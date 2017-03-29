@@ -1,4 +1,3 @@
-
 //Ponteiro
 pd.setInput = function(layer, eventId, funcToCall, multiTouch) {
 
@@ -50,7 +49,7 @@ input_createDownEvent = function(func, multiTouch){
 			onTouchBegan: function (touch, event) {  
 				var target = event.getCurrentTarget();
 				cc.log('tst')
-				if(touch.getId() <= multiTouch){
+				if(touch.getID() <= multiTouch){
 					target[func](touch);
 				}
 				return true;
@@ -79,7 +78,7 @@ input_createDragEvent = function(func, multiTouch){
 			},
 			onTouchMoved: function (touch, event) {  
 				var target = event.getCurrentTarget();
-				if(touch.getId() <= multiTouch){
+				if(touch.getID() <= multiTouch){
 					target[func](touch);
 				}
 				return true;
@@ -109,7 +108,7 @@ input_createUpEvent = function(func, multiTouch){
 			onTouchEnded: function (touch, event) {  
 				cc.log('tst')
 				var target = event.getCurrentTarget();
-				if(touch.getId() <= multiTouch){
+				if(touch.getID() <= multiTouch){
 					target[func](touch);
 				}
 				return true;
@@ -137,11 +136,9 @@ pd.setInput.ACCELEROMETER = 3;
 
 
 ///Keyboard
-
-
 pd.setKeyboard = function(layer, funcKeyDown, funcKeyUp){
 	if(!cc.sys.isMobile){
-		cc.eventManager.addListener({
+        var listener = {
 			event: cc.EventListener.KEYBOARD,
 			onKeyPressed:  function(keyCode, event){
 				var target = event.getCurrentTarget();
@@ -151,11 +148,65 @@ pd.setKeyboard = function(layer, funcKeyDown, funcKeyUp){
 				var target = event.getCurrentTarget();
 				target[funcKeyUp](keyCode, event);
 			}
-		}, layer);
+		};
+		cc.eventManager.addListener(listener, layer);
+        return listener;
 	}
 }
 
+///Mouse
+pd.setMouse = function(layer, funcMouseDown, funcMouseMove, funcMouseUp, multiTouch) {
+	var listener = null;
+	if(cc.sys.isMobile) {
+		listener = cc.EventListener.create({
+			event: cc.EventListener.TOUCH_ALL_AT_ONCE,
+			onTouchesBegan: function (touch, event) {
+				var target = event.getCurrentTarget();
+				if(touch.getID() <= multiTouch && target[funcMouseDown])
+					target[funcMouseDown](touch);
+				return false;
+			},
+			onTouchesEnded: function (touch, event) {
+				var target = event.getCurrentTarget();
+				if(touch.getID() <= multiTouch && target[funcMouseUp])
+					target[funcMouseUp](touch);
+				return false;
+				//}
+			},
+			onTouchesMoved: function (touches, event) {
+				var target = event.getCurrentTarget();
+				if(touch.getID() <= multiTouch && target[funcMouseMove])
+					target[funcMouseMove](touches);
+				return false;
+			},
+		});
+	}
 
+	else {
+		listener = cc.EventListener.create({
+			event: cc.EventListener.MOUSE,
+			onMouseDown: function (event) {
+				var target = event.getCurrentTarget();
+				if(target[funcMouseDown])
+					target[funcMouseDown](event);
+			},
+			onMouseUp: function (event) {
+				var target = event.getCurrentTarget();
+				if(target[funcMouseUp])
+					target[funcMouseUp](event);
+			},
+			onMouseMove: function (event) {
+				var target = event.getCurrentTarget();
+				if(target[funcMouseMove])
+					target[funcMouseMove](event);
+			}
+		});
+	}
+	if (listener) {
+		cc.eventManager.addListener(listener, layer);
+	}
+	return listener;
+};
 
 //outros
 
@@ -166,21 +217,21 @@ pd.setInputForButton = function(layer) {
 			event: cc.EventListener.TOUCH_ALL_AT_ONCE, 
 			onTouchesBegan: function (touch, event) {  
 				var target = event.getCurrentTarget();
-				//if(touch.getId() == 0 || touch.getId() == 1){
+				//if(touch.getID() == 0 || touch.getID() == 1){
 				target.onMouseDown(touch);
 				//}g
 				return false;
 			},
 			onTouchesEnded: function (touch, event) {  
 				var target = event.getCurrentTarget(); 
-				//if(touch.getId() == 0 || touch.getId() == 1){
+				//if(touch.getID() == 0 || touch.getID() == 1){
 				target.onMouseUp(touch);
 				return false;
 				//}
 			},
 			onTouchesMoved: function (touches, event) {
 				var target = event.getCurrentTarget(); 
-				//if(touch.getId() == 0 || touch.getId() == 1){
+				//if(touch.getID() == 0 || touch.getID() == 1){
 				target.onMouseDragged(touches);
 				//}
 				return false;

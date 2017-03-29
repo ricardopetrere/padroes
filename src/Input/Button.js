@@ -72,7 +72,7 @@ pd.Button = cc.Sprite.extend(
 				var tempBox = cc.rect(position.x, position.y, 1,1);
 				if(cc.rectIntersectsRect(this.getBoundingBox(), tempBox)){
 					if(this.isNative){
-						this.touchId = event.getId();
+						this.touchId = event.getID();
 					}
 					this.setSpriteFrame(this.pressedImg);
 					this.scaleReleased = this.getScale();
@@ -90,7 +90,7 @@ pd.Button = cc.Sprite.extend(
 			onMouseUp:function(event){
 				if(this.isNative){
 					for(i in event){
-						if(event[i].getId() == this.touchId && this.isGrabbed){
+						if(event[i].getID() == this.touchId && this.isGrabbed){
 							this.setSpriteFrame(this.normalImg);
 							this.setScale(this.scaleReleased);
 							this.callCustomCallBack(false);
@@ -111,7 +111,7 @@ pd.Button = cc.Sprite.extend(
 			onMouseDragged:function(event){
 				if(this.isNative){
 					for(i in event){
-						if(event[i].getId() == this.touchId && this.isGrabbed){
+						if(event[i].getID() == this.touchId && this.isGrabbed){
 							var position = event[i].getLocation();
 							var tempBox = cc.rect(position.x, position.y, 1,1);
 							if(!cc.rectIntersectsRect(this.getBoundingBox(), tempBox)){

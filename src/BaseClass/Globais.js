@@ -139,7 +139,9 @@ pd.resumar = function(target, acoesPausadas,audios) {
 	}
 
 	target.resume();
-	cc.director.getActionManager().resumeTargets(acoesPausadas);
+	if (acoesPausadas && acoesPausadas.length > 0) {
+		cc.director.getActionManager().resumeTargets(acoesPausadas);
+	}
 
 	isPaused = false;
 };

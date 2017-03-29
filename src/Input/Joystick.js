@@ -89,7 +89,7 @@ pd.Joystick = cc.Layer.extend(
 			}
 			else {
 				for(i in event){
-					if(event[i].getId() == this.touchId){
+					if(event[i].getID() == this.touchId){
 						this.releasedEvent(event[i]);
 						this.callCustomCallBack(new cc.p(0,0), new cc.p(0,0));
 						break;
@@ -100,7 +100,7 @@ pd.Joystick = cc.Layer.extend(
 		onMouseDragged:function(event){
 			if(this.isNative){
 				for(i in event){
-					if(event[i].getId() == this.touchId){
+					if(event[i].getID() == this.touchId){
 						this.delta = this.getStickState(event[i]);
 						this.callCustomCallBack(this.delta, this.power);
 						break;
@@ -170,7 +170,7 @@ pd.Joystick = cc.Layer.extend(
 					if(cc.rectIntersectsRect(this.joystickStick.getBoundingBox(), tempBox)){
 						this.isGrabbed = true;
 						if(this.isNative){
-							this.touchId = event.getId();
+							this.touchId = event.getID();
 						}
 						this.clickInitialPosition = event.getLocation();
 						ret = new cc.p(0,0);
@@ -184,7 +184,7 @@ pd.Joystick = cc.Layer.extend(
 				}
 				else{//verificando movimentação
 					if(this.isNative){
-						if(event.getId() == this.touchId){
+						if(event.getID() == this.touchId){
 							var ret = this.getDelta(event);
 							return ret;
 						}
@@ -273,7 +273,7 @@ pd.Joystick = cc.Layer.extend(
 			}	
 			else{
 				if(this.isNative){
-					if(event.getId() == this.touchId){
+					if(event.getID() == this.touchId){
 						this.isGrabbed = false;
 						this.touchId = null;
 						this.joystickStick.setPosition(this.joystickStick.CenterPosition);
@@ -365,21 +365,21 @@ pd.setInputForJoystick = function(layer) {
 			swallowTouches: false,
 			onTouchesEnded: function (touch, event) {  
 				var target = event.getCurrentTarget(); 
-				//if(touch.getId() == 0 || touch.getId() == 1){
+				//if(touch.getID() == 0 || touch.getID() == 1){
 				target.onMouseUp(touch);
 				return false;
 				//}
 			},
 			onTouchesBegan: function (touch, event) {  
 				var target = event.getCurrentTarget();
-				//if(touch.getId() == 0 || touch.getId() == 1){
+				//if(touch.getID() == 0 || touch.getID() == 1){
 				target.onMouseDown(touch);
 				//}
 				return false;
 			},
 			onTouchesMoved: function (touches, event) {
 				var target = event.getCurrentTarget(); 
-				//if(touch.getId() == 0 || touch.getId() == 1){
+				//if(touch.getID() == 0 || touch.getID() == 1){
 				target.onMouseDragged(touches);
 				//}
 				return false;
