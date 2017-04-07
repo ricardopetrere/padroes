@@ -19,7 +19,7 @@ pd.PreloadLayer = cc.Layer.extend({
 		var logo = new cc.Sprite(pd.resLoad.s_logo);
 
 		this.layer = new cc.LayerColor(cc.color(255, 255, 255, 0), 1024, 768);
-		this.layer.setPosition(winSize.width / 2, winSize.height / 2);
+		this.layer.setPosition(cc.winSize.width / 2, cc.winSize.height / 2);
 		this.addChild(this.layer, 0, 0);
 
 		var str_carregando = new cc.Sprite(pd.resLoad.s_carregando);

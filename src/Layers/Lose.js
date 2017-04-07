@@ -22,12 +22,12 @@ pd.LoseLayer = cc.Layer.extend({
 
 		//Fundo
 		this.bg = new cc.Sprite(pd.resPadrao.s_fundoPreto);
-		this.bg.setPosition(winSize.width / 2, winSize.height / 2);
+		this.bg.setPosition(cc.winSize.width / 2, cc.winSize.height / 2);
 		this.addChild(this.bg, 0);
 		
 		//Faixa
 		this.faixa = new cc.Sprite(cache.getSpriteFrame("faixa_frente.png"));
-		this.faixa.setPosition(winSize.width / 2, winSize.height / 4 + 30);
+		this.faixa.setPosition(cc.winSize.width / 2, cc.winSize.height / 4 + 30);
 		this.addChild(this.faixa, 10);
 		//Posicao da faixa no plist
 		this.faixa.rectX = this.faixa.getTextureRect().x;
@@ -91,7 +91,7 @@ pd.LoseLayer = cc.Layer.extend({
 		
 		//Personagem
 		this.personagem = new cc.Sprite(this.personagem);
-		this.personagem.setPosition(winSize.width / 2, winSize.height / 2 + 30);
+		this.personagem.setPosition(cc.winSize.width / 2, cc.winSize.height / 2 + 30);
 		this.addChild(this.personagem, 5);
 		this.personagem.setScale(0);
 		this.personagem.animar = new cc.TargetedAction(this.personagem, new cc.EaseBounceOut(new cc.ScaleTo(1, 1)));

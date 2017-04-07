@@ -41,7 +41,7 @@ pd.PauseLayer = cc.Layer.extend(
 			this.mamai.pausarCena();//pausa a cena pai  //nome ta como mamae pra evitar certos conflitos com a cocos
 		}
 		
-		this.bg_img = pd.cObject("pd_pause_interface", -this.offset, winSize.height/2, this, 1);
+		this.bg_img = pd.cObject("pd_pause_interface", -this.offset, cc.winSize.height/2, this, 1);
 	
 		this.btn_menu = new pd.Button(this.offset, 480, this, "button_Func", "pd_btn_menu_normal.png", "pd_btn_menu_pressed.png");
 		this.bg_img.addChild(this.btn_menu, 9000);
@@ -59,7 +59,7 @@ pd.PauseLayer = cc.Layer.extend(
 			this.bg_img.addChild(this.btn_restart, 9000);
 		}
 		
-		this.btn_resume = new pd.Button(this.offset*2, winSize.height/2, this, "button_Func", "pd_btn_resume_normal.png", "pd_btn_resume_pressed.png");
+		this.btn_resume = new pd.Button(this.offset*2, cc.winSize.height/2, this, "button_Func", "pd_btn_resume_normal.png", "pd_btn_resume_pressed.png");
 		this.btn_resume.defineKey(27);
 		this.bg_img.addChild(this.btn_resume, 9000);
 	

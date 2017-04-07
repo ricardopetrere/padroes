@@ -15,7 +15,7 @@ for(i = 0; i < 6; i++){
 //Variaveis
 //*****************
 var isPalco = false;//marcar como true se estiver usando o palco / deixar null ou false caso esteja usando o standAlone
-var winSize = null;
+// var winSize = null;
 var cache = null;//TODO Verificar se ainda estão sendo usados
 var endGame = false;
 var endLevel = false;//TODO Verificar se ainda estão sendo usados
@@ -48,7 +48,7 @@ if (cc.sys.isNative) {
 
 pd.initGlobals = function() {
 //	Inicializa as variaveis globais
-	winSize = cc.director.getWinSize();
+// 	winSize = cc.director.getWinSize();
 	cache = cc.spriteFrameCache;
 	endGame = false;
 	endLevel = false;
@@ -110,8 +110,8 @@ pd.randomInterval = function(min, max) {
 
 pd.proportion = function() {
 //	Mantem as coordenadas proporcionais para todos os tamanhos de tela - a área desenhavel (canvas), TEM QUE ESTAR CENTRALIZADA
-	var largura = (winSize.width - TARGETX) / 2;
-	var altura = (winSize.height - TARGETY) / 2;
+	var largura = (cc.winSize.width - TARGETX) / 2;
+	var altura = (cc.winSize.height - TARGETY) / 2;
 	return {x: largura, y: altura};
 };
 

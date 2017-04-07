@@ -22,12 +22,12 @@ pd.WinLayer = cc.Layer.extend({
 
 		//Fundo
 		this.bg = new cc.Sprite(pd.resPadrao.s_fundoPreto);
-		this.bg.setPosition(winSize.width / 2, winSize.height / 2);
+		this.bg.setPosition(cc.winSize.width / 2, cc.winSize.height / 2);
 		this.addChild(this.bg, 0);
 
 		//Faixa
 		this.faixa = new cc.Sprite(cache.getSpriteFrame("faixa.png"));
-		this.faixa.setPosition(winSize.width / 2, winSize.height / 4 + 30);
+		this.faixa.setPosition(cc.winSize.width / 2, cc.winSize.height / 4 + 30);
 		this.addChild(this.faixa, 10);
 		//Posicao da faixa no plist
 		this.faixa.rectX = this.faixa.getTextureRect().x;
@@ -47,7 +47,7 @@ pd.WinLayer = cc.Layer.extend({
 		
 		//Placa
 		this.placa = new cc.Sprite(texto);
-		this.placa.setPosition(winSize.width / 2, winSize.height / 4 + 55);
+		this.placa.setPosition(cc.winSize.width / 2, cc.winSize.height / 4 + 55);
 		this.placa.setAnchorPoint(0.5, 1);
 		this.addChild(this.placa, 8);
 		this.placa.setScale(1, 0);
@@ -67,7 +67,7 @@ pd.WinLayer = cc.Layer.extend({
 		pd.reter(seqPlaca);
 		//Personagem
 		this.personagem = new cc.Sprite(this.personagem);
-		this.personagem.setPosition(winSize.width / 2, winSize.height / 2 + 80);
+		this.personagem.setPosition(cc.winSize.width / 2, cc.winSize.height / 2 + 80);
 		this.addChild(this.personagem, 5);
 		this.personagem.setScale(0);
 		this.personagem.animar = new cc.TargetedAction(this.personagem, new cc.EaseBounceOut(new cc.ScaleTo(1, 1)));
@@ -78,11 +78,11 @@ pd.WinLayer = cc.Layer.extend({
 		this.estrelas = [];
 		
 		this.estrelas[0] = new cc.Sprite(cache.getSpriteFrame("estrela_grande.png"));
-		this.estrelas[0].setPosition(winSize.width / 2 - 82, winSize.height / 2);
+		this.estrelas[0].setPosition(cc.winSize.width / 2 - 82, cc.winSize.height / 2);
 		this.estrelas[0].setAnchorPoint(1, 0);
 				
 		this.estrelas[1] = new cc.Sprite(cache.getSpriteFrame("estrela_grande.png"));
-		this.estrelas[1].setPosition(winSize.width / 2 + 82, winSize.height / 2);
+		this.estrelas[1].setPosition(cc.winSize.width / 2 + 82, cc.winSize.height / 2);
 		this.estrelas[1].setAnchorPoint(0, 0);
 		this.estrelas[1].setFlippedX(true);	
 		
