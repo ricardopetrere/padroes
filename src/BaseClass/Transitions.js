@@ -20,7 +20,7 @@ var FadeTransition = function (t, s) {
 };
 
 var FadeWhiteTransition = function (t, s) {
-    return new cc.TransitionFade(t, s, new cc.Color(255, 255, 255));
+    return new cc.TransitionFade(t, s, cc.color(255, 255, 255));
 };
 
 var FlipXLeftOver = function (t, s) {
