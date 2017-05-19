@@ -27,8 +27,7 @@ pd.PreloadLayer = cc.Layer.extend({
 		var progressBG = new cc.Sprite(pd.resLoad.s_loadbarBG);
 
 
-		var cache = cc.spriteFrameCache;
-		cache.addSpriteFrames(pd.resLoad.icon_plist);
+		cc.spriteFrameCache.addSpriteFrames(pd.resLoad.icon_plist);
 
 		logo.setPosition(cc.p(0, 0));
 		progress.setAnchorPoint(0,0);

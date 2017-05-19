@@ -26,7 +26,7 @@ pd.WinLayer = cc.Layer.extend({
 		this.addChild(this.bg, 0);
 
 		//Faixa
-		this.faixa = new cc.Sprite(cache.getSpriteFrame("faixa.png"));
+		this.faixa = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("faixa.png"));
 		this.faixa.setPosition(cc.winSize.width / 2, cc.winSize.height / 4 + 30);
 		this.addChild(this.faixa, 10);
 		//Posicao da faixa no plist
@@ -77,48 +77,48 @@ pd.WinLayer = cc.Layer.extend({
 		//Estrelas
 		this.estrelas = [];
 		
-		this.estrelas[0] = new cc.Sprite(cache.getSpriteFrame("estrela_grande.png"));
+		this.estrelas[0] = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("estrela_grande.png"));
 		this.estrelas[0].setPosition(cc.winSize.width / 2 - 82, cc.winSize.height / 2);
 		this.estrelas[0].setAnchorPoint(1, 0);
 				
-		this.estrelas[1] = new cc.Sprite(cache.getSpriteFrame("estrela_grande.png"));
+		this.estrelas[1] = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("estrela_grande.png"));
 		this.estrelas[1].setPosition(cc.winSize.width / 2 + 82, cc.winSize.height / 2);
 		this.estrelas[1].setAnchorPoint(0, 0);
 		this.estrelas[1].setFlippedX(true);	
 		
-		this.estrelas[2] = new cc.Sprite(cache.getSpriteFrame("estrela1.png"));
+		this.estrelas[2] = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("estrela1.png"));
 		this.estrelas[2].setPosition(760, 270);
 		this.estrelas[2].maxEscala = 1;
 		
-		this.estrelas[3] = new cc.Sprite(cache.getSpriteFrame("estrela1.png"));
+		this.estrelas[3] = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("estrela1.png"));
 		this.estrelas[3].setPosition(730, 250);
 		this.estrelas[3].maxEscala = 0.5;
 		
-		this.estrelas[4] = new cc.Sprite(cache.getSpriteFrame("estrela2.png"));
+		this.estrelas[4] = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("estrela2.png"));
 		this.estrelas[4].setPosition(700, 200);
 		this.estrelas[4].maxEscala = 0.85;
 		
-		this.estrelas[5] = new cc.Sprite(cache.getSpriteFrame("estrela2.png"));
+		this.estrelas[5] = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("estrela2.png"));
 		this.estrelas[5].setPosition(670, 330);
 		this.estrelas[5].maxEscala = 1.4;
 		
-		this.estrelas[6] = new cc.Sprite(cache.getSpriteFrame("estrela2.png"));
+		this.estrelas[6] = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("estrela2.png"));
 		this.estrelas[6].setPosition(360, 330);
 		this.estrelas[6].maxEscala = 1;
 		
-		this.estrelas[7] = new cc.Sprite(cache.getSpriteFrame("estrela2.png"));
+		this.estrelas[7] = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("estrela2.png"));
 		this.estrelas[7].setPosition(330, 200);
 		this.estrelas[7].maxEscala = 1;
 		
-		this.estrelas[8] = new cc.Sprite(cache.getSpriteFrame("estrela3.png"));
+		this.estrelas[8] = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("estrela3.png"));
 		this.estrelas[8].setPosition(255, 240);
 		this.estrelas[8].maxEscala = 1;
 		
-		this.estrelas[9] = new cc.Sprite(cache.getSpriteFrame("estrela3.png"));
+		this.estrelas[9] = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("estrela3.png"));
 		this.estrelas[9].setPosition(220, 195);
 		this.estrelas[9].maxEscala = 0.5;
 		
-		this.estrelas[10] = new cc.Sprite(cache.getSpriteFrame("estrela3.png"));
+		this.estrelas[10] = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("estrela3.png"));
 		this.estrelas[10].setPosition(265, 175);
 		this.estrelas[10].maxEscala = 0.45;
 		
@@ -163,7 +163,7 @@ pd.WinLayer = cc.Layer.extend({
 		this.audioSeq = cc.Sequence.create(cc.DelayTime.create(0.3), explosion, cc.DelayTime.create(0.7), desenrolar, audioFlip);
 		pd.reter(this.audioSeq);
 		//Onda de impacto
-		this.onda = new cc.Sprite(cache.getSpriteFrame("impacto.png"));
+		this.onda = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("impacto.png"));
 		this.onda.setPosition(this.personagem.getPosition());
 		this.addChild(this.onda, 4);
 		this.onda.setScale(0);

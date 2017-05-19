@@ -1,24 +1,22 @@
 pd.preload_Cache = function(res, padrao){//desutilizado, talvez seja removido
-	this.cache = cc.spriteFrameCache;
 	for(i = 0; i < res.length; i++){
 		if(res[i].indexOf(".plist") != -1){
-			this.cache.addSpriteFrames(res[i]);
+			cc.spriteFrameCache.addSpriteFrames(res[i]);
 			cc.log('Vetor normal num ' + i + " " + res[i]);
 		}
 	}
 	if(padrao != undefined && padrao != null){
 		for(i = 0; i < padrao.length; i++){
 			if(padrao[i].indexOf(".plist") != -1){
-				this.cache.addSpriteFrames(padrao[i]);
+				cc.spriteFrameCache.addSpriteFrames(padrao[i]);
 				cc.log('Vetor Padrao num ' + i + " " + padrao[i]);
 			}
 		}
 	}
 }
 pd.preloadSingleData = function(res){
-	this.cache = cc.spriteFrameCache;
 	cc.log(res);
-	this.cache.addSpriteFrames(res);
+	cc.spriteFrameCache.addSpriteFrames(res);
 }
 pd.limparSpriteFrameCache = function(gameResourcesToBePurged, naoLimparTudo){
 	if(gameResourcesToBePurged != null && gameResourcesToBePurged != undefined){

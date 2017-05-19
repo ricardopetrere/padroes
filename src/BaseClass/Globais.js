@@ -15,21 +15,15 @@ for(i = 0; i < 6; i++){
 //Variaveis
 //*****************
 var isPalco = false;//marcar como true se estiver usando o palco / deixar null ou false caso esteja usando o standAlone
-// var winSize = null;
-var cache = null;//TODO Verificar se ainda estão sendo usados
 var endGame = false;
-var endLevel = false;//TODO Verificar se ainda estão sendo usados
 var isPaused = false;
-var talking = false;//TODO Verificar se ainda estão sendo usados
-var audiosTut = [];//TODO Verificar se ainda estão sendo usados
 var retidos = [];
 var acoesPausadas = [];
-var resAdicional = [];//TODO Verificar se ainda estão sendo usados
+var resAdicional = [];
 var DebugMode = false;
 var activeGameSpace = null;
 var padroesPath = cc.game.config["padroesPath"];
-var versaoPadroes = "2.0";
-var lastGame = null;//TODO Verificar se ainda estão sendo usados
+var versaoPadroes = "2.1";
 cc.log("Padrões Cocos Versão " + versaoPadroes);
 
 //Especifico para android - relativos ao obb
@@ -48,13 +42,8 @@ if (cc.sys.isNative) {
 
 pd.initGlobals = function() {
 //	Inicializa as variaveis globais
-// 	winSize = cc.director.getWinSize();
-	cache = cc.spriteFrameCache;
 	endGame = false;
-	endLevel = false;
 	isPaused = false;
-	talking = false;
-	audiosTut = [];
 	activeGameSpace.audioVector = [];
 };
 
@@ -180,7 +169,6 @@ pd.trocaCena = function(transicao, layer) {
 		layer.FinalizouCena = true;
 		var delay = new cc.DelayTime(0.5);
 		var troca = new cc.CallFunc(function(){
-			endLevel = false;
 			cc.director.runScene(transicao);
 		}, layer);
 		var seqTroca = cc.Sequence.create(delay, troca);

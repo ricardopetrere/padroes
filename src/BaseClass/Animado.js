@@ -6,7 +6,6 @@ pd.Animado = cc.Sprite.extend({
     running: null,
     speed:null,
     currentAnimation:null,
-    cache: null,
     id:null,
     
     ctor: function() {
@@ -16,7 +15,6 @@ pd.Animado = cc.Sprite.extend({
         this.Animations = [];
         this.running = false;
         this.speed = 24;
-        this.cache = cc.spriteFrameCache;
         this.TipoDoObj = "Animado";
     },
     
@@ -51,7 +49,7 @@ pd.Animado = cc.Sprite.extend({
     		else {
     			str = anim_name + i + ".png";
     		}
-    		var frame = this.cache.getSpriteFrame(str);
+    		var frame = cc.spriteFrameCache.getSpriteFrame(str);
     		frames.push(frame);
     	}
 
@@ -83,7 +81,7 @@ pd.Animado = cc.Sprite.extend({
     		else {
     			str = anim_name + v + ".png";
     		}
-    		var frame = this.cache.getSpriteFrame(str);
+    		var frame = cc.spriteFrameCache.getSpriteFrame(str);
     		frames.push(frame);
     	}
 

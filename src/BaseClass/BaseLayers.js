@@ -56,11 +56,12 @@ pd.GameLayer = pd.BaseLayer.extend({
 
 		return true;
 	},
+    //TODO: Juntar essas duas funções com as correspondentes da pd.MainLayer, e colocar na pd.BaseLayer
 	debugger_keyDown:function(key)
 	{
 		if(key == "120"){
-			cc.log('toggleMute');
 			pd.audioEngine.toggleMute();
+			cc.log('toggleMute: ' + pd.audioEngine.isMuted);
 		}
 		else if(key == "112"){
 			if(!pd.CurrentDebugScreen)
@@ -135,11 +136,12 @@ pd.MainLayer = pd.BaseLayer.extend({
 		return true;
 	},
 
+	//TODO: Juntar essas duas funções com as correspondentes da pd.GameLayer, e colocar na pd.BaseLayer
 	debugger_keyDown:function(key)
 	{
 		if(key == "120"){
-			cc.log('toggleMute');
 			pd.audioEngine.toggleMute();
+            cc.log('toggleMute: ' + pd.audioEngine.isMuted);
 		}
 		else if(key == "112"){
 			if(!this.debugScreen)

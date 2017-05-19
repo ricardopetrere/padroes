@@ -1,11 +1,32 @@
 /**
  * Created by rcardoso on 13/03/2017.
+ * @class
  */
-pd.AudioEngine = cc.Class.extend({
+pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
+    /**
+     * @type {null|pd.AudioEngine}
+     */
     _singleton: null,
+    /**
+     * @type {number}
+     */
     effectVolume: 1,
+    /**
+     * @type {boolean}
+     */
     isMuted: false,
+    /**
+     * @type {number}
+     */
     musicVolume: 1,
+    /**
+     *
+     * @param target
+     * @param duration
+     * @param from
+     * @param to
+     * @param cb
+     */
     fadeMusic: function(target, duration, from, to, cb) {
         duration = duration * 100;
         var d = 1 / duration;
@@ -25,12 +46,24 @@ pd.AudioEngine = cc.Class.extend({
         }
         target.runAction(new cc.Sequence(sequencia));
     },
+    /**
+     *
+     * @returns {Number} effectVolume
+     */
     getEffectsVolume: function () {
         return cc.audioEngine.getEffectsVolume();
     },
+    /**
+     *
+     * @returns {Number} musicVolume
+     */
     getMusicVolume: function () {
         return cc.audioEngine.getMusicVolume();
     },
+    /**
+     *
+     * @param {number} effectId
+     */
     pauseEffect: function (effectId) {
         return cc.audioEngine.pauseEffect(effectId);
     },
@@ -39,7 +72,7 @@ pd.AudioEngine = cc.Class.extend({
      * @param effect {resources}
      * @param loop [boolean]
      * @param volume [number]
-     * @returns {number}
+     * @returns {number} effectId
      */
     playEffect: function (effect, loop, volume) {
         var retorno = -1;
@@ -130,4 +163,7 @@ pd.AudioEngine.getInstance = function () {
     return pd.AudioEngine.prototype._singleton;
 };
 
+/**
+ * @type pd.AudioEngine
+ */
 pd.audioEngine = pd.AudioEngine.getInstance();

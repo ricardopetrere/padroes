@@ -26,7 +26,7 @@ pd.LoseLayer = cc.Layer.extend({
 		this.addChild(this.bg, 0);
 		
 		//Faixa
-		this.faixa = new cc.Sprite(cache.getSpriteFrame("faixa_frente.png"));
+		this.faixa = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("faixa_frente.png"));
 		this.faixa.setPosition(cc.winSize.width / 2, cc.winSize.height / 4 + 30);
 		this.addChild(this.faixa, 10);
 		//Posicao da faixa no plist
@@ -45,7 +45,7 @@ pd.LoseLayer = cc.Layer.extend({
 		pd.reter(this.faixa.reboteIn);
 		pd.reter(this.faixa.reboteOut);
 		
-		this.abaL = new cc.Sprite(cache.getSpriteFrame("faixa_aba.png"));
+		this.abaL = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("faixa_aba.png"));
 		this.abaL.setPosition(this.faixa.x - 177, this.faixa.y + 41);
 		this.abaL.setAnchorPoint(1, 0.5);
 		this.addChild(this.abaL, 10);
@@ -59,7 +59,7 @@ pd.LoseLayer = cc.Layer.extend({
 		pd.reter(this.abaL.reboteIn);
 		pd.reter(this.abaL.reboteOut);
 		
-		this.abaR = new cc.Sprite(cache.getSpriteFrame("faixa_aba.png"));
+		this.abaR = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("faixa_aba.png"));
 		this.abaR.setPosition(this.faixa.x + 177, this.faixa.y + 41);
 		this.abaR.setAnchorPoint(0, 0.5);
 		this.abaR.setFlippedX(true);
@@ -108,7 +108,7 @@ pd.LoseLayer = cc.Layer.extend({
 		//pd.reter(desenrolar);
 		//pd.reter(audioFlip);
 		//Onda de impacto
-		this.onda = new cc.Sprite(cache.getSpriteFrame("impacto.png"));
+		this.onda = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("impacto.png"));
 		this.onda.setPosition(this.personagem.getPosition());
 		this.addChild(this.onda, 4);
 		this.onda.setScale(0);
