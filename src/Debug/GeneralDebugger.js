@@ -38,7 +38,7 @@ pd.GeneralDebugScreen = cc.Sprite.extend(
 			locked:null,
 			mouseOffSet:null,
 			ctor:function(){
-				this._super(pd.resPadrao.debuggerUi);
+				this._super(pd.res.debuggerUi);
 			},
 			init:function()
 			{
@@ -70,44 +70,44 @@ pd.GeneralDebugScreen = cc.Sprite.extend(
 				pd.setInput(this, pd.setInput.MOUSE_MOVE, "onMouseDragged");
 				pd.setInput(this, pd.setInput.MOUSE_UP, "onMouseUp");
 
-				this.btFechar = new cc.Sprite(pd.resPadrao.btn_fechar);
+				this.btFechar = new cc.Sprite(pd.res.btn_fechar);
 				this.btFechar.setPosition(129, 217);
 				this.btFechar.setScale(0.60);
 				this.addChild(this.btFechar, 5);
 
-				this.btMais = new cc.Sprite(pd.resPadrao.btn_mais);
+				this.btMais = new cc.Sprite(pd.res.btn_mais);
 				this.btMais.setPosition(114, 217);
 				this.btMais.setScale(0.60);
 				this.addChild(this.btMais, 5);
 				
-				this.boundingBoxImage = new cc.Scale9Sprite(pd.resPadrao.BoundingBox);
+				this.boundingBoxImage = new cc.Scale9Sprite(pd.res.BoundingBox);
 				this.boundingBoxImage.setOpacity(0);
 				this.addChild(this.boundingBoxImage);
 
-				this.CheckBoxLocked = new cc.Sprite(pd.resPadrao.uncheckedButton);
+				this.CheckBoxLocked = new cc.Sprite(pd.res.uncheckedButton);
 				this.CheckBoxLocked.isSelected = false;
 				this.CheckBoxLocked.setScale(0.5);
 				this.CheckBoxLocked.setPosition(123,80);
 				this.addChild(this.CheckBoxLocked);
 				
-				this.CheckBoxFlipped = new cc.Sprite(pd.resPadrao.uncheckedButton);
+				this.CheckBoxFlipped = new cc.Sprite(pd.res.uncheckedButton);
 				this.CheckBoxFlipped.isSelected = false;
 				this.CheckBoxFlipped.setScale(0.5);
 				this.CheckBoxFlipped.setPosition(55,80);
 				this.addChild(this.CheckBoxFlipped);
 				
-				this.CheckBoxBounding = new cc.Sprite(pd.resPadrao.uncheckedButton);
+				this.CheckBoxBounding = new cc.Sprite(pd.res.uncheckedButton);
 				this.CheckBoxBounding.isSelected = false;
 				this.CheckBoxBounding.setScale(0.5);
 				this.CheckBoxBounding.setPosition(115,23);
 				this.addChild(this.CheckBoxBounding);
 				
-				this.editSpriteRotation = new cc.EditBox(new cc.Size(38,22), new cc.Scale9Sprite(pd.resPadrao.textBoxImage));
+				this.editSpriteRotation = new cc.EditBox(new cc.Size(38,22), new cc.Scale9Sprite(pd.res.textBoxImage));
 				this.editSpriteRotation.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 				this.editSpriteRotation.setFontColor(new cc.color(0,0,0,255));
 				this.editSpriteRotation.setPosition(73,109);
 
-				this.editSpriteAlpha = new cc.EditBox(new cc.Size(38,22), new cc.Scale9Sprite(pd.resPadrao.textBoxImage));
+				this.editSpriteAlpha = new cc.EditBox(new cc.Size(38,22), new cc.Scale9Sprite(pd.res.textBoxImage));
 				this.editSpriteAlpha.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 				this.editSpriteAlpha.setFontColor(new cc.color(0,0,0,255));
 				this.editSpriteAlpha.setPosition(62,53);
@@ -116,12 +116,12 @@ pd.GeneralDebugScreen = cc.Sprite.extend(
 				this.addChild(this.editSpriteAlpha);
 
 
-				this.editSpritePosX = new cc.EditBox(new cc.Size(38,24), new cc.Scale9Sprite(pd.resPadrao.textBoxImage));
+				this.editSpritePosX = new cc.EditBox(new cc.Size(38,24), new cc.Scale9Sprite(pd.res.textBoxImage));
 				this.editSpritePosX.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 				this.editSpritePosX.setFontColor(new cc.color(0,0,0,255));
 				this.editSpritePosX.setPosition(50,172);
 
-				this.editSpritePosY = new cc.EditBox(new cc.Size(38,24), new cc.Scale9Sprite(pd.resPadrao.textBoxImage));
+				this.editSpritePosY = new cc.EditBox(new cc.Size(38,24), new cc.Scale9Sprite(pd.res.textBoxImage));
 				this.editSpritePosY.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 				this.editSpritePosY.setFontColor(new cc.color(0,0,0,255));
 				this.editSpritePosY.setPosition(50,144);
@@ -130,12 +130,12 @@ pd.GeneralDebugScreen = cc.Sprite.extend(
 				this.addChild(this.editSpritePosY);
 
 				
-				this.editSpriteScaleX = new cc.EditBox(new cc.Size(38,24), new cc.Scale9Sprite(pd.resPadrao.textBoxImage));
+				this.editSpriteScaleX = new cc.EditBox(new cc.Size(38,24), new cc.Scale9Sprite(pd.res.textBoxImage));
 				this.editSpriteScaleX.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 				this.editSpriteScaleX.setFontColor(new cc.color(0,0,0,255));
 				this.editSpriteScaleX.setPosition(113,172);
 
-				this.editSpriteScaleY = new cc.EditBox(new cc.Size(38,24), new cc.Scale9Sprite(pd.resPadrao.textBoxImage));
+				this.editSpriteScaleY = new cc.EditBox(new cc.Size(38,24), new cc.Scale9Sprite(pd.res.textBoxImage));
 				this.editSpriteScaleY.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 				this.editSpriteScaleY.setFontColor(new cc.color(0,0,0,255));
 				this.editSpriteScaleY.setPosition(113,144);
@@ -170,12 +170,12 @@ pd.GeneralDebugScreen = cc.Sprite.extend(
 				if(this.Target != undefined && this.Target != null){	
 					if(this.CheckBoxBounding.isSelected){
 						this.CheckBoxBounding.isSelected = false;
-						this.CheckBoxBounding.setTexture(pd.resPadrao.uncheckedButton);
+						this.CheckBoxBounding.setTexture(pd.res.uncheckedButton);
 						this.boundingBoxImage.setOpacity(0);
 					}
 					else{
 						this.CheckBoxBounding.isSelected = true;
-						this.CheckBoxBounding.setTexture(pd.resPadrao.checkedButton);
+						this.CheckBoxBounding.setTexture(pd.res.checkedButton);
 						this.boundingBoxImage.setOpacity(255);
 						//this.boundingBoxImage.setAnchorPoint(this.Target.getAnchorPoint());
 						this.boundingBoxImage.setContentSize(this.Target.getBoundingBox().width, this.Target.getBoundingBox().height);
@@ -189,13 +189,13 @@ pd.GeneralDebugScreen = cc.Sprite.extend(
 				if(this.Target != undefined && this.Target != null){
 					if(this.CheckBoxFlipped.isSelected){
 						this.CheckBoxFlipped.isSelected = false;
-						this.CheckBoxFlipped.setTexture(pd.resPadrao.uncheckedButton);
+						this.CheckBoxFlipped.setTexture(pd.res.uncheckedButton);
 						this.Target.setFlippedX(false);
 	
 					}
 					else{
 						this.CheckBoxFlipped.isSelected = true;
-						this.CheckBoxFlipped.setTexture(pd.resPadrao.checkedButton);
+						this.CheckBoxFlipped.setTexture(pd.res.checkedButton);
 						this.Target.setFlippedX(true);
 	
 					}
@@ -205,13 +205,13 @@ pd.GeneralDebugScreen = cc.Sprite.extend(
 				if(this.Target != undefined && this.Target != null){
 					if(this.CheckBoxLocked.isSelected){
 						this.CheckBoxLocked.isSelected = false;
-						this.CheckBoxLocked.setTexture(pd.resPadrao.uncheckedButton);
+						this.CheckBoxLocked.setTexture(pd.res.uncheckedButton);
 						this.locked = false;
 
 					}
 					else{
 						this.CheckBoxLocked.isSelected = true;
-						this.CheckBoxLocked.setTexture(pd.resPadrao.checkedButton);
+						this.CheckBoxLocked.setTexture(pd.res.checkedButton);
 						this.locked = true;
 					}
 				}
@@ -224,9 +224,9 @@ pd.GeneralDebugScreen = cc.Sprite.extend(
 				this.Target.getParent().addChild(this.boundingBoxImage, 1000);
 				this.boundingBoxImage.setOpacity(0);
 				this.CheckBoxFlipped.isSelected = false;
-				this.CheckBoxFlipped.setTexture(pd.resPadrao.uncheckedButton);
+				this.CheckBoxFlipped.setTexture(pd.res.uncheckedButton);
 				this.CheckBoxBounding.isSelected = false;
-				this.CheckBoxBounding.setTexture(pd.resPadrao.uncheckedButton);
+				this.CheckBoxBounding.setTexture(pd.res.uncheckedButton);
 				if(this.Target.getRotation() == 0){
 					this.editSpriteRotation.string = "0";
 				}
@@ -391,7 +391,7 @@ pd.GeneralDebugScreen = cc.Sprite.extend(
 		});
 }
 var createBoundingBox = function(x,y, width, height){				
-	var boundingBoxImage = new cc.Scale9Sprite(pd.resPadrao.BoundingBox);
+	var boundingBoxImage = new cc.Scale9Sprite(pd.res.BoundingBox);
 	boundingBoxImage.setPosition(x,y);
 	boundingBoxImage.setContentSize(width, height);
 	return boundingBoxImage;

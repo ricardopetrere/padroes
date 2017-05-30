@@ -17,16 +17,16 @@ pd.SceneDebugger =  cc.Node.extend({
 				sc = pd.DebugScenes[i];
 				if(sc.Callback)
 				this.runAction(new cc.Sequence(sc.Callback, new cc.CallFunc(function(){
-					proximo = new activeGameSpace[sc.Scene]();
+					proximo = new pd.delegate.activeNamespace[sc.Scene]();
 					var transition = FadeTransition(0.5, proximo);
-					pd.reter(transition);
+					pd.delegate.retain(transition);
 					cc.director.runScene(transition);
 				},this)));
 
 				else{
-					proximo = new activeGameSpace[sc.Scene]();
+					proximo = new pd.delegate.activeNamespace[sc.Scene]();
 					var transition = FadeTransition(0.5, proximo);
-					pd.reter(transition);
+					pd.delegate.retain(transition);
 					cc.director.runScene(transition);
 				}
 			}		
@@ -34,6 +34,6 @@ pd.SceneDebugger =  cc.Node.extend({
 	}
 });
 
-if(!isPalco){
+if(!pd.delegate.context == pd.Delegate.CONTEXT_PALCO){
 	pd.DebugScenes = [];
 }

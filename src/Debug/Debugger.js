@@ -66,39 +66,39 @@ pd.DebugScreen = cc.Layer.extend(
 			},
 			exitButtonFunc:function(){
 
-				this.UiGeral = new cc.Sprite(pd.resPadrao.mainDebugInterface);
+				this.UiGeral = new cc.Sprite(pd.res.mainDebugInterface);
 				this.UiGeral.setPosition(0,0);
 				this.addChild(this.UiGeral);
-				this.btn_general = new cc.Sprite(pd.resPadrao.btn_general);
+				this.btn_general = new cc.Sprite(pd.res.btn_general);
 				this.btn_general.setPosition(-165,0);
 				this.addChild(this.btn_general)
-				this.btn_audio = new cc.Sprite(pd.resPadrao.btn_audio);
+				this.btn_audio = new cc.Sprite(pd.res.btn_audio);
 				this.btn_audio.setPosition(170,0);
 				this.addChild(this.btn_audio)
-				this.btn_animation = new cc.Sprite(pd.resPadrao.btn_animation);
+				this.btn_animation = new cc.Sprite(pd.res.btn_animation);
 				this.btn_animation.setPosition(5,0);
 				this.addChild(this.btn_animation)
 			},
 			
 			initInterface2:function(){
-				this.AddInterface = new cc.Sprite(pd.resPadrao.debuggerUi2);
+				this.AddInterface = new cc.Sprite(pd.res.debuggerUi2);
 				this.AddInterface.setPosition(70,115);
 				this.addChild(this.AddInterface);
 				
-				this.anchorPercX = new cc.EditBox(new cc.Size(38,24), new cc.Scale9Sprite(pd.resPadrao.textBoxImage));
+				this.anchorPercX = new cc.EditBox(new cc.Size(38,24), new cc.Scale9Sprite(pd.res.textBoxImage));
 				this.anchorPercX.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 				this.anchorPercX.setFontColor(new cc.color(0,0,0,255));
 				this.anchorPercX.setPosition(50,144);
-				this.anchorPercY = new cc.EditBox(new cc.Size(38,24), new cc.Scale9Sprite(pd.resPadrao.textBoxImage));
+				this.anchorPercY = new cc.EditBox(new cc.Size(38,24), new cc.Scale9Sprite(pd.res.textBoxImage));
 				this.anchorPercY.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 				this.anchorPercY.setFontColor(new cc.color(0,0,0,255));
 				this.anchorPercY.setPosition(50,144);
 
-				this.anchorValorX= new cc.EditBox(new cc.Size(24,24), new cc.Scale9Sprite(pd.resPadrao.textBoxImage));
+				this.anchorValorX= new cc.EditBox(new cc.Size(24,24), new cc.Scale9Sprite(pd.res.textBoxImage));
 				this.anchorValorX.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 				this.anchorValorX.setFontColor(new cc.color(0,0,0,255));
 				this.anchorValorX.setPosition(50,144);
-				this.anchorValorY= new cc.EditBox(new cc.Size(24,24), new cc.Scale9Sprite(pd.resPadrao.textBoxImage));
+				this.anchorValorY= new cc.EditBox(new cc.Size(24,24), new cc.Scale9Sprite(pd.res.textBoxImage));
 				this.anchorValorY.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 				this.anchorValorY.setFontColor(new cc.color(0,0,0,255));
 				this.anchorValorY.setPosition(50,144);

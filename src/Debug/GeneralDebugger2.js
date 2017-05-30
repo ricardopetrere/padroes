@@ -17,7 +17,7 @@ if (!cc.sys.isNative) {
 				dragging:null,
 				mouseOffSet:null,
 				ctor:function(){
-					this._super(pd.resPadrao.debuggerUi2);
+					this._super(pd.res.debuggerUi2);
 				},
 				init:function()
 				{
@@ -45,26 +45,26 @@ if (!cc.sys.isNative) {
 					pd.setInput(this, pd.setInput.MOUSE_MOVE, "onMouseDragged");
 					pd.setInput(this, pd.setInput.MOUSE_UP, "onMouseUp");
 
-					this.btFechar = new cc.Sprite(pd.resPadrao.btn_fechar);
+					this.btFechar = new cc.Sprite(pd.res.btn_fechar);
 					this.btFechar.setPosition(155, 219);
 					this.btFechar.setScale(0.60);
 					this.addChild(this.btFechar, 5);
 
-					this.btMais = new cc.Sprite(pd.resPadrao.btn_mais);
+					this.btMais = new cc.Sprite(pd.res.btn_mais);
 					this.btMais.setPosition(140, 219);
 					this.btMais.setScale(0.60);
 					this.addChild(this.btMais, 5);
 
 					
-					//this.editAnchorPX = new cc.EditBox(new cc.Size(24,18), new cc.Scale9Sprite(pd.resPadrao.textBoxImage));
-						this.editAnchorPX = new cc.EditBox(new cc.Size(28, 20), new cc.Scale9Sprite(pd.resPadrao.BoundingBox));
+					//this.editAnchorPX = new cc.EditBox(new cc.Size(24,18), new cc.Scale9Sprite(pd.res.textBoxImage));
+						this.editAnchorPX = new cc.EditBox(new cc.Size(28, 20), new cc.Scale9Sprite(pd.res.BoundingBox));
 					this.editAnchorPX.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 					this.editAnchorPX.setFontColor(new cc.color(0,0,0,255));
 					this.editAnchorPX.setPosition(100,178);
 					this.editAnchorPX.setFontSize(16);
 					this.addChild(this.editAnchorPX);
 
-					this.editAnchorPY = new cc.EditBox(new cc.Size(28,20), new cc.Scale9Sprite(pd.resPadrao.BoundingBox));
+					this.editAnchorPY = new cc.EditBox(new cc.Size(28,20), new cc.Scale9Sprite(pd.res.BoundingBox));
 					this.editAnchorPY.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 					this.editAnchorPY.setFontColor(new cc.color(0,0,0,255));
 					this.editAnchorPY.setPosition(143,178);
@@ -72,14 +72,14 @@ if (!cc.sys.isNative) {
 					this.addChild(this.editAnchorPY);
 
 
-					this.editAnchorVX = new cc.EditBox(new cc.Size(30,20), new cc.Scale9Sprite(pd.resPadrao.BoundingBox));
+					this.editAnchorVX = new cc.EditBox(new cc.Size(30,20), new cc.Scale9Sprite(pd.res.BoundingBox));
 					this.editAnchorVX.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 					this.editAnchorVX.setFontColor(new cc.color(0,0,0,255));
 					this.editAnchorVX.setPosition(100,158);
 					this.editAnchorVX.setFontSize(10);
 					this.addChild(this.editAnchorVX);
 					
-					this.editAnchorVY = new cc.EditBox(new cc.Size(30,20), new cc.Scale9Sprite(pd.resPadrao.BoundingBox));
+					this.editAnchorVY = new cc.EditBox(new cc.Size(30,20), new cc.Scale9Sprite(pd.res.BoundingBox));
 					this.editAnchorVY.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 					this.editAnchorVY.setFontColor(new cc.color(0,0,0,255));
 					this.editAnchorVY.setPosition(143, 158);
@@ -88,7 +88,7 @@ if (!cc.sys.isNative) {
 
 					this.InternalAnchor = null;
 
-					this.editZOrder = new cc.EditBox(new cc.Size(70,20), new cc.Scale9Sprite(pd.resPadrao.BoundingBox));
+					this.editZOrder = new cc.EditBox(new cc.Size(70,20), new cc.Scale9Sprite(pd.res.BoundingBox));
 					this.editZOrder.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 					this.editZOrder.setFontColor(new cc.color(0,0,0,255));
 					this.editZOrder.setPosition(120,20);
@@ -96,7 +96,7 @@ if (!cc.sys.isNative) {
 					this.editZOrder.setFontSize(16);
 					this.addChild(this.editZOrder);
 					
-					this.editRed = new cc.EditBox(new cc.Size(32,20), new cc.Scale9Sprite(pd.resPadrao.BoundingBox));
+					this.editRed = new cc.EditBox(new cc.Size(32,20), new cc.Scale9Sprite(pd.res.BoundingBox));
 					this.editRed.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 					this.editRed.setFontColor(new cc.color(0,0,0,255));
 					this.editRed.setPosition(40,107);
@@ -104,7 +104,7 @@ if (!cc.sys.isNative) {
 					this.editRed.setFontSize(14);
 					this.addChild(this.editRed);
 					
-					this.editGreen = new cc.EditBox(new cc.Size(32,20), new cc.Scale9Sprite(pd.resPadrao.BoundingBox));
+					this.editGreen = new cc.EditBox(new cc.Size(32,20), new cc.Scale9Sprite(pd.res.BoundingBox));
 					this.editGreen.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 					this.editGreen.setFontColor(new cc.color(0,0,0,255));
 					this.editGreen.setPosition(40,87);
@@ -112,7 +112,7 @@ if (!cc.sys.isNative) {
 					this.editGreen.setFontSize(14);
 					this.addChild(this.editGreen);
 					
-					this.editBlue = new cc.EditBox(new cc.Size(32,20), new cc.Scale9Sprite(pd.resPadrao.BoundingBox));
+					this.editBlue = new cc.EditBox(new cc.Size(32,20), new cc.Scale9Sprite(pd.res.BoundingBox));
 					this.editBlue.setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC);	
 					this.editBlue.setFontColor(new cc.color(0,0,0,255));
 					this.editBlue.setPosition(40,67);
@@ -124,13 +124,13 @@ if (!cc.sys.isNative) {
 					this.colorFusion.setPosition(110, 40);
 					this.addChild(this.colorFusion);
 
-					this.CheckBoxLocked = new cc.Sprite(pd.resPadrao.uncheckedButton);
+					this.CheckBoxLocked = new cc.Sprite(pd.res.uncheckedButton);
 					this.CheckBoxLocked.isSelected = false;
 					this.CheckBoxLocked.setScale(0.5);
 					this.CheckBoxLocked.setPosition(139,106);
 					this.addChild(this.CheckBoxLocked);
 					
-					this.CheckBoxShowAP = new cc.Sprite(pd.resPadrao.uncheckedButton);
+					this.CheckBoxShowAP = new cc.Sprite(pd.res.uncheckedButton);
 					this.CheckBoxShowAP.isSelected = false;
 					this.CheckBoxShowAP.setScale(0.5);
 					this.CheckBoxShowAP.setPosition(147,87);
@@ -232,13 +232,13 @@ if (!cc.sys.isNative) {
 					if(this.Target != undefined && this.Target != null){
 						if(this.CheckBoxLocked.isSelected){
 							this.CheckBoxLocked.isSelected = false;
-							this.CheckBoxLocked.setTexture(pd.resPadrao.uncheckedButton);
+							this.CheckBoxLocked.setTexture(pd.res.uncheckedButton);
 							this.locked = false;
 
 						}
 						else{
 							this.CheckBoxLocked.isSelected = true;
-							this.CheckBoxLocked.setTexture(pd.resPadrao.checkedButton);
+							this.CheckBoxLocked.setTexture(pd.res.checkedButton);
 							this.locked = true;
 						}
 					}
@@ -248,17 +248,17 @@ if (!cc.sys.isNative) {
 					if(this.Target != undefined && this.Target != null){
 						if(this.CheckBoxShowAP.isSelected){
 							this.CheckBoxShowAP.isSelected = false;
-							this.CheckBoxShowAP.setTexture(pd.resPadrao.uncheckedButton);
+							this.CheckBoxShowAP.setTexture(pd.res.uncheckedButton);
 							this.crossActive = false;
 							this.crossRef.removeFromParent();
 							this.crossRef = null;
 						}
 						else{
 							this.CheckBoxShowAP.isSelected = true;
-							this.CheckBoxShowAP.setTexture(pd.resPadrao.checkedButton);
+							this.CheckBoxShowAP.setTexture(pd.res.checkedButton);
 							this.crossActive = true;
 							
-							var newCross = new cc.Sprite(pd.resPadrao.cross); 
+							var newCross = new cc.Sprite(pd.res.cross);
 							this.crossRef = newCross;
 							this.crossRef.setScale(1);
 							this.Target.addChild(newCross, 99999);
@@ -421,7 +421,7 @@ if (!cc.sys.isNative) {
 			});
 }
 var createBoundingBox = function(x,y, width, height){				
-	var boundingBoxImage = new cc.Scale9Sprite(pd.resPadrao.BoundingBox);
+	var boundingBoxImage = new cc.Scale9Sprite(pd.res.BoundingBox);
 	boundingBoxImage.setPosition(x,y);
 	boundingBoxImage.setContentSize(width, height);
 	return boundingBoxImage;
