@@ -61,6 +61,11 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     isPaused:false,
 
     /**
+     * @type {number}
+     */
+    transitionTime: 0,
+
+    /**
      * Construtor padrão.
      * @constructs
      */
@@ -154,10 +159,15 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
      */
     bootUp: function() {
         if(pd.debugMode == true || (this.context == pd.Delegate.CONTEXT_PALCO && this.activeNamespace.srcPath.lastIndexOf("jogo") == -1)) {
-            var mainScene = new this.activeNamespace.MainScene();
+            if (this.transitionTime > 0) {
+                var mainScene = FadeWhiteTransition(this.transitionTime, new this.activeNamespace.MainScene());
+            } else {
+                mainScene = new this.activeNamespace.MainScene();
+            }
         }
         else {
-            mainScene = FadeWhiteTransition(0.8, new this.activeNamespace.MainScene());
+            this.transitionTime = 0.8;
+            mainScene = FadeWhiteTransition(this.transitionTime, new this.activeNamespace.MainScene());
         }
 
         pd.delegate.retain(mainScene);
