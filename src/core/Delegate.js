@@ -321,6 +321,6 @@ pd.delegate = pd.Delegate.getInstance();
 
 /**
  * Atalho para facilitar a chamada.
- * @type {pd.Delegate.retain}
+ * @type {function}
  */
 pd.retain = pd.delegate.retain;

@@ -142,20 +142,31 @@ pd.createText = function(x, y, txt, font, size){
 
 /**
  * Cria um clipping node.
- * @param x {Number}
- * @param y {Number}
+ * @param parent {cc.Node}
+ * @param xOrClippingNodeRect {Number | cc.Rect}
+ * @param yOrMaskRect {Number | cc.Rect}
  * @param width {Number}
  * @param height {Number}
- * @param parent {cc.Node}
  * @param maskX {Number}
  * @param maskY {Number}
  * @param maskWidth {Number}
  * @param maskHeight {Number}
  * @returns {cc.ClippingNode}
  */
-pd.createClippingNode = function(x, y, width, height, parent, maskX, maskY, maskWidth, maskHeight) {
+pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width, height, maskX, maskY, maskWidth, maskHeight) {
+    if (xOrClippingNodeRect.x !== undefined) {
+        maskX = yOrMaskRect.x;
+        maskY = yOrMaskRect.y;
+        maskWidth = yOrMaskRect.width;
+        maskHeight = yOrMaskRect.height;
+
+        height = xOrClippingNodeRect.height;
+        width = xOrClippingNodeRect.width;
+        yOrMaskRect = xOrClippingNodeRect.y;
+        xOrClippingNodeRect = xOrClippingNodeRect.x;
+    }
     var clippingNode = new cc.ClippingNode();
-    clippingNode.attr({x:x, y:y, width:width, height:height});
+    clippingNode.attr({x:xOrClippingNodeRect, y:yOrMaskRect, width:width, height:height});
     parent.addChild(clippingNode, 50);
 
     const stencil = new cc.DrawNode();
@@ -197,7 +208,7 @@ pd.switchScene = function(transition, layer, delay) {
 
 /**
  * Verifica se um ponto está em um segmento de reta.
- * @param p {cc.p}
+ * @param p {cc.Point}
  * @param l {{p1:cc.p, p2:cc.p}}
  */
 pd.pointInLineIntersection = function(p, l) {
@@ -215,8 +226,8 @@ pd.lineInLineIntersection = function(l1, l2) {
 
 /**
  * Verifica se um ponto está dentro de um polígono.
- * @param p {cc.p}
- * @param vertexes {cc.p[]}
+ * @param p {cc.Point}
+ * @param vertexes {cc.Point[]}
  */
 pd.pointInPolygonIntersection= function(p, vertexes) {
     var hasCollided = false;
@@ -231,8 +242,8 @@ pd.pointInPolygonIntersection= function(p, vertexes) {
 
 /**
  * Verifica se um polígono intercepta outro polígono.
- * @param polygon1 {cc.p[]}
- * @param polygon2 {cc.p[]}
+ * @param polygon1 {cc.Point[]}
+ * @param polygon2 {cc.Point[]}
  */
 pd.polygonInPolygonIntersection = function(polygon1, polygon2) {
     //to-do...
@@ -240,8 +251,8 @@ pd.polygonInPolygonIntersection = function(polygon1, polygon2) {
 
 /**
  * Calcula a distância entre dois pontos.
- * @param p1 {cc.p}
- * @param p2 {cc.p}
+ * @param p1 {cc.Point}
+ * @param p2 {cc.Point}
  */
 pd.pointDistance = function(p1, p2) {
     //to-do...
@@ -249,7 +260,7 @@ pd.pointDistance = function(p1, p2) {
 
 /**
  * Calcula a distância entre um ponto e um segmento.
- * @param p {cc.p}
+ * @param p {cc.Point}
  * @param l {{p1:cc.p, p2:cc.p}}
  */
 pd.pointToSegmentDistance = function(p, l) {

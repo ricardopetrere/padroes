@@ -39,8 +39,6 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
             this.addChild(this.debugger);
             if(pd.debugMode == true) {
                 pd.setKeyboard(this, "onDebugKeyDown", "onDebugKeyUp");
-                this.debugger.reset();
-                this.debugger.addScene('mainScene');
             }
         }
     },
@@ -145,6 +143,13 @@ pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
         pd.audioEngine.setMute(false);
         pd.audioEngine.setEffectsVolume(1);
     },
+    onEnter: function () {
+        this._super();
+        if(pd.debugMode == true) {
+            this.debugger.reset();
+            this.debugger.addScene('MainScene');
+        }
+    },
 
     /**
      * Callback proveniente do clique no botão de fechar.
@@ -195,13 +200,13 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
     /**
      * Callback do botão de pause.
      * @param caller {cc.Node}
-     * @param e {boolean}
+     * @param isPressed {boolean}
      */
-    onPauseButton: function(caller, e){
+    onPauseButton: function(caller, isPressed){
         if(this.pauseButton.isLocked)
             return;
         
-        if(!this.pauseButton.isPaused && !e){
+        if(!this.pauseButton.isPaused && !isPressed){
             pd.audioEngine.playEffect(pd.res.fx_button);
             var pLayer = new pd.PauseLayer(this, this.pausedOpacity);
             this.addChild(pLayer,999999);

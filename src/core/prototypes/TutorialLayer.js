@@ -44,11 +44,11 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
     /**
 	 * @deprecated - utilizar this.btnArrowLeft.
      */
-	tecla_esq:null,
+	tecla_esquerda:null,
     /**
 	 * @deprecated - utilizar this.btnArrowRight.
      */
-	tecla_dir:null,
+	tecla_direita:null,
     /**
 	 * @deprecated - utilizar this.arrowKeys.
      */
@@ -61,6 +61,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
 	/**
 	 * @constructs
+	 * @param txt {String | cc.SpriteFrame}
 	 */
 	ctor: function(txt) {
 		this._super();
@@ -86,11 +87,11 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
     /**
 	 * Cria as setas do teclado e adiciona-as à layer.
-     * @param offset {cc.p} - ajuste relativo da posição das teclas.
+     * @param offset {cc.Point} - ajuste relativo da posição das teclas.
      * @returns {Array}
      */
 	createArrowKeys: function(offset) {
-		this.btnArrowLeft = this._createArrowButton("keyUp", 0, 60);
+		this.btnArrowUp = this._createArrowButton("keyUp", 0, 60);
 		this.btnArrowDown = this._createArrowButton("keyDown", 0, 0);
 		this.btnArrowLeft = this._createArrowButton("keyLeft", -60, 0);
 		this.btnArrowRight = this._createArrowButton("keyRight", 60, 0);
@@ -99,17 +100,17 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
 		////////// LEGADO: ///////////////
 		this.tecla_cima = this.btnArrowUp;
-		this.tecla_esq = this.btnArrowLeft;
+		this.tecla_esquerda = this.btnArrowLeft;
 		this.tecla_baixo = this.btnArrowDown;
-		this.tecla_dir = this.btnArrowRight;
+		this.tecla_direita = this.btnArrowRight;
 		this.vTeclas = this.arrowKeys;
 		///////////////////////////////////
 
 
 		for(var i = 0; i < this.arrowKeys.length; i++) {
 			this.arrowKeys[i].setScale(0.75);
-			this.arrowKeys[i].x += translate.x;
-			this.arrowKeys[i].y += translate.y;
+			this.arrowKeys[i].x += offset.x;
+			this.arrowKeys[i].y += offset.y;
 		}
 
 		return this.arrowKeys;
@@ -117,7 +118,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
     /**
 	 * Cria o ponteiro (setinha do mouse).
-     * @param initialPosition {cc.p}
+     * @param initialPosition {cc.Point}
      */
 	createPointer:function(initialPosition) {
 		var frameName = "mouse" in cc.sys.capabilities ? "seta_" : "dedo_";
@@ -135,7 +136,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
     /**
 	 * Cria o texto inferior.
-     * @param txt {String||cc.SpriteFrame}
+     * @param txt {String|cc.SpriteFrame}
      */
 	createBottomText: function(txt) {
 		if(!pd.delegate.activeNamespace.tutoriais.txtOffSetY)
@@ -143,7 +144,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
 		const label = pd.createText(0, 0, txt, "Calibri", 25);
 		label.setPosition(512, 140 + pd.delegate.activeNamespace.tutoriais.txtOffSetY);
-		this.addChild(label);
+		this.addChild(label, 999);
 	},
 
     /**
