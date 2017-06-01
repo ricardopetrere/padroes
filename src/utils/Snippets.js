@@ -43,6 +43,36 @@ pd.cloneArray = function(array) {
     return cloned;
 };
 
+/**
+ * Troca a posição de dois elementos de um array entre eles.
+ * @param array {Array}
+ * @param i {Number} - índice do primeiro elemento.
+ * @param j {Number} - índice do segundo elemento.
+ */
+pd.arraySwap = function(array, i, j) {
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+};
+
+/**
+ * Ordena um array.
+ * @param array {Array}
+ * @param [key = null] {Number} - a propriedade dos elementos do array que será usada como chave de ordenação.
+ * se for null, o elemento do array será a própria chave.
+ * @param [crescentOrder=true] {Boolean}
+ */
+pd.orderBy = function(array, key, crescentOrder) {
+    crescentOrder = crescentOrder == null || crescentOrder == undefined ? true : crescentOrder;
+    for(var i = 0 ; i < array.length ; i++) {
+        for(var j = i + 1 ; j < array.length; j++) {
+            if(((array[j][key] || array[j]) < (array[i][key] || array[i])) == !crescentOrder) {
+                pd.arraySwap(array, j, i);
+            }
+        }
+    }  
+};
+
 /****************************************************************************************/
 /****************************** #REGION: Randomization **********************************/
 /****************************************************************************************/
@@ -84,7 +114,7 @@ pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder){
         pd.AddToDebugger(obj);
     
     return obj;
-}
+};
 
 /**
  * Cria uma caixa de texto.
@@ -108,7 +138,33 @@ pd.createText = function(x, y, txt, font, size){
     text.setPosition(x, y);
     text.setAnchorPoint(0.5, 1);
     return text;
-}
+};
+
+/**
+ * Cria um clipping node.
+ * @param x {Number}
+ * @param y {Number}
+ * @param width {Number}
+ * @param height {Number}
+ * @param parent {cc.Node}
+ * @param maskX {Number}
+ * @param maskY {Number}
+ * @param maskWidth {Number}
+ * @param maskHeight {Number}
+ * @returns {cc.ClippingNode}
+ */
+pd.createClippingNode = function(x, y, width, height, parent, maskX, maskY, maskWidth, maskHeight) {
+    var clippingNode = new cc.ClippingNode();
+    clippingNode.attr({x:x, y:y, width:width, height:height});
+    parent.addChild(clippingNode, 50);
+
+    const stencil = new cc.DrawNode();
+    const rectangle = [cc.p(maskX, maskY),cc.p(maskX + maskWidth, maskY), cc.p(maskX + maskWidth, maskY + maskHeight), cc.p(maskX, maskY + maskHeight)];
+    stencil.drawPoly(rectangle, cc.color(255, 0, 0, 255), 0, cc.color(255, 255, 255, 0));
+    clippingNode.stencil = stencil;
+    //clippingNode.addChild(stencil); talvez precise para o mobile...
+    return clippingNode;
+};
 
 /****************************************************************************************/
 /******************************** #REGION: Navigation ***********************************/
@@ -119,19 +175,19 @@ pd.createText = function(x, y, txt, font, size){
  * @static
  * @param transition {cc.Class}
  * @param layer {cc.Node}
+ * @param [delay=0.5] {Number}
  */
-pd.switchScene = function(transition, layer) {
-    //TODO: verificar depois porque fazer essa verificação com a variável 'FinalizouCena'... deixar por enquanto.
-    if(layer.FinalizouCena == null || layer.FinalizouCena == undefined){
-        layer.FinalizouCena = true;
-        var delay = new cc.DelayTime(0.5);
-        var troca = new cc.CallFunc(function(){
+pd.switchScene = function(transition, layer, delay) {
+    if(!layer.didGetDestroyed) {
+        layer.didGetDestroyed = true;
+        var delay = new cc.DelayTime(delay || 0.5);
+        var funcChange = new cc.CallFunc(function(){
             cc.director.runScene(transition);
         }, layer);
-        var seqTroca = cc.Sequence.create(delay, troca);
+        var switchSequence = cc.Sequence.create(delay, funcChange);
         pd.delegate.retain(transition);
-        pd.delegate.retain(seqTroca);
-        layer.runAction(seqTroca);
+        pd.delegate.retain(switchSequence);
+        layer.runAction(switchSequence);
     }
 };
 
@@ -139,7 +195,66 @@ pd.switchScene = function(transition, layer) {
 /********************************* #REGION: Geometry ************************************/
 /****************************************************************************************/
 
-// TO-DO...
+/**
+ * Verifica se um ponto está em um segmento de reta.
+ * @param p {cc.p}
+ * @param l {{p1:cc.p, p2:cc.p}}
+ */
+pd.pointInLineIntersection = function(p, l) {
+    //to-do...
+};
+
+/**
+ * Verifica se dois segmentos de reta se interceptam.
+ * @param l1 {{p1:cc.p, p2:cc.p}}
+ * @param l2 {{p1:cc.p, p2:cc.p}}
+ */
+pd.lineInLineIntersection = function(l1, l2) {
+    //to-do...
+};
+
+/**
+ * Verifica se um ponto está dentro de um polígono.
+ * @param p {cc.p}
+ * @param vertexes {cc.p[]}
+ */
+pd.pointInPolygonIntersection= function(p, vertexes) {
+    var hasCollided = false;
+    var j = 0;
+
+    for(var i = 0, j = vertexes.length - 1; i < vertexes.length; j = i++) {
+        if(((vertexes[i].y > p.y ) != (vertexes[j].y > p.y) ) && (p.x < (vertexes[j].x - vertexes[i].x) * (p.y - vertexes[i].y) / (vertexes[j].y - vertexes[i].y) + vertexes[i].x))
+            hasCollided = !hasCollided;
+    }
+    return hasCollided;
+};
+
+/**
+ * Verifica se um polígono intercepta outro polígono.
+ * @param polygon1 {cc.p[]}
+ * @param polygon2 {cc.p[]}
+ */
+pd.polygonInPolygonIntersection = function(polygon1, polygon2) {
+    //to-do...
+};
+
+/**
+ * Calcula a distância entre dois pontos.
+ * @param p1 {cc.p}
+ * @param p2 {cc.p}
+ */
+pd.pointDistance = function(p1, p2) {
+    //to-do...
+};
+
+/**
+ * Calcula a distância entre um ponto e um segmento.
+ * @param p {cc.p}
+ * @param l {{p1:cc.p, p2:cc.p}}
+ */
+pd.pointToSegmentDistance = function(p, l) {
+    //to-do...
+};
 
 /****************************************************************************************/
 /*************************** #REGION: Native Capabilities *******************************/
@@ -180,7 +295,7 @@ pd.checkValidation = function() {
     else {
         return false;
     }
-}
+};
 
 /****************************************************************************************/
 /********************************** #REGION: Legacy *************************************/

@@ -12,6 +12,9 @@ pd.SceneDebugger =  cc.Node.extend({
 		pd.DebugScenes = [];		
 	},
 	onKeyUp:function(e){
+		if(!pd.DebugScenes)
+			return;
+
 		for(var i = 0; i < pd.DebugScenes.length; i ++){
 			if(e == 49 + i){
 				sc = pd.DebugScenes[i];

@@ -1,5 +1,7 @@
 //autoria minha =3 Vinicius Carlos Maschio
 var DebugArray = [];
+
+
 var AddToDebugger = function(obj){
 	DebugArray.push(obj);
 }

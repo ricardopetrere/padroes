@@ -61,6 +61,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     isPaused:false,
 
     /**
+     * O tempo de transição no modo debug.
      * @type {number}
      */
     transitionTime: 0,
@@ -134,6 +135,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
         this.activeNamespace = ns;
         activeGameSpace = ns; // legado - apenas para manter compatível!
+        pd.DebugScenes = [];
 
         if(this.context == pd.Delegate.CONTEXT_PALCO && ns.resPath.lastIndexOf("jogo") != -1) {
             if(ns.resPath.lastIndexOf("games") == -1)
@@ -258,7 +260,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
      */
     finish: function() {
         if(this.context == pd.Delegate.CONTEXT_PALCO) {
-            this.releaseAll(false);
+            this.releaseAll(true);
             pd.audioEngine.setMute(false);
             var transition = FadeWhiteTransition(0.6, new palco.MainScene());
             pd.delegate.retain(transition);

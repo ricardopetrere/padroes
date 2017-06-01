@@ -94,3 +94,23 @@ pd.resPadrao = pd.res;
  */
 DebugMode = undefined;
 
+/**
+ * @deprecated - desde a versão 2.2 - utilizar pd.Tutorial.
+ */
+pd.TutorialScene = pd.Tutorial;
+
+/**
+ * @deprecated - desde a versão 2.2.
+ */
+pd.TutorialLayer.prototype.criarTextoInferior = pd.TutorialLayer.prototype.createBottomText;
+
+/**
+ * @deprecated - desde a versão 2.2.
+ */
+pd.TutorialLayer.prototype.createTeclas = pd.TutorialLayer.prototype.createArrowKeys;
+
+/**
+ * @deprecated - desde a versão 2.2.
+ */
+pd.TutorialLayer.prototype.createPonteiro = pd.TutorialLayer.prototype.createPointer;
+

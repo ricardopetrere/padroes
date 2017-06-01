@@ -59,20 +59,30 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
      * @returns {pd.LoaderScene}
      */
     preload: function() {
-        var _cc = cc;
-        if(!_cc.loaderScene) {
-            _cc.loaderScene = new pd.LoaderScene();
-            _cc.loaderScene.setAnimationType(pd.debugMode ? pd.LoaderScene.ANIMATION_TYPE_NONE : pd.LoaderScene.ANIMATION_TYPE_FULL);
-            _cc.loaderScene.init();
-            cc.eventManager.addCustomListener(cc.Director.EVENT_PROJECTION_CHANGED, function(){
-                _cc.loaderScene._updateTransform();
-            });
-        }
-        _cc.loaderScene.initWithResources(pd.load_resources, this.onPreloadDidFinish, this);
+        if(!cc.sys.isNative) {
+            var _cc = cc;
+            if (!_cc.loaderScene) {
+                _cc.loaderScene = new pd.LoaderScene();
+                _cc.loaderScene.setAnimationType(pd.debugMode ? pd.LoaderScene.ANIMATION_TYPE_NONE : pd.LoaderScene.ANIMATION_TYPE_FULL);
+                _cc.loaderScene.init();
+                cc.eventManager.addCustomListener(cc.Director.EVENT_PROJECTION_CHANGED, function () {
+                    _cc.loaderScene._updateTransform();
+                });
+            }
 
-        cc.director.runScene(_cc.loaderScene);
-        this.loaderScene = _cc.loaderScene;
-        return _cc.loaderScene;
+            _cc.loaderScene.initWithResources(pd.load_resources, this.onPreloadDidFinish, this);
+
+            cc.director.runScene(_cc.loaderScene);
+            this.loaderScene = _cc.loaderScene;
+            return _cc.loaderScene;
+        }
+        else {
+            cc.LoaderScene.preload(pd.load_resources, function () {
+                this.loaderScene = new pd.LoaderScene();
+                cc.director.runScene(this.loaderScene);
+                this.onPreloadDidFinish();
+            }, this);
+        }
     },
 
     /**

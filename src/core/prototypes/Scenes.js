@@ -203,10 +203,11 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
         
         if(!this.pauseButton.isPaused && !e){
             pd.audioEngine.playEffect(pd.res.fx_button);
-            var pLayer = new pd.PauseLayer();
-            pLayer.init(this, null, this.pausedOpacity);
+            var pLayer = new pd.PauseLayer(this, this.pausedOpacity);
             this.addChild(pLayer,999999);
         }
+
+        cc.log("[pd.GameScene] O jogo foi pausado.");
     },
     /**
      * Executa a animação de vitória.
@@ -217,7 +218,7 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
     winGame: function(circleSpriteFrame, messageSpriteFrame, tiltScreen) {
         this.pauseButton.cleanup();
         const winLayer = new pd.WinLayer();
-        winLayer.init(this, new pd.delegate.activeNamespace.mainScene, circleSpriteFrame, messageSpriteFrame, tiltScreen);
+        winLayer.init(this, new pd.delegate.activeNamespace.MainScene(), circleSpriteFrame, messageSpriteFrame, tiltScreen);
         this.addChild(winLayer, 9999);
     },
 
@@ -229,7 +230,7 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
     loseGame: function(circleSpriteFrame, tiltScreen) {
         this.pauseButton.cleanup();
         const loseLayer = new pd.LoseLayer();
-        loseLayer.init(this, new pd.delegate.activeNamespace.mainScene, circleSpriteFrame, tiltScreen);
+        loseLayer.init(this, new pd.delegate.activeNamespace.MainScene(), circleSpriteFrame, tiltScreen);
         this.addChild(loseLayer, 9999);
     }
 });

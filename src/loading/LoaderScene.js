@@ -1,10 +1,10 @@
 /**
  * Created by Ryan Balieiro on 19/05/17.
  * @class
- * @extends {cc.LoaderScene}
+ * @extends {cc.LoaderScene|cc.Scene}
  * @classdesc Componente responsável pelo pré-carregamento do framework.
  */
-pd.LoaderScene = cc.LoaderScene.extend({/** @lends pd.LoaderScene#*/
+pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lends pd.LoaderScene#*/
 
     /**
      * @type {cc.Sprite}
@@ -37,6 +37,7 @@ pd.LoaderScene = cc.LoaderScene.extend({/** @lends pd.LoaderScene#*/
      */
     ctor: function(isLoadingModule) {
         this._super();
+
         if(this._isLoadingModule == true || this._isLoadingModule == false)
             this._isLoadingModule = isLoadingModule;
     },
@@ -68,6 +69,7 @@ pd.LoaderScene = cc.LoaderScene.extend({/** @lends pd.LoaderScene#*/
      */
     init: function() {
         this._super();
+
         for(var i in this) {
             if(this[i] instanceof cc.Node)
                 this[i].visible = false;
@@ -98,6 +100,12 @@ pd.LoaderScene = cc.LoaderScene.extend({/** @lends pd.LoaderScene#*/
      * Realiza a construção dos elementos da cena, adicionando-os e animando-os.
      */
     buildUp: function() {
+        if(cc.sys.isNative) {
+            const bg = new cc.LayerColor(pd.delegate.context == pd.Delegate.CONTEXT_PORTAL ? cc.color(255,135,10) : cc.color(101,167,228),
+                cc.winSize.width, cc.winSize.height);
+            this.addChild(bg);
+        }
+
         this._logo = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("portalLogo.png"));
         this.addChild(this._logo);
 
