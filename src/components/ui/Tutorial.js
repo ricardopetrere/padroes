@@ -27,6 +27,10 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
      */
     _bgLayers:null,
     /**
+     * @type {cc.Sprite[]}
+     */
+    _extraBgLayer:null,
+    /**
      * @type {cc.Sprite}
      */
     _title:null,
@@ -45,10 +49,10 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
     /**
      * @type {cc.Sprite|cc.LabelTTF}
      */
-    mainText:null,
+    headerText:null,
     /**
      * @type {cc.Sprite|cc.LabelTTF}
-     * @deprecated - utilizar a propriedade 'mainText'.
+     * @deprecated - utilizar a propriedade 'headerText'.
      */
     texto_objetivo:null,
     /**
@@ -89,8 +93,9 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
         this._handler.addChild(this, 99999);
         this._buildUI();
-
         this._performInitialTween();
+
+        pd.setMouse(this, "_onSwipeBegin", "_onSwipeMove", "_onSwipeFinish");
     },
 
     /**
@@ -103,6 +108,8 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
             pd.createSprite('background_02_instrucoes', 512, -500, this, 2),
             pd.createSprite('layer_instrucoes', 512, -500, this, 3)
         ];
+
+        this._extraBgLayer = pd.createSprite('layer_instrucoes', 512, -500, this, 3);
 
         this._tweenableObjects = [];
         for(var i in this._bgLayers)
@@ -146,7 +153,6 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
         //this._setClippingNode();
         this._tweenableObjects.push(this.headerText);
-        this._performInitialTween();
     },
 
     /**
@@ -155,23 +161,23 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
      */
     _performInitialTween: function() {
         var fadeScene = new cc.FadeIn(0.2);
-        var moveBackground01 = new cc.TargetedAction(this._bgLayers[0], new cc.MoveTo(0.35, 512, -60).easing(cc.easeSineOut()));
-        var moveBackground02 = new cc.TargetedAction(this._bgLayers[1], new cc.MoveTo(0.55, 512, -60).easing(cc.easeSineOut()));
-        var moveBackground03 = new cc.TargetedAction(this._bgLayers[2], new cc.MoveTo(0.75, 512, -74).easing(cc.easeSineOut()));
+        var moveBackground01 = new cc.TargetedAction(this._bgLayers[0], new cc.MoveTo(0.35, 512, 364).easing(cc.easeSineOut()));
+        var moveBackground02 = new cc.TargetedAction(this._bgLayers[1], new cc.MoveTo(0.55, 512, 364).easing(cc.easeSineOut()));
+        var moveBackground03 = new cc.TargetedAction(this._bgLayers[2], new cc.MoveTo(0.75, 512, 350).easing(cc.easeSineOut()));
         var fadeName = new cc.TargetedAction(this._title, new cc.FadeIn(0.1));
         var fadeBtnRight = new cc.TargetedAction(this._btnRight, new cc.FadeIn(0.1));
         var fadeBtnLeft = new cc.TargetedAction(this._btnLeft, new cc.FadeIn(0.1));
         var fadeMainText = new cc.TargetedAction(this.headerText, new cc.FadeIn(0.1));
-        var moveBtnExit = new cc.TargetedAction(this._btnExit, new cc.MoveTo(0.1, 1040, 740));
+        var moveBtnExit = new cc.TargetedAction(this._btnExit, new cc.MoveTo(0.1, 980, 740));
 
         var seq = new cc.Sequence(
             fadeScene,
             pd.delegate.context == pd.Delegate.CONTEXT_PORTAL ? new cc.TintTo(0.3, 225, 105, 10) : new cc.TintTo(0.3, 101, 167, 228),
             new cc.Spawn(moveBackground01, moveBackground02, moveBackground03),
             new cc.Spawn(fadeName, fadeBtnRight, fadeBtnLeft, fadeMainText),
-            new cc.CallFunc(this._showPage, this),
             new cc.CallFunc(this._updateIndicators, this),
-            moveBtnExit
+            moveBtnExit,
+            new cc.CallFunc(this._showPage, this)
         );
 
         this.runAction(seq);
@@ -201,6 +207,96 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
     },
 
     /**
+     * Verifica se um ponto (x,y) está contido dentro do bounding box de um botão.
+     * @param _x {int}
+     * @param _y {int}
+     * @param tolerance {int=}
+     * @returns {Boolean}
+     */
+    isInside: function(_button, _x, _y, tolerance) {
+        return cc.rectIntersectsRect(cc.rect(_x, _y, tolerance || 1, tolerance || 1), _button.getBoundingBox());
+    },
+
+    /**
+     * Manipula a inicialização do swipe.
+     * @param e {Object}
+     * @private
+     */
+    _onSwipeBegin: function(e) {
+        if(!this._isControlEnabled || this.isInside(this._btnLeft, e.getLocation().x, e.getLocation().y, 1) || this.isInside(this._btnRight, e.getLocation().x, e.getLocation().y, 1))
+            return;
+
+        const x = e.getLocation().x;
+        this._swipeInitialX = x;
+        this._accumulatedX = 0;
+        this._checkDisplayStates();
+        this._isSwiping = true;
+    },
+
+    /**
+     * Manipula a movimentação do swipe.
+     * @param e {Object}
+     * @private
+     */
+    _onSwipeMove: function(e) {
+        if(this._isSwiping) {
+            const x = e.getLocation().x;
+
+            const dx = x - this._swipeInitialX;
+            this._swipeInitialX = x;
+            this._accumulatedX += dx;
+
+            var divider = 1;
+            if((this._accumulatedX > 0 && this._currentPage == 0) || (this._accumulatedX < 0 && this._currentPage == pd.delegate.activeNamespace.tutoriais.length - 1)) {
+                divider = 2;
+            }
+
+            this._bgLayers[2].x = this._bgLayers[2].displayState.x + this._accumulatedX/divider;
+            this.headerText.x = this.headerText.displayState.x + this._accumulatedX/divider;
+            this._activeLayer.x = this._accumulatedX/divider;
+
+            if(Math.abs(this._accumulatedX) > 430 && divider == 1)
+                this._onSwipeFinish();
+        }
+    },
+
+    /**
+     * Manipula a finalização do swipe.
+     * @param e {Object}
+     * @private
+     */
+    _onSwipeFinish: function(e) {
+        if(this._isSwiping) {
+            this._isSwiping = false;
+            if (this._accumulatedX > 100 && this._currentPage > 0) {
+                this._onPreviousPage(this, false);
+            }
+            else if (this._accumulatedX < -100 && this._currentPage < pd.delegate.activeNamespace.tutoriais.length - 1) {
+                this._onNextPage(this, false);
+            }
+            else {
+                this._onSwipeCancel();
+            }
+        }
+    },
+
+    /**
+     * Reseta a página atual após o cancelamento de um swipe.
+     * @private
+     */
+    _onSwipeCancel: function() {
+        this.setControlEnabled(false);
+        this._bgLayers[2].runAction(cc.moveTo(0.1, this._bgLayers[2].displayState.x, this._bgLayers[2].y).easing(cc.easeSineOut()));
+        this.headerText.runAction(cc.moveTo(0.1, this.headerText.displayState.x, this.headerText.y).easing(cc.easeSineOut()));
+        this._activeLayer.runAction(cc.sequence(
+            cc.moveTo(0.1, 0, this._activeLayer.y).easing(cc.easeSineOut()),
+            cc.callFunc(function() {
+                this.setControlEnabled(true);
+            }, this)
+        ));
+    },
+
+    /**
      * Esconde a página atual e mostra a próxima.
      * @private
      */
@@ -210,21 +306,34 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
         this._activeLayer.stopAllActions();
         this._activeLayer.runAction(cc.sequence(
-            cc.moveTo(0.1, this._activeLayer.x + this._slideDirection*1024, this._activeLayer.y - 50).easing(cc.easeSineIn()),
-            cc.delayTime(0.1),
-            cc.callFunc(this._showPage, this, true)
+            cc.moveTo(0.25, this._activeLayer.x + this._slideDirection*pd.Tutorial.PAGE_SPACING, this._activeLayer.y - 50).easing(cc.easeSineIn()),
+            cc.delayTime(0.25),
+            cc.callFunc(this._onPageHidden, this, this._activeLayer)
         ));
 
         this._title.runAction(cc.jumpTo(0.3, this._title.x, this._title.y, 30, 1));
+        this._extraBgLayer.x = this._bgLayers[2].x;
+        this._extraBgLayer.y = this._bgLayers[2].y;
 
-        for(var i in this._tweenableObjects) {
-            var node = this._tweenableObjects[i];
-            var extraTime = 0;
-            node.cleanup();
-            if(this._bgLayers.lastIndexOf(node) != -1)
-                extraTime = (2 - this._bgLayers.lastIndexOf(node))*0.05;
+        this._extraBgLayer.runAction(cc.moveTo(
+            0.25,
+            this._bgLayers[2].displayState.x + this._slideDirection*pd.Tutorial.PAGE_SPACING,
+            this._bgLayers[2].displayState.y
+        ).easing(cc.easeSineIn()));
 
-            node.runAction(cc.moveTo(0.1 + extraTime, node.displayState.x + this._slideDirection*1024, node.displayState.y - 100).easing(cc.easeSineIn()));
+        this._showPage(this, true);
+    },
+
+    /**
+     * Deleta a layer anterior após ela ser removida da tela.
+     * @param caller {cc.Node}
+     * @param oldLayer {pd.TutorialLayer}
+     * @private
+     */
+    _onPageHidden: function(caller, oldLayer) {
+        if(oldLayer) {
+            oldLayer.setStatus(false);
+            oldLayer.removeFromParent();
         }
     },
 
@@ -238,33 +347,30 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._checkDisplayStates();
         this.setControlEnabled(true);
 
-        const oldLayer = this._activeLayer;
-        if(oldLayer) {
-            oldLayer.stop();
-            oldLayer.removeFromParent();
-        }
-
         this._activeLayer = pd.delegate.activeNamespace.tutoriais[this._currentPage];
         const newLayer = this._activeLayer;
 
         if(!newLayer._initialPosition)
             newLayer._initialPosition = {x:this._activeLayer.x, y:this._activeLayer.y};
 
-        this.addChild(newLayer, 5);
-        newLayer.stop();
+        if(newLayer.getParent() != this)
+            this.addChild(newLayer, 5);
+
+        newLayer.cleanup();
+        newLayer.setStatus(false);
         newLayer.setPosition(newLayer._initialPosition.x, newLayer._initialPosition.y);
-        newLayer.attr({opacity:shouldAnimate ? 255 : 0, x:shouldAnimate ? newLayer.x-this._slideDirection*1024 : newLayer.x});
+        newLayer.attr({opacity:shouldAnimate ? 255 : 0, x:shouldAnimate ? newLayer.x-this._slideDirection*pd.Tutorial.PAGE_SPACING : newLayer.x});
         newLayer.runAction(cc.sequence(
-            cc.spawn(cc.moveTo(0.15, shouldAnimate ? newLayer.x + this._slideDirection*1024 : newLayer.x, newLayer._initialPosition.y), cc.fadeIn(0.2)).easing(cc.easeSineOut()),
+            cc.spawn(cc.moveTo(0.25, shouldAnimate ? newLayer.x + this._slideDirection*pd.Tutorial.PAGE_SPACING : newLayer.x, newLayer._initialPosition.y), cc.fadeIn(0.2)).easing(cc.easeSineOut()),
             cc.callFunc(this._onPageShown, this))
         );
 
         for(var i in this._tweenableObjects) {
             var node = this._tweenableObjects[i];
             node.cleanup();
-            node.x = node.displayState.x - this._slideDirection*1024;
+            node.x = node.displayState.x - this._slideDirection*pd.Tutorial.PAGE_SPACING;
             node.y = node.displayState.y;
-            node.runAction(cc.moveTo(0.15, node.displayState.x, node.y).easing(cc.easeSineOut()));
+            node.runAction(cc.moveTo(0.25, node.displayState.x, node.y).easing(cc.easeSineOut()));
         }
     },
 
@@ -273,7 +379,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
      * @private
      */
     _onPageShown:function() {
-        this._activeLayer.run();
+        this._activeLayer.setStatus(true);
     },
     
     /**
@@ -374,8 +480,8 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
                     cc.delayTime(slideTime - 0.1),
                     cc.fadeOut(0.5),
                     cc.callFunc(function() {
-                        if(this._activeLayer)
-                            this._activeLayer.removeFromParent();
+                        this._activeLayer.setStatus(false);
+                        this._activeLayer.removeFromParent();
                         this._handler.onResume();
                     }, this)
                 )
@@ -404,3 +510,9 @@ pd.Tutorial.setBottomTextOffset = function(offset) {
 pd.Tutorial.setHeader = function(headerSpriteFrameOrText) {
     pd.delegate.activeNamespace.tutoriais.txt_objetivo = headerSpriteFrameOrText;
 };
+
+/**
+ * @constant
+ * @type {number}
+ */
+pd.Tutorial.PAGE_SPACING = 1800;

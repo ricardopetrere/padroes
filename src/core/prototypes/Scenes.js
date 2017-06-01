@@ -143,9 +143,12 @@ pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
         pd.audioEngine.setMute(false);
         pd.audioEngine.setEffectsVolume(1);
     },
+    /**
+     * @override
+     */
     onEnter: function () {
         this._super();
-        if(pd.debugMode == true) {
+        if(pd.debugMode == true && this.debugger) {
             this.debugger.reset();
             this.debugger.addScene('MainScene');
         }

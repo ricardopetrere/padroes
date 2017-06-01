@@ -32,6 +32,11 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
      */
 	pointer:null,
 
+	/**
+	 * @type {Boolean}
+	 */
+	isActiveAndRunning:false,
+
 	/////////////////// DEPRECIATIONS //////////////////////
     /**
 	 * @deprecated - utilizar this.btnArrowUp.
@@ -173,11 +178,26 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
 	},
 
+	/**
+	 * Seta o status da layer.
+	 * @param running {Boolean} - indica se a animação deve rodar ou não.
+	 */
+	setStatus: function(running) {
+		if(this.isActiveAndRunning && running)
+			return;
+
+		this.isActiveAndRunning = running;
+		if(running == true)
+			this.run();
+		else
+			this.stop();
+	},
+
     /**
 	 * Reseta a animação da layer.
      */
 	reset: function() {
-		this.stop();
-		this.run();
+		this.setStatus(false);
+		this.setStatus(true);
 	}
 });
