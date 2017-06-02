@@ -95,7 +95,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._buildUI();
         this._performInitialTween();
 
-        pd.setMouse(this, "_onSwipeBegin", "_onSwipeMove", "_onSwipeFinish");
+        pd.setMouse(this, "_onSwipeBegin", "_onSwipeMove", "_onSwipeFinish", 0);
     },
 
     /**
@@ -223,10 +223,10 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
      * @private
      */
     _onSwipeBegin: function(e) {
-        if(!this._isControlEnabled || this.isInside(this._btnLeft, e.getLocation().x, e.getLocation().y, 1) || this.isInside(this._btnRight, e.getLocation().x, e.getLocation().y, 1))
+        if(!this._isControlEnabled || this.isInside(this._btnLeft, e.getLocationX(), e.getLocationY(), 1) || this.isInside(this._btnRight, e.getLocationX(), e.getLocationY(), 1))
             return;
 
-        const x = e.getLocation().x;
+        const x = e.getLocationX();
         this._swipeInitialX = x;
         this._accumulatedX = 0;
         this._checkDisplayStates();
@@ -240,7 +240,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
      */
     _onSwipeMove: function(e) {
         if(this._isSwiping) {
-            const x = e.getLocation().x;
+            const x = e.getLocationX();
 
             const dx = x - this._swipeInitialX;
             this._swipeInitialX = x;
