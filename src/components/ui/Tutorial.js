@@ -71,6 +71,18 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
      * @type {Number}
      */
     _slideDirection:0,
+    /**
+     * @type {Number}
+     */
+    _swipeInitialX:0,
+    /**
+     * @type {Number}
+     */
+    _accumulatedX:0,
+    /**
+     * @type {Boolean}
+     */
+    _isSwiping:false,
 
     /**
      * @constructs
