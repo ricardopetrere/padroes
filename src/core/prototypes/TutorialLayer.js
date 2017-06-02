@@ -3,7 +3,7 @@
  *
  * @class {pd.TutorialLayer}
  * @extends {cc.Layer}
- * @classdesc Classe-base para a implementação de layers de tutorial.
+ * @classdesc Classe base para a implementação de layers de tutorial.
  */
 pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
@@ -24,18 +24,25 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
      */
 	btnArrowRight:null,
     /**
+	 * Vetor com referências para todas as teclas acima.
      * @type {pd.Animado[]}
      */
 	arrowKeys:null,
     /**
+	 * Setinha do mouse (ou dedo, se for mobile).
 	 * @type {pd.Animado}
      */
 	pointer:null,
-
 	/**
+	 * Indica se a página está sendo exibida e sua animação está rodando.
 	 * @type {Boolean}
 	 */
 	isActiveAndRunning:false,
+	/**
+	 * Índice da página (não setar manualmente!).
+	 * @type {Number}
+	 */
+	pageID:-1,
 
 	/////////////////// DEPRECIATIONS //////////////////////
     /**
@@ -65,16 +72,17 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	///////////////////////////////////////////////////////////
 
 	/**
+	 * Construtor padrao - informar uma string ou um sprite frame para o texto inferior (instrução da página).
 	 * @constructs
 	 * @param txt {String | cc.SpriteFrame}
 	 */
 	ctor: function(txt) {
 		this._super();
-		this.createBottomText(txt);
+		this._createBottomText(txt);
 	},
 
     /**
-	 * Cria um botão de arrow key.
+	 * Cria um botão de arrow key (apenas uso interno!)
      * @param frameName {String}
      * @param posX {Number}
      * @param posY {Number}
@@ -111,7 +119,6 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 		this.vTeclas = this.arrowKeys;
 		///////////////////////////////////
 
-
 		for(var i = 0; i < this.arrowKeys.length; i++) {
 			this.arrowKeys[i].setScale(0.75);
 			this.arrowKeys[i].x += offset.x;
@@ -122,7 +129,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	},
 
     /**
-	 * Cria o ponteiro (setinha do mouse).
+	 * Cria o ponteiro (setinha do mouse ou mãozinha, se for mobile).
      * @param initialPosition {cc.Point}
      */
 	createPointer:function(initialPosition) {
@@ -142,8 +149,9 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
     /**
 	 * Cria o texto inferior.
      * @param txt {String|cc.SpriteFrame}
+	 * @private
      */
-	createBottomText: function(txt) {
+	_createBottomText: function(txt) {
 		if(!pd.delegate.activeNamespace.tutoriais.txtOffSetY)
 			pd.delegate.activeNamespace.tutoriais.txtOffSetY = 0;
 
@@ -153,7 +161,8 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	},
 
     /**
-	 * Para e reseta todas as animaçoes internas.
+	 * Mata e reseta todas as animaçoes dos componentes internos. <br />
+	 * Sobescrever esta função para parar e resetar componentes customizados.
 	 * @virtual
      */
 	stop: function() {
@@ -171,7 +180,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	},
 
     /**
-	 * Roda a layer vigente.
+	 * Roda a animação da página.
 	 * @virtual.
      */
 	run: function() {
@@ -181,16 +190,41 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	/**
 	 * Seta o status da layer.
 	 * @param running {Boolean} - indica se a animação deve rodar ou não.
+	 * @param [shouldResetAfterStopping=true] {Boolean}
 	 */
-	setStatus: function(running) {
-		if(this.isActiveAndRunning && running)
+	setStatus: function(running, shouldResetAfterStopping) {
+		if(running && this.isActiveAndRunning) {
 			return;
+		}
 
 		this.isActiveAndRunning = running;
-		if(running == true)
+		if(!this.isActiveAndRunning) {
+			this.cleanup();
+			this._cleanAllRunningActions(this);
+			this.unscheduleUpdate();
+			if(shouldResetAfterStopping != false)
+				this.stop();
+		}
+		else {
 			this.run();
-		else
-			this.stop();
+		}
+	},
+
+	/**
+	 * Limpa todas as ações rodando na layer.
+	 * @param node {cc.Node}
+	 * @private
+	 */
+	_cleanAllRunningActions: function(node) {
+		const children = node.getChildren();
+
+		for(var i = 0; i < children.length ; i++) {
+			var child = children[i];
+			if(child) {
+				child.cleanup();
+				this._cleanAllRunningActions(child);
+			}
+		}
 	},
 
     /**
