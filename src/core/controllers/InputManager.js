@@ -48,7 +48,6 @@ input_createDownEvent = function(func, multiTouch){
 			event: cc.EventListener.TOUCH_ONE_BY_ONE, 
 			onTouchBegan: function (touch, event) {  
 				var target = event.getCurrentTarget();
-				cc.log('tst')
 				if(touch.getID() <= multiTouch){
 					target[func](touch);
 				}
@@ -106,7 +105,6 @@ input_createUpEvent = function(func, multiTouch){
 				return true;
 			},
 			onTouchEnded: function (touch, event) {  
-				cc.log('tst')
 				var target = event.getCurrentTarget();
 				if(touch.getID() <= multiTouch){
 					target[func](touch);
@@ -159,25 +157,24 @@ pd.setMouse = function(layer, funcMouseDown, funcMouseMove, funcMouseUp, multiTo
 	var listener = null;
 	if(cc.sys.isMobile) {
 		listener = cc.EventListener.create({
-			event: cc.EventListener.TOUCH_ALL_AT_ONCE,
-			onTouchesBegan: function (touch, event) {
+			event: cc.EventListener.TOUCH_ONE_BY_ONE,
+			onTouchBegan: function (touch, event) {
 				var target = event.getCurrentTarget();
 				if(touch.getID() <= multiTouch && target[funcMouseDown])
 					target[funcMouseDown](touch);
-				return false;
+				return true;
 			},
-			onTouchesEnded: function (touch, event) {
+			onTouchEnded: function (touch, event) {
 				var target = event.getCurrentTarget();
 				if(touch.getID() <= multiTouch && target[funcMouseUp])
 					target[funcMouseUp](touch);
-				return false;
-				//}
+				return true;
 			},
-			onTouchesMoved: function (touches, event) {
+			onTouchMoved: function (touch, event) {
 				var target = event.getCurrentTarget();
 				if(touch.getID() <= multiTouch && target[funcMouseMove])
-					target[funcMouseMove](touches);
-				return false;
+					target[funcMouseMove](touch);
+				return true;
 			},
 		});
 	}
