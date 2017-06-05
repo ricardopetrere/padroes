@@ -5,7 +5,6 @@
  * @classdesc Wrapper básico responsável por gerenciar operações de carregamento dentro da aplicação.
  */
 pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
-    
     /**
      * @type {pd.Loader}
      */
@@ -18,7 +17,8 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
     loaderScene:null,
 
     /**
-     * Matriz com os vetores de assets a serem carregados. Caso não haja nenhuma operação de carregamento em atividade, é igual a null.
+     * Matriz com os vetores de assets a serem carregados. <br/>
+     * Caso não haja nenhuma operação de carregamento em atividade, é igual a null.
      * @type {Object[]}
      */
     _res:null,
@@ -29,7 +29,7 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
     _currentRes:-1,
 
     /**
-     * Objeto responsável pelo carregamento de assets.
+     * Objeto nativo responsável pelo carregamento de assets.
      * @type {cc.Loader}
      */
     _ccLoader:null,
@@ -44,7 +44,10 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
     },
 
     /**
-     * Determina o método de carregamento a ser empregado.
+     * Determina o método de carregamento a ser empregado para o módulo atual. <br/>
+     * Dependendo do contexto ou do status da aplicação, uma estratégia de carregamento diferente deve ser empregada: <br/>
+     * - Se não estiver no palco ou se o palco estiver sendo inicializado, deve-se fazer um pré-carregamento da aplicação, carregando os recursos utilizados pelos padrões. <br/>
+     * - Se estiver no palco, e o usuário estiver abrindo no jogo, não há a necessidade de se fazer um pré-carregamento, pois os recursos utilizados pelos padrões já estão carregados na memória.
      */
     onModuleReady: function() {
         if(pd.delegate.context != pd.Delegate.CONTEXT_PALCO || pd.delegate.activeNamespace.srcPath.lastIndexOf("palco") != -1)
@@ -55,7 +58,6 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
 
     /**
      * Realiza o pré-carregamento da aplicação.
-     * @public
      * @returns {pd.LoaderScene}
      */
     preload: function() {
@@ -70,7 +72,7 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
                 });
             }
 
-            _cc.loaderScene.initWithResources(pd.load_resources, this.onPreloadDidFinish, this);
+            _cc.loaderScene.initWithResources(pd.load_resources, this._onPreloadDidFinish, this);
 
             cc.director.runScene(_cc.loaderScene);
             this.loaderScene = _cc.loaderScene;
@@ -80,16 +82,16 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
             cc.LoaderScene.preload(pd.load_resources, function () {
                 this.loaderScene = new pd.LoaderScene();
                 cc.director.runScene(this.loaderScene);
-                this.onPreloadDidFinish();
+                this._onPreloadDidFinish();
             }, this);
         }
     },
 
     /**
-     * Inicializa a aplicação após o pré-carregamento (assets da tela de loading).
+     * Inicializa a aplicação após a finalização da operação de preload.
      * @private
      */
-    onPreloadDidFinish: function() {
+    _onPreloadDidFinish: function() {
         cc.spriteFrameCache.addSpriteFrames(pd.resLoad.p_loader);
         this.loaderScene.buildUp();
     },

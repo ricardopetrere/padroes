@@ -1,6 +1,6 @@
 /**
  * Created by Ryan Balieiro on 25/05/17.
- * Protótipos de cena pré-implementados - utilizados como base para as cenas dos jogos.
+ * @desc Protótipos de cena pré-implementados - utilizados como base para as cenas dos jogos.
  *
  * @class
  * @extends {cc.Scene}
@@ -44,7 +44,7 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
     },
 
     /**
-     * Debugger (teclado)
+     * Trata comandos de debug disparados via teclado.
      * @param key {string}
      */
     onDebugKeyDown: function(key) {
@@ -68,7 +68,7 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
     },
 
     /**
-     * Debugger (teclado)
+     * Trata comandos de debug disparados via teclado.
      * @param key {string}
      */
     onDebugKeyUp: function(key) {},
@@ -143,6 +143,7 @@ pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
         pd.audioEngine.setMute(false);
         pd.audioEngine.setEffectsVolume(1);
     },
+
     /**
      * @override
      */
@@ -201,6 +202,15 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
     },
 
     /**
+     * Seta a opacidade da layer foco que cobre a cena após ela ser pausada. <br />
+     * Utilizar esta função para cobrir a cena de jogo em situações em que o usuário possa tirar vantagem do recurso de pause para observar a cena com o tempo de jogo pausado.
+     * @param {Number} pausedOpacity
+     */
+    setPausedOpacity: function(pausedOpacity) {
+        this.pausedOpacity = pausedOpacity;
+    },
+
+    /**
      * Callback do botão de pause.
      * @param caller {cc.Node}
      * @param isPressed {boolean}
@@ -217,6 +227,7 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
 
         cc.log("[pd.GameScene] O jogo foi pausado.");
     },
+
     /**
      * Executa a animação de vitória.
      * @param circleSpriteFrame {cc.SpriteFrame}

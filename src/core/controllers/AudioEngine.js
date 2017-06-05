@@ -2,7 +2,7 @@
  * Created by Ricardo Cardoso on 13/03/2017.
  * @class
  * @extends {cc.Class}
- * @classdesc Gerenciador de áudio da biblioteca.
+ * @classdesc Gerenciador de áudios.
  */
 pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
     /**

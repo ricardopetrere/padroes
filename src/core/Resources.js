@@ -92,7 +92,6 @@ for (var i in pd.res) {
 
 /**
  * Seta a cor da UI (realizar a chamada antes do carregamento dos recursos).
- * @static
  * @function
  * @param {pd.UI_COLOR_BLUE|pd.UI_COLOR_ORANGE} color
  */

@@ -12,8 +12,18 @@ var pd = {};
  */
 var padroesPath = cc.game.config["padroesPath"];
 
+/**
+ * Indica se o modo debug está ativo (não setar esta variável manualmente!).
+ * @type {boolean}
+ */
 pd.debugMode = cc.game.config[cc.game.CONFIG_KEY.debugMode] != cc.game.DEBUG_MODE_NONE;
+
+/**
+ * Versão atual dos padrões.
+ * @type {string}
+ */
 pd.version = "2.2";
+
 cc.log("[pd] Padrões Cocos Versão: " + pd.version);
 if(pd.debugMode)
     cc.log("[pd] O modo de debug está ativo!");
@@ -61,7 +71,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     isPaused:false,
 
     /**
-     * O tempo de transição no modo debug.
+     * O tempo de transição da tela de loading para a tela de entrada de um namespace no modo debug.
      * @type {number}
      */
     transitionTime: 0,
@@ -76,7 +86,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
     /**
      * Seta o contexto em que o jogo está a rodar.
-     * @param context
+     * @param context {String}
      */
     setContext: function(context) {
         this.context = context;
@@ -95,7 +105,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
     /**
      * Seta o status de pause/resume.
-     * @param paused
+     * @param paused {Boolean}
      */
     setPaused: function(paused) {
         this.isPaused = paused;
@@ -118,7 +128,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     },
 
     /**
-     * Inicializa o controlador.
+     * Inicializa os controles internos.
      */
     init: function() {
         this._pausedActions = null;
@@ -126,7 +136,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     },
 
     /**
-     * Inicializa o jogo com o namespace informado.
+     * Inicializa o namespace indicado.
      * @param ns {Object}
      */
     initWithNamespace: function(ns) {
@@ -157,7 +167,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     },
 
     /**
-     * Executa a inicialização do namespace ativo após o seu carregamento.
+     * Navega para a cena inicial do namespace carregado.
      */
     bootUp: function() {
         if(pd.debugMode == true || (this.context == pd.Delegate.CONTEXT_PALCO && this.activeNamespace.srcPath.lastIndexOf("jogo") == -1)) {
@@ -320,7 +330,7 @@ pd.Delegate.getInstance = function () {
 pd.delegate = pd.Delegate.getInstance();
 
 /**
- * Atalho para facilitar a chamada.
+ * Atalho para facilitar a chamada ao método de reter objetos.
  * @type {function}
  */
 pd.retain = pd.delegate.retain;

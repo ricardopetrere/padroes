@@ -24,7 +24,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
      */
 	btnArrowRight:null,
     /**
-	 * Vetor com referências para todas as teclas acima.
+	 * Vetor com referências para todas as teclas descritas acima.
      * @type {pd.Animado[]}
      */
 	arrowKeys:null,
@@ -34,7 +34,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
      */
 	pointer:null,
 	/**
-	 * Indica se a página está sendo exibida e sua animação está rodando.
+	 * Indica se a página está sendo exibida pelo tutorial e sua animação respecitva está rodando.
 	 * @type {Boolean}
 	 */
 	isActiveAndRunning:false,
@@ -211,7 +211,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	},
 
 	/**
-	 * Limpa todas as ações rodando na layer.
+	 * Limpa todas as ações rodando na layer recursivamente.
 	 * @param node {cc.Node}
 	 * @private
 	 */
@@ -228,7 +228,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	},
 
     /**
-	 * Reseta a animação da layer.
+	 * Reseta a animação.
      */
 	reset: function() {
 		this.setStatus(false);

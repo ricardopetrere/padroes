@@ -9,7 +9,7 @@
 
 /**
  * Embaralha um array.
- * @static
+ * @type {Function}
  * @param array {Array}
  * @returns {Array}
  */
@@ -20,7 +20,7 @@ pd.shuffle = function(array) {
 
 /**
  * Elimina um elemento do array e reorganiza-o (fazendo shifting de todos elementos à frente do item removido para a esquerda).
- * @static
+ * @type {Function}
  * @param array {Array}
  * @param index {Number}
  */
@@ -33,6 +33,7 @@ pd.rearrange = function(array, index) {
 
 /**
  * Clona um array.
+ * @type {Function}
  * @param array {Array}
  * @returns {Array}
  */
@@ -45,6 +46,7 @@ pd.cloneArray = function(array) {
 
 /**
  * Troca a posição de dois elementos de um array entre eles.
+ * @type {Function}
  * @param array {Array}
  * @param i {Number} - índice do primeiro elemento.
  * @param j {Number} - índice do segundo elemento.
@@ -57,9 +59,9 @@ pd.arraySwap = function(array, i, j) {
 
 /**
  * Ordena um array.
+ * @type {Function}
  * @param array {Array}
- * @param [key = null] {Number} - a propriedade dos elementos do array que será usada como chave de ordenação.
- * se for null, o elemento do array será a própria chave.
+ * @param [key = null] {Number} - a propriedade dos elementos do array que será usada como chave de ordenação. Se for null, o elemento do array será a própria chave.
  * @param [crescentOrder=true] {Boolean}
  */
 pd.orderBy = function(array, key, crescentOrder) {
@@ -79,7 +81,7 @@ pd.orderBy = function(array, key, crescentOrder) {
 
 /**
  * Retorna um número aleatório dentro de um intervalo pré-definido.
- * @static
+ * @type {Function}
  * @param min {Number}
  * @param max {Number}
  * @returns {Number}
@@ -94,7 +96,7 @@ pd.randomInterval = function(min, max) {
 
 /**
  * Cria uma sprite.
- * @static
+ * @type {Function}
  * @param spriteFrameName {String}
  * @param x {Number}
  * @param y {Number}
@@ -118,7 +120,7 @@ pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder){
 
 /**
  * Cria uma caixa de texto.
- * @static
+ * @type {Function}
  * @param x {Number}
  * @param y {Number}
  * @param txt {String}
@@ -173,7 +175,6 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
     const rectangle = [cc.p(maskX, maskY),cc.p(maskX + maskWidth, maskY), cc.p(maskX + maskWidth, maskY + maskHeight), cc.p(maskX, maskY + maskHeight)];
     stencil.drawPoly(rectangle, cc.color(255, 0, 0, 255), 0, cc.color(255, 255, 255, 0));
     clippingNode.stencil = stencil;
-    //clippingNode.addChild(stencil); talvez precise para o mobile...
     return clippingNode;
 };
 
@@ -183,7 +184,7 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
 
 /**
  * Troca a cena atual.
- * @static
+ * @type {Function}
  * @param transition {cc.Class}
  * @param layer {cc.Node}
  * @param [delay=0.5] {Number}
@@ -209,7 +210,7 @@ pd.switchScene = function(transition, layer, delay) {
 /**
  * Verifica se um ponto está em um segmento de reta.
  * @param p {cc.Point}
- * @param l {{p1:cc.p, p2:cc.p}}
+ * @param l {{p1:cc.Point, p2:cc.Point}}
  */
 pd.pointInLineIntersection = function(p, l) {
     //to-do...
@@ -217,8 +218,8 @@ pd.pointInLineIntersection = function(p, l) {
 
 /**
  * Verifica se dois segmentos de reta se interceptam.
- * @param l1 {{p1:cc.p, p2:cc.p}}
- * @param l2 {{p1:cc.p, p2:cc.p}}
+ * @param l1 {{p1:cc.Point, p2:cc.Point}}
+ * @param l2 {{p1:cc.Point, p2:cc.Point}}
  */
 pd.lineInLineIntersection = function(l1, l2) {
     //to-do...
@@ -261,7 +262,7 @@ pd.pointDistance = function(p1, p2) {
 /**
  * Calcula a distância entre um ponto e um segmento.
  * @param p {cc.Point}
- * @param l {{p1:cc.p, p2:cc.p}}
+ * @param l {{p1:cc.Point, p2:cc.Point}}
  */
 pd.pointToSegmentDistance = function(p, l) {
     //to-do...
@@ -273,7 +274,7 @@ pd.pointToSegmentDistance = function(p, l) {
 
 /**
  * Abre uma URL.
- * @static
+ * @type {Function}
  * @param url {String}
  */
 pd.openURL = function(url) {
@@ -285,7 +286,7 @@ pd.openURL = function(url) {
 
 /**
  * Salva a validação da aplicação localmente.
- * @static
+ * @type {Function}
  */
 pd.validate = function() {
     var value = "true";
@@ -296,7 +297,7 @@ pd.validate = function() {
 
 /**
  * Checa o status de validação.
- * @static
+ * @type {Function}
  */
 pd.checkValidation = function() {
     var data = lStorage.getItem("validado");

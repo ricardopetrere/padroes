@@ -26,7 +26,7 @@ pd.setInput = function(layer, eventId, funcToCall, multiTouch) {
 
 };
 
-input_createAccelerometer = function(func){
+input_createAccelerometer = function(func){t
 	cc.inputManager.setAccelerometerInterval(1/10);
 	cc.inputManager.setAccelerometerEnabled(true);
 	var listener = cc.EventListener.create({

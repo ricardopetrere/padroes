@@ -7,39 +7,44 @@
 pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lends pd.LoaderScene#*/
 
     /**
+     * Logo do J.Piaget/Piaget+Digital
      * @type {cc.Sprite}
      */
     _logo:null,
 
     /**
+     * Feedback de carregando.
      * @type {cc.Sprite}
      */
     _feedback:null,
 
     /**
-     * @type {cc.TextLabel}
+     * Mensagem de feedback.
+     * @type {cc.LabelTTF}
      */
     _textFeedback:null,
 
     /**
+     * O tipo da animação a ser feita pelos elementos de UI da tela.
      * @type {String}
      */
     _animationType:"",
 
     /**
+     * true, se a aplicação já foi pré-carregada - false, se a aplicação estiver sendo pré-carregada.
      * @type {Boolean}
      */
-    _isLoadingModule:false,
+    _didPreload:false,
 
     /**
      * @constructs
-     * @param isLoadingModule {Boolean}
+     * @param [didPreload=false] {Boolean}
      */
-    ctor: function(isLoadingModule) {
+    ctor: function(didPreload) {
         this._super();
 
-        if(this._isLoadingModule == true || this._isLoadingModule == false)
-            this._isLoadingModule = isLoadingModule;
+        if(this._didPreload == true || this._didPreload == false)
+            this._didPreload = didPreload;
     },
 
     /**
@@ -47,7 +52,7 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
      * @override
      */
     onEnter: function() {
-        if(!this._isLoadingModule)
+        if(!this._didPreload)
             this._super();
         else
             cc.Scene.prototype.onEnter.apply(this);
@@ -57,7 +62,7 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
      * Exit point da cena.
      */
     onExit: function() {
-        if(!this._isLoadingModule)
+        if(!this._didPreload)
             this._super();
         else
             cc.Scene.prototype.onExit.apply(this);
@@ -140,7 +145,7 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
     },
 
     /**
-     * Adiciona a animação de progresso.
+     * Inicializa o objeto de feedback de progresso.
      * @param {Number} x
      * @param {Number} y
      * @private
