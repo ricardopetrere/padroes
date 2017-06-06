@@ -238,7 +238,7 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
                 cc.callFunc(function () {
                     cc.audioEngine.playEffect(pd.resLoad.fx_woosh);
                 }, this),
-                cc.targetedAction(this._logo, cc.spawn(cc.moveBy(0.15, 1084, 0))),
+                cc.targetedAction(this._logo, cc.spawn(cc.moveBy(0.15, 1114, 0))),
                 cc.callFunc(pd.loader.onGameReadyToStart, pd.loader)
             ));
         }

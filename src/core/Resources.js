@@ -9,7 +9,6 @@
 
 /**
  * Recursos utilizados pela tela de loading.
- * @global
  * @static
  * @type {{s_logo: string, s_loadbar: string, s_loadbarBG: string, s_carregando: string, icon_plist: string, icon_sprite: string, s_loader: string, p_loader: string, fx_woosh: string}}
  */
@@ -37,7 +36,6 @@ for (var i in pd.resLoad) {
 
 /**
  * Recursos utilizados pelos padrões.
- * @global
  * @static
  * @type {{mainDebugInterface: string, btn_fechar: string, btn_mais: string, btn_audio: string, btn_animation: string, btn_general: string, debuggerUi: string, debuggerUi2: string, uncheckedButton: string, checkedButton: string, textBoxImage: string, BoundingBox: string, cross: string, s_input: string, p_input: string, s_menus: string, p_menus: string, s_Padroes: string, p_Padroes: string, fx_Erro: string, fx_Acerto: string, fx_BgmLose: string, fx_BgmWin: string, fx_escrever: string, s_fundoPreto: string, fx_flip: string, fx_exp: string, fx_star: string, fx_button: string}}
  */

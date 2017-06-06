@@ -22,7 +22,7 @@ pd.debugMode = cc.game.config[cc.game.CONFIG_KEY.debugMode] != cc.game.DEBUG_MOD
  * Versão atual dos padrões.
  * @type {string}
  */
-pd.version = "2.2";
+pd.version = "2.3";
 
 cc.log("[pd] Padrões Cocos Versão: " + pd.version);
 if(pd.debugMode)
@@ -181,9 +181,26 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
             this.transitionTime = 0.8;
             mainScene = FadeWhiteTransition(this.transitionTime, new this.activeNamespace.MainScene());
         }
-
         pd.delegate.retain(mainScene);
         cc.director.runScene(mainScene);
+
+        pd.debugger.init();
+        pd.debugger.addShortcut("MainScene");
+    },
+
+    /**
+     * Seta o tutorial do jogo.
+     * @param tutorialPages {pd.TutorialLayer[]}
+     * @param tutorialTitleSpriteFrameOrText {cc.SpriteFrame|cc.LabelTTF}
+     */
+    setTutorial: function(tutorialPages, tutorialTitleSpriteFrameOrText) {
+        this.activeNamespace.tutorialData = [];
+        pd.Tutorial.setHeader(tutorialTitleSpriteFrameOrText);
+        for(var i in tutorialPages) {
+            this.activeNamespace.tutorialData.push(tutorialPages[i]);
+        }
+
+        this.activeNamespace.tutoriais = this.activeNamespace.tutorialData; //legado.
     },
 
     /**

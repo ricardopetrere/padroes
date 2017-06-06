@@ -183,7 +183,7 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
 /****************************************************************************************/
 
 /**
- * Troca a cena atual.
+ * Troca a cena atual para a cena informada.
  * @type {Function}
  * @param transition {cc.Class}
  * @param layer {cc.Node}
@@ -196,12 +196,21 @@ pd.switchScene = function(transition, layer, delay) {
         var funcChange = new cc.CallFunc(function(){
             cc.director.runScene(transition);
         }, layer);
-        var switchSequence = cc.Sequence.create(delay, funcChange);
+        var switchSequence = cc.sequence(delay, funcChange);
         pd.delegate.retain(transition);
         pd.delegate.retain(switchSequence);
         layer.runAction(switchSequence);
     }
 };
+
+/**
+ * Obtém a cena atual -> utilizar a chamada direta pd.currentScene (útil para acessar elementos via console).
+ * @type {cc.Scene}
+ */
+pd.mainScene = null;
+pd.__defineGetter__("mainScene", function() {
+   return cc.director._runningScene;
+});
 
 /****************************************************************************************/
 /********************************* #REGION: Geometry ************************************/

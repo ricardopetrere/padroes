@@ -136,7 +136,13 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._buildUI();
         this._performInitialTween();
 
-        pd.setMouse(this, "_onSwipeBegin", "_onSwipeMove", "_onSwipeFinish", 0);
+        if(pd.Tutorial._hasInstance)
+            throw new Error("[pd.Tutorial] Não é possível instanciar dois tutoriais ao mesmo tempo!");
+        pd.Tutorial._hasInstance = true;
+
+        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, this._onSwipeBegin);
+        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, this, this._onSwipeMove);
+        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, this, this._onSwipeFinish);
     },
 
     /**
@@ -366,10 +372,11 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
      * Tweena para a página posterior à página atual.
      * @param caller {cc.Node}
      * @param isCallerPressed {Boolean}
+     * @param isSwiping {Boolean}
      * @private
      */
-    _onNextPage:function(caller, isCallerPressed){
-        if(caller.isVisible() && this._isControlEnabled && !isCallerPressed){
+    _onNextPage:function(caller, isCallerPressed, isSwiping){
+        if(caller.isVisible() && this._isControlEnabled && !isCallerPressed && (!this._isChangingPage  || isSwiping)){
             pd.audioEngine.playEffect(pd.resLoad.fx_swish);
             var totalPages = this._pages.length -1;
             
@@ -389,10 +396,11 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
      * Tweena para a página anterior à página atual.
      * @param caller {cc.Node}
      * @param isCallerPressed {Boolean}
+     * @param isSwiping {Boolean}
      * @private
      */
-    _onPreviousPage:function(caller,isCallerPressed){
-        if(caller.isVisible() && this._isControlEnabled && !isCallerPressed){
+    _onPreviousPage:function(caller,isCallerPressed, isSwiping){
+        if(caller.isVisible() && this._isControlEnabled && !isCallerPressed && (!this._isChangingPage || isSwiping)){
             pd.audioEngine.playEffect(pd.resLoad.fx_swish);
 
             if(this._currentPage <= 0)
@@ -465,10 +473,10 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         if(this._isSwiping) {
             this._isSwiping = false;
             if (this._accumulatedX > 100 && this._currentPage > 0) {
-                this._onPreviousPage(this, false);
+                this._onPreviousPage(this, false, true);
             }
             else if (this._accumulatedX < -100 && this._currentPage < this._pages.length - 1) {
-                this._onNextPage(this, false);
+                this._onNextPage(this, false, true);
             }
             else {
                 this._onSwipeCancel();
@@ -562,6 +570,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
             page.removeFromParent();
         }
         this._handler.onResume();
+        pd.Tutorial._hasInstance = false;
     }
 });
 
@@ -588,3 +597,10 @@ pd.Tutorial.setHeader = function(headerSpriteFrameOrText) {
  * @type {number}
  */
 pd.Tutorial.PAGE_SPACING = 1800;
+
+/**
+ * Indica se há uma instância ativa do tutorial.
+ * @type {boolean}
+ * @private
+ */
+pd.Tutorial._hasInstance = false;

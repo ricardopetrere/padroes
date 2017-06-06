@@ -6,7 +6,9 @@ var AddToDebugger = function(obj){
 	DebugArray.push(obj);
 }
 
-
+/**
+ * Arrumar a nomeação - mudar de 'Debug' para 'Editor'!
+ */
 pd.DebugScreen = cc.Layer.extend(
 		{
 			CheckBoxFlipped:null,

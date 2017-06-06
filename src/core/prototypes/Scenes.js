@@ -8,7 +8,7 @@
  */
 pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
     /**
-     * @type {pd.debugger}
+     * @type {pd.Debugger}
      */
     debugger:null,
     /**
@@ -35,10 +35,9 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
         pd.DebugArrayNonClickable = [];
         
         if(!(pd.delegate.context == pd.Delegate.CONTEXT_PALCO)) {
-            this.debugger = new pd.SceneDebugger();
-            this.addChild(this.debugger);
+            this.debugger = pd.debugger; // legado...
             if(pd.debugMode == true) {
-                pd.setKeyboard(this, "onDebugKeyDown", "onDebugKeyUp");
+                pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, this, this.onDebugKeyDown);
             }
         }
     },
@@ -48,30 +47,27 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
      * @param key {string}
      */
     onDebugKeyDown: function(key) {
-        switch(key) {
-            case '112':
-                if(!this.debugScreen) {
-                    this.debugScreen = new pd.DebugScreen();
-                    this.addChild(this.debugScreen, 1000);
-                    this.debugScreen.init();
-                }
-                else {
-                    this.debugScreen.removeFromParent();
-                    this.debugScreen = null;
-                }
-                break;
-            case '120':
-                pd.audioEngine.toggleMute();
-                cc.log('[pd.ScenePrototype] ToggleMute: ' + pd.audioEngine.isMuted);
-                break;
+        const intKey = parseInt(key);
+
+        if(intKey == 112) {
+            if(!this.debugScreen) {
+                this.debugScreen = new pd.DebugScreen();
+                this.addChild(this.debugScreen, 1000);
+                this.debugScreen.init();
+            }
+            else {
+                this.debugScreen.removeFromParent();
+                this.debugScreen = null;
+            }
+        }
+        else if(intKey == 120) {
+            pd.audioEngine.toggleMute();
+            cc.log('[pd.ScenePrototype] ToggleMute: ' + pd.audioEngine.isMuted);
+        }
+        else if(intKey > 48 && intKey < 58) {
+            pd.debugger.loadShortcut(intKey - 49);
         }
     },
-
-    /**
-     * Trata comandos de debug disparados via teclado.
-     * @param key {string}
-     */
-    onDebugKeyUp: function(key) {},
 
     /**
      * Pause handler.
@@ -149,10 +145,6 @@ pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
      */
     onEnter: function () {
         this._super();
-        if(pd.debugMode == true && this.debugger) {
-            this.debugger.reset();
-            this.debugger.addScene('MainScene');
-        }
     },
 
     /**
@@ -223,9 +215,8 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
             pd.audioEngine.playEffect(pd.res.fx_button);
             var pLayer = new pd.PauseLayer(this, this.pausedOpacity);
             this.addChild(pLayer,999999);
+            cc.log("[pd.GameScene] O jogo foi pausado.");
         }
-
-        cc.log("[pd.GameScene] O jogo foi pausado.");
     },
 
     /**
@@ -236,8 +227,8 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
      */
     winGame: function(circleSpriteFrame, messageSpriteFrame, tiltScreen) {
         this.pauseButton.cleanup();
-        const winLayer = new pd.WinLayer();
-        winLayer.init(this, new pd.delegate.activeNamespace.MainScene(), circleSpriteFrame, messageSpriteFrame, tiltScreen);
+        const winLayer = new pd.GameOverLayer();
+        winLayer.init(this, pd.GameOverLayer.TYPE_WIN, circleSpriteFrame, messageSpriteFrame, tiltScreen);
         this.addChild(winLayer, 9999);
     },
 
@@ -248,8 +239,8 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
      */
     loseGame: function(circleSpriteFrame, tiltScreen) {
         this.pauseButton.cleanup();
-        const loseLayer = new pd.LoseLayer();
-        loseLayer.init(this, new pd.delegate.activeNamespace.MainScene(), circleSpriteFrame, tiltScreen);
+        const loseLayer = new pd.GameOverLayer();
+        loseLayer.init(this, pd.GameOverLayer.TYPE_LOSE, circleSpriteFrame, null, tiltScreen);
         this.addChild(loseLayer, 9999);
     }
 });

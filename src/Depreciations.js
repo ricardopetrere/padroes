@@ -114,3 +114,89 @@ pd.TutorialLayer.prototype.createTeclas = pd.TutorialLayer.prototype.createArrow
  */
 pd.TutorialLayer.prototype.createPonteiro = pd.TutorialLayer.prototype.createPointer;
 
+/**
+ * @deprecated - desde a versão 2.3 - utilizar a função 'addShortcut'.
+ */
+pd.Debugger.prototype.addScene = function() {
+    cc.log("[pd] Uso de função depreciada: 'addScene'. Utilizar 'addShortcut' a partir de agora.");
+};
+
+/**
+ * @deprecated - desde a versão 2.3 - utilizar pd.inputManager.add.
+ * @example
+ * pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, this.onMouseDown);
+ */
+pd.setInput = function(layer, eventId, funcToCall, multiTouch) {
+    if(multiTouch)
+        pd.inputManager.config(layer, true);
+
+    switch(eventId) {
+        case 0:
+            pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, layer, funcToCall);
+            return layer._inputMetadata[pd.InputManager.EVENT_MOUSE_DOWN];
+        case 1:
+            pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, layer, funcToCall);
+            return layer._inputMetadata[pd.InputManager.EVENT_MOUSE_MOVE];
+        case 2:
+            pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, layer, funcToCall);
+            return layer._inputMetadata[pd.InputManager.EVENT_MOUSE_UP];
+        case 3:
+            pd.inputManager.add(pd.InputManager.EVENT_ACCELEROMETER, layer, funcToCall);
+            return layer._inputMetadata[pd.InputManager.EVENT_ACCELEROMETER];
+    }
+};
+
+/**
+ * @deprecated
+ * @type {number}
+ */
+pd.setInput.MOUSE_DOWN = 0;
+/**
+ * @deprecated
+ * @type {number}
+ */
+pd.setInput.MOUSE_MOVE = 1;
+/**
+ * @deprecated
+ * @type {number}
+ */
+pd.setInput.MOUSE_UP = 2;
+/**
+ * @deprecated
+ * @type {number}
+ */
+pd.setInput.ACCELEROMETER = 3;
+
+/**
+ * @deprecated - desde a versão 2.3 - utilizar pd.inputManager.add.
+ * @example
+ * pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, this, this.onMouseDown);
+ */
+pd.setKeyboard = function(layer, funcKeyDown, funcKeyUp) {
+    pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, layer, funcKeyDown);
+    pd.inputManager.add(pd.InputManager.EVENT_KEY_UP, layer, funcKeyUp);
+};
+
+/**
+ * @deprecated - desde a versão 2.3 - utilizar pd.inputManager.add.
+ */
+pd.setMouse = function(layer, funcMouseDown, funcMouseMove, funcMouseUp, multiTouch) {
+    if(multiTouch)
+        pd.inputManager.config(layer, true);
+    pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, layer, funcMouseDown);
+    pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, layer, funcMouseMove);
+    pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, layer, funcMouseUp);
+};
+
+/**
+ * @deprecated - desde a versão 2.3 - utilizar pd.inputManager.add.
+ */
+pd.setInputForButton = function(layer) {
+    pd.inputManager.config(layer, false, cc.EventListener.TOUCH_ALL_AT_ONCE, 1);
+    pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, layer, "onMouseDown");
+    pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, layer, "onMouseDragged");
+    pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, layer, "onMouseUp");
+
+    pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, layer, "keyDown");
+    pd.inputManager.add(pd.InputManager.EVENT_KEY_UP, layer, "keyReleased");
+};
