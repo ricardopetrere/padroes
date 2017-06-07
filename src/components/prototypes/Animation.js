@@ -6,7 +6,7 @@
  * @classdesc Protótipo base para componentes animados.
  */
 
-pd.Animation = cc.Sprite.extend({/** @lends jogo4av3por2.Animation#**/
+pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     /**
      * Indica se a animação atual está rodando.
      * @type {Boolean}

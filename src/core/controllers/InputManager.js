@@ -148,21 +148,21 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      */
     _checkInputSources: function(target, eventType, didAddCallback) {
         if(eventType.lastIndexOf("Mouse") != -1)
-            var source = pd.InputManager.Sources.INPUT_SOURCE_MOUSE;
+            var source = pd.InputManager.Sources.MOUSE;
         else if(eventType.lastIndexOf("Key") != -1)
-            source = pd.InputManager.Sources.INPUT_SOURCE_KEYBOARD;
+            source = pd.InputManager.Sources.KEYBOARD;
         else
-            source = pd.InputManager.Sources.INPUT_SOURCE_ACCELEROMETER;
+            source = pd.InputManager.Sources.ACCELEROMETER;
 
         if(!target._inputMetadata[source]) {
             switch(source) {
-                case pd.InputManager.Sources.INPUT_SOURCE_MOUSE:
+                case pd.InputManager.Sources.MOUSE:
                     this[didAddCallback ? "_activateMouse" : "_deactivateMouse"](target);
                     break;
-                case pd.InputManager.Sources.INPUT_SOURCE_KEYBOARD:
+                case pd.InputManager.Sources.KEYBOARD:
                     this[didAddCallback ? "_activateKeyboard" : "_deactivateKeyboard"](target);
                     break;
-                case pd.InputManager.Sources.INPUT_SOURCE_ACCELEROMETER:
+                case pd.InputManager.Sources.ACCELEROMETER:
                     this[didAddCallback ? "_activateAccelerometer" : "_deactivateAccelerometer"](target);
                     break;
             }
@@ -190,11 +190,11 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @private
      */
     _activateMouse: function(target) {
-        if(target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_MOUSE])
+        if(target._inputMetadata[pd.InputManager.Sources.MOUSE])
             return;
 
         if(cc.sys.isMobile) {
-            target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_MOUSE] = cc.EventListener.create({
+            target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
                 event: target._inputMetadata.touchEventTypeCode ? target._inputMetadata.touchEventTypeCode : cc.EventListener.TOUCH_ONE_BY_ONE,
                 onTouchBegan: function (touch, event) {
                     pd.inputManager._setEventMetadata("_mouseMeta", touch, event);
@@ -218,7 +218,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
         }
 
         else {
-            target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_MOUSE] = cc.EventListener.create({
+            target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
                 event: cc.EventListener.MOUSE,
                 onMouseDown: function (event) {
                     pd.inputManager._setEventMetadata("_mouseMeta", event);
@@ -253,7 +253,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             });
         }
 
-        this._addListener(target, target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_MOUSE]);
+        this._addListener(target, target._inputMetadata[pd.InputManager.Sources.MOUSE]);
     },
 
     /**
@@ -262,9 +262,9 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @private
      */
     _deactivateMouse: function(target) {
-        if(target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_MOUSE] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_DOWN] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_MOVE] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_SCROLL] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_UP] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_HOVER] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_PAN]) {
-            cc.eventManager.removeListener(target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_MOUSE]);
-            delete target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_MOUSE];
+        if(target._inputMetadata[pd.InputManager.Sources.MOUSE] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_DOWN] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_MOVE] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_SCROLL] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_UP] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_HOVER] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_PAN]) {
+            cc.eventManager.removeListener(target._inputMetadata[pd.InputManager.Sources.MOUSE]);
+            delete target._inputMetadata[pd.InputManager.Sources.MOUSE];
         }
     },
 
@@ -274,10 +274,10 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @private
      */
     _activateKeyboard: function(target) {
-        if(cc.sys.isMobile || target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_KEYBOARD])
+        if(cc.sys.isMobile || target._inputMetadata[pd.InputManager.Sources.KEYBOARD])
             return;
 
-        target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_KEYBOARD] = {
+        target._inputMetadata[pd.InputManager.Sources.KEYBOARD] = {
             event: cc.EventListener.KEYBOARD,
             onKeyPressed:  function(keyCode, event) {
                 pd.inputManager._setEventMetadata("_keyboardMeta", keyCode, event);
@@ -291,7 +291,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             }
         };
 
-        this._addListener(target, target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_KEYBOARD]);
+        this._addListener(target, target._inputMetadata[pd.InputManager.Sources.KEYBOARD]);
     },
 
     /**
@@ -300,9 +300,9 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @private
      */
     _deactivateKeyboard: function(target) {
-        if(target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_KEYBOARD] && !target._inputMetadata[pd.InputManager.EVENT_KEY_DOWN] && !target._inputMetadata[pd.InputManager.EVENT_KEY_UP]) {
-            cc.eventManager.removeListener(target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_KEYBOARD]);
-            delete target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_KEYBOARD];
+        if(target._inputMetadata[pd.InputManager.Sources.KEYBOARD] && !target._inputMetadata[pd.InputManager.EVENT_KEY_DOWN] && !target._inputMetadata[pd.InputManager.EVENT_KEY_UP]) {
+            cc.eventManager.removeListener(target._inputMetadata[pd.InputManager.Sources.KEYBOARD]);
+            delete target._inputMetadata[pd.InputManager.Sources.KEYBOARD];
         }
     },
 
@@ -312,13 +312,13 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @private
      */
     _activateAccelerometer: function(target) {
-        if(!cc.sys.isMobile || target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_ACCELEROMETER])
+        if(!cc.sys.isMobile || target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER])
             return;
 
         cc.inputManager.setAccelerometerInterval(1/10);
         cc.inputManager.setAccelerometerEnabled(true);
 
-        target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_ACCELEROMETER] = cc.EventListener.create({
+        target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER] = cc.EventListener.create({
             event:cc.EventListener.ACCELERATION,
 
             callback: function(acc, event) {
@@ -328,7 +328,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             }
         });
 
-        this._addListener(target, target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_KEYBOARD]);
+        this._addListener(target, target._inputMetadata[pd.InputManager.Sources.KEYBOARD]);
     },
 
     /**
@@ -337,9 +337,9 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @private
      */
     _deactivateAccelerometer: function(target) {
-        if(target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_ACCELEROMETER] && !target._inputMetadata[pd.InputManager.EVENT_ACCELEROMETER]) {
-            cc.eventManager.removeListener(target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_ACCELEROMETER]);
-            delete target._inputMetadata[pd.InputManager.Sources.INPUT_SOURCE_ACCELEROMETER];
+        if(target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER] && !target._inputMetadata[pd.InputManager.EVENT_ACCELEROMETER]) {
+            cc.eventManager.removeListener(target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER]);
+            delete target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER];
         }
     }
 });
@@ -425,7 +425,7 @@ pd.InputManager.EVENT_ACCELEROMETER = "eventTypeAccelerometer";
  * @enum {String}
  */
 pd.InputManager.Sources = {
-    INPUT_SOURCE_MOUSE: "inputSourceMouse",
-    INPUT_SOURCE_KEYBOARD: "inputSourceKeyboard",
-    INPUT_SOURCE_ACCELEROMETER: "inputSourceAccelerometer"
+    MOUSE: "inputSourceMouse",
+    KEYBOARD: "inputSourceKeyboard",
+    ACCELEROMETER: "inputSourceAccelerometer"
 };
