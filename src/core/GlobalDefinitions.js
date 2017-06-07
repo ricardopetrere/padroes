@@ -1,10 +1,10 @@
 /**
- * Created by ??? on ???.
- * @desc Listagem de recursos utilizados pelo palco.
+ * Created by Ryan Balieiro on 07/06/17.
+ * Lista de constantes globais do namespace 'Padrões'.
  */
 
 /****************************************************************************************/
-/******************************* #REGION: LoadingScreen *********************************/
+/******************************* #REGION: Resources *************************************/
 /****************************************************************************************/
 
 /**
@@ -20,19 +20,6 @@ pd.resLoad = {
     fx_swish: padroesPath+"/res/snd/loading/swish.mp3",
     lato: padroesPath+"/res/font/Lato.ttf"
 };
-
-/**
- * @type {Array}
- */
-pd.load_resources = [];
-for (var i in pd.resLoad) {
-    pd.load_resources.push(pd.resLoad[i]);
-}
-
-
-/****************************************************************************************/
-/********************************** #REGION: Padroes ************************************/
-/****************************************************************************************/
 
 /**
  * Recursos utilizados pelos padrões.
@@ -83,39 +70,64 @@ pd.res = {
 /**
  * @type {Array}
  */
+pd.load_resources = [];
+for (var i in pd.resLoad) {
+    pd.load_resources.push(pd.resLoad[i]);
+}
+
+/**
+ * @type {Array}
+ */
 pd.g_resources = [];
 for (var i in pd.res) {
     pd.g_resources.push(pd.res[i]);
 }
 
+/****************************************************************************************/
+/******************************* #REGION: Enumerators ***********************************/
+/****************************************************************************************/
+
 /**
- * Seta a cor da UI (realizar a chamada antes do carregamento dos recursos).
- * @function
- * @param {pd.UI_COLOR_BLUE|pd.UI_COLOR_ORANGE} color
+ * Enumerador com o mapeamento de teclas comumente utilizadas.
+ * @enum {number}
  */
-pd.setUIColor = function(color) {
-    const uiElements = ["s_input", "p_input", "s_menus", "p_menus"];
-    if(pd.res[uiElements[0]].lastIndexOf(color) != -1)
-        return;
-
-    const currentPattern = color == pd.UI_COLOR_BLUE ? pd.UI_COLOR_ORANGE : pd.UI_COLOR_BLUE;
-    for(var i in uiElements) {
-        pd.res[uiElements[i]] = pd.res[uiElements[i]].replace(currentPattern, color);
-    }
-
-    pd.g_resources = [];
-    for (var i in pd.res)
-        pd.g_resources.push(pd.res[i]);
+pd.Keys = {
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    A: 65,
+    W: 87,
+    D: 68,
+    S: 83,
+    DPAD0: 96, //Pros outros, somar com esse aqui.
+    F0: 111, //Pros outros, somar com esse aqui.
+    CTRL: 17,
+    SHIFT: 16,
+    ALT: 18,
+    WIN: 91,
+    TAB: 9,
+    CAPS: 20,
+    SPACE: 32,
+    DELETE: 46,
+    ZERO: 48,
+    ESC: 27 //Cuidado: nas pd.GameLayer, essa tecla chama a pauseLayer.
 };
 
 /**
- * @constant
- * @type {string}
+ * Enumerador com os zOrders os elementos de interface dos padrões.
+ * @enum {number}
  */
-pd.UI_COLOR_BLUE = "blueUI";
-
-/**
- * @constant
- * @type {string}
- */
-pd.UI_COLOR_ORANGE = 'orangeUI';
+pd.ZOrders = {
+    TUTORIAL_BUTTON: 10,
+    TUTORIAL_POINTER: 30,
+    TUTORIAL_PAGE: 50,
+    TUTORIAL_CONTROLLER_BUTTON:99,
+    TUTORIAL_PAGE_BOTTOM_TEXT: 999,
+    PAUSE_LAYER_UI_ELEMENTS:9000,
+    DEBUG_SCREEN: 1000,
+    PAUSE_BUTTON: 9000,
+    GAME_OVER_LAYER: 9999,
+    TUTORIAL_LAYER: 99999,
+    PAUSE_LAYER: 999999
+};

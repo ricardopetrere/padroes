@@ -132,7 +132,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         if(!shouldPauseHandler)
             this._handler.onPause();
 
-        this._handler.addChild(this, 99999);
+        this._handler.addChild(this, pd.ZOrders.TUTORIAL_LAYER);
         this._buildUI();
         this._performInitialTween();
 
@@ -164,26 +164,26 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._title.setOpacity(0);
 
         this._btnExit = new pd.Button(1090, 740, this, '_onCloseButton', 'btn_sair_instrucoes.png', 'btp_sair_instrucoes.png');
-        this.addChild(this._btnExit, 99);
+        this.addChild(this._btnExit, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
 
         this._btnRight = new pd.Button(987, 360, this, '_onNextPage', "btn_next_instrucoes.png", "btp_next_instrucoes.png");
-        this.addChild(this._btnRight, 99);
+        this.addChild(this._btnRight, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._btnRight.setFlippedX(true);
         this._btnRight.setOpacity(0);
         this._btnRight.setVisible(pd.delegate.activeNamespace.tutoriais.length > 1);
 
         this._btnLeft = new pd.Button(37, 360, this, '_onPreviousPage', "btn_next_instrucoes.png", "btp_next_instrucoes.png");
-        this.addChild(this._btnLeft, 99);
+        this.addChild(this._btnLeft, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._btnLeft.setOpacity(0);
         this._btnLeft.setVisible(false);
 
         this.headerText = pd.createText(512, 660, pd.delegate.activeNamespace.tutoriais.txt_objetivo, "Calibri", 25);
-        this.addChild(this.headerText, 99);
+        this.addChild(this.headerText, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this.headerText.setOpacity(0);
         this.texto_objetivo = this.headerText; //legado!
 
         this._extraHeaderText = pd.createText(512, 660, pd.delegate.activeNamespace.tutoriais.txt_objetivo, "Calibri", 25);
-        this.addChild(this._extraHeaderText, 99);
+        this.addChild(this._extraHeaderText, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._extraHeaderText.setOpacity(0);
 
         this._initPages();
@@ -211,7 +211,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
             page.setCascadeOpacityEnabled(true);
             page.setOpacity(0);
             page.setVisible(false);
-            this.addChild(page, 50);
+            this.addChild(page, pd.ZOrders.TUTORIAL_PAGE);
             this._pages.push(page);
         }
     },

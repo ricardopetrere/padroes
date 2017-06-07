@@ -95,6 +95,18 @@ pd.randomInterval = function(min, max) {
 /****************************************************************************************/
 
 /**
+ * Busca um SpriteFrame no cache.
+ * @param {String} spriteFrameName
+ * @returns {cc.SpriteFrame}
+ */
+pd.getSpriteFrame = function(spriteFrameName) {
+    if(spriteFrameName.lastIndexOf("png") == -1)
+        spriteFrameName += ".png";
+
+    return cc.spriteFrameCache.getSpriteFrame(spriteFrameName);
+};
+
+/**
  * Cria uma sprite.
  * @type {Function}
  * @param spriteFrameName {String}
@@ -317,6 +329,42 @@ pd.checkValidation = function() {
         return false;
     }
 };
+
+/****************************************************************************************/
+/******************************* #REGION: Configuration *********************************/
+/****************************************************************************************/
+
+/**
+ * Seta a cor da UI (realizar a chamada antes do carregamento dos recursos).
+ * @function
+ * @param {pd.UI_COLOR_BLUE|pd.UI_COLOR_ORANGE} color
+ */
+pd.setUIColor = function(color) {
+    const uiElements = ["s_input", "p_input", "s_menus", "p_menus"];
+    if(pd.res[uiElements[0]].lastIndexOf(color) != -1)
+        return;
+
+    const currentPattern = color == pd.UI_COLOR_BLUE ? pd.UI_COLOR_ORANGE : pd.UI_COLOR_BLUE;
+    for(var i in uiElements) {
+        pd.res[uiElements[i]] = pd.res[uiElements[i]].replace(currentPattern, color);
+    }
+
+    pd.g_resources = [];
+    for (var i in pd.res)
+        pd.g_resources.push(pd.res[i]);
+};
+
+/**
+ * @constant
+ * @type {string}
+ */
+pd.UI_COLOR_BLUE = "blueUI";
+
+/**
+ * @constant
+ * @type {string}
+ */
+pd.UI_COLOR_ORANGE = 'orangeUI';
 
 /****************************************************************************************/
 /********************************** #REGION: Legacy *************************************/

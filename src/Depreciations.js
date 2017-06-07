@@ -200,3 +200,24 @@ pd.setInputForButton = function(layer) {
     pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, layer, "keyDown");
     pd.inputManager.add(pd.InputManager.EVENT_KEY_UP, layer, "keyReleased");
 };
+
+/**
+ * @deprecated - desde a versão 2.3 - utilizar pd.Animation.
+ */
+pd.Animado = pd.Animation;
+
+/**
+ * @deprecated - desde a versão 2.3 - utilizar changeAndPlay, changeAndLoop ou changeAndStop.
+ */
+pd.Animation.prototype.changeAnimation = function(newAnimation, repeatable, newSpeed, taxaRepeticao, callBack) {
+    if(repeatable)
+        this.changeAndLoop(newAnimation, newSpeed);
+    else
+        this.changeAndPlay(newAnimation, callBack, this.getParent(), repeatable, taxaRepeticao, newSpeed);
+};
+
+/**
+ * @deprecated
+ * @type {number}
+ */
+SingletonId_Animacoes = 0;

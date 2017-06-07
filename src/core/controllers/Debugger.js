@@ -57,7 +57,7 @@ pd.Debugger = cc.Class.extend({/**@lends pd.Debugger#*/
     },
 
     /**
-     * Verifica se um atalho já foi adicionado (uso interno).
+     * Verifica se um atalho já foi adicionado para evitar duplicações. (uso interno).
      * @param targetSceneName {String|null} - a cena para qual deseja-se navegar.
      * @param callbackFunction {Function|null} - a função de callback a ser executada.
      * @param callbackCaller {*|null} - o objeto responsável por chamar a função de callback.
@@ -68,7 +68,10 @@ pd.Debugger = cc.Class.extend({/**@lends pd.Debugger#*/
     _hasShortcut: function(targetSceneName, callbackFunction, callbackCaller, callbackArguments) {
         for(var i in this._shortcuts) {
             var shortcut = this._shortcuts[i];
-            if(shortcut.targetSceneName == targetSceneName && shortcut.callbackFunction == callbackFunction && shortcut.callbackCaller == callbackCaller && shortcut.callbackArguments == callbackArguments) {
+            var func1 = shortcut.callbackFunction ? shortcut.callbackFunction.toString() : null;
+            var func2 = callbackFunction ? callbackFunction.toString() : null;
+
+            if(shortcut.targetSceneName == targetSceneName && func1 == func2) {
                 return true;
             }
         }
@@ -95,7 +98,7 @@ pd.Debugger = cc.Class.extend({/**@lends pd.Debugger#*/
             cc.director.runScene(transition);
         }
 
-        cc.log("[pd.Debugger] Carregando Shortcut["+ id +"] para a cena: " +
+        cc.log("[pd.Debugger] Carregando shortcut vinculado à tecla: ["+ (id+1) +"]. Redirecionando para a cena: " +
             (shortcut.targetSceneName ? shortcut.targetSceneName : "[MesmaCena]"))
     }
 });

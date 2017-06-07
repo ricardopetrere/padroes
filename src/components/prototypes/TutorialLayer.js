@@ -8,29 +8,29 @@
 pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
     /**
-	 * @type {pd.Animado}
+	 * @type {pd.Animation}
      */
 	btnArrowUp: null,
     /**
-     * @type {pd.Animado}
+     * @type {pd.Animation}
      */
 	btnArrowDown: null,
     /**
-     * @type {pd.Animado}
+     * @type {pd.Animation}
      */
 	btnArrowLeft:null,
     /**
-     * @type {pd.Animado}
+     * @type {pd.Animation}
      */
 	btnArrowRight:null,
     /**
 	 * Vetor com referências para todas as teclas descritas acima.
-     * @type {pd.Animado[]}
+     * @type {pd.Animation[]}
      */
 	arrowKeys:null,
     /**
 	 * Setinha do mouse (ou dedo, se for mobile).
-	 * @type {pd.Animado}
+	 * @type {pd.Animation}
      */
 	pointer:null,
 	/**
@@ -86,15 +86,15 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
      * @param frameName {String}
      * @param posX {Number}
      * @param posY {Number}
-	 * @returns {pd.Animado}
+	 * @returns {pd.Animation}
      * @private
      */
 	_createArrowButton: function(frameName, posX, posY) {
-		const btn = new pd.Animado();
+		const btn = new pd.Animation();
         btn.addAnimation('normal', 1, 1, frameName);
         btn.addAnimation('pressed', 2, 2, frameName);
         btn.setPosition(posX, posY);
-        this.addChild(btn, 10);
+        this.addChild(btn, pd.ZOrders.TUTORIAL_BUTTON);
         return btn;
 	},
 
@@ -135,11 +135,11 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	createPointer:function(initialPosition) {
 		var frameName = "mouse" in cc.sys.capabilities ? "seta_" : "dedo_";
 		
-		this.pointer = new pd.Animado();
+		this.pointer = new pd.Animation();
 		this.pointer.addAnimation('normal', 1, 1, frameName);
 		this.pointer.addAnimation('pressed', 1, 2, frameName);
 		this.pointer.setPosition(initialPosition.x, initialPosition.y);
-		this.addChild(this.pointer,30);
+		this.addChild(this.pointer, pd.ZOrders.TUTORIAL_POINTER);
 		this.pointer.setAnchorPoint(0,1);
 		this.pointer.initialPosition = initialPosition;
 
@@ -157,7 +157,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
 		const label = pd.createText(0, 0, txt, "Calibri", 25);
 		label.setPosition(512, 140 + pd.delegate.activeNamespace.tutoriais.txtOffSetY);
-		this.addChild(label, 999);
+		this.addChild(label, pd.ZOrders.TUTORIAL_PAGE_BOTTOM_TEXT);
 	},
 
     /**
@@ -168,12 +168,12 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	stop: function() {
 		if(this.arrowKeys){
 			for(var i = 0; i < 4; i++){
-				this.arrowKeys[i].changeAnimation('normal', false);
+				this.arrowKeys[i].changeAndStop('normal', false);
 			}
 		}
 
 		if(this.pointer){
-			this.pointer.changeAnimation('normal', false);
+			this.pointer.changeAndStop('normal', false);
 			this.pointer.x = this.pointer.initialPosition.x;
 			this.pointer.y = this.pointer.initialPosition.y;
 		}

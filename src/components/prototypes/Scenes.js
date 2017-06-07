@@ -49,10 +49,10 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
     onDebugKeyDown: function(key) {
         const intKey = parseInt(key);
 
-        if(intKey == 112) {
+        if(intKey == pd.Keys.F0 + 1) {
             if(!this.debugScreen) {
                 this.debugScreen = new pd.DebugScreen();
-                this.addChild(this.debugScreen, 1000);
+                this.addChild(this.debugScreen, pd.ZOrders.DEBUG_SCREEN);
                 this.debugScreen.init();
             }
             else {
@@ -60,11 +60,11 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
                 this.debugScreen = null;
             }
         }
-        else if(intKey == 120) {
+        else if(intKey == pd.Keys.F0 + 11) {
             pd.audioEngine.toggleMute();
             cc.log('[pd.ScenePrototype] ToggleMute: ' + pd.audioEngine.isMuted);
         }
-        else if(intKey > 48 && intKey < 58) {
+        else if(intKey > pd.Keys.ZERO && intKey < pd.Keys.ZERO + 10) {
             pd.debugger.loadShortcut(intKey - 49);
         }
     },
@@ -183,14 +183,14 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
         this._super();
         
         this.uiButton = new pd.Button(975, 715, this, "onPauseButton", "pd_btn_pause_normal.png", "pd_btn_pause_pressed.png");
-        this.uiButton.defineKey(27);
+        this.uiButton.defineKey(pd.Keys.ESC);
         this.uiButton.isLocked = false;
         this.uiButton.unlock = function(){
             this.isLocked = false;
         };
 
         this.pauseButton = this.uiButton; // manter compatibilidade (legado)...
-        this.addChild(this.pauseButton, 9000);
+        this.addChild(this.pauseButton, pd.ZOrders.PAUSE_BUTTON);
     },
 
     /**
@@ -214,7 +214,7 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
         if(!this.pauseButton.isPaused && !isPressed){
             pd.audioEngine.playEffect(pd.res.fx_button);
             var pLayer = new pd.PauseLayer(this, this.pausedOpacity);
-            this.addChild(pLayer,999999);
+            this.addChild(pLayer, pd.ZOrders.PAUSE_LAYER);
             cc.log("[pd.GameScene] O jogo foi pausado.");
         }
     },
@@ -229,7 +229,7 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
         this.pauseButton.cleanup();
         const winLayer = new pd.GameOverLayer();
         winLayer.init(this, pd.GameOverLayer.TYPE_WIN, circleSpriteFrame, messageSpriteFrame, tiltScreen);
-        this.addChild(winLayer, 9999);
+        this.addChild(winLayer, pd.ZOrders.GAME_OVER_LAYER);
     },
 
     /**
@@ -241,6 +241,6 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
         this.pauseButton.cleanup();
         const loseLayer = new pd.GameOverLayer();
         loseLayer.init(this, pd.GameOverLayer.TYPE_LOSE, circleSpriteFrame, null, tiltScreen);
-        this.addChild(loseLayer, 9999);
+        this.addChild(loseLayer, pd.ZOrders.GAME_OVER_LAYER);
     }
 });
