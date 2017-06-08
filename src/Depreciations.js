@@ -210,7 +210,7 @@ pd.Animado = pd.Animation;
  * @deprecated - desde a versão 2.3 - utilizar changeAndPlay, changeAndLoop ou changeAndStop.
  */
 pd.Animation.prototype.changeAnimation = function(newAnimation, repeatable, newSpeed, taxaRepeticao, callBack) {
-    if(repeatable)
+    if(repeatable == true || repeatable == null)
         this.changeAndLoop(newAnimation, newSpeed);
     else
         this.changeAndPlay(newAnimation, callBack, this.getParent(), repeatable, taxaRepeticao, newSpeed);

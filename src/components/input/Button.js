@@ -14,13 +14,13 @@ pd.Button = cc.Sprite.extend(
 		eventName:null,
 		scalePressed: undefined,
 		scaleReleased: 1,
-		ctor:function(x, y, ParentNode, eventToCall, normalImage, pressedImage, scale){
+		ctor:function(x, y, targetNode, eventToCall, normalImage, pressedImage, args, scale){
 			this.scalePressed = scale;
 			this._super();
 			singletonJoyButton++;
 			this.id = singletonJoyButton;
 			var nome = "button" + this.id.toString();
-			this.createCustomListener(eventToCall, nome, ParentNode, false);
+			this.createCustomListener(eventToCall, nome, targetNode, args);
 
 			this.delta = null;
 			this.power = null;
@@ -176,11 +176,11 @@ pd.Button = cc.Sprite.extend(
 			this.funcCaller = target;
 			this.funcArgs = funcArgs;
 		},
-		callCustomCallBack:function(arg){
+		callCustomCallBack:function(isKeyDown){
 			if(typeof(this.funcToCall) == "function") {
-				this.runAction(new cc.CallFunc(this.funcToCall, this.funcCaller, arg));
+				this.runAction(new cc.CallFunc(this.funcToCall, this.funcCaller, isKeyDown));
 			} else if(typeof(this.funcToCall) == "string") {
-				this.funcCaller[this.funcToCall](this, arg);
+				this.funcCaller[this.funcToCall](this, isKeyDown, this.funcArgs);
 			}
 		},
 		createCustomListenerBackup: function(CallBack, NomeDoEvento, target, removeCallBack){
