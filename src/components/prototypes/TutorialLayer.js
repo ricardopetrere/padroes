@@ -6,7 +6,10 @@
  * @classdesc Classe base para a implementação de layers de tutorial.
  */
 pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
-
+    /**
+     * @type {pd.Animation}
+     */
+    accelerometer:null,
     /**
 	 * @type {pd.Animation}
      */
@@ -23,6 +26,10 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
      * @type {pd.Animation}
      */
 	btnArrowRight:null,
+    /**
+     * @type {pd.Animation}
+     */
+    btnSpace:null,
     /**
 	 * Vetor com referências para todas as teclas descritas acima.
      * @type {pd.Animation[]}
@@ -82,14 +89,30 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	},
 
     /**
-	 * Cria um botão de arrow key (apenas uso interno!)
+     * Cria o acelerômetro e adiciona-o à layer
+     * @param posX {Number}
+     * @param posY {Number}
+     */
+    createAccelerometer: function (posX, posY) {
+        this.accelerometer = new pd.Animation();
+        this.accelerometer.addAnimation('normal', 1, 1, 'accel_lateral');
+        this.accelerometer.addAnimation('left', 1, 10, 'accel_lateral');
+        this.accelerometer.addAnimation('right', 11, 20, 'accel_lateral');
+        this.accelerometer.addAnimation('up', 1, 10, 'accel_vertical');
+        this.accelerometer.addAnimation('down', 11, 20, 'accel_vertical');
+        this.accelerometer.setPosition(posX, posY);
+        this.addChild(this.accelerometer, pd.ZOrders.TUTORIAL_BUTTON);
+    },
+
+    /**
+	 * Cria um botão (apenas uso interno!)
      * @param frameName {String}
      * @param posX {Number}
      * @param posY {Number}
 	 * @returns {pd.Animation}
      * @private
      */
-	_createArrowButton: function(frameName, posX, posY) {
+	_createButton: function(frameName, posX, posY) {
 		const btn = new pd.Animation();
         btn.addAnimation('normal', 1, 1, frameName);
         btn.addAnimation('pressed', 2, 2, frameName);
@@ -104,10 +127,10 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
      * @returns {Array}
      */
 	createArrowKeys: function(offset) {
-		this.btnArrowUp = this._createArrowButton("keyUp", 0, 60);
-		this.btnArrowDown = this._createArrowButton("keyDown", 0, 0);
-		this.btnArrowLeft = this._createArrowButton("keyLeft", -60, 0);
-		this.btnArrowRight = this._createArrowButton("keyRight", 60, 0);
+		this.btnArrowUp = this._createButton("keyUp", 0, 60);
+		this.btnArrowDown = this._createButton("keyDown", 0, 0);
+		this.btnArrowLeft = this._createButton("keyLeft", -60, 0);
+		this.btnArrowRight = this._createButton("keyRight", 60, 0);
 
 		this.arrowKeys = [this.btnArrowLeft, this.btnArrowUp, this.btnArrowRight, this.btnArrowDown];
 
@@ -129,6 +152,22 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	},
 
     /**
+     * Cria um botão default, podendo ou não colocar uma imagem ou texto em cima
+     * @param posX {Number}
+     * @param posY {Number}
+     * @param [sprite] {cc.Sprite|cc.LabelTTF} Imagem ou LabelTTF para colocar como "texto" do botão
+     * @returns {pd.Animation}
+     */
+    createNakedButton: function (posX, posY, sprite) {
+        var botao = this._createButton("keyNaked", posX, posY);
+        if (sprite) {
+            botao.label = sprite;
+            botao.label.setPosition(botao.width / 2, botao.height / 2);
+            botao.addChild(botao.label, 1);
+        }
+    },
+
+    /**
 	 * Cria o ponteiro (setinha do mouse ou mãozinha, se for mobile).
      * @param initialPosition {cc.Point}
      */
@@ -145,6 +184,16 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
 		this.ponteiro = this.pointer; //legado
 	},
+
+    /**
+     * Cria a barra de espaço e adiciona-a à layer
+     * @param posX {Number}
+     * @param posY {Number}
+     */
+    createSpaceButton: function (posX, posY) {
+        this.btnSpace = this._createButton('keySpace', posX, posY);
+        this.btnSpace.setScale(0.7);
+    },
 
     /**
 	 * Cria o texto inferior.
