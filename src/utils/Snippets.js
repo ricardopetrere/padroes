@@ -232,26 +232,31 @@ pd.__defineGetter__("mainScene", function() {
  * Verifica se um ponto está em um segmento de reta.
  * @param p {cc.Point}
  * @param l {{p1:cc.Point, p2:cc.Point}}
+ * @param w {Number} Distância máxima para considerar um ponto como dentro de uma reta
+ * @returns {boolean}
  */
-pd.pointInLineIntersection = function(p, l) {
-    //to-do...
+pd.pointInLineIntersection = function(p, l, w) {
+    //TODO Rever essa assinatura. Criar objeto só para isso?
+    return pd.pointToSegmentDistance(p, l) <= w;
 };
 
 /**
  * Verifica se dois segmentos de reta se interceptam.
  * @param l1 {{p1:cc.Point, p2:cc.Point}}
  * @param l2 {{p1:cc.Point, p2:cc.Point}}
+ * @returns {boolean}
  */
 pd.lineInLineIntersection = function(l1, l2) {
-    //to-do...
+    //TODO Criar lógica. Rever aulas de cálculo/matemática aplicada
 };
 
 /**
  * Verifica se um ponto está dentro de um polígono.
  * @param p {cc.Point}
  * @param vertexes {cc.Point[]}
+ * @returns {boolean}
  */
-pd.pointInPolygonIntersection= function(p, vertexes) {
+pd.pointInPolygonIntersection = function(p, vertexes) {
     var hasCollided = false;
     var j = 0;
 
@@ -266,27 +271,112 @@ pd.pointInPolygonIntersection= function(p, vertexes) {
  * Verifica se um polígono intercepta outro polígono.
  * @param polygon1 {cc.Point[]}
  * @param polygon2 {cc.Point[]}
+ * @returns {boolean}
+ * @author Ricardo Petrére
  */
 pd.polygonInPolygonIntersection = function(polygon1, polygon2) {
-    //to-do...
+    var hasCollided = false;
+    var n = 0;
+    //polygon1 vai primeiro
+    for (n = 0; n < polygon1.length; n++) {
+        if (jogo4av3mat1.pointInPolygonCollision(polygon1[n], polygon2)) {
+            hasCollided = true;
+            break;
+        }
+    }
+    //É a vez de polygon2, mas só se não houve colisão do lado de polygon1
+    if (!hasCollided) {
+        for (n = 0; n < polygon2.length; n++) {
+            if (jogo4av3mat1.pointInPolygonCollision(polygon2[n], polygon1)) {
+                hasCollided = true;
+                break;
+            }
+        }
+    }
+    return hasCollided;
+};
+
+/**
+ *
+ * @param {cc.Point[]} array
+ * @param {cc.Rect} rect
+ * @returns {boolean}
+ * @author Ricardo Petrére
+ */
+pd.polygonInRectCollision = function (array, rect) {
+    var hasCollided = false;
+    var n = 0;
+    for (n = 0; n < array.length; n++) {
+        if (cc.rectContainsPoint(rect, array[n])) {
+            hasCollided = true;
+            break;
+        }
+    }
+    return hasCollided;
 };
 
 /**
  * Calcula a distância entre dois pontos.
  * @param p1 {cc.Point}
  * @param p2 {cc.Point}
+ * @returns {number}
+ * @author Ricardo Petrére
  */
 pd.pointDistance = function(p1, p2) {
-    //to-do...
+    //TODO Revisar a assinatura da função. Ser obrigado a criar cc.Point pode impactar performance em alguns jogos
+// Ricardo Petrére: Na minha versão, está assim:
+// jogo4av3mat1.distance = function (x1, y1, x2, y2) {
+    var x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y;
+    if (x1.x !== undefined) {
+        x2 = y1;
+        y2 = x2;
+        y1 = x1.y;
+        x1 = x1.x;
+        if (x2.x !== undefined) {
+            y2 = x2.y;
+            x2 = x2.x;
+        }
+    }
+    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 };
 
 /**
  * Calcula a distância entre um ponto e um segmento.
  * @param p {cc.Point}
  * @param l {{p1:cc.Point, p2:cc.Point}}
+ * @author Ricardo Petrére
  */
 pd.pointToSegmentDistance = function(p, l) {
-    //to-do...
+    //TODO Rever essa assinatura. Criar objeto só para isso?
+    var v = l.p1, w = l.p2;
+    /**
+     * Para uso futuro (de verificar apenas quando um ponto está paralelo a um segmento)
+     *
+     * Dentro de {@link distToSegmentSquared}, se t < 0, significa que o ponto está abaixo do intervalo do segmento. <br/>
+     * Se t > 1, significa que o ponto está acima do intervalo do segmento
+     * @type {boolean}
+     */
+    var fora_do_segmento;
+    function sqr(x) { return x * x }
+    function dist2(v, w) { return sqr(v.x - w.x) + sqr(v.y - w.y) }
+    function distToSegmentSquared(p, v, w) {
+        var l2 = dist2(v, w);
+        if (l2 === 0) return dist2(p, v);
+        /**
+         * Indicador, relativo ao comprimento do segmento e de 0 a 1, de em que ponto do segmento o ponto está paralelo ao segmento <br/>
+         * Valores acima de 1 ou abaixo de 0 indica que o ponto não está paralelo ao segmento
+         * @type {number}
+         */
+        var t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+        if (t < 0 || t > 1) {
+            fora_do_segmento = true;
+        }
+        //No caso do ponto "extrapolar" o segmento, serve para buscar o ponto mais próximo do segmento
+        t = Math.max(0, Math.min(1, t));
+        return dist2(p, { x: v.x + t * (w.x - v.x),
+            y: v.y + t * (w.y - v.y) });
+    }
+    return Math.sqrt(distToSegmentSquared(p, v_comeco, v_fim));
 };
 
 /****************************************************************************************/
