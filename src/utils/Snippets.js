@@ -376,7 +376,7 @@ pd.pointToSegmentDistance = function(p, l) {
         return dist2(p, { x: v.x + t * (w.x - v.x),
             y: v.y + t * (w.y - v.y) });
     }
-    return Math.sqrt(distToSegmentSquared(p, v_comeco, v_fim));
+    return Math.sqrt(distToSegmentSquared(p, l.p1, l.p2));
 };
 
 /****************************************************************************************/
