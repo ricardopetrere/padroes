@@ -217,6 +217,16 @@ pd.Animation.prototype.changeAnimation = function(newAnimation, repeatable, newS
 };
 
 /**
+ * @deprecated - desde a versão 2.3.
+ */
+pd.Button.prototype.setCallUpEvent = pd.Button.prototype.setForceMouseUpCall;
+
+/**
+ * @deprecated - desde a versão 2.3 - utilizar setKeyCode.
+ */
+pd.Button.prototype.defineKey = pd.Button.prototype.setKeyCode;
+
+/**
  * @deprecated
  * @type {number}
  */

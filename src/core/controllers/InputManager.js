@@ -42,7 +42,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     add: function(eventType, target, handlerFunc, handler) {
         if(!target._inputMetadata)
             target._inputMetadata = {};
-        target._inputMetadata.allowMultiTouch = false;
+
         const metadata = target._inputMetadata;
         if(metadata[eventType])
             cc.log("[pd.InputManager] Warning: tentando attachar dois callbacks a um mesmo tipo de evento para um mesmo target (não recomendado): " + eventType);
@@ -124,9 +124,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param target {*}
      * @param eventType {String}
      * @param args
-     * @private
      */
-    _call: function(target, eventType, args) {
+    call: function(target, eventType, args) {
         if(!target._inputMetadata[eventType])
             return;
 
@@ -147,24 +146,19 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @private
      */
     _checkInputSources: function(target, eventType, didAddCallback) {
-        if(eventType.lastIndexOf("Mouse") != -1)
-            var source = pd.InputManager.Sources.MOUSE;
-        else if(eventType.lastIndexOf("Key") != -1)
-            source = pd.InputManager.Sources.KEYBOARD;
-        else
-            source = pd.InputManager.Sources.ACCELEROMETER;
-
-        if(!target._inputMetadata[source]) {
-            switch(source) {
-                case pd.InputManager.Sources.MOUSE:
-                    this[didAddCallback ? "_activateMouse" : "_deactivateMouse"](target);
-                    break;
-                case pd.InputManager.Sources.KEYBOARD:
-                    this[didAddCallback ? "_activateKeyboard" : "_deactivateKeyboard"](target);
-                    break;
-                case pd.InputManager.Sources.ACCELEROMETER:
-                    this[didAddCallback ? "_activateAccelerometer" : "_deactivateAccelerometer"](target);
-                    break;
+        if(eventType.lastIndexOf("Mouse") != -1) {
+            if(!target._inputMetadata[pd.InputManager.Sources.MOUSE]) {
+                this[didAddCallback ? "_activateMouse" : "_deactivateMouse"](target);
+            }
+        }
+        else if(eventType.lastIndexOf("Key") != -1) {
+            if(!target._inputMetadata[pd.InputManager.Sources.KEYBOARD]) {
+                this[didAddCallback ? "_activateKeyboard" : "_deactivateKeyboard"](target);
+            }
+        }
+        else if(eventType.lastIndexOf("Accelerometer" != -1)) {
+            if(!target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER]) {
+                this[didAddCallback ? "_activateAccelerometer" : "_deactivateAccelerometer"](target);
             }
         }
     },
@@ -173,9 +167,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * Recicla o array de metadados pré-alocado de um evento anterior para economizar memória.
      * @param {String} arr
      * @param {...*} argv
-     * @private
      */
-    _setEventMetadata: function(arr, argv) {
+    setEventMetadata: function(arr, argv) {
         if(!this[arr])
             this[arr] = [];
 
@@ -194,66 +187,113 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             return;
 
         if(cc.sys.isMobile) {
-            target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
-                event: target._inputMetadata.touchEventTypeCode ? target._inputMetadata.touchEventTypeCode : cc.EventListener.TOUCH_ONE_BY_ONE,
-                onTouchBegan: function (touch, event) {
-                    pd.inputManager._setEventMetadata("_mouseMeta", touch, event);
-                    if(touch.getID() == 0 || target._inputMetadata.allowMultiTouch)
-                        pd.inputManager._call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_DOWN, pd.inputManager._mouseMeta);
-                    return true;
-                },
-                onTouchMoved: function (touch, event) {
-                    pd.inputManager._setEventMetadata("_mouseMeta", touch, event);
-                    if(touch.getID() == 0 || target._inputMetadata.allowMultiTouch)
-                        pd.inputManager._call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_MOVE, pd.inputManager._mouseMeta);
-                    return true;
-                },
-                onTouchEnded: function (touch, event) {
-                    pd.inputManager._setEventMetadata("_mouseMeta", touch, event);
-                    if(touch.getID() == 0 || target._inputMetadata.allowMultiTouch)
-                        pd.inputManager._call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_UP, pd.inputManager._mouseMeta);
-                    return true;
-                }
-            });
+            if(target._inputMetadata.touchEventTypeCode != cc.EventListener.TOUCH_ALL_AT_ONCE)
+                this._setMouseAsTouchOneByOne(target);
+            else
+                this._setMouseAsTouchAllAtOnce(target)
         }
-
         else {
-            target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
-                event: cc.EventListener.MOUSE,
-                onMouseDown: function (event) {
-                    pd.inputManager._setEventMetadata("_mouseMeta", event);
-                    if (event.getButton() == 0)
-                        pd.inputManager._call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_DOWN, pd.inputManager._mouseMeta);
-                    return true;
-                },
-                onMouseMove: function (event) {
-                    pd.inputManager._setEventMetadata("_mouseMeta", event);
-                    const btn = event.getButton();
-                    switch(btn) {
-                        case null: pd.inputManager._call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_HOVER, pd.inputManager._mouseMeta); break;
-                        case 0: pd.inputManager._call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_MOVE, pd.inputManager._mouseMeta); break;
-                        case 1: pd.inputManager._call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_PAN, pd.inputManager._mouseMeta); break;
-                    }
-                    return true;
-                },
-                onMouseScroll: function(event) {
-                    pd.inputManager._setEventMetadata("_mouseMeta", event);
-                    if (cc.sys.os === cc.sys.OS_OSX) { // rolagem natural.
-                        event.setScrollData(event.getScrollX(), -event.getScrollY());
-                    }
-                    pd.inputManager._call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_SCROLL, pd.inputManager._mouseMeta);
-                    return true;
-                },
-                onMouseUp: function (event) {
-                    pd.inputManager._setEventMetadata("_mouseMeta", event);
-                    if (event.getButton() == 0)
-                        pd.inputManager._call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_UP, pd.inputManager._mouseMeta);
-                    return true;
-                }
-            });
+            this._setMouse(target);
         }
 
         this._addListener(target, target._inputMetadata[pd.InputManager.Sources.MOUSE]);
+    },
+
+    /**
+     * Cria um evento de mouse para o mobile - touch sem o recurso multitouch.
+     * @private {*} target
+     */
+    _setMouseAsTouchOneByOne: function(target) {
+        target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
+            event: target._inputMetadata.touchEventTypeCode ? target._inputMetadata.touchEventTypeCode : cc.EventListener.TOUCH_ONE_BY_ONE,
+            onTouchBegan: function (touch, event) {
+                pd.inputManager.setEventMetadata("_mouseMeta", touch, event);
+                if(target._inputMetadata.allowMultiTouch || touch.getID() == 0)
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_DOWN, pd.inputManager._mouseMeta);
+                return true;
+            },
+            onTouchMoved: function (touch, event) {
+                pd.inputManager.setEventMetadata("_mouseMeta", touch, event);
+                if(target._inputMetadata.allowMultiTouch || touch.getID() == 0)
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_MOVE, pd.inputManager._mouseMeta);
+                return true;
+            },
+            onTouchEnded: function (touch, event) {
+                pd.inputManager.setEventMetadata("_mouseMeta", touch, event);
+                if(target._inputMetadata.allowMultiTouch || touch.getID() == 0)
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_UP, pd.inputManager._mouseMeta);
+                return true;
+            }
+        });
+    },
+
+    /**
+     * Cria um evento de mouse para o mobile - touch com o recurso multitouch.
+     * @private
+     */
+    _setMouseAsTouchAllAtOnce: function(target) {
+        target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
+            event: target._inputMetadata.touchEventTypeCode ? target._inputMetadata.touchEventTypeCode : cc.EventListener.TOUCH_ONE_BY_ONE,
+            onTouchesBegan: function (touches, event) {
+                pd.inputManager.setEventMetadata("_mouseMeta", touches, event);
+                if(target._inputMetadata.allowMultiTouch || touches.length == 1)
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_DOWN, pd.inputManager._mouseMeta);
+                return true;
+            },
+            onTouchesMoved: function (touches, event) {
+                pd.inputManager.setEventMetadata("_mouseMeta", touches, event);
+                if(target._inputMetadata.allowMultiTouch || touches.length == 1)
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_MOVE, pd.inputManager._mouseMeta);
+                return true;
+            },
+            onTouchesEnded: function (touches, event) {
+                pd.inputManager.setEventMetadata("_mouseMeta", touches, event);
+                if(target._inputMetadata.allowMultiTouch || touches.length == 1)
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_UP, pd.inputManager._mouseMeta);
+                return true;
+            }
+        });
+    },
+
+    /**
+     * Cria um evento de mouse para o desktop.
+     * @param {*} target
+     * @private
+     */
+    _setMouse: function(target) {
+        target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
+            event: cc.EventListener.MOUSE,
+            onMouseDown: function (event) {
+                pd.inputManager.setEventMetadata("_mouseMeta", event);
+                if (event.getButton() == 0)
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_DOWN, pd.inputManager._mouseMeta);
+                return true;
+            },
+            onMouseMove: function (event) {
+                pd.inputManager.setEventMetadata("_mouseMeta", event);
+                const btn = event.getButton();
+                switch(btn) {
+                    case null: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_HOVER, pd.inputManager._mouseMeta); break;
+                    case 0: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_MOVE, pd.inputManager._mouseMeta); break;
+                    case 1: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_PAN, pd.inputManager._mouseMeta); break;
+                }
+                return true;
+            },
+            onMouseScroll: function(event) {
+                pd.inputManager.setEventMetadata("_mouseMeta", event);
+                if (cc.sys.os === cc.sys.OS_OSX) { // rolagem natural.
+                    event.setScrollData(event.getScrollX(), -event.getScrollY());
+                }
+                pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_SCROLL, pd.inputManager._mouseMeta);
+                return true;
+            },
+            onMouseUp: function (event) {
+                pd.inputManager.setEventMetadata("_mouseMeta", event);
+                if (event.getButton() == 0)
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_UP, pd.inputManager._mouseMeta);
+                return true;
+            }
+        });
     },
 
     /**
@@ -280,13 +320,13 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
         target._inputMetadata[pd.InputManager.Sources.KEYBOARD] = {
             event: cc.EventListener.KEYBOARD,
             onKeyPressed:  function(keyCode, event) {
-                pd.inputManager._setEventMetadata("_keyboardMeta", keyCode, event);
-                pd.inputManager._call(event.getCurrentTarget(), pd.InputManager.EVENT_KEY_DOWN, pd.inputManager._keyboardMeta);
+                pd.inputManager.setEventMetadata("_keyboardMeta", keyCode, event);
+                pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_KEY_DOWN, pd.inputManager._keyboardMeta);
                 return true;
             },
             onKeyReleased: function(keyCode, event) {
-                pd.inputManager._setEventMetadata("_keyboardMeta", keyCode, event);
-                pd.inputManager._call(event.getCurrentTarget(), pd.InputManager.EVENT_KEY_UP, pd.inputManager._keyboardMeta);
+                pd.inputManager.setEventMetadata("_keyboardMeta", keyCode, event);
+                pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_KEY_UP, pd.inputManager._keyboardMeta);
                 return true;
             }
         };
@@ -322,8 +362,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             event:cc.EventListener.ACCELERATION,
 
             callback: function(acc, event) {
-                pd.inputManager._setEventMetadata("_accelerometerMeta", acc, event);
-                pd.inputManager._call(event.getCurrentTarget(), pd.InputManager.EVENT_ACCELEROMETER, pd.inputManager._accelerometerMeta);
+                pd.inputManager.setEventMetadata("_accelerometerMeta", acc, event);
+                pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_ACCELEROMETER, pd.inputManager._accelerometerMeta);
                 return true;
             }
         });
@@ -421,11 +461,25 @@ pd.InputManager.EVENT_KEY_UP = "eventTypeKeyUp";
 pd.InputManager.EVENT_ACCELEROMETER = "eventTypeAccelerometer";
 
 /**
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_BUTTON_PRESSED = "eventButtonPress";
+
+/**
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_BUTTON_RELEASED = "eventButtonReleased";
+
+/**
  * Fontes de input disponíveis.
  * @enum {String}
  */
 pd.InputManager.Sources = {
     MOUSE: "inputSourceMouse",
     KEYBOARD: "inputSourceKeyboard",
-    ACCELEROMETER: "inputSourceAccelerometer"
+    ACCELEROMETER: "inputSourceAccelerometer",
+    BUTTON: "inputSourceButton"
 };
+

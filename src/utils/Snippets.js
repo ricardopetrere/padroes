@@ -324,8 +324,8 @@ pd.polygonInRectCollision = function (array, rect) {
  */
 pd.pointDistance = function(p1, p2) {
     //TODO Revisar a assinatura da função. Ser obrigado a criar cc.Point pode impactar performance em alguns jogos
-// Ricardo Petrére: Na minha versão, está assim:
-// jogo4av3mat1.distance = function (x1, y1, x2, y2) {
+    // Ricardo Petrére: Na minha versão, está assim:
+    // jogo4av3mat1.distance = function (x1, y1, x2, y2) {
     var x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y;
     if (x1.x !== undefined) {
         x2 = y1;
@@ -456,14 +456,18 @@ pd.UI_COLOR_BLUE = "blueUI";
  */
 pd.UI_COLOR_ORANGE = 'orangeUI';
 
-/****************************************************************************************/
-/********************************** #REGION: Legacy *************************************/
-/****************************************************************************************/
-
 /**
- * TODO: Verificar onde isso está sendo utilizado... por enquanto deixar aqui.
+ * Injeta um decorator em um objeto dinamicamente (em runtime).
+ * @param object {*}
+ * @param decorator {Object}
  */
-singletonTouchId = [];
-for(i = 0; i < 6; i++){
-    singletonTouchId[i] = false;
-}
+pd.decorate = function(object, decorator) {
+    for(var i in decorator) {
+        if(object[i] === undefined) {
+            object[i] = decorator[i];
+        }
+        else {
+            throw new Error("[pd] Tentando sobrescrever propriedade já existente.");
+        }
+    }
+};

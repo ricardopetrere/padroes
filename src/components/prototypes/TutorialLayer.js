@@ -163,7 +163,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
         if (sprite) {
             botao.label = sprite;
             botao.label.setPosition(botao.width / 2, botao.height / 2);
-            botao.addChild(botao.label, 1);
+            botao.addChild(botao.label, pd.ZOrders.TUTORIAL_BUTTON);
         }
     },
 
