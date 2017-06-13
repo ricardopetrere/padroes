@@ -331,6 +331,9 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._checkDisplayStates();
         this.setControlEnabled(true);
 
+        if (this._pages.length === 0) {
+            return;
+        }
         this._activeLayer = this._pages[this._currentPage];
         const newLayer = this._activeLayer;
 
@@ -421,7 +424,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
      * @private
      */
     _onSwipeBegin: function(e) {
-        if(!this._isControlEnabled || Math.abs(this._activeLayer.x) > 430 || this.isInside(this._btnLeft, e.getLocationX(), e.getLocationY(), 1) || this.isInside(this._btnRight, e.getLocationX(), e.getLocationY(), 1))
+        if(!this._isControlEnabled || this._pages <= 1 || Math.abs(this._activeLayer.x) > 430 || this.isInside(this._btnLeft, e.getLocationX(), e.getLocationY(), 1) || this.isInside(this._btnRight, e.getLocationX(), e.getLocationY(), 1))
             return;
 
         const x = e.getLocationX();
@@ -564,8 +567,10 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
      * @private
      */
     _onDestroy: function() {
-        this._activeLayer.setStatus(false);
-        for(var i = 0; i < this._pages.length; i++) {
+        if (this._pages.length > 0) {
+            this._activeLayer.setStatus(false);
+        }
+        for (var i = 0; i < this._pages.length; i++) {
             var page = this._pages[i];
             page.removeFromParent();
         }
