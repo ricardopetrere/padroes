@@ -76,21 +76,21 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * Adiciona uma animação à lista.
      * @param {String} name - um nome customizado para a animação.
      * @param {Number} firstFrame - o frame inicial da animação.
-     * @param {Number} numFrames - a quantidade de frames a partir do frame inicial que a animação irá possuir.
+     * @param {Number} lastFrame - o último frame da animação.
      * @param {String} spriteFrameNamePattern - o padrão de nome da animação no spriteFrameCache.
      * @param {Number} speed - a velocidade da animação em frames/segundo.
      */
-    addAnimation: function(name, firstFrame, numFrames, spriteFrameNamePattern, speed) {
+    addAnimation: function(name, firstFrame, lastFrame, spriteFrameNamePattern, speed) {
         const frames = [];
 
-        for(var i = firstFrame ; i <= numFrames ; i++) {
+        for(var i = firstFrame ; i <= lastFrame ; i++) {
             frames.push(cc.spriteFrameCache.getSpriteFrame(spriteFrameNamePattern + this._insertZeroes(i, 3) + ".png"));
         }
-        this.speed = speed || 24;
+        this.speed = speed || this.speed;
         var animation = new cc.Animation(frames, 1/this.speed);
         pd.delegate.retain(animation);
 
-        this.animations.push({name: name || this.animations.length + 1, animation: animation});
+        this.animations.push({name: name || this.animations.length + 1, animation: animation, numFrames: lastFrame - firstFrame + 1});
         if(this.animations.length == 1)
             this.changeAndStop(name);
     },
@@ -109,7 +109,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
         }
 
         var animation = new cc.Animation(frames, 1/24);
-        this.animations.push({name: name || this.animations.length + 1, animation: animation});
+        this.animations.push({name: name || this.animations.length + 1, animation: animation, numFrames: vFrames.length});
     },
 
     /**
@@ -186,14 +186,32 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     /**
      * Muda e dá play em uma nova animação.
      * @param frame {Number|String} - o índice ou o nome da animação.
-     * @param onComplete {String|Function=} - a função de callback.
-     * @param onCompleteHandler {cc.Node=} - o caller da função de callback.
-     * @param repeatable {Boolean=false}
+     * @param [repeatForever=true] {boolean}
+     * @param [repeatTimes=0] {Number}
+     * @param speed {Number}
+     * @param onComplete {String|Function} - a função de callback.
+     * @param onCompleteHandler {cc.Node} - o caller da função de callback.
+     */
+    change: function (frame, repeatForever, repeatTimes, speed, onComplete, onCompleteHandler) {
+        if (repeatForever) {
+            this.changeAndLoop(frame, speed);
+        } else if (this.getAnimation(frame).numFrames > 1) {
+            this.changeAndPlay(frame, repeatTimes, speed, onComplete, onCompleteHandler);
+        } else {
+            this.changeAndStop(frame);
+        }
+    },
+
+    /**
+     * Muda e dá play em uma nova animação.
+     * @param frame {Number|String} - o índice ou o nome da animação.
      * @param repeatTimes {Number=0}
      * @param speed {Number=}
+     * @param onComplete {String|Function=} - a função de callback.
+     * @param onCompleteHandler {cc.Node=} - o caller da função de callback.
      */
-    changeAndPlay: function(frame, onComplete, onCompleteHandler, repeatable, repeatTimes, speed) {
-        this._displayAnimation(frame, repeatable, speed, repeatTimes);
+    changeAndPlay: function(frame, repeatTimes, speed, onComplete, onCompleteHandler) {
+        this._displayAnimation(frame, repeatTimes ? true : false, speed, repeatTimes);
         this.onComplete = onComplete;
         this.onCompleteHandler = onCompleteHandler || this.getParent();
     },
@@ -210,7 +228,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     /**
      * Muda a animação atual, sem dar play na nova animação.
      * @param frame {Number|String} - o índice ou o nome da animação.
-     * @param innerFrame {Number=1} - frame interno (frame da nova animação a ser exibido pelo objeto).
+     * @param [innerFrame=0] {Number} - frame interno (frame da nova animação a ser exibido pelo objeto).
      */
     changeAndStop: function(frame, innerFrame) {
         this._displayAnimationFrame(frame, innerFrame || 0);

@@ -170,19 +170,19 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this.addChild(this._btnRight, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._btnRight.setFlippedX(true);
         this._btnRight.setOpacity(0);
-        this._btnRight.setVisible(pd.delegate.activeNamespace.tutoriais.length > 1);
+        this._btnRight.setVisible(pd.delegate.activeNamespace.tutorialData.length > 1);
 
         this._btnLeft = new pd.Button("btn_next_instrucoes.png", "btp_next_instrucoes.png", {x:37, y:360}, 1, true, false, this, "_onPreviousPage");
         this.addChild(this._btnLeft, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._btnLeft.setOpacity(0);
         this._btnLeft.setVisible(false);
 
-        this.headerText = pd.createText(512, 660, pd.delegate.activeNamespace.tutoriais.txt_objetivo, "Calibri", 25);
+        this.headerText = pd.createText(512, 660, pd.delegate.activeNamespace.tutorialData.txt_objetivo, "Calibri", 25);
         this.addChild(this.headerText, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this.headerText.setOpacity(0);
         this.texto_objetivo = this.headerText; //legado!
 
-        this._extraHeaderText = pd.createText(512, 660, pd.delegate.activeNamespace.tutoriais.txt_objetivo, "Calibri", 25);
+        this._extraHeaderText = pd.createText(512, 660, pd.delegate.activeNamespace.tutorialData.txt_objetivo, "Calibri", 25);
         this.addChild(this._extraHeaderText, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._extraHeaderText.setOpacity(0);
 
@@ -197,16 +197,16 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
     _initPages: function() {
         this._pages = [];
 
-        var numPages = pd.delegate.activeNamespace.tutoriais.length;
+        var numPages = pd.delegate.activeNamespace.tutorialData.length;
         var iniX = -(numPages/2 - 1) * 30;
         this._indicators = [];
 
         for(i = 0; i < numPages; i++) {
-            var indicator = pd.createSprite("stage_instrucoes", 512 + iniX + i * 30, 30 + pd.delegate.activeNamespace.tutoriais.txtOffSetY, this, 50);
+            var indicator = pd.createSprite("stage_instrucoes", 512 + iniX + i * 30, 30 + pd.delegate.activeNamespace.tutorialData.txtOffSetY, this, 50);
             indicator.setScale(0);
             this._indicators.push(indicator);
 
-            var page = pd.delegate.activeNamespace.tutoriais[i];
+            var page = pd.delegate.activeNamespace.tutorialData[i];
             page.pageID = i;
             page.setCascadeOpacityEnabled(true);
             page.setOpacity(0);
@@ -588,7 +588,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
  * @param {Number} offset
  */
 pd.Tutorial.setBottomTextOffset = function(offset) {
-    pd.delegate.activeNamespace.tutoriais.txtOffSetY = offset;
+    pd.delegate.activeNamespace.tutorialData.txtOffSetY = offset;
 };
 
 /**
@@ -596,7 +596,7 @@ pd.Tutorial.setBottomTextOffset = function(offset) {
  * @param headerSpriteFrameOrText {cc.SpriteFrame|cc.LabelTTF}
  */
 pd.Tutorial.setHeader = function(headerSpriteFrameOrText) {
-    pd.delegate.activeNamespace.tutoriais.txt_objetivo = headerSpriteFrameOrText;
+    pd.delegate.activeNamespace.tutorialData.txt_objetivo = headerSpriteFrameOrText;
 };
 
 /**

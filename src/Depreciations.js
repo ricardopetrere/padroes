@@ -10,11 +10,6 @@
 activeGameSpace = pd.delegate.activeNamespace;
 
 /**
- * @deprecated - desde a versão 2.3 - utilizar {@link pd.delegate.setTutorial}.
- */
-activeGameSpace.tutoriais = pd.activeNamespace.tutorialData;
-
-/**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.delegate.isPaused}.
  * @type {boolean}
  */
@@ -218,7 +213,7 @@ pd.Animation.prototype.changeAnimation = function(newAnimation, repeatable, newS
     if(repeatable == true || repeatable == null)
         this.changeAndLoop(newAnimation, newSpeed);
     else
-        this.changeAndPlay(newAnimation, callBack, this.getParent(), repeatable, taxaRepeticao, newSpeed);
+        this.changeAndPlay(newAnimation, taxaRepeticao, newSpeed, callBack, this.getParent());
 };
 
 /**
