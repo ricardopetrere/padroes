@@ -117,10 +117,10 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
      * Construtor padrão - instancia, ativa e adiciona o tutorial ao _handler.
      * @constructs
      * @param _handler {cc.Node}
-     * @param shouldPauseHandler {Boolean}
+     * @param [shouldPauseHandler=true] {Boolean}
      */
     ctor:function(_handler, shouldPauseHandler) {
-        this._super(new cc.Color(255, 255, 255), 1024, 768);
+        this._super(new cc.Color(255, 255, 255), 1028, 768);
         this.setOpacity(0);
         this.setCascadeOpacityEnabled(true);
         this.setControlEnabled(false);
@@ -163,16 +163,16 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._title = pd.createSprite('txt_instrucoes', 512, 730, this, 99);
         this._title.setOpacity(0);
 
-        this._btnExit = new pd.Button(1090, 740, this, '_onCloseButton', 'btn_sair_instrucoes.png', 'btp_sair_instrucoes.png');
+        this._btnExit = new pd.Button("btn_sair_instrucoes.png", "btp_sair_instrucoes.png", {x:1090, y:740}, 1, true, false, this, "_onCloseButton");
         this.addChild(this._btnExit, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
 
-        this._btnRight = new pd.Button(987, 360, this, '_onNextPage', "btn_next_instrucoes.png", "btp_next_instrucoes.png");
+        this._btnRight = new pd.Button("btn_next_instrucoes.png", "btp_next_instrucoes.png", {x:987, y:360}, 1, true, false, this, "_onNextPage");
         this.addChild(this._btnRight, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._btnRight.setFlippedX(true);
         this._btnRight.setOpacity(0);
         this._btnRight.setVisible(pd.delegate.activeNamespace.tutoriais.length > 1);
 
-        this._btnLeft = new pd.Button(37, 360, this, '_onPreviousPage', "btn_next_instrucoes.png", "btp_next_instrucoes.png");
+        this._btnLeft = new pd.Button("btn_next_instrucoes.png", "btp_next_instrucoes.png", {x:37, y:360}, 1, true, false, this, "_onPreviousPage");
         this.addChild(this._btnLeft, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._btnLeft.setOpacity(0);
         this._btnLeft.setVisible(false);
@@ -382,7 +382,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         if(caller.isVisible() && this._isControlEnabled && !isCallerPressed && (!this._isChangingPage  || isSwiping)){
             pd.audioEngine.playEffect(pd.resLoad.fx_swish);
             var totalPages = this._pages.length -1;
-            
+            this._isSwiping = false;
             if(this._currentPage >= totalPages)
                 return;
             
@@ -405,7 +405,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
     _onPreviousPage:function(caller,isCallerPressed, isSwiping){
         if(caller.isVisible() && this._isControlEnabled && !isCallerPressed && (!this._isChangingPage || isSwiping)){
             pd.audioEngine.playEffect(pd.resLoad.fx_swish);
-
+            this._isSwiping = false;
             if(this._currentPage <= 0)
                 return;
 
@@ -433,6 +433,8 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
         if (this._activeLayer._slideTween)
             this._activeLayer.stopAction(this._activeLayer._slideTween);
+
+        this._activeLayer.setOpacity(255);
         this._bgLayers[2].cleanup();
         this.headerText.cleanup();
 

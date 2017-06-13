@@ -115,6 +115,12 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
      * Inicializa o carregamento de um módulo da aplicação.
      */
     initModule: function() {
+        if(this.context == pd.Delegate.CONTEXT_PALCO)
+            pd.delegate.releaseAll();
+
+        if(pd.delegate.lastNameSpace && pd.delegate.lastNameSpace != pd.delegate.activeNamespace)
+            this.unloadCachedModule();
+
         this.loaderScene.setAnimationType(pd.debugMode ? pd.LoaderScene.ANIMATION_TYPE_NONE : pd.LoaderScene.ANIMATION_TYPE_SIMPLE);
         this.loaderScene.init();
         this.loaderScene.buildUp();
@@ -213,6 +219,17 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
                 cc.spriteFrameCache.addSpriteFrames(res[i]);
                 cc.log("[pd.Loader] pList " + (isInternal ? "PADRÃO" : "do jogo") +  " adicionado ao cache com sucesso: " + res[i])
             }
+        }
+    },
+
+    /**
+     * Descarrega o namespace carregado no cache (palco-only). <br />
+     * Esse método é chamado toda vez que o usuário abre um jogo, e o jogo que ele abriu é diferente do jogo que ele havia aberto anteriormente. <br />
+     * Caso ele abra o mesmo jogo, este método não é executado, pois o jogo já está carregado no cache.
+     */
+    unloadCachedModule:function() {
+        if(!(this.context == pd.Delegate.CONTEXT_PALCO)) {
+            this.unload(pd.delegate.lastNameSpace.g_resources);
         }
     },
 

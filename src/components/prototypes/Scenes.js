@@ -15,6 +15,7 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
      * @type {boolean}
      */
     isPaused:false,
+    isPaused:false,
     /**
      * @type {pd.Button}
      */
@@ -129,10 +130,10 @@ pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
         this._super();
 
         if(pd.delegate.context == pd.Delegate.CONTEXT_PALCO) {
-            this.uiButton = new pd.Button(975, 715, this, "onExitButton", "pd_btn_close_normal.png", "pd_btn_close_pressed.png");
+            this.uiButton = new pd.Button("pd_btn_close_normal.png", "pd_btn_close_pressed.png", {x:975, y:715}, 1, true, false, this, this.onExitButton);
             this.uiButton.isLocked = false;
             this.uiButton.unlock = function () {this.isLocked = false;};
-            this.addChild(this.uiButton, 9000);
+            this.addChild(this.uiButton, pd.ZOrders.PAUSE_BUTTON);
         }
 
         pd.delegate.setPaused(false);
@@ -149,10 +150,12 @@ pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
 
     /**
      * Callback proveniente do clique no botão de fechar.
+     * @param {*} caller
+     * @param {Boolean} arg
      * @private
      */
-    onExitButton: function(){
-        if(!pd.delegate.isPaused){
+    onExitButton: function(caller, arg) {
+        if(!pd.delegate.isPaused && !arg){
             pd.audioEngine.stopMusic(true);
             pd.delegate.finish();
             pd.audioEngine.playEffect(pd.res.fx_button);
@@ -181,9 +184,9 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
      */
     ctor: function() {
         this._super();
-        
-        this.uiButton = new pd.Button(975, 715, this, "onPauseButton", "pd_btn_pause_normal.png", "pd_btn_pause_pressed.png");
-        this.uiButton.defineKey(pd.Keys.ESC);
+
+        this.uiButton = new pd.Button("pd_btn_pause_normal.png", "pd_btn_pause_pressed.png", {x:975, y:715}, null, true, false, this, this.onPauseButton);
+        this.uiButton.setKeyCode(pd.Keys.ESC);
         this.uiButton.isLocked = false;
         this.uiButton.unlock = function(){
             this.isLocked = false;

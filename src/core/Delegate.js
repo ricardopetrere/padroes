@@ -48,6 +48,11 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     activeNamespace:null,
 
     /**
+     * Aponta para o último namespace ativo antes do atual.
+     */
+    lastNameSpace:null,
+
+    /**
      * Componente responsável pela validação da aplicação.
      */
     validator: null,
@@ -140,11 +145,9 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
      * @param ns {Object}
      */
     initWithNamespace: function(ns) {
-        if(this.activeNamespace && this.activeNamespace.srcPath.lastIndexOf("jogo") != -1)
-            pd.loader.unload(this.activeNamespace);
-
         this.activeNamespace = ns;
         activeGameSpace = ns; // legado - apenas para manter compatível!
+
         pd.DebugScenes = [];
 
         if(this.context == pd.Delegate.CONTEXT_PALCO && ns.resPath.lastIndexOf("jogo") != -1) {
@@ -263,9 +266,8 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
     /**
      * Libera todos os objetos retidos e (opcional) descarrega o namespace atual.
-     * @param {Boolean} shouldUnload - indica se os assets do namespace devem ser descarregados da memória.
      */
-    releaseAll: function(shouldUnload) {
+    releaseAll: function() {
         for(var i in this._retainedNodes) {
             var target = this._retainedNodes[i];
             if(target) {
@@ -275,11 +277,6 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
         }
 
         this._retainedNodes = [];
-
-        if(shouldUnload) {
-            pd.loader.unload(this.activeNamespace.g_resources);
-            cc.sys.garbageCollect();
-        }
     },
 
     /**
@@ -287,14 +284,14 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
      */
     finish: function() {
         if(this.context == pd.Delegate.CONTEXT_PALCO) {
-            this.releaseAll(true);
+            this.lastNameSpace = this.activeNamespace;
             pd.audioEngine.setMute(false);
             var transition = FadeWhiteTransition(0.6, new palco.MainScene());
             pd.delegate.retain(transition);
             cc.director.runScene(transition);
         }
         else {
-            this.releaseAll(false);
+            this.releaseAll();
             transition = FadeWhiteTransition(0.6, new this.activeNamespace.MainScene());
             pd.delegate.retain(transition);
             cc.director.runScene(transition);

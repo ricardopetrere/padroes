@@ -1,241 +1,336 @@
-var singletonJoyButton = 0;
-var Singleton_eventId = 0;
-pd.Button = cc.Sprite.extend(
-	{
-		isGrabbed:false,
-		touchId:null,
-		isNative:null,
-		normalImg:null,
-		pressedImg:null,
-		keyValue:null,
-		id:null,
-		callBack:null,
-		event:null,
-		eventName:null,
-		scalePressed: undefined,
-		scaleReleased: 1,
-		ctor:function(x, y, targetNode, eventToCall, normalImage, pressedImage, args, scale){
-			this.scalePressed = scale;
-			this._super();
-			singletonJoyButton++;
-			this.id = singletonJoyButton;
-			var nome = "button" + this.id.toString();
-			this.createCustomListener(eventToCall, nome, targetNode, args);
+/**
+ * Created by Ryan Balieiro on 08/06/17.
+ *
+ * @class
+ * @extends {cc.Sprite}
+ * @extends {pd.EventDispatcher}
+ * @classdesc Classe base para botões de interface.
+ */
+pd.Button = cc.Sprite.extend(pd.EventDispatcher).extend({/** @lends pd.Button#**/
+    /**
+     * O ID do touch que está interagindo com o botão.
+     * @type {Number}
+     */
+    _touchID:-1,
+    /**
+     * O KeyCode da tecla vinculado ao botão.
+     * @type {Number}
+     */
+    _attachedKeyCode:-1,
+    /**
+     * O objeto responsável por controlar o botão.
+     * @type {cc.Node}
+     */
+    _handler:null,
+    /**
+     * A função do handler a ser chamada quando o status do botão mudar (modo explícito).
+     * @type {Function|String}
+     */
+    _handlerFunc:null,
+    /**
+     * Os argumentos a serem passados para a função de interação com o botão.
+     * @type {Array}
+     */
+    _handlerFuncArgs:null,
+    /**
+     * O fator de escala do botão no status 'idle'.
+     * @type {Number}
+     */
+    _normalScale:1,
+    /**
+     * O fator de escala do botão no status 'pressionado'.
+     * @type {Number}
+     */
+    _pressedScale:1,
+    /**
+     * Flag que indica se o evento de Mouse Up deve ser disparado mesmo quando o usuário tirar o cursor/dedo da área do botão (mouse out).
+     * @type {Boolean}
+     */
+    _forceMouseUpCall:false,
+    /**
+     * Flag que indica se os listeners do botão estão ativos (uso interno).
+     * @type {Boolean}
+     */
+    _isEnabled:false,
+    /**
+     * Flag que indica se o botão está apertado (uso interno).
+     * @type {Boolean}
+     */
+    _isPressed:false,
+    /**
+     * Spriteframe do botão quando ele está 'solto'.
+     * @type {cc.SpriteFrame}
+     */
+    _normalSpriteFrame:null,
+    /**
+     * Spriteframe do botão quando ele está apertado.
+     * @type {cc.SpriteFrame}
+     */
+    _pressedSpriteFrame:null,
+    /**
+     * O mecanismo de callback utilizado pelo botão.
+     * @type {pd.Button.CALLBACK_MODE_EXPLICIT|pd.Button.CALLBACK_MODE_EVENT_BASED}
+     */
+    _callbackMode:"",
 
-			this.delta = null;
-			this.power = null;
-			this.isGrabbed = false;
-			this.touchId = null;
-			this.normalImg = null;
-			this.pressedImg = null;
-			this.keyValue = null;
+    /**
+     * @constructs
+     * @param normalImage {cc.SpriteFrame} - o sprite frame do botão quando ele está solto.
+     * @param [pressedImage=null] {cc.SpriteFrame|null} - o sprite frame do botão quando ele está pressionado.
+     * @param attr {{x:Number, y:Number, scaleX:Number, scaleY:Number, opacity:Number, visible:Boolean, rotation:Number}} - as propriedades de exibição do botão.
+     * @param pressedScale {Number} - o fator de escala do botão ao ser pressionado.
+     * @param autoEnable {Boolean} - indica se os listeners do botão devem ser adicionados automaticamente após a sua construção.
+     * @param eventBased {Boolean} - indica se o mecanismo de callbacks do botão será baseado em eventos.
+     * @param [handler=null] {*|null} - para o método de callback explícito: o objeto que irá executar a função de callback.
+     * @param [handlerFunc=null] {Function|String|null} - para o método de callback explícito: a função de callback a ser executada.
+     * @param [handlerFuncArgs=null] {Array|null} - para o método de callback explícito: os argumentos a serem passados para a função de callback.
+     * @returns {pd.Button}
+     */
+    ctor: function(normalImage, pressedImage, attr, pressedScale, autoEnable, eventBased, handler, handlerFunc, handlerFuncArgs) {
+        this._super();
+        this._setPressed(false);
 
-			this.clickInitialPosition = null;
-			if (!cc.sys.isMobile) {
-				this.isNative = false;
-			}
-			else{
-				this.isNative = true;
-			}
+        if(typeof arguments[0] == 'number') { // construtor legado.
+            this._legacyCtor.apply(this, arguments);
+        }
+        else {
+            this._normalSpriteFrame = cc.spriteFrameCache.getSpriteFrame(normalImage);
+            this._pressedSpriteFrame = cc.spriteFrameCache.getSpriteFrame(pressedImage ? pressedImage : normalImage);
+            this.attr(attr);
+            this._pressedScale = pressedScale;
+            this._callbackMode = eventBased ? pd.Button.CALLBACK_MODE_EVENT_BASED : pd.Button.CALLBACK_MODE_EXPLICIT;
 
-			this.setPosition(x,y);
+            this._handler = handler;
+            this._handlerFunc = handlerFunc;
+            this._handlerFuncArgs = handlerFuncArgs;
 
-			pd.setInputForButton(this);
-			this.normalImg = cc.spriteFrameCache.getSpriteFrame(normalImage);
-			this.pressedImg = cc.spriteFrameCache.getSpriteFrame(pressedImage);
+            if(autoEnable)
+                this.enable();
+        }
 
-			this.setSpriteFrame(this.normalImg);
-			this.callUpEvent = false;
-			this.forceCallUpEvent = false;
-			return true;
-		},
-		setCallUpEvent:function(b){
-			this.forceCallUpEvent = b;
-		},
-		//Define um botão do teclado para ativar o botão
-		defineKey:function(intKeyValue){
-			this.keyValue = intKeyValue;
-		},
+        this.setSpriteFrame(this._normalSpriteFrame);
+        return this;
+    },
 
-		onMouseDown:function(event){
-			if(this.isNative){
-				for(i in event){
-					if(singletonTouchId[i] == false){
-						var press = this.checkHitBox(event[i]);
-						if(press){
-							break;
-						}
-					}
-				}
-			}
-			else{
-				this.checkHitBox(event);
-			}
-		},
-		checkHitBox:function(event){
-			var position = event.getLocation();
-			var tempBox = cc.rect(position.x, position.y, 1,1);
-			if(cc.rectIntersectsRect(this.getBoundingBox(), tempBox)){
-				if(this.isNative){
-					this.touchId = event.getID();
-				}
-				this.setSpriteFrame(this.pressedImg);
-				this.scaleReleased = this.getScale();
-				if (this.scalePressed === undefined) {
-					this.scalePressed = this.scaleReleased;
-				}
-				this.setScale(this.scalePressed);
+    /**
+     * Construtor antigo - apenas para manter a compatibilidade
+     * @deprecated
+     * @param x {Number}
+     * @param y {Number}
+     * @param handler {*}
+     * @param handlerFunc {Function|String}
+     * @param normalImage {String}
+     * @param pressedImage {String}
+     * @param handlerFuncArgs {Array}
+     * @param pressedScale {Number}
+     * @param forceMouseUpCall {Boolean}
+     * @param callbackMode {pd.Button.CALLBACK_MODE_EXPLICIT|pd.Button.CALLBACK_MODE_EVENT_BASED}
+     */
+    _legacyCtor: function(x, y, handler, handlerFunc, normalImage, pressedImage, handlerFuncArgs, pressedScale, forceMouseUpCall, callbackMode) {
+        cc.log("[pd.Button] Construindo botão com o construtor legado - utilizar o novo padrão!");
 
-				this.isGrabbed = true;
-				this.callUpEvent = true;
-				this.callCustomCallBack(true);
-				return true;
-			}
-			return false;
-		},
-		onMouseUp:function(event){
-			if(this.isNative){
-				for(i in event){
-					if(event[i].getID() == this.touchId && this.isGrabbed){
-						this.setSpriteFrame(this.normalImg);
-						this.setScale(this.scaleReleased);
-						this.isGrabbed = false;
-						if(this.callUpEvent || this.forceCallUpEvent)
-							this.callCustomCallBack(false);
+        this._handler = handler;
+        this._handlerFunc = handlerFunc;
+        this._handlerFuncArgs = handlerFuncArgs;
+        this._pressedScale = pressedScale;
+        this._forceMouseUpCall = forceMouseUpCall;
 
-						this.callUpEvent = false;
-					}
-				}
-			}
-			else{
-				if(this.isGrabbed){
-					this.setSpriteFrame(this.normalImg);
-					this.setScale(this.scaleReleased);
-					if(this.callUpEvent || this.forceCallUpEvent)
-						this.callCustomCallBack(false);
+        this._normalSpriteFrame = cc.spriteFrameCache.getSpriteFrame(normalImage);
+        this._pressedSpriteFrame = cc.spriteFrameCache.getSpriteFrame(pressedImage);
+        this._callbackMode = callbackMode || pd.Button.CALLBACK_MODE_EXPLICIT;
 
-					this.callUpEvent = false;
-					this.isGrabbed = false;
-				}
-			}
+        this.setPosition(x, y);
+        this.enable();
+    },
 
-		},
-		onMouseDragged:function(event){
-			if(this.isNative){
-				for(i in event){
-					if(event[i].getID() == this.touchId && this.isGrabbed){
-						var position = event[i].getLocation();
-						var tempBox = cc.rect(position.x, position.y, 1,1);
-						if(!cc.rectIntersectsRect(this.getBoundingBoxToWorld(), tempBox)){
-							this.setSpriteFrame(this.normalImg);
-							this.setScale(this.scaleReleased);
-							this.callUpEvent = false;
-						}
-						else{
-							this.setSpriteFrame(this.pressedImg);
-							this.setScale(this.scalePressed);
-							this.callUpEvent = true;
-						}
-					}
-				}
-			} else{
-				if(this.isGrabbed){
-					var position = event.getLocation();
-					var tempBox = cc.rect(position.x, position.y, 1,1);
-					if(!cc.rectIntersectsRect(this.getBoundingBox(), tempBox)){
-						this.setSpriteFrame(this.normalImg);
-						this.setScale(this.scaleReleased);
-						this.callUpEvent = false;
-					}
-					else{
-						this.setSpriteFrame(this.pressedImg);
-						this.setScale(this.scalePressed);
-						this.callUpEvent = true;
-					}
-				}
-			}
-		},
-		keyDown:function(keyCode, event){
-			// cc.log(keyCode);
-			if(keyCode == this.keyValue){
-				this.setSpriteFrame(this.pressedImg);
-				this.callCustomCallBack(true);
-			}
-		},
-		keyReleased:function(keyCode, event){
-			if(keyCode == this.keyValue){
-				this.setSpriteFrame(this.normalImg);
-				this.callCustomCallBack(false);
-			}
-		},
+    /**
+     * Altera a sensibilidade do botão, obrigando o evento de mouse up a ser disparado se for true.
+     * @param forceMouseUpCall {Boolean}
+     */
+    setForceMouseUpCall: function(forceMouseUpCall) {
+        this._forceMouseUpCall = forceMouseUpCall;
+    },
 
+    /**
+     * Seta o keycode do botão.
+     * @param keyCode {Number}
+     */
+    setKeyCode: function(keyCode) {
+        this._attachedKeyCode = keyCode;
+    },
 
-		createCustomListener:function(CallBack, NomeDoEvento, target, funcArgs){
-			this.funcToCall = CallBack;
-			this.eventName = NomeDoEvento;
-			this.funcCaller = target;
-			this.funcArgs = funcArgs;
-		},
-		callCustomCallBack:function(isKeyDown){
-			if(typeof(this.funcToCall) == "function") {
-				this.runAction(new cc.CallFunc(this.funcToCall, this.funcCaller, isKeyDown));
-			} else if(typeof(this.funcToCall) == "string") {
-				this.funcCaller[this.funcToCall](this, isKeyDown, this.funcArgs);
-			}
-		},
-		createCustomListenerBackup: function(CallBack, NomeDoEvento, target, removeCallBack){
-			this.removeCallBack = removeCallBack;
-			if(target == null && target == undefined){
-				target = this.getParent();
-			}
+    /**
+     * Ativa o botao.
+     */
+    enable: function() {
+        if(this._isEnabled)
+           return;
 
-			if(NomeDoEvento == undefined || NomeDoEvento == null){
-				NomeDoEvento = 'padrao';
-			}
-			NomeDoEvento += this.id.toString();
-			NomeDoEvento += Singleton_eventId.toString();
-			Singleton_eventId ++;
-			var evento = cc.EventListener.create({
-				event: cc.EventListener.CUSTOM,
-				press: false,
-				eventName: NomeDoEvento,
-				callback: function(event, press){
-					var call = event.getUserData();
-					var target = event.getCurrentTarget();
-					target.call = call;
-					target.call(event.press);
-				}
-			});
-			if(CallBack == undefined || CallBack == null){
-				cc.log('Parametro 1(CallBack) esta como nulo ou indefinido');
-			}
-			if(typeof(CallBack) != "function"){
-				cc.log('CallBack Precisa ser uma função');
-			}
-			if(target == null || target == undefined){
-				cc.log('Target esta nulo ou undefined, adicione esse LongEffectPlayer à layer que deseja chamar o CallBack');
-			}
-			this.callBack = CallBack;
-			this.event = evento;
-			cc.eventManager.addListener(this.event, target);
-			this.eventName = NomeDoEvento;
-		},
-		//Ao termino do som, o callBack eh chamado
-		callCustomCallBackBackup: function(valor){
-			if((this.eventName == null || this.eventName == undefined) && this.event != null && this.event != undefined){
-				cc.log('eventName nulo ou undefined, init chamado apos criação do CustomCallBack sem o parametro false');
-			}
-			if(this.eventName != null && this.eventName != undefined) {
-				var evento = new cc.EventCustom(this.eventName);
-				evento.setUserData(this.callBack, valor);
-				evento.press = valor;
-				cc.eventManager.dispatchEvent(evento);
-				if(this.removeCallBack != null && this.removeCallBack != undefined){
-					if(this.removeCallBack)
-						cc.eventManager.removeListener(this.event);
-					this.event = null;
-				}
-			}
-		}
-	}
-);
+        pd.inputManager.config(this, true, cc.EventListener.TOUCH_ONE_BY_ONE, 1);
+        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, this._onMouseDown);
+        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, this, this._onMouseDragged);
+        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, this, this._onMouseUp);
+
+        pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, this, this._onKeyDown);
+        pd.inputManager.add(pd.InputManager.EVENT_KEY_UP, this, this._onKeyUp);
+        this._isEnabled = true;
+    },
+
+    /**
+     * Desabilita o botão.
+     */
+    disable: function() {
+        if(!this._isEnabled)
+            return;
+
+        pd.inputManager.clean(this);
+        this._isEnabled = false;
+    },
+
+    /**
+     * Altera o indicador do status do botão.
+     * @param isPressed {Boolean}
+     * @private
+     */
+    _setPressed: function(isPressed) {
+        this._isPressed = isPressed;
+        this.isGrabbed = isPressed; // legado.
+    },
+
+    /**
+     * Verifica se as coordenadas do evento estão dentro do bounding box do botão.
+     * @param event {Object}
+     * @private
+     */
+    _isColliding: function(event) {
+        if(!event)
+            return false;
+
+        const location = event.getLocation();
+        const collisionBox = cc.rect(location.x, location.y, 1, 1);
+        return cc.rectIntersectsRect(this.getBoundingBox(), collisionBox);
+    },
+
+    /**
+     * @param eventOrTouch {Object|Array}
+     * @private
+     */
+    _onMouseDown: function(eventOrTouch) {
+        const isColliding = this._isColliding(eventOrTouch);
+        if(!isColliding)
+            return;
+
+        if(cc.sys.isMobile) {
+            if(this._touchID == -1)
+                this._touchID = eventOrTouch.getID();
+            else if(eventOrTouch.getID() != this._touchID)
+                return;
+        }
+
+        this.setSpriteFrame(this._pressedSpriteFrame);
+        this._setPressed(true);
+        this._normalScale = this.getScale();
+        this._pressedScale = this._pressedScale ? this._pressedScale : this._normalScale;
+        this.setScale(this._pressedScale);
+        this._performCallback(true);
+    },
+
+    /**
+     * @param eventOrTouch {Object|Array}
+     * @private
+     */
+    _onMouseDragged: function(eventOrTouch) {
+        if(cc.sys.isMobile && eventOrTouch.getID() != this._touchID)
+            return;
+
+        if(this._isPressed) {
+            if(this._isColliding(eventOrTouch)) {
+                this.setSpriteFrame(this._pressedSpriteFrame);
+                this.setScale(this._pressedScale);
+                this._shouldDispatchMouseUpCall = false;
+            }
+            else {
+                this.setSpriteFrame(this._normalSpriteFrame);
+                this.setScale(this._normalScale);
+                this._shouldDispatchMouseUpCall = this._forceMouseUpCall;
+            }
+        }
+    },
+
+    /**
+     * @param eventOrTouch {Object|Array}
+     * @private
+     */
+    _onMouseUp: function(eventOrTouch) {
+        if(cc.sys.isMobile && eventOrTouch.getID() != this._touchID)
+            return;
+
+        if(this._isPressed) {
+            this._touchID = -1;
+            this.setSpriteFrame(this._normalSpriteFrame);
+            this.setScale(this._normalScale);
+            this._setPressed(false);
+            if(this._shouldDispatchMouseUpCall || this._isColliding(eventOrTouch))
+                this._performCallback(false);
+        }
+    },
+
+    /**
+     * @param keyCode {Number}
+     * @param event {Object}
+     * @private
+     */
+    _onKeyDown: function(keyCode, event) {
+        if(this._attachedKeyCode == keyCode) {
+            this._setPressed(true);
+            this.setSpriteFrame(this._pressedSpriteFrame);
+            this._performCallback(true);
+        }
+    },
+
+    /**
+     * @param keyCode {Number}
+     * @param event {Object}
+     * @private
+     */
+    _onKeyUp: function(keyCode, event) {
+        if(this._attachedKeyCode == keyCode) {
+            this._setPressed(false);
+            this.setSpriteFrame(this._normalSpriteFrame);
+            this._performCallback(false);
+        }
+    },
+
+    /**
+     * Executa a função de callback.
+     * @param pressed {Boolean}
+     * @private
+     */
+    _performCallback: function(pressed) {
+        if(this._callbackMode == pd.Button.CALLBACK_MODE_EXPLICIT) {
+            if (typeof(this._handlerFunc) == "function") {
+                this._handlerFunc.apply(this._handler, [this, pressed, this._handlerFuncArgs]);
+            }
+            else {
+                this._handler[this._handlerFunc].apply(this._handler, [this, pressed, this._handlerFuncArgs]);
+            }
+        }
+        else {
+            pd.inputManager.setEventMetadata("_buttonMeta", this);
+            pd.inputManager.call(this, pressed ? pd.InputManager.EVENT_BUTTON_PRESSED : pd.InputManager.EVENT_BUTTON_RELEASED, pd.inputManager._buttonMeta);
+        }
+    }
+});
+
+/**
+ * Modo de callback explícito: as funções de callback são definidas no construtor do botão, e são invocadas de maneira explícita.
+ * @constant
+ * @type {string}
+ */
+pd.Button.CALLBACK_MODE_EXPLICIT = "buttonCallbackModeExplicit";
+
+/**
+ * Modo de callback baseado em eventos: os botões disparam notificações, permitindo que as funções de callback sejam injetadas por um controlador externo.
+ * @type {string}
+ */
+pd.Button.CALLBACK_MODE_EVENT_BASED = "buttonCallbackModeEventBased";
