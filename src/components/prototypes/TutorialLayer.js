@@ -53,27 +53,27 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
 	/////////////////// DEPRECIATIONS //////////////////////
     /**
-	 * @deprecated - utilizar this.btnArrowUp.
+	 * @deprecated - utilizar {@link pd.TutorialLayer.btnArrowUp}.
      */
 	tecla_cima:null,
     /**
-	 * @deprecated - utilizar this.btnArrowDown.
+	 * @deprecated - utilizar {@link pd.TutorialLayer.btnArrowDown}.
      */
 	tecla_baixo:null,
     /**
-	 * @deprecated - utilizar this.btnArrowLeft.
+	 * @deprecated - utilizar {@link pd.TutorialLayer.btnArrowLeft}.
      */
 	tecla_esquerda:null,
     /**
-	 * @deprecated - utilizar this.btnArrowRight.
+	 * @deprecated - utilizar {@link pd.TutorialLayer.btnArrowRight}.
      */
 	tecla_direita:null,
     /**
-	 * @deprecated - utilizar this.arrowKeys.
+	 * @deprecated - utilizar {@link pd.TutorialLayer.arrowKeys}.
      */
 	vTeclas:null,
     /**
-	 * @deprecated - utilizar this.pointer.
+	 * @deprecated - utilizar {@link pd.TutorialLayer.pointer}.
      */
 	ponteiro:null,
 	///////////////////////////////////////////////////////////

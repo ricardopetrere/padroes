@@ -64,7 +64,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
     _extraHeaderText:null,
     /**
      * @type {cc.Sprite|cc.LabelTTF}
-     * @deprecated - utilizar a propriedade 'headerText'.
+     * @deprecated - utilizar a propriedade {@link pd.Tutorial.headerText}.
      */
     texto_objetivo:null,
     /**
