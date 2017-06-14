@@ -6,18 +6,22 @@
  */
 pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
     /**
+     * Instância singleton do objeto.
      * @type {null|pd.AudioEngine}
      */
     _singleton: null,
     /**
+     * Volume dos efeitos.
      * @type {number}
      */
     effectVolume: 1,
     /**
+     * Indica se o jogo está mutado.
      * @type {boolean}
      */
     isMuted: false,
     /**
+     * Volume da música.
      * @type {number}
      */
     musicVolume: 1,
@@ -187,6 +191,10 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
     }
 });
 
+/**
+ * Obtém a instância singleton do objeto.
+ * @returns {pd.AudionEngine}
+ */
 pd.AudioEngine.getInstance = function () {
     if (pd.AudioEngine.prototype._singleton == null) {
         pd.AudioEngine.prototype._singleton = new pd.AudioEngine();

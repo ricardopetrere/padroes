@@ -3,10 +3,7 @@
  * @desc - Conjunto de snippets (utilitários).
  */
 
-/****************************************************************************************/
-/******************************* #REGION: Array Utils ***********************************/
-/****************************************************************************************/
-
+//<editor-fold desc="#Array Utils">
 /**
  * Embaralha um array.
  * @type {Function}
@@ -45,6 +42,18 @@ pd.cloneArray = function(array) {
 };
 
 /**
+ * Clona todas as propriedades de um objeto dentro de um array.
+ * @param object {Object}
+ * @returns {Array}
+ */
+pd.objectToArray = function(object) {
+    const array = [];
+    for(var i in object)
+        array.push(object[i]);
+    return array;
+};
+
+/**
  * Troca a posição de dois elementos de um array entre eles.
  * @type {Function}
  * @param array {Array}
@@ -74,11 +83,8 @@ pd.orderBy = function(array, key, crescentOrder) {
         }
     }  
 };
-
-/****************************************************************************************/
-/****************************** #REGION: Randomization **********************************/
-/****************************************************************************************/
-
+//</editor-fold>
+//<editor-fold desc="#Randomization">
 /**
  * Retorna um número aleatório dentro de um intervalo pré-definido.
  * @type {Function}
@@ -89,13 +95,10 @@ pd.orderBy = function(array, key, crescentOrder) {
 pd.randomInterval = function(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
-
-/****************************************************************************************/
-/****************************** #REGION: Object Creation ********************************/
-/****************************************************************************************/
-
+//</editor-fold>
+//<editor-fold desc="#Object Creation">
 /**
- * Busca um SpriteFrame no cache.
+ * Busca um cc.SpriteFrame no cache.
  * @param {String} spriteFrameName
  * @returns {cc.SpriteFrame}
  */
@@ -108,7 +111,6 @@ pd.getSpriteFrame = function(spriteFrameName) {
 
 /**
  * Cria uma sprite.
- * @type {Function}
  * @param spriteFrameName {String}
  * @param x {Number}
  * @param y {Number}
@@ -117,7 +119,7 @@ pd.getSpriteFrame = function(spriteFrameName) {
  * @returns {cc.Sprite}
  */
 pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder){
-    const obj = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(spriteFrameName + '.png'));
+    const obj = new cc.Sprite(pd.getSpriteFrame(spriteFrameName));
     obj.setPosition(x, y);
     zOrder = zOrder || 0;
 
@@ -189,13 +191,10 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
     clippingNode.stencil = stencil;
     return clippingNode;
 };
-
-/****************************************************************************************/
-/******************************** #REGION: Navigation ***********************************/
-/****************************************************************************************/
-
+//</editor-fold>
+//<editor-fold desc="#Navigation">
 /**
- * Troca a cena atual para a cena informada.
+ * Troca a cena atual para a cena informada (antigo pd.trocaCena()).
  * @type {Function}
  * @param transition {cc.Class}
  * @param layer {cc.Node}
@@ -204,11 +203,11 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
 pd.switchScene = function(transition, layer, delay) {
     if(!layer.didGetDestroyed) {
         layer.didGetDestroyed = true;
-        var delay = new cc.DelayTime(delay || 0.5);
+        var delayTime = new cc.DelayTime(delay || 0.5);
         var funcChange = new cc.CallFunc(function(){
             cc.director.runScene(transition);
         }, layer);
-        var switchSequence = cc.sequence(delay, funcChange);
+        var switchSequence = cc.sequence(delayTime, funcChange);
         pd.delegate.retain(transition);
         pd.delegate.retain(switchSequence);
         layer.runAction(switchSequence);
@@ -223,11 +222,8 @@ pd.mainScene = null;
 pd.__defineGetter__("mainScene", function() {
    return cc.director._runningScene;
 });
-
-/****************************************************************************************/
-/********************************* #REGION: Geometry ************************************/
-/****************************************************************************************/
-
+//</editor-fold>
+//<editor-fold desc="#Geometry">
 /**
  * Verifica se um ponto está em um segmento de reta.
  * @param p {cc.Point}
@@ -247,7 +243,30 @@ pd.pointInLineIntersection = function(p, l, w) {
  * @returns {boolean}
  */
 pd.lineInLineIntersection = function(l1, l2) {
-    //TODO Criar lógica. Rever aulas de cálculo/matemática aplicada
+    var s10_x = l1.p1.x - l1.p2.x; // obtém o "b" da reta l1
+    var s10_y = l1.p1.y - l1.p2.y; // obtém o "a" da reta l1
+    var s32_x = l2.p1.x - l2.p2.x; // obtém o "b" da reta l2
+    var s32_y = l2.p1.y - l2.p2.y; // obtém o "a" da reta l2
+
+    var denom = s10_x * s32_y - s32_x * s10_y; // produto escalar entre as retas.
+    if (denom == 0) // retas colineares - não colidem!
+        return false;
+
+    var denomPositive = denom > 0; // denom > 0 - retas concorrentes || denom < 0 - retas reversas
+    var s02_x = l1.p2.x - l2.p2.x; // calcula o produto misto das retas
+    var s02_y = l1.p2.y - l2.p2.y;
+
+    var s_numer = s10_x * s02_y - s10_y * s02_x;
+    var t_numer = s32_x * s02_y - s32_y * s02_x;
+    if ((s_numer < 0) == denomPositive || (t_numer < 0) == denomPositive || ((s_numer > denom) == denomPositive) || ((t_numer > denom) == denomPositive))
+        return false;
+
+    var t = t_numer / denom;
+    var i_x = l1.p2.x + (t * s10_x);
+    var i_y = l1.p2.y + (t * s10_y);
+
+    function comparePoints(p1x, p1y, p2x, p2y) {if(p1x == p2x && p1y == p2y) return 1; else return 0;}
+    return (comparePoints(l1.p1.x, l1.p1.y, i_x, i_y) + comparePoints(l1.p2.x, l1.p2.y, i_x, i_y) + comparePoints(l2.p1.x, l2.p1.y, i_x, i_y) + comparePoints(l2.p1.x, l2.p1.y, i_x, i_y) != 2);
 };
 
 /**
@@ -378,11 +397,56 @@ pd.pointToSegmentDistance = function(p, l) {
     }
     return Math.sqrt(distToSegmentSquared(p, l.p1, l.p2));
 };
+//</editor-fold>
+//<editor-fold desc="#Actions">
+/**
+ * Cria uma sequência de 'palpitação'.
+ * @param time {Number} - o tempo da animação.
+ * @param pulsations {Number} - o número de palpitações que o objeto irá fazer dentro do intervalo de tempo.
+ * @param initialScale {Number} - o valor de escala inicial do objeto.
+ * @param targetScale {Number} - a escala que o objeto irá assumir ao encolher-se.
+ * @returns {cc.Sequence}
+ */
+pd.throb = function(time, pulsations, initialScale, targetScale) {
+    if(!time || !pulsations || !initialScale || !targetScale)
+        throw new Error("[pd.Throb] Argumentos obrigatórios não foram fornecidos para a função!");
 
-/****************************************************************************************/
-/*************************** #REGION: Native Capabilities *******************************/
-/****************************************************************************************/
+    const sequenceSteps = [];
+    for(var i = 0 ; i < pulsations ; i++) {
+        sequenceSteps.push(
+            cc.scaleTo(time/(pulsations*2), targetScale, targetScale),
+            cc.scaleTo(time/(pulsations*2), initialScale, initialScale)
+        );
+    }
 
+    return cc.sequence(sequenceSteps);
+};
+
+/**
+ * Cria uma sequência de 'balanço'.
+ * @param time {Number} - o tempo da animação.
+ * @param cycles {Number} - o número de ciclos da animação.
+ * @param initialRotation {Number} - a rotação inicial do objeto.
+ * @param strength {Number} - a 'força' da rotação (em pixels).
+ * @returns {cc.Sequence}
+ */
+pd.shake = function(time, cycles, initialRotation, strength) {
+    if(!time || !cycles || (!initialRotation && initialRotation != 0) || !strength)
+        throw new Error("[pd.Shake] Argumentos obrigatórios não foram fornecidos para a função!");
+
+    const sequenceSteps = [];
+    for(var i = 0 ; i < cycles ; i++) {
+        sequenceSteps.push(
+            cc.rotateTo(time/(cycles*4), initialRotation - strength, 0),
+            cc.rotateTo(time/(cycles*2), initialRotation + strength, 0),
+            cc.rotateTo(time/(cycles*4), initialRotation, 0)
+        )
+    }
+
+    return cc.sequence(sequenceSteps);
+};
+//</editor-fold>
+//<editor-fold desc="#Native Capabilities">
 /**
  * Abre uma URL.
  * @type {Function}
@@ -419,13 +483,11 @@ pd.checkValidation = function() {
         return false;
     }
 };
-
-/****************************************************************************************/
-/******************************* #REGION: Configuration *********************************/
-/****************************************************************************************/
-
+//</editor-fold>
+//<editor-fold desc="#Configuration">
 /**
- * Seta a cor da UI (realizar a chamada antes do carregamento dos recursos).
+ * Seta a cor da UI. <br />
+ * Realizar a chamada à esta função antes do carregamento dos recursos.
  * @function
  * @param {pd.UI_COLOR_BLUE|pd.UI_COLOR_ORANGE} color
  */
@@ -471,3 +533,4 @@ pd.decorate = function(object, decorator) {
         }
     }
 };
+//</editor-fold>

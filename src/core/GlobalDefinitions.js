@@ -3,10 +3,7 @@
  * Lista de constantes globais do namespace 'Padrões'.
  */
 
-/****************************************************************************************/
-/******************************* #REGION: Resources *************************************/
-/****************************************************************************************/
-
+//<editor-fold desc="#Resources">
 /**
  * Recursos utilizados pela tela de loading.
  * @static
@@ -82,11 +79,8 @@ pd.g_resources = [];
 for (var i in pd.res) {
     pd.g_resources.push(pd.res[i]);
 }
-
-/****************************************************************************************/
-/******************************* #REGION: Enumerators ***********************************/
-/****************************************************************************************/
-
+//</editor-fold>
+//<editor-fold desc="#Global Constants">
 /**
  * Enumerador com o mapeamento de teclas comumente utilizadas.
  * @enum {number}
@@ -131,3 +125,4 @@ pd.ZOrders = {
     TUTORIAL_LAYER: 99999,
     PAUSE_LAYER: 999999
 };
+//</editor-fold">

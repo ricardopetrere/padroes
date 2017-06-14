@@ -2,9 +2,8 @@
  * Created by Ryan Balieiro on 05/06/2017.
  * @class
  * @extends {cc.Layer}
- * @classdesc Animação de game over (vitória ou derrota).
- *
- * Por enquanto mantive a estrutura de tweens das classes antigas, mas seria melhor organizar os passos da sequência de uma forma mais intuitiva!
+ * @classdesc Animação de game over (vitória ou derrota). <br />
+ *            Por enquanto mantive a estrutura de tweens das classes antigas, mas seria melhor organizar os passos da sequência de uma forma mais intuitiva!
  */
 pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
     /**
@@ -99,7 +98,7 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
             this.speed = 20;
 
         if(this._type == pd.GameOverLayer.TYPE_WIN && !labelSpriteFrame)
-            throw new Error("[GameOverLayer] Layers de vitória precisam, obrigatóriamente, de uma placa com a mensagem de parabéns!")
+            throw new Error("[GameOverLayer] Layers de vitória precisam, obrigatóriamente, de uma placa com a mensagem de parabéns!");
 
         if(pd.GameOverLayer._hasInstance)
             throw new Error("[GameOverLayer] Houve uma tentativa de instânciar mais de uma layer de Game Over!");
@@ -239,7 +238,7 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
     },
 
     /**
-     * Cria um 'canto' da faixa.
+     * Cria um 'canto' da faixa de derrota.
      * @param x {Number}
      * @param y {Number}
      * @param anchorPointX {Number}
@@ -262,7 +261,7 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
     },
 
     /**
-     * Adiciona os 'cantos' da faixa.
+     * Adiciona os 'cantos' da faixa de derrota.
      * @private
      */
     _addCorners: function() {
@@ -426,7 +425,7 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
     },
 
     /**
-     * Realiza as animações assíncronas.
+     * Realiza as animações assíncronas (chamada via scheduler).
      * @private
      */
     _animate: function() {

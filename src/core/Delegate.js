@@ -22,7 +22,7 @@ pd.debugMode = cc.game.config[cc.game.CONFIG_KEY.debugMode] != cc.game.DEBUG_MOD
  * Versão atual dos padrões.
  * @type {string}
  */
-pd.version = "2.3";
+pd.version = "2.3.2";
 
 cc.log("[pd] Padrões Cocos Versão: " + pd.version);
 if(pd.debugMode)
@@ -184,9 +184,8 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
             this.transitionTime = 0.8;
             mainScene = FadeWhiteTransition(this.transitionTime, new this.activeNamespace.MainScene());
         }
-        pd.delegate.retain(mainScene);
-        cc.director.runScene(mainScene);
 
+        cc.director.runScene(mainScene);
         pd.debugger.init();
         pd.debugger.addShortcut("MainScene");
     },
@@ -286,8 +285,9 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
         if(this.context == pd.Delegate.CONTEXT_PALCO) {
             this.lastNameSpace = this.activeNamespace;
             pd.audioEngine.setMute(false);
-            var transition = FadeWhiteTransition(0.6, new palco.MainScene());
-            pd.delegate.retain(transition);
+            this._destroyGame();
+
+            var transition = FadeWhiteTransition(cc.sys.isMobile ? 0.3 : 0.4, new palco.MainScene());
             cc.director.runScene(transition);
         }
         else {
@@ -297,6 +297,20 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
             cc.director.runScene(transition);
         }
 
+    },
+
+    /**
+     * Destrói o jogo atual.
+     * @private
+     */
+    _destroyGame: function() {
+        for(var i in this.activeNamespace.tutoriais) {
+            pd.delegate.release(this.activeNamespace.tutoriais[i]);
+            this.activeNamespace.tutoriais[i] = null;
+        }
+        this.activeNamespace.tutoriais = null;
+        pd.delegate.releaseAll();
+        pd.loader.unload(pd.delegate.activeNamespace.res);
     }
 });
 

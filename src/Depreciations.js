@@ -1,6 +1,6 @@
 /**
  * Created by Ryan Balieiro on 23/05/17.
- * @desc Listagem de propriedades depreciadas durante alterações dos padrões - para manter a compatibilidade com versões antigas.
+ * @desc Listagem de propriedades depreciadas durante alterações dos padrões para manter a compatibilidade com versões antigas.
  */
 
 /**
@@ -217,17 +217,17 @@ pd.Animation.prototype.changeAnimation = function(newAnimation, repeatable, newS
 };
 
 /**
- * @deprecated - desde a versão 2.3.
+ * @deprecated - desde a versão 2.3 utilizar {@link pd.Button.prototype.setForceMouseUpCall}
  */
 pd.Button.prototype.setCallUpEvent = pd.Button.prototype.setForceMouseUpCall;
 
 /**
- * @deprecated - desde a versão 2.3 - utilizar setKeyCode.
+ * @deprecated - desde a versão 2.3 - utilizar {@link pd.Button.prototype.setKeyCode}
  */
 pd.Button.prototype.defineKey = pd.Button.prototype.setKeyCode;
 
 /**
- * @deprecated
+ * @deprecated - desde a versao 2.3.
  * @type {number}
  */
 SingletonId_Animacoes = 0;

@@ -15,7 +15,6 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
      * @type {boolean}
      */
     isPaused:false,
-    isPaused:false,
     /**
      * @type {pd.Button}
      */
@@ -31,7 +30,7 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
     onEnter: function() {
         this._super();
 
-        //deixar (lógica interna do debugger).
+        //deixar (lógica interna do antigo debugger, agora editor).
         pd.DebugArrayClickable = [];
         pd.DebugArrayNonClickable = [];
         
@@ -114,6 +113,9 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
     onExit: function() {
         this._super();
         this.removeAllChildren(true);
+        if(cc.sys.isNative) {
+            cc.director.getTextureCache().removeUnusedTextures();
+        }
     }
 });
 

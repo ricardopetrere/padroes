@@ -3,10 +3,10 @@
  *
  * @class
  * @extends {cc.Sprite}
- * @extends {pd.EventDispatcher}
+ * @mixes {pd.EventDispatcher}
  * @classdesc Classe base para botões de interface.
  */
-pd.Button = cc.Sprite.extend(pd.EventDispatcher).extend({/** @lends pd.Button#**/
+pd.Button = cc.Sprite.extend({/** @lends pd.Button#**/
     /**
      * O ID do touch que está interagindo com o botão.
      * @type {Number}
@@ -144,7 +144,7 @@ pd.Button = cc.Sprite.extend(pd.EventDispatcher).extend({/** @lends pd.Button#**
     },
 
     /**
-     * Altera a sensibilidade do botão, obrigando o evento de mouse up a ser disparado se for true.
+     * Altera a sensibilidade do botão.
      * @param forceMouseUpCall {Boolean}
      */
     setForceMouseUpCall: function(forceMouseUpCall) {
@@ -160,7 +160,7 @@ pd.Button = cc.Sprite.extend(pd.EventDispatcher).extend({/** @lends pd.Button#**
     },
 
     /**
-     * Ativa o botao.
+     * Habilita o botao.
      */
     enable: function() {
         if(this._isEnabled)

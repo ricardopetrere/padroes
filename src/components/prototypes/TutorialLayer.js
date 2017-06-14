@@ -89,7 +89,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	},
 
     /**
-     * Cria o acelerômetro e adiciona-o à layer
+     * Cria a animação do acelerômetro e adiciona-a à layer
      * @param posX {Number}
      * @param posY {Number}
      */
@@ -103,23 +103,6 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
         this.accelerometer.setPosition(posX, posY);
         this.addChild(this.accelerometer, pd.ZOrders.TUTORIAL_BUTTON);
     },
-
-    /**
-	 * Cria um botão (apenas uso interno!)
-     * @param frameName {String}
-     * @param posX {Number}
-     * @param posY {Number}
-	 * @returns {pd.Animation}
-     * @private
-     */
-	_createButton: function(frameName, posX, posY) {
-		const btn = new pd.Animation();
-        btn.addAnimation('normal', 1, 1, frameName);
-        btn.addAnimation('pressed', 2, 2, frameName);
-        btn.setPosition(posX, posY);
-        this.addChild(btn, pd.ZOrders.TUTORIAL_BUTTON);
-        return btn;
-	},
 
     /**
 	 * Cria as setas do teclado e adiciona-as à layer.
@@ -152,10 +135,10 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	},
 
     /**
-     * Cria um botão default, podendo ou não colocar uma imagem ou texto em cima
+     * Cria um botão default, podendo ou não colocar uma imagem ou texto como label.
      * @param posX {Number}
      * @param posY {Number}
-     * @param [sprite] {cc.Sprite|cc.LabelTTF} Imagem ou LabelTTF para colocar como "texto" do botão
+     * @param [sprite = null] {cc.Sprite|cc.LabelTTF} Imagem ou LabelTTF para colocar como "texto" do botão.
      * @returns {pd.Animation}
      */
     createNakedButton: function (posX, posY, sprite) {
@@ -186,7 +169,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	},
 
     /**
-     * Cria a barra de espaço e adiciona-a à layer
+     * Cria a barra de espaço e adiciona-a à layer.
      * @param posX {Number}
      * @param posY {Number}
      */
@@ -194,6 +177,23 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
         this.btnSpace = this._createButton('keySpace', posX, posY);
         this.btnSpace.setScale(0.7);
     },
+
+	/**
+	 * Cria um botão (apenas uso interno!)
+	 * @param frameName {String}
+	 * @param posX {Number}
+	 * @param posY {Number}
+	 * @returns {pd.Animation}
+	 * @private
+	 */
+	_createButton: function(frameName, posX, posY) {
+		const btn = new pd.Animation();
+		btn.addAnimation('normal', 1, 1, frameName);
+		btn.addAnimation('pressed', 2, 2, frameName);
+		btn.setPosition(posX, posY);
+		this.addChild(btn, pd.ZOrders.TUTORIAL_BUTTON);
+		return btn;
+	},
 
     /**
 	 * Cria o texto inferior.

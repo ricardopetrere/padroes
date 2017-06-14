@@ -45,6 +45,12 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
 
         if(this._didPreload == true || this._didPreload == false)
             this._didPreload = didPreload;
+
+        if(cc.sys.isNative) {
+            const bg = new cc.LayerColor(pd.delegate.context == pd.Delegate.CONTEXT_PORTAL ? cc.color(255, 135, 10) : cc.color(101, 167, 228),
+                cc.winSize.width, cc.winSize.height);
+            this.addChild(bg);
+        }
     },
 
     /**
@@ -56,6 +62,14 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
             this._super();
         else
             cc.Scene.prototype.onEnter.apply(this);
+    },
+
+    /**
+     * Manipula a entrada na cena.
+     * @override
+     */
+    onEnterTransitionDidFinish: function() {
+        this._super();
     },
 
     /**
@@ -74,6 +88,9 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
      */
     init: function() {
         this._super();
+        const bg = new cc.LayerColor(pd.delegate.context == pd.Delegate.CONTEXT_PORTAL ? cc.color(255, 135, 10) : cc.color(101, 167, 228),
+            cc.winSize.width, cc.winSize.height);
+        this.addChild(bg);
 
         for(var i in this) {
             if(this[i] instanceof cc.Node)
@@ -82,10 +99,6 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
 
         if(this._animationType == "")
             this.setAnimationType(pd.LoaderScene.ANIMATION_TYPE_NONE);
-
-        const bg = new cc.LayerColor(pd.delegate.context == pd.Delegate.CONTEXT_PORTAL ? cc.color(255,135,10) : cc.color(101,167,228),
-            cc.winSize.width, cc.winSize.height);
-        this.addChild(bg);
 
         if(this._animationType != pd.LoaderScene.ANIMATION_TYPE_NONE) {
             bg.attr({opacity: 0});
@@ -105,14 +118,12 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
      * Realiza a construção dos elementos da cena, adicionando-os e animando-os.
      */
     buildUp: function() {
-        if(cc.sys.isNative) {
-            const bg = new cc.LayerColor(pd.delegate.context == pd.Delegate.CONTEXT_PORTAL ? cc.color(255,135,10) : cc.color(101,167,228),
-                cc.winSize.width, cc.winSize.height);
-            this.addChild(bg);
-        }
-
         this._logo = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("portalLogo.png"));
         this.addChild(this._logo);
+
+        if(this._animationType == pd.LoaderScene.ANIMATION_TYPE_HIDDEN) {
+            this._logo.visible = false;
+        }
 
         if(this._animationType == pd.LoaderScene.ANIMATION_TYPE_FULL) {
             this._logo.attr({x: 512, y: 500, scaleX: 0.5, scaleY: 0.5, opacity: 0});
@@ -181,7 +192,7 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
         this._textFeedback.setPosition(this._circleFeedback.x, 100);
         this.addChild(this._textFeedback);
 
-        if(this._animationType != pd.LoaderScene.ANIMATION_TYPE_NONE) {
+        if(this._animationType != pd.LoaderScene.ANIMATION_TYPE_NONE && this._animationType != pd.LoaderScene.ANIMATION_TYPE_HIDDEN) {
             cc.audioEngine.playEffect(pd.resLoad.fx_woosh);
             this._circleFeedback.runAction(cc.sequence(
                 cc.moveTo(0.15, this._circleFeedback.x, 200),
@@ -191,6 +202,11 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
         else {
             this._circleFeedback.setPosition(this._circleFeedback.x, 200);
             pd.loader.onScreenReady();
+        }
+
+        if(this._animationType == pd.LoaderScene.ANIMATION_TYPE_HIDDEN) {
+            this._textFeedback.setVisible(false);
+            this._circleFeedback.setVisible(false);
         }
     },
 
@@ -231,7 +247,7 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
         this._circleFeedback.cleanup();
         this.displayProgress(100);
 
-        if(this._animationType != pd.LoaderScene.ANIMATION_TYPE_NONE) {
+        if(this._animationType != pd.LoaderScene.ANIMATION_TYPE_NONE && this._animationType != pd.LoaderScene.ANIMATION_TYPE_HIDDEN) {
             this.runAction(cc.sequence(
                 cc.delayTime(0.2),
                 cc.spawn(cc.targetedAction(this._circleFeedback, cc.fadeOut(0.3)), cc.targetedAction(this._textFeedback, cc.moveBy(0.3, 0, -300))),
@@ -249,19 +265,29 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
 });
 
 /**
+ * Nesta configuração, a tela de loading é estática e abrupta, aparecendo e sumindo da tela instantaneamente.
  * @constant
  * @type {string}
  */
 pd.LoaderScene.ANIMATION_TYPE_NONE = "animationTypeNone";
 
 /**
+ * Nesta configuração é feita uma animação básica, tweenando o logo da esquerda para a direita.
  * @constant
  * @type {string}
  */
 pd.LoaderScene.ANIMATION_TYPE_SIMPLE = "animationTypeSimple";
 
 /**
+ * A animação completa é feita nesta configuração: tweenando o logo, tocando o som de introdução e tweenando o feedback de carregamento.
  * @constant
  * @type {string}
  */
 pd.LoaderScene.ANIMATION_TYPE_FULL = "animationTypeFull";
+
+/**
+ * Esta configuração é uma implementação semelhante ao antigo "Loader Sombrio", mostrando apenas uma layer da cor azul do fundo do palco.
+ * @constant
+ * @type {string}
+ */
+pd.LoaderScene.ANIMATION_TYPE_HIDDEN = "animationTypeHidden";

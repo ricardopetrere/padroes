@@ -160,6 +160,11 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._extraBgLayer = pd.createSprite('layer_instrucoes', 512, -500, this, 3);
         this._tweenableObjects.push(this._bgLayers[2]);
 
+        if(!pd.delegate.activeNamespace.tutorialData && pd.delegate.activeNamespace.tutoriais) {
+            pd.delegate.activeNamespace.tutorialData = pd.delegate.activeNamespace.tutoriais;
+            cc.log("[pd] Warning: utilizando recurso depreciado: activeNamespace.tutoriais. Utilizar a função pd.delegate.setTutorial() para inicializar o tutorial do jogo.")
+        }
+
         this._title = pd.createSprite('txt_instrucoes', 512, 730, this, 99);
         this._title.setOpacity(0);
 

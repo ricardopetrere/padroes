@@ -4,7 +4,6 @@
  * @class
  * @extends {cc.Class}
  * @classdesc Objeto singleton responsável por gerenciar os listeners de inputs da aplicação.
- *
  * Pendência: transformar os tipos de evento em um enumerador.
  */
 pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
@@ -33,7 +32,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     },
 
     /**
-     * Seta um listener de evento para o àlvo informado.
+     * Seta um listener de evento para o álvo informado.
      * @param eventType {String} - tipo do evento.
      * @param target {*} - o objeto que dispara o evento.
      * @param handlerFunc {Function|String} - a função a ser invocada pelo objeto que escuta o evento.
@@ -200,8 +199,9 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     },
 
     /**
-     * Cria um evento de mouse para o mobile - touch sem o recurso multitouch.
-     * @private {*} target
+     * Cria um evento de mouse para o mobile na configuração touch one by one.
+     * @param {*} target
+     * @private
      */
     _setMouseAsTouchOneByOne: function(target) {
         target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
@@ -228,7 +228,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     },
 
     /**
-     * Cria um evento de mouse para o mobile - touch com o recurso multitouch.
+     * Cria um evento de mouse para o mobile na configuração touch all at once.
+     * @param {*} target
      * @private
      */
     _setMouseAsTouchAllAtOnce: function(target) {

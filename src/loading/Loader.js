@@ -17,7 +17,7 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
     loaderScene:null,
 
     /**
-     * Matriz com os vetores de assets a serem carregados. <br/>
+     * Matriz com os vetores de assets a serem carregados. <br/ >
      * Caso não haja nenhuma operação de carregamento em atividade, é igual a null.
      * @type {Object[]}
      */
@@ -81,6 +81,7 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
         else {
             cc.LoaderScene.preload(pd.load_resources, function () {
                 this.loaderScene = new pd.LoaderScene();
+                this.loaderScene.setAnimationType(pd.debugMode ? pd.LoaderScene.ANIMATION_TYPE_NONE : pd.LoaderScene.ANIMATION_TYPE_FULL);
                 cc.director.runScene(this.loaderScene);
                 this._onPreloadDidFinish();
             }, this);
@@ -94,6 +95,20 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
     _onPreloadDidFinish: function() {
         cc.spriteFrameCache.addSpriteFrames(pd.resLoad.p_loader);
         this.loaderScene.buildUp();
+    },
+
+    /**
+     * Recarrega o core da aplicação do zero (apenas para debugar!)
+     */
+    reloadCore: function() {
+        if(!cc.sys.isNative)
+            return;
+
+        pd.delegate.activeNamespace = palco;
+        this.loaderScene = new pd.LoaderScene();
+        this.loaderScene.setAnimationType(pd.LoaderScene.ANIMATION_TYPE_HIDDEN);
+        cc.director.runScene(this.loaderScene);
+        pd.delegate.releaseAll();
     },
 
     /**
@@ -115,12 +130,6 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
      * Inicializa o carregamento de um módulo da aplicação.
      */
     initModule: function() {
-        if(this.context == pd.Delegate.CONTEXT_PALCO)
-            pd.delegate.releaseAll();
-
-        if(pd.delegate.lastNameSpace && pd.delegate.lastNameSpace != pd.delegate.activeNamespace)
-            this.unloadCachedModule();
-
         this.loaderScene.setAnimationType(pd.debugMode ? pd.LoaderScene.ANIMATION_TYPE_NONE : pd.LoaderScene.ANIMATION_TYPE_SIMPLE);
         this.loaderScene.init();
         this.loaderScene.buildUp();
@@ -152,17 +161,17 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
     onGameReadyToLoad: function() {
         pd.delegate.setValidator(null);
         this._currentRes = -1;
-        this.load(pd.delegate.activeNamespace.g_resources);
+        this._load(pd.delegate.activeNamespace.g_resources);
     },
 
     /**
      * Inicializa o processo de carregamento do próximo vetor de assets.
      * @private
      */
-    load: function() {
+    _load: function() {
         this._currentRes++;
         if(this._currentRes < this._res.length)
-            this._ccloader = cc.loader.load(this._res[this._currentRes], this.onLoadProgress, this.onLoadComplete);
+            this._ccLoader = cc.loader.load(this._res[this._currentRes], this._onLoadProgress, this._onLoadComplete);
     },
 
     /**
@@ -172,7 +181,7 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
      * @param {Number} loadedItems - o número total de itens já carregados.
      * @private
      */
-    onLoadProgress: function(target, totalItems, loadedItems) {
+    _onLoadProgress: function(target, totalItems, loadedItems) {
         const progress = pd.loader._currentRes/pd.loader._res.length*100 + loadedItems/totalItems*(100/pd.loader._res.length);
         pd.loader.loaderScene.displayProgress(progress);
     },
@@ -183,12 +192,12 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
      * @param {Array} loadedObjects - lista de objetos carregados.
      * @private
      */
-    onLoadComplete: function(err, loadedObjects) {
+    _onLoadComplete: function(err, loadedObjects) {
         if(!err) {
             if(pd.loader._currentRes == pd.loader._res.length - 1)
                 pd.loader.loaderScene.destroy();
             else
-                pd.loader.load();
+                pd.loader._load();
         }
         else {
             cc.log("[pd.Loader] Ocorreu um erro ao carregar os assets do jogo!");
@@ -197,7 +206,6 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
 
     /**
      * Manipula o processo de inicialização do jogo.
-     * @private
      */
     onGameReadyToStart: function() {
         for(var i in this._res) {
@@ -211,7 +219,6 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
      * Procura os spriteframes dentro do vetor de assets e adiciona-os ao cache.
      * @param {Array} res
      * @param {Boolean} isInternal - indica se a requisição é proveniente de um carregamento interno dos 'padrões'.
-     * @private
      */
     addSpriteFrames: function(res, isInternal) {
         for(i = 0; i < res.length; i++) {
@@ -223,27 +230,15 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
     },
 
     /**
-     * Descarrega o namespace carregado no cache (palco-only). <br />
-     * Esse método é chamado toda vez que o usuário abre um jogo, e o jogo que ele abriu é diferente do jogo que ele havia aberto anteriormente. <br />
-     * Caso ele abra o mesmo jogo, este método não é executado, pois o jogo já está carregado no cache.
-     */
-    unloadCachedModule:function() {
-        if(!(this.context == pd.Delegate.CONTEXT_PALCO)) {
-            this.unload(pd.delegate.lastNameSpace.g_resources);
-        }
-    },
-
-    /**
      * Realiza o descarregamento do módulo (jogo) atual.
      * @param {Array} res
-     * @public
      */
     unload: function(res) {
-        for(i = 0; i < res.length; i++) {
+        for(var i in res) {
             if(res[i].indexOf(".plist") != -1) {
                 cc.spriteFrameCache.removeSpriteFramesFromFile(res[i]);
             }
-            else if(res[i].indexOf(".png") != -1 || res[i].indexOf(".jpg")) {
+            else if(res[i].indexOf(".png") != -1 || res[i].indexOf(".jpg") != -1) {
                 cc.textureCache.removeTextureForKey(res[i]);
             }
             else if(res[i].indexOf(".mp3") != -1 || res[i].indexOf(".wav") != -1) {
@@ -253,16 +248,18 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
         }
 
         cc.eventManager.removeAllListeners();
+        cc.sys.garbageCollect();
     },
 
     /**
-     * Realiza um descarregamento forçado de todos os assets pré-carregados pela aplicação, assim como remove todos os listeners de evento ativos.
-     * @public
+     * Realiza um descarregamento forçado de todos os assets pré-carregados pela aplicação, assim como remove todos os listeners de evento ativos. <br />
+     * Utilizar apenas para fins de debugging.
      */
     hardUnload: function() {
         cc.eventManager.removeAllListeners();
         cc.spriteFrameCache.removeSpriteFrames();
         cc.textureCache.removeAllTextures();
+        cc.director.purgeCachedData();
     }
 });
 

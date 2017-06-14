@@ -20,7 +20,7 @@ var ZoomTo = function (t, s, layer, z, x, y) {
         new cc.ScaleTo(t, z)
     ));
     return FadeWhiteTransition(t, s);
-}
+};
 
 /**
  * @param t {number}
@@ -49,7 +49,7 @@ var FadeTransition = function (t, s) {
  * @constructor
  */
 var FadeWhiteTransition = function (t, s) {
-    return new cc.TransitionFade(t, s, cc.color(255, 255, 255));
+    return new cc.TransitionFade(t, s, cc.color(255, 255, 255, 255));
 };
 
 /**

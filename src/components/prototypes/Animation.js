@@ -184,7 +184,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     },
 
     /**
-     * Muda e dá play em uma nova animação.
+     * Muda a animação atual.
      * @param frame {Number|String} - o índice ou o nome da animação.
      * @param [repeatForever=true] {boolean}
      * @param [repeatTimes=0] {Number}
@@ -337,7 +337,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     },
 
     /**
-     * Exibe um frame de uma animação.
+     * Exibe um frame específico de uma animação.
      * @param targetFrame {Number}
      * @param targetInnerFrame {Number=0}
      * @private
