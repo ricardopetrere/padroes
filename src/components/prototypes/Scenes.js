@@ -48,7 +48,6 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
      */
     onDebugKeyDown: function(key) {
         const intKey = parseInt(key);
-
         if(intKey == pd.Keys.F0 + 1) {
             if(!this.debugScreen) {
                 this.debugScreen = new pd.DebugScreen();
@@ -59,6 +58,10 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
                 this.debugScreen.removeFromParent();
                 this.debugScreen = null;
             }
+        }
+        else if (intKey == pd.Keys.F0 + 5) {
+            cc.log('[pd.ScenePrototype] Window Reload');
+            location.reload(true);
         }
         else if(intKey == pd.Keys.F0 + 11) {
             pd.audioEngine.toggleMute();
