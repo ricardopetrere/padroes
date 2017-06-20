@@ -48,7 +48,6 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
      */
     onDebugKeyDown: function(key) {
         const intKey = parseInt(key);
-
         if(intKey == pd.Keys.F0 + 1) {
             if(!this.debugScreen) {
                 this.debugScreen = new pd.DebugScreen();
@@ -59,6 +58,10 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
                 this.debugScreen.removeFromParent();
                 this.debugScreen = null;
             }
+        }
+        else if (intKey == pd.Keys.F0 + 5) {
+            cc.log('[pd.ScenePrototype] Window Reload');
+            location.reload(true);
         }
         else if(intKey == pd.Keys.F0 + 11) {
             pd.audioEngine.toggleMute();
@@ -131,7 +134,7 @@ pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
     ctor: function() {
         this._super();
 
-        if(pd.delegate.context == pd.Delegate.CONTEXT_PALCO) {
+        if(pd.delegate.context == pd.Delegate.CONTEXT_PALCO || pd.debugMode) {
             this.uiButton = new pd.Button("pd_btn_close_normal.png", "pd_btn_close_pressed.png", {x:975, y:715}, 1, true, false, this, this.onExitButton);
             this.uiButton.isLocked = false;
             this.uiButton.unlock = function () {this.isLocked = false;};
@@ -153,11 +156,11 @@ pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
     /**
      * Callback proveniente do clique no botão de fechar.
      * @param {*} caller
-     * @param {Boolean} arg
+     * @param {Boolean} isKeyDown
      * @private
      */
-    onExitButton: function(caller, arg) {
-        if(!pd.delegate.isPaused && !arg){
+    onExitButton: function(caller, isKeyDown) {
+        if(!pd.delegate.isPaused && !isKeyDown){
             pd.audioEngine.stopMusic(true);
             pd.delegate.finish();
             pd.audioEngine.playEffect(pd.res.fx_button);
