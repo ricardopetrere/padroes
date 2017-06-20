@@ -93,6 +93,8 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
 
         this._type = type;
         this._shouldTilt = shouldTilt;
+        if(this._shouldTilt == null || this._shouldTilt == undefined)
+            this._shouldTilt = true;
 
         if(this._type == pd.GameOverLayer.TYPE_LOSE)
             this.speed = 20;

@@ -231,3 +231,10 @@ pd.Button.prototype.defineKey = pd.Button.prototype.setKeyCode;
  * @type {number}
  */
 SingletonId_Animacoes = 0;
+
+/**
+ * @deprecated - desde a versão 2.3 - utilizar {@link pd.Joystick.prototype.enable}
+ */
+pd.setInputForJoystick = function() {
+    cc.log("[pd] Uso de função depreciada: 'setInputForJoystick'. Utilizar a função 'enable()' da instância de seu joystick.");
+};

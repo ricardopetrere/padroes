@@ -1,424 +1,335 @@
-var singletonJoyStick = 0;
+/**
+ * Created by Ryan Balieiro on 19/06/17.
+ *
+ * @class
+ * @extends {cc.Sprite}
+ * @mixes {pd.decorators.EventDispatcher}
+ * @mixes {pd.decorators.ClickableNode}
+ * @classdesc Implementação funcional de um joystick virtual analógico.
+ */
+pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators.ClickableNode).extend({/** @lends pd.Joystick#**/
+    /**
+     * A parte 'arrastável' do joystick.
+     * @type {cc.Sprite}
+     */
+    _pad:null,
+    /**
+     * Indica se o controle está sendo movido.
+     * @type {Boolean}
+     */
+    _isGrabbed: false,
+    /**
+     * O objeto responsável por controlar o joystick.
+     * @type {cc.Node}
+     */
+    _handler:null,
+    /**
+     * A função do handler a ser chamada quando o status do joystick mudar (modo explícito).
+     * @type {Function|String}
+     */
+    _handlerFunc:null,
+    /**
+     * @type {cc.Point}
+     */
+    _targetPoint:null,
+    /**
+     * O ID to touch interagindo com o joystick.
+     * @type {Number}
+     */
+    _touchID:-1,
+    /**
+     * A distância máxima que o pad pode se afastar de sua posição inicial (raio do joystick).
+     */
+    _radius:0,
+    /**
+     * @type {cc.Point}
+     */
+    _delta:null,
+    /**
+     * @type {cc.Point}
+     */
+    _power:null,
+    /**
+     * Indica se o movimento do joystick é analógico (false) ou baseado em direções pré-setadas (true).
+     * @type {Boolean}
+     */
+    _keyboardMode:false,
+    /**
+     * Variável interna para a lógica do 'modo teclado'.
+     * @type {Boolean}
+     */
+    _allow8Directions:false,
+    /**
+     * Variável interna para a lógica do 'modo teclado'.
+     * @type {Number}
+     */
+    _threshold:0,
+    /**
+     * Variável interna para a lógica do 'modo teclado'.
+     * @type {{left:Boolean, right:Boolean, up:Boolean, down:Boolean}}
+     */
+    _keyboardModeMetadata:{left:false, right:false, up:false, down:false},
+    /**
+     * Indica se o modo follow está ativo.
+     * @type {Boolean}
+     */
+    _followMode:false,
+    /**
+     * Variável interna para a lógia do 'modo follow'.
+     * @type {cc.Rect}
+     */
+    _followModeTouchArea:null,
 
-pd.Joystick = cc.Layer.extend(
-	{
-		isGrabbed:false,
-		touchId:null,
-		isNative:null,
-		joystickBG:null,
-		joystickStick:null,
-		delta:null,
-		power:null,
-		mousePressed:null,
-		eventForCallBack:null,
-		clickInitialPosition:null,
-		id:null,
-		callBack:null,
-		event:null,
-		eventName:null,
+    /**
+     * @constructs
+     * @param attr {{x:Number, y:Number, scaleX:Number, scaleY:Number, opacity:Number, visible:Boolean, rotation:Number}} - as propriedades de exibição do joystick.
+     * @param autoEnable {Boolean} - indica se os listeners do joystick devem ser adicionados automaticamente após a sua construção.
+     * @param eventBased {Boolean} - indica se o mecanismo de callbacks do joystick será baseado em eventos.
+     * @param [handler=null] {*|null} - para o método de callback explícito: o objeto que irá executar a função de callback.
+     * @param [handlerFunc=null] {Function|String|null} - para o método de callback explícito: a função de callback a ser executada.
+     */
+    ctor: function(attr, autoEnable, eventBased, handler, handlerFunc) {
+        if(typeof arguments[0] == 'number') {
+            throw new Error("[pd.Joystick] Utilizando construtor antigo não mais suportado para instanciar um joystick!")
+        }
 
-		keyUpState:false,
-		keyDownState:false,
-		keyLeftState:false,
-		keyRightState:false,
-		
-		ctor:function(x, y, ParentNode, uiSprite, stickSprite, eventToCall){
-			this._super();
+        this._super(pd.getSpriteFrame("JoysticBackGround.png"));
+        this._radius = this.getBoundingBox().width/2;
 
-			singletonJoyStick++;
-			this.id = singletonJoyStick;
-			var nome = "button" + this.id.toString();
-			this.createCustomListener(eventToCall, nome, ParentNode, false);
+        this._pad = pd.createSprite("JoysticStick.png", this._radius, this._radius, this);
 
-			
-			this.eventForCallBack = eventToCall;
-			this.mousePressed = null;
-			this.delta = null;
-			this.power = cc.p(0,0);
-			this.isGrabbed = false;
-			this.touchId = null;
-			this.clickInitialPosition = null;
-			if (!cc.sys.isMobile) {
-				this.isNative = false;
-			}
-			else{
-				this.isNative = true;
-			}
-			this.joystickBG = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(uiSprite));
-			this.joystickBG.setPosition(x,y);
-			this.joystickBG.setColor(cc.color(25,225,225,255));
-		
-			this.joystickStick = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(stickSprite));
-			this.joystickStick.CenterPosition = cc.p(this.joystickBG.getPosition());
-			this.joystickStick.setPosition(this.joystickStick.CenterPosition);
-		
-			this.addChild(this.joystickBG,1000);
-			this.addChild(this.joystickStick,1001);
-			pd.setInputForJoystick(this);
+        this._isGrabbed = false;
 
-			
-			return true;
-		},
-		
-		onMouseDown:function(event){
-			if(!this.isNative){
-				this.mousePressed = true;
-				this.delta = this.getStickState(event);
-			}
-			else{
-				for(i in event){
-					if(singletonTouchId[i] == false){
-						this.delta = this.getStickState(event[i]);
-						if(this.delta != false)
-							break;
-					}
-				}
-			}
-			if(this.delta != null && this.delta != undefined){
-				if(this.delta != false){
-					this.callCustomCallBack(this.delta, this.power);
-					//this.eventForCallBack(this.delta, this.power);
-				}
-			}
-		},
-		onMouseUp:function(event){
-			if(!this.isNative){
-				this.mousePressed = false;
-				this.releasedEvent(event);
-				this.callCustomCallBack(new cc.p(0,0), new cc.p(0,0));
-			}
-			else {
-				for(i in event){
-					if(event[i].getID() == this.touchId){
-						this.releasedEvent(event[i]);
-						this.callCustomCallBack(new cc.p(0,0), new cc.p(0,0));
-						break;
-					}
-				}
-			}
-		},
-		onMouseDragged:function(event){
-			if(this.isNative){
-				for(i in event){
-					if(event[i].getID() == this.touchId){
-						this.delta = this.getStickState(event[i]);
-						this.callCustomCallBack(this.delta, this.power);
-						break;
-					}
-				}
-			}
-			else if(this.mousePressed){
-				this.delta = this.getStickState(event);
-				this.callCustomCallBack(this.delta, this.power);
-			}
-		},
-		keyDown:function(keyCode, event){
-			this.delta = this.getStickState(event, keyCode);
-			this.callCustomCallBack(this.delta, this.power);
-		},
-		keyReleased:function(keyCode, event){
-			this.releasedEvent(event, keyCode);
-			this.callCustomCallBack(this.delta, this.power);
-		},
-		
-		setColor:function(r,g,b,a){
-			this.joystickBG.setColor(cc.color(r,g,b,a));
-			this.joystickStick.setColor(cc.color(r,g,b,a));
-		},
-		computeKey:function(){
-			var point = cc.p(0,0);
-			this.power = cc.p(0,0);
-			if(this.keyUpState){
-				point.y += 1;
-				this.power.y = 1;
-			}
-			if(this.keyDownState){
-				point.y -= 1;
-				this.power.y = 1;				
-			}
-			if(this.keyRightState){
-				point.x += 1;
-				this.power.x = 1;
-			}
-			if(this.keyLeftState){
-				point.x -= 1;
-				this.power.x = 1;
-			}
-			return point;
-			
-		},
-		getStickState:function(event, keyCode){
-			if(keyCode != null && keyCode != undefined){//teclado
-				if(keyCode == 40){//baixo
-					this.keyDownState = true;
-				}
-				if(keyCode == 38){//cima
-					this.keyUpState = true;
-				}
-				if(keyCode == 39){//direita
-					this.keyRightState = true;
-				}
-				if(keyCode == 37){//esquerda
-					this.keyLeftState = true;
-				}
-				return this.computeKey();
-			}
-			else{
-				var position = event.getLocation();
-				if(!this.isGrabbed){//ainda não foi clicado
-					var tempBox = cc.rect(position.x, position.y, 1,1);
-					if(cc.rectIntersectsRect(this.joystickStick.getBoundingBox(), tempBox)){
-						this.isGrabbed = true;
-						if(this.isNative){
-							this.touchId = event.getID();
-						}
-						this.clickInitialPosition = event.getLocation();
-						ret = new cc.p(0,0);
-						return ret;
-						
-					}
-					else{
-						ret = false;
-						return ret;
-					}
-				}
-				else{//verificando movimentação
-					if(this.isNative){
-						if(event.getID() == this.touchId){
-							var ret = this.getDelta(event);
-							return ret;
-						}
-					}
-					else{
-						var ret = this.getDelta(event);
-						return ret;
-					}
-				}
-			}
-			return false;
-		},
-		getDelta:function(event, isKeyboard){
-			
-			if(isKeyboard != null && isKeyboard != undefined){
-				var deltaX = event.x - this.joystickStick.CenterPosition.x;
-				var deltaY = event.y - this.joystickStick.CenterPosition.y;
-				var diferencaX = event.x - this.joystickBG.getPosition().x;//this.clickInitialPosition.x;
-				var diferencaY = event.y - this.joystickBG.getPosition().y//- this.clickInitialPosition.y;
-			}
-			else{
-				var deltaX = event.getLocation().x - this.joystickStick.CenterPosition.x;
-				var deltaY = event.getLocation().y - this.joystickStick.CenterPosition.y;
-				var diferencaX = event.getLocation().x - this.joystickBG.getPosition().x;//this.clickInitialPosition.x;
-				var diferencaY = event.getLocation().y - this.joystickBG.getPosition().y//- this.clickInitialPosition.y;
-			}
+        if(attr)
+            this.attr(attr);
 
-			var anguloFormado = Math.atan2(deltaY, deltaX); //* 180 / Math.PI;
-			var anguloX = Math.cos(anguloFormado);
-			var anguloY = Math.sin(anguloFormado);
-			
-			if(diferencaX >= this.joystickBG.getBoundingBox().width/2 - this.joystickBG.getBoundingBox().width/10){
-				diferencaX = this.joystickBG.getBoundingBox().width/2 - this.joystickBG.getBoundingBox().width/10;
-			}
-			else if(diferencaX <= -this.joystickBG.getBoundingBox().width/2 + this.joystickBG.getBoundingBox().width/10){
-				diferencaX = -this.joystickBG.getBoundingBox().width/2 + this.joystickBG.getBoundingBox().width/10;
-			}
-			if(diferencaY >= this.joystickBG.getBoundingBox().height/2 - this.joystickBG.getBoundingBox().height/10){
-				diferencaY = this.joystickBG.getBoundingBox().height/2 - this.joystickBG.getBoundingBox().height/10;
-			}
-			else if(diferencaY <= -this.joystickBG.getBoundingBox().height/2 + this.joystickBG.getBoundingBox().height/10){
-				diferencaY = -this.joystickBG.getBoundingBox().height/2 + this.joystickBG.getBoundingBox().height/10;
-			}
-			if(Math.abs(diferencaX) > (this.joystickBG.getBoundingBox().width/2 - this.joystickBG.getBoundingBox().width/10) * Math.abs(anguloX))
-			{
-				diferencaX = (this.joystickBG.getBoundingBox().width/2 - this.joystickBG.getBoundingBox().width/10) * (anguloX)				
-			}	
-			if(Math.abs(diferencaY) > (this.joystickBG.getBoundingBox().height/2 - this.joystickBG.getBoundingBox().height/10) * Math.abs(anguloY))
-			{
-				diferencaY = (this.joystickBG.getBoundingBox().height/2 - this.joystickBG.getBoundingBox().height/10) * (anguloY);		
-			}	
-			//diferencaX = diferencaX * Math.abs(anguloX);
-			//diferencaY = diferencaY * Math.abs(anguloY);
-			
-			this.joystickStick.setPosition(this.joystickStick.CenterPosition.x + diferencaX,
-					this.joystickStick.CenterPosition.y + diferencaY);
-		
+        if(autoEnable)
+            this.enable();
 
-			
-			deltaX = this.joystickStick.getPosition().x - this.joystickStick.CenterPosition.x;
-			deltaY = this.joystickStick.getPosition().y - this.joystickStick.CenterPosition.y;
-			anguloFormado = Math.atan2(deltaY, deltaX); //* 180 / Math.PI;
-			anguloX = Math.cos(anguloFormado);
-			anguloY = Math.sin(anguloFormado);
-			forcaX = Math.abs(deltaX) / (this.joystickBG.getBoundingBox().width/2);
-			forcaY = Math.abs(deltaY) / (this.joystickBG.getBoundingBox().height/2);
-			this.power = new cc.p(forcaX, forcaY);
-			return (new cc.p(anguloX, anguloY));
-		},
-		releasedEvent:function(event, keyCode){
-			if(keyCode != null && keyCode != undefined){//teclado
-				if(keyCode == 40){//baixo
-					this.keyDownState = false;
-				}
-				if(keyCode == 38){//cima
-					this.keyUpState = false;
-				}
-				if(keyCode == 39){//direita
-					this.keyRightState = false;
-				}
-				if(keyCode == 37){//esquerda
-					this.keyLeftState = false;
-				}
-				delta = this.computeKey();
-				this.callCustomCallBack(delta, this.power);
-			}	
-			else{
-				if(this.isNative){
-					if(event.getID() == this.touchId){
-						this.isGrabbed = false;
-						this.touchId = null;
-						this.joystickStick.setPosition(this.joystickStick.CenterPosition);
-					}
-				}
-				else{
-					this.isGrabbed = false;
-					this.touchId = null;
-					this.joystickStick.setPosition(this.joystickStick.CenterPosition);
-				}
-			}
-		},
-		createCustomListener:function(CallBack, NomeDoEvento, target, funcArgs){
-			this.funcToCall = CallBack;
-			this.eventName = NomeDoEvento;
-			this.funcCaller = target;
-			this.funcArgs = funcArgs;
-		},
-		callCustomCallBack:function(arg1, arg2){
-				this.funcCaller[this.funcToCall](arg1, arg2);
-			
-		},
-		createCustomListenerBackUp: function(CallBack, NomeDoEvento, target, removeCallBack){
-			this.removeCallBack = removeCallBack;
-			if(target == null && target == undefined){
-				target = this.getParent();
-			}
+        this.setCallbackMode(eventBased);
+        this._handler = handler;
+        this._handlerFunc = handlerFunc;
+    },
 
-			if(NomeDoEvento == undefined || NomeDoEvento == null){
-				NomeDoEvento = 'padrao';
-			}
-			NomeDoEvento += this.id.toString();
-			NomeDoEvento += Singleton_eventId.toString();
-			Singleton_eventId ++;
-			var evento = cc.EventListener.create({
-				event: cc.EventListener.CUSTOM,
-				press: false,
-				eventName: NomeDoEvento,
-				callback: function(event, press){
-					var call = event.getUserData();
-					var target = event.getCurrentTarget();
-					target.call = call;
-					target.call(event.delta, event.power);
-				}
-			});    
-			if(CallBack == undefined || CallBack == null){
-				cc.log('Parametro 1(CallBack) esta como nulo ou indefinido');
-			}
-			if(typeof(CallBack) != "function"){
-				cc.log('CallBack Precisa ser uma função');
-			}
-			if(target == null || target == undefined){
-				cc.log('Target esta nulo ou undefined, adicione esse LongEffectPlayer à layer que deseja chamar o CallBack');
-			}
-			this.callBack = CallBack;
-			this.event = evento;
-			cc.eventManager.addListener(this.event, target);
-			this.eventName = NomeDoEvento;
-		},
-		//Ao termino do som, o callBack eh chamado
-		callCustomCallBackBackup: function(delta, power){
-			if((this.eventName == null || this.eventName == undefined) && this.event != null && this.event != undefined){
-				cc.log('eventName nulo ou undefined, init chamado apos criação do CustomCallBack sem o parametro false');
-			}
-			if(this.eventName != null && this.eventName != undefined) {
-				var evento = new cc.EventCustom(this.eventName);
-				evento.setUserData(this.callBack);
-				evento.delta = delta;
-				evento.power = power;
-				cc.eventManager.dispatchEvent(evento);
-				if(this.removeCallBack != null && this.removeCallBack != undefined){
-					if(this.removeCallBack)
-						cc.eventManager.removeListener(this.event);
-					this.event = null;
-				}
-			}
-		}
+    /**
+     * Habilita o joystick.
+     */
+    enable: function() {
+        if(this._isEnabled)
+            return;
 
+        pd.inputManager.config(this, true, cc.EventListener.TOUCH_ONE_BY_ONE, 1);
 
-	}
-);
+        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, this._onMouseDown);
+        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, this, this._onMouseDragged);
+        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, this, this._onMouseUp);
+        this._isEnabled = true;
+    },
 
+    /**
+     * Desabilita o joystick.
+     */
+    disable: function() {
+        if(!this._isEnabled)
+            return;
 
-pd.setInputForJoystick = function(layer) {
-//	Seta um listener para os eventos de mouse e touch de uma layer
-	if(cc.sys.isMobile) {
-		var listener = cc.EventListener.create({
-			event: cc.EventListener.TOUCH_ALL_AT_ONCE,
-			swallowTouches: false,
-			onTouchesEnded: function (touch, event) {  
-				var target = event.getCurrentTarget(); 
-				//if(touch.getID() == 0 || touch.getID() == 1){
-				target.onMouseUp(touch);
-				return false;
-				//}
-			},
-			onTouchesBegan: function (touch, event) {  
-				var target = event.getCurrentTarget();
-				//if(touch.getID() == 0 || touch.getID() == 1){
-				target.onMouseDown(touch);
-				//}
-				return false;
-			},
-			onTouchesMoved: function (touches, event) {
-				var target = event.getCurrentTarget(); 
-				//if(touch.getID() == 0 || touch.getID() == 1){
-				target.onMouseDragged(touches);
-				//}
-				return false;
-			}
-		});
-	}
+        pd.inputManager.clean(this);
+        this._isEnabled = false;
+    },
 
-	else {
-		var listener = cc.EventListener.create({
-			event: cc.EventListener.MOUSE,                   
-			onMouseDown: function (event) {  
-				var target = event.getCurrentTarget();  
-				target.onMouseDown(event);
-			},
-			onMouseUp: function (event) {  
-				var target = event.getCurrentTarget();  
-				target.onMouseUp(event);
-			},
-			onMouseMove: function (event) {  
-				var target = event.getCurrentTarget();  
-				target.onMouseDragged(event);
-			}
-		});
-	}
+    /**
+     * Seta a cor do joystick.
+     * @param color {cc.Color}
+     */
+    setColor: function(color) {
+        this._super(color);
+        this.setCascadeColorEnabled(true);
+    },
 
-	cc.eventManager.addListener(listener, layer);
-	cc.eventManager.setPriority(listener, 10);
+    /**
+     * Seta o joystick para simular um movimento com direções pré-setadas, simulando um input de teclado.
+     * @param keyboardMode {Boolean} - true, para ativar. false, para desativar.
+     * @param [allow8Directions=false] {Boolean} - indica se o joystick deverá aceitar 8 direções (up, down, left, right, up+left, up+right, down+left, down+right). Caso false, ele será configurado apenas para 4 direções (up, down, left e right).
+     * @param [threshold=0.1] {Number} - um valor entre 0 e 1, que indica a porcentagem da distância que o 'pad' deve estar do centro do joystick para computar o movimento.
+     */
+    setKeyboardMode: function(keyboardMode, allow8Directions, threshold) {
+        this._keyboardMode = keyboardMode;
+        if(keyboardMode) {
+            this._allow8Directions = allow8Directions;
+            this._threshold = threshold || 0.1;
+        }
+    },
 
-	if (!cc.sys.isNative) {
-		cc.eventManager.addListener({
-			event: cc.EventListener.KEYBOARD,
-			onKeyPressed:  function(keyCode, event){
-				var target = event.getCurrentTarget();
-				target.keyDown(keyCode, event);
-			},
-			onKeyReleased: function(keyCode, event){
-				var target = event.getCurrentTarget();
-				target.keyReleased(keyCode, event);
-			}
-		}, layer);
-	}
-};
+    /**
+     * Seta o joystick para 'seguir' o toque do usuário, aparecendo na posição inicial do evento de toque toda a vez que o usuário iniciar tocar na área indicada.
+     * @param followMode {Boolean} - true, para ativar. false, para desativar.
+     * @param [touchArea=null] - a área disponível em que o joystick pode aparecer. Caso seja null, a área disponível será a tela inteira.
+     */
+    setFollowMode: function(followMode, touchArea) {
+        this._followMode = followMode;
+        if(followMode) {
+            this.setVisible(false);
+            this._followModeTouchArea = touchArea;
+        }
+    },
+
+    /**
+     * Atualiza as coordenadas do ponto-álvo.
+     * @param x {Number}
+     * @param y {Number}
+     * @private
+     */
+    _setTargetPoint: function(x, y) {
+        if(!this._targetPoint)
+            this._targetPoint = cc.p(0, 0);
+
+        this._targetPoint.x = x - this.x + this._radius;
+        this._targetPoint.y = y - this.y + this._radius;
+    },
+
+    /**
+     * Reseta o pad para a posição inicial.
+     * @private
+     */
+    _resetTargetPoint: function() {
+        if(!this._targetPoint)
+            this._targetPoint = cc.p(0, 0);
+
+        this._targetPoint.x = this._radius;
+        this._targetPoint.y = this._radius;
+    },
+
+    /**
+     * @param eventOrTouch {Object|Array}
+     * @private
+     */
+    _onMouseDown: function(eventOrTouch) {
+        if(!this.isGrabbed) {
+            if(this._followMode) {
+                if(!this._followModeTouchArea || pd.pointInPolygonIntersection(eventOrTouch.getLocation(), pd.rectToPolygon(this._followModeTouchArea))) {
+                    this.setPosition(eventOrTouch.getLocationX(), eventOrTouch.getLocationY());
+                    this.setVisible(true);
+                }
+                else {
+                    return;
+                }
+            }
+
+            if (this.isInside(eventOrTouch.getLocationX(), eventOrTouch.getLocationY())) {
+                this.isGrabbed = true;
+                if (cc.sys.isMobile) {
+                    if (this._touchID == -1)
+                        this._touchID = eventOrTouch.getID();
+                }
+                this._setTargetPoint(eventOrTouch.getLocationX(), eventOrTouch.getLocationY());
+                this._updatePad();
+            }
+        }
+    },
+
+    /**
+     * @param eventOrTouch {Object|Array}
+     * @private
+     */
+    _onMouseDragged: function(eventOrTouch) {
+        if(this.isGrabbed == true && (!cc.sys.isMobile || eventOrTouch.getID() == this._touchID)) {
+            this._setTargetPoint(eventOrTouch.getLocationX(), eventOrTouch.getLocationY());
+            this._updatePad();
+        }
+    },
+
+    /**
+     * @param eventOrTouch {Object|Array}
+     * @private
+     */
+    _onMouseUp: function(eventOrTouch) {
+        if(this.isGrabbed == true && (!cc.sys.isMobile || eventOrTouch.getID() == this._touchID)) {
+            this._resetTargetPoint();
+            this.isGrabbed = false;
+            this._updatePad();
+            if(this._followMode)
+                this.setVisible(false);
+            this._touchID = -1;
+        }
+    },
+
+    /**
+     * Atualiza a posição do pad.
+     * @private
+     */
+    _updatePad: function() {
+        var offset = this._radius - 15;
+        this._pad.x = this._targetPoint.x;
+        this._pad.y = this._targetPoint.y;
+        
+        if (Math.sqrt(Math.pow(this._pad.x - this._radius, 2) + Math.pow(this._pad.y - this._radius, 2)) > offset) {
+            var angle = Math.atan2(this._pad.y - this._radius, this._pad.x - this._radius);
+            this._pad.x = this._radius + Math.cos(angle) * offset;
+            this._pad.y = this._radius + Math.sin(angle) * offset;
+        }
+
+        var proportionX = (this._pad.x - this._radius) / offset;
+        var proportionY = (this._pad.y - this._radius) / offset;
+
+        if(this._keyboardMode) {
+            proportionX = Math.abs(proportionX) > this._threshold && (this._allow8Directions || (Math.abs(proportionX) > Math.abs(proportionY))) ? proportionX/Math.abs(proportionX) : 0;
+            proportionY = Math.abs(proportionY) > this._threshold && (this._allow8Directions || (Math.abs(proportionY) > Math.abs(proportionX))) ? proportionY/Math.abs(proportionY) : 0;
+            this._handleCallback(proportionX, proportionY, proportionX, proportionY);
+        }
+        else {
+            this._handleCallback(proportionX, proportionY, (Math.exp(Math.abs(proportionX)) - 1) / 1.72, (Math.exp(Math.abs(proportionY)) - 1) / 1.72);
+        }
+    },
+
+    /**
+     * Manipula o mecanismo de callback.
+     * @private
+     */
+    _handleCallback: function(deltaX, deltaY, powerX, powerY) {
+        if(!this._delta)
+            this._delta = cc.p(0, 0);
+        this._delta.x = deltaX;
+        this._delta.y = deltaY;
+
+        if(!this._power)
+            this._power = cc.p(0, 0);
+        this._power.x = powerX;
+        this._power.y = powerY;
+
+        if(this._shouldDispatchEvent()) {
+            pd.inputManager.setEventMetadata("_joystickMeta", this, this._delta, this._power);
+            this._dispatchInputEvent(pd.InputManager.EVENT_JOYSTICK_STATUS, pd.inputManager["_joystickMeta"]);
+
+            if(this._keyboardMode) {
+                this._checkKeyboardDirection("left", deltaX == -1, pd.Keys.LEFT);
+                this._checkKeyboardDirection("right", deltaX == 1, pd.Keys.RIGHT);
+                this._checkKeyboardDirection("up", deltaY == 1, pd.Keys.UP);
+                this._checkKeyboardDirection("down", deltaY == -1, pd.Keys.DOWN);
+            }
+        }
+        else if(this._handler && this._handlerFunc) {
+            this._performCall(this._handler, this._handlerFunc, [this, this._delta, this._power]);
+        }
+        else {
+            cc.log("[pd.Joystick] Aviso: Não foi registrada uma função de callback para o joystick (modo explícito)!");
+        }
+    },
+
+    /**
+     * Manipula o disparo de eventos de teclado para o keyboardMode.
+     * @private
+     */
+    _checkKeyboardDirection: function(direction, active, keyCode) {
+        if(this._keyboardModeMetadata[direction] == false && active) {
+            pd.inputManager.setEventMetadata("_keyboardMeta", this, keyCode);
+            this._dispatchInputEvent(pd.InputManager.EVENT_KEY_DOWN, pd.inputManager["_keyboardMeta"]);
+            this._keyboardModeMetadata[direction] = true;
+        }
+        else if(this._keyboardModeMetadata[direction] == true && !active) {
+            pd.inputManager.setEventMetadata("_keyboardMeta", this, keyCode);
+            this._dispatchInputEvent(pd.InputManager.EVENT_KEY_UP, pd.inputManager["_keyboardMeta"]);
+            this._keyboardModeMetadata[direction] = false;
+        }
+    }
+
+});

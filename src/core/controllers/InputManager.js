@@ -44,7 +44,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
         const metadata = target._inputMetadata;
         if(metadata[eventType])
-            cc.log("[pd.InputManager] Warning: tentando attachar dois callbacks a um mesmo tipo de evento para um mesmo target (não recomendado): " + eventType);
+            cc.log("[pd.InputManager] Aviso: tentando attachar dois callbacks a um mesmo tipo de evento para um mesmo target (não recomendado): " + eventType);
         metadata[eventType] = {handler: handler ? handler : target, handlerFunc:handlerFunc};
         this._checkInputSources(target, eventType, true);
     },
@@ -155,7 +155,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
                 this[didAddCallback ? "_activateKeyboard" : "_deactivateKeyboard"](target);
             }
         }
-        else if(eventType.lastIndexOf("Accelerometer" != -1)) {
+        else if(eventType.lastIndexOf("Accelerometer") != -1) {
             if(!target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER]) {
                 this[didAddCallback ? "_activateAccelerometer" : "_deactivateAccelerometer"](target);
             }
@@ -474,6 +474,12 @@ pd.InputManager.EVENT_BUTTON_PRESSED = "eventButtonPress";
 pd.InputManager.EVENT_BUTTON_RELEASED = "eventButtonReleased";
 
 /**
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_JOYSTICK_STATUS = "eventJoystickStatus";
+
+/**
  * Fontes de input disponíveis.
  * @enum {String}
  */
@@ -481,6 +487,7 @@ pd.InputManager.Sources = {
     MOUSE: "inputSourceMouse",
     KEYBOARD: "inputSourceKeyboard",
     ACCELEROMETER: "inputSourceAccelerometer",
-    BUTTON: "inputSourceButton"
+    BUTTON: "inputSourceButton",
+    JOYSTICK: "inputSourceJoystick"
 };
 
