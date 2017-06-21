@@ -182,12 +182,12 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._btnLeft.setOpacity(0);
         this._btnLeft.setVisible(false);
 
-        this.headerText = pd.createText(512, 660, pd.delegate.activeNamespace.tutorialData.txt_objetivo, "Calibri", 25);
+        this.headerText = pd.cText(512, 660, pd.delegate.activeNamespace.tutorialData.txt_objetivo, "Calibri", 25);
         this.addChild(this.headerText, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this.headerText.setOpacity(0);
         this.texto_objetivo = this.headerText; //legado!
 
-        this._extraHeaderText = pd.createText(512, 660, pd.delegate.activeNamespace.tutorialData.txt_objetivo, "Calibri", 25);
+        this._extraHeaderText = pd.cText(512, 660, pd.delegate.activeNamespace.tutorialData.txt_objetivo, "Calibri", 25);
         this.addChild(this._extraHeaderText, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._extraHeaderText.setOpacity(0);
 

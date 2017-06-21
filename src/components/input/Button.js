@@ -44,6 +44,16 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
      */
     _pressedScale:1,
     /**
+     * O fator de opacidade do botão no status 'idle'.
+     * @type {Number}
+     */
+    _normalOpacity:255,
+    /**
+     * O fator de escala do botão no status 'pressionado'.
+     * @type {Number}
+     */
+    _disabledOpacity:255,
+    /**
      * Flag que indica se o evento de Mouse Up deve ser disparado mesmo quando o usuário tirar o cursor/dedo da área do botão (mouse out).
      * @type {Boolean}
      */
@@ -71,9 +81,9 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
 
     /**
      * @constructs
-     * @param normalImage {cc.SpriteFrame} - o sprite frame do botão quando ele está solto.
-     * @param [pressedImage=null] {cc.SpriteFrame|null} - o sprite frame do botão quando ele está pressionado.
-     * @param attr {{x:Number, y:Number, scaleX:Number, scaleY:Number, opacity:Number, visible:Boolean, rotation:Number}} - as propriedades de exibição do botão.
+     * @param normalImage {String} - o sprite frame do botão quando ele está solto.
+     * @param [pressedImage=null] {String|null} - o sprite frame do botão quando ele está pressionado.
+     * @param attr {Object} - as propriedades de exibição do botão.
      * @param pressedScale {Number} - o fator de escala do botão ao ser pressionado.
      * @param autoEnable {Boolean} - indica se os listeners do botão devem ser adicionados automaticamente após a sua construção.
      * @param eventBased {Boolean} - indica se o mecanismo de callbacks do botão será baseado em eventos.
@@ -90,8 +100,8 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
             this._legacyCtor.apply(this, arguments);
         }
         else {
-            this._normalSpriteFrame = cc.spriteFrameCache.getSpriteFrame(normalImage);
-            this._pressedSpriteFrame = cc.spriteFrameCache.getSpriteFrame(pressedImage ? pressedImage : normalImage);
+            this._normalSpriteFrame = pd.getSpriteFrame(normalImage);
+            this._pressedSpriteFrame = pd.getSpriteFrame(pressedImage ? pressedImage : normalImage);
             this.attr(attr);
             this._pressedScale = pressedScale;
             this.setCallbackMode(eventBased);
@@ -156,11 +166,19 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     },
 
     /**
+     * Seta a opacidade do botão de quando ele está desabilitado.
+     * @param disabledOpacity
+     */
+    setDisabledOpacity: function(disabledOpacity) {
+        this._disabledOpacity = disabledOpacity;
+    },
+
+    /**
      * Habilita o botao.
      */
     enable: function() {
         if(this._isEnabled)
-           return;
+            return;
 
         pd.inputManager.config(this, true, cc.EventListener.TOUCH_ONE_BY_ONE, 1);
         pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, this._onMouseDown);
@@ -169,6 +187,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
 
         pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, this, this._onKeyDown);
         pd.inputManager.add(pd.InputManager.EVENT_KEY_UP, this, this._onKeyUp);
+        this.setOpacity(this._normalOpacity);
         this._isEnabled = true;
     },
 
@@ -295,7 +314,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
      */
     _performCallback: function(pressed) {
         if(this._shouldDispatchEvent()) {
-            pd.inputManager.setEventMetadata("_buttonMeta", this);
+            pd.inputManager.setEventMetadata("_buttonMeta", this._attachedKeyCode, this);
             this._dispatchInputEvent(pressed ? pd.InputManager.EVENT_BUTTON_PRESSED : pd.InputManager.EVENT_BUTTON_RELEASED, pd.inputManager["_buttonMeta"]);
         }
         else if(this._handler && this._handlerFunc) {

@@ -116,6 +116,7 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
     _setPreCachedCollisionRect: function(_x, _y, _width, _height) {
         if(!this._preCachedRect)
             this._preCachedRect = cc.rect();
+
         this._preCachedRect.x = _x;
         this._preCachedRect.y = _y;
         this._preCachedRect.width = _width || 1;

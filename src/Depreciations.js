@@ -23,9 +23,20 @@ pd.cObject = pd.createSprite;
 
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.createText}.
- * A função ainda é a mesma, apenas foi dado um nome mais claro à ela.
  */
-pd.cText = pd.createText;
+pd.cText = function(x, y, txt, font, size){
+    var text = null;
+    if(typeof txt == "string"){
+        text = new cc.LabelTTF(txt, font, size);
+        text.setFontFillColor(new cc.Color(0, 0, 0));
+    }
+    else{
+        text = new cc.Sprite(txt);
+    }
+    text.setPosition(x, y);
+    text.setAnchorPoint(0.5, 1);
+    return text;
+};
 
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.delegate.init}.

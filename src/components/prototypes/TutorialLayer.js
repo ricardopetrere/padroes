@@ -204,7 +204,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 		if(!pd.delegate.activeNamespace.tutoriais.txtOffSetY)
 			pd.delegate.activeNamespace.tutoriais.txtOffSetY = 0;
 
-		const label = pd.createText(0, 0, txt, "Calibri", 25);
+		const label = pd.cText(0, 0, txt, "Calibri", 25);
 		label.setPosition(512, 140 + pd.delegate.activeNamespace.tutoriais.txtOffSetY);
 		this.addChild(label, pd.ZOrders.TUTORIAL_PAGE_BOTTOM_TEXT);
 	},

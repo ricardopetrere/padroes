@@ -6,6 +6,9 @@ pd.CurrentDebugTarget = null;
 
 var DEBUGGER_ID_COUNT = 0;
 pd.AddToDebugger = function(obj, type, name){
+	if(!pd.debugMode)
+		return;
+
 	obj.Debugger_Id = DEBUGGER_ID_COUNT;
 	if(!name)
 		name = "obj" + obj.Debugger_Id;

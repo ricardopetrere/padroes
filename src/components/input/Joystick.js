@@ -93,10 +93,10 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
             throw new Error("[pd.Joystick] Utilizando construtor antigo não mais suportado para instanciar um joystick!")
         }
 
-        this._super(pd.getSpriteFrame("JoysticBackGround.png"));
+        this._super(pd.getSpriteFrame("JoystickBackGround.png"));
         this._radius = this.getBoundingBox().width/2;
 
-        this._pad = pd.createSprite("JoysticStick.png", this._radius, this._radius, this);
+        this._pad = pd.createSprite("JoystickStick.png", this._radius, this._radius, this);
 
         this._isGrabbed = false;
 
@@ -133,7 +133,9 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
         if(!this._isEnabled)
             return;
 
-        pd.inputManager.clean(this);
+        pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_DOWN, this);
+        pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_MOVE, this);
+        pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_UP, this);
         this._isEnabled = false;
     },
 
@@ -161,9 +163,9 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     },
 
     /**
-     * Seta o joystick para 'seguir' o toque do usuário, aparecendo na posição inicial do evento de toque toda a vez que o usuário iniciar tocar na área indicada.
+     * Seta o joystick para 'seguir' o toque do usuário, aparecendo na posição inicial do evento de toque toda a vez que o usuário tocar na área indicada.
      * @param followMode {Boolean} - true, para ativar. false, para desativar.
-     * @param [touchArea=null] - a área disponível em que o joystick pode aparecer. Caso seja null, a área disponível será a tela inteira.
+     * @param [touchArea=null] {cc.Rect} - a área disponível em que o joystick pode aparecer. Caso seja null, a área disponível será a tela inteira.
      */
     setFollowMode: function(followMode, touchArea) {
         this._followMode = followMode;

@@ -134,26 +134,58 @@ pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder){
 
 /**
  * Cria uma caixa de texto.
- * @type {Function}
+ * @param fontPath {String}
+ * @param fontName {String}
  * @param x {Number}
  * @param y {Number}
- * @param txt {String}
- * @param font {String}
  * @param size {Number}
+ * @param [color=] {cc.Color}
+ * @param [parentNode=null] {cc.Node}
+ * @param [text=""] {String}
+ * @param [alignment=null] {cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_RIGHT}
  * @returns {cc.LabelTTF}
  */
-pd.createText = function(x, y, txt, font, size){
-    var text = null;
-    if(typeof txt == "string"){
-        text = new cc.LabelTTF(txt, font, size);
-        text.setFontFillColor(new cc.Color(0, 0, 0));
+pd.createText = function(fontPath, fontName, x, y, size, color, parentNode, text, alignment) {
+    const txt = new cc.LabelTTF(text, cc.sys.isNative ? fontPath : fontName, size);
+    txt.fillStyle = color || cc.color(0, 0, 0, 255);
+
+    if(!alignment)
+        txt.setHorizontalAlignment(alignment);
+
+    if(!txt)
+        txt.setString(text);
+
+    if(parentNode)
+        parentNode.addChild(txt);
+
+    return txt;
+};
+
+/**
+ * Cria uma caixa de texto com uma fonte padrão.
+ * @param fontID {String}
+ * @param x {Number}
+ * @param y {Number}
+ * @param size {Number}
+ * @param [color=] {cc.Color}
+ * @param [parentNode=null] {cc.Node}
+ * @param [text=""] {String}
+ * @param [alignment=null] {cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_RIGHT}
+ * @returns {cc.LabelTTF}
+ */
+pd.createTextWithStandardFont = function(fontID, x, y, size, color, parentNode, text, alignment) {
+    switch(fontID) {
+        case pd.Fonts.CALIBRI:
+            var path = pd.res.calibri;
+            break;
+        case pd.Fonts.CARTON_SIX:
+            path = pd.res.carton_six;
+            break;
+        case pd.Fonts.DIMBO:
+            path = pd.res.dimbo;
+            break;
     }
-    else{
-        text = new cc.Sprite(txt);
-    }
-    text.setPosition(x, y);
-    text.setAnchorPoint(0.5, 1);
-    return text;
+    return pd.createText(path, fontID, x, y, size, color, parentNode, text, alignment);
 };
 
 /**

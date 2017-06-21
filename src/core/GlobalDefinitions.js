@@ -60,7 +60,12 @@ pd.res = {
     fx_flip : padroesPath+"/res/snd/desenrola.mp3",
     fx_exp : padroesPath+"/res/snd/explosion.mp3",
     fx_star : padroesPath+"/res/snd/estrelas.mp3",
-    fx_button: padroesPath+"/res/snd/button.mp3"
+    fx_button: padroesPath+"/res/snd/button.mp3",
+
+    //Fonts
+    carton_six: padroesPath+"/res/font/Carton Six.ttf",
+    dimbo: padroesPath+"/res/font/Dimbo.ttf",
+    calibri: padroesPath+"/res/font/Calibri.ttf"
 
 };
 
@@ -125,4 +130,15 @@ pd.ZOrders = {
     TUTORIAL_LAYER: 99999,
     PAUSE_LAYER: 999999
 };
+
+/**
+ * Enumerador com as fontes padrão.
+ * @enum {String}
+ */
+pd.Fonts = {
+    CALIBRI: "Calibri",
+    CARTON_SIX: "Carton Six",
+    DIMBO: "Dimbo"
+};
+
 //</editor-fold">
