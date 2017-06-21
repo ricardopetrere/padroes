@@ -4,797 +4,1086 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>JoysticBackGround.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{2,829},{179,179}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{179,179}}</string>
-                <key>sourceSize</key>
-                <string>{179,179}</string>
-            </dict>
-            <key>JoysticStick.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{266,952},{68,68}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{68,68}}</string>
-                <key>sourceSize</key>
-                <string>{68,68}</string>
-            </dict>
             <key>JoystickBackGround.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,829},{179,179}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{179,179}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{179,179}</string>
+                <key>spriteSourceSize</key>
+                <string>{179,179}</string>
+                <key>textureRect</key>
+                <string>{{2,2},{179,179}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>JoystickStick.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{266,952},{68,68}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{68,68}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{68,68}</string>
+                <key>spriteSourceSize</key>
+                <string>{68,68}</string>
+                <key>textureRect</key>
+                <string>{{899,363},{68,68}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0001.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,426},{197,127}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,5},{197,127}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{197,129}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{410,266},{197,129}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0002.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,426},{197,127}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,5},{197,127}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{197,129}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{410,266},{197,129}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0003.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,426},{197,127}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,5},{197,127}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{197,129}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{410,266},{197,129}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0004.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{201,514},{195,133}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{1,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,2},{195,133}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{195,135}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{410,129},{195,135}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0005.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{201,514},{195,133}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{1,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,2},{195,133}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{195,135}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{410,129},{195,135}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0006.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{197,649},{191,139}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{2,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{5,0},{191,139}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{193,139}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{852,2},{193,139}}</string>
+                <key>textureRotated</key>
+                <true/>
             </dict>
             <key>accel_lateral0007.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{197,649},{191,139}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{2,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{5,0},{191,139}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{193,139}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{852,2},{193,139}}</string>
+                <key>textureRotated</key>
+                <true/>
             </dict>
             <key>accel_lateral0008.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{197,649},{191,139}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{2,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{5,0},{191,139}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{193,139}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{852,2},{193,139}}</string>
+                <key>textureRotated</key>
+                <true/>
             </dict>
             <key>accel_lateral0009.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{201,514},{195,133}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{1,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,2},{195,133}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{195,135}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{410,129},{195,135}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0010.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{201,514},{195,133}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{1,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,2},{195,133}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{195,135}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{410,129},{195,135}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0011.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,426},{197,127}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,5},{197,127}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{197,129}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{410,266},{197,129}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0012.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,426},{197,127}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,5},{197,127}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{197,129}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{410,266},{197,129}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0013.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,426},{197,127}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,5},{197,127}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{197,129}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{410,266},{197,129}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0014.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,555},{193,131}}</string>
-                <key>offset</key>
-                <string>{2,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{4,3},{193,131}}</string>
-                <key>sourceSize</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{1,1}</string>
+                <key>spriteSize</key>
+                <string>{195,133}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{609,260},{195,133}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0015.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,555},{193,131}}</string>
-                <key>offset</key>
-                <string>{2,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{4,3},{193,131}}</string>
-                <key>sourceSize</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{1,1}</string>
+                <key>spriteSize</key>
+                <string>{195,133}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{609,260},{195,133}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0016.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,688},{189,139}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{3,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{7,0},{189,139}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{191,139}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{208,353},{191,139}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0017.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,688},{189,139}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{3,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{7,0},{189,139}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{191,139}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{208,353},{191,139}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0018.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,688},{189,139}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{3,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{7,0},{189,139}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{191,139}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{208,353},{191,139}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0019.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,555},{193,131}}</string>
-                <key>offset</key>
-                <string>{2,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{4,3},{193,131}}</string>
-                <key>sourceSize</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{1,1}</string>
+                <key>spriteSize</key>
+                <string>{195,133}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{609,260},{195,133}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_lateral0020.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,555},{193,131}}</string>
-                <key>offset</key>
-                <string>{2,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{4,3},{193,131}}</string>
-                <key>sourceSize</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{1,1}</string>
+                <key>spriteSize</key>
+                <string>{195,133}</string>
+                <key>spriteSourceSize</key>
                 <string>{197,139}</string>
+                <key>textureRect</key>
+                <string>{{609,260},{195,133}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0001.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{202,385},{198,127}}</string>
-                <key>offset</key>
-                <string>{0,3}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{3,0},{198,127}}</string>
-                <key>sourceSize</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,2}</string>
+                <key>spriteSize</key>
+                <string>{200,129}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{607,129},{200,129}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0002.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{202,385},{198,127}}</string>
-                <key>offset</key>
-                <string>{0,3}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{3,0},{198,127}}</string>
-                <key>sourceSize</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,2}</string>
+                <key>spriteSize</key>
+                <string>{200,129}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{607,129},{200,129}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0003.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{202,385},{198,127}}</string>
-                <key>offset</key>
-                <string>{0,3}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{3,0},{198,127}}</string>
-                <key>sourceSize</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,2}</string>
+                <key>spriteSize</key>
+                <string>{200,129}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{607,129},{200,129}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0004.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,295},{198,129}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{3,1},{198,129}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{200,131}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{208,220},{200,131}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0005.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,295},{198,129}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{3,1},{198,129}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{200,131}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{208,220},{200,131}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0006.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{204,252},{198,131}}</string>
-                <key>offset</key>
-                <string>{0,-1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{3,2},{198,131}}</string>
-                <key>sourceSize</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{200,133}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{208,85},{200,133}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0007.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{204,252},{198,131}}</string>
-                <key>offset</key>
-                <string>{0,-1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{3,2},{198,131}}</string>
-                <key>sourceSize</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{200,133}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{208,85},{200,133}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0008.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{204,252},{198,131}}</string>
-                <key>offset</key>
-                <string>{0,-1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{3,2},{198,131}}</string>
-                <key>sourceSize</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{200,133}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{208,85},{200,133}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0009.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,295},{198,129}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{3,1},{198,129}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{200,131}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{208,220},{200,131}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0010.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,295},{198,129}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,1}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{3,1},{198,129}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{200,131}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{208,220},{200,131}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0011.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{202,385},{198,127}}</string>
-                <key>offset</key>
-                <string>{0,3}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{3,0},{198,127}}</string>
-                <key>sourceSize</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,2}</string>
+                <key>spriteSize</key>
+                <string>{200,129}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{607,129},{200,129}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0012.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{202,385},{198,127}}</string>
-                <key>offset</key>
-                <string>{0,3}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{3,0},{198,127}}</string>
-                <key>sourceSize</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,2}</string>
+                <key>spriteSize</key>
+                <string>{200,129}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{607,129},{200,129}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0013.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{202,385},{198,127}}</string>
-                <key>offset</key>
-                <string>{0,3}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{3,0},{198,127}}</string>
-                <key>sourceSize</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,2}</string>
+                <key>spriteSize</key>
+                <string>{200,129}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{607,129},{200,129}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0014.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,168},{200,125}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,4}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,0},{200,125}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{202,125}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{444,2},{202,125}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0015.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,168},{200,125}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,4}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,0},{200,125}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{202,125}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{444,2},{202,125}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0016.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{263,2},{204,121}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,6}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{204,121}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{204,121}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{85,183},{204,121}}</string>
+                <key>textureRotated</key>
+                <true/>
             </dict>
             <key>accel_vertical0017.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{263,2},{204,121}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,6}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{204,121}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{204,121}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{85,183},{204,121}}</string>
+                <key>textureRotated</key>
+                <true/>
             </dict>
             <key>accel_vertical0018.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{263,2},{204,121}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,6}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{204,121}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{204,121}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{85,183},{204,121}}</string>
+                <key>textureRotated</key>
+                <true/>
             </dict>
             <key>accel_vertical0019.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{263,125},{200,125}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,4}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,0},{200,125}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{202,125}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{648,2},{202,125}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>accel_vertical0020.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{263,125},{200,125}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,4}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{2,0},{200,125}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
+                <string>{202,125}</string>
+                <key>spriteSourceSize</key>
                 <string>{204,133}</string>
+                <key>textureRect</key>
+                <string>{{648,2},{202,125}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>buttonLabelAction.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{-1,2}</string>
+                <key>spriteSize</key>
+                <string>{58,48}</string>
+                <key>spriteSourceSize</key>
+                <string>{60,60}</string>
+                <key>textureRect</key>
+                <string>{{816,446},{58,48}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>buttonLabelBaloon.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{-1,1}</string>
+                <key>spriteSize</key>
+                <string>{51,49}</string>
+                <key>spriteSourceSize</key>
+                <string>{53,51}</string>
+                <key>textureRect</key>
+                <string>{{972,335},{51,49}}</string>
+                <key>textureRotated</key>
+                <true/>
+            </dict>
+            <key>buttonLabelCheckMark.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{-1,1}</string>
+                <key>spriteSize</key>
+                <string>{51,45}</string>
+                <key>spriteSourceSize</key>
+                <string>{53,47}</string>
+                <key>textureRect</key>
+                <string>{{876,446},{51,45}}</string>
+                <key>textureRotated</key>
+                <true/>
+            </dict>
+            <key>buttonLabelDash.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{-1,1}</string>
+                <key>spriteSize</key>
+                <string>{44,44}</string>
+                <key>spriteSourceSize</key>
+                <string>{46,46}</string>
+                <key>textureRect</key>
+                <string>{{923,433},{44,44}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>buttonLabelExclamationMark.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{-1,1}</string>
+                <key>spriteSize</key>
+                <string>{17,51}</string>
+                <key>spriteSourceSize</key>
+                <string>{19,53}</string>
+                <key>textureRect</key>
+                <string>{{183,85},{17,51}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>buttonLabelEye.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{-1,1}</string>
+                <key>spriteSize</key>
+                <string>{54,33}</string>
+                <key>spriteSourceSize</key>
+                <string>{56,35}</string>
+                <key>textureRect</key>
+                <string>{{809,129},{54,33}}</string>
+                <key>textureRotated</key>
+                <true/>
+            </dict>
+            <key>buttonLabelFlame.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{-1,1}</string>
+                <key>spriteSize</key>
+                <string>{37,45}</string>
+                <key>spriteSourceSize</key>
+                <string>{39,47}</string>
+                <key>textureRect</key>
+                <string>{{169,389},{37,45}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>buttonLabelHand.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{-1,1}</string>
+                <key>spriteSize</key>
+                <string>{49,52}</string>
+                <key>spriteSourceSize</key>
+                <string>{51,54}</string>
+                <key>textureRect</key>
+                <string>{{143,448},{49,52}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>buttonLabelPin.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{-1,1}</string>
+                <key>spriteSize</key>
+                <string>{52,52}</string>
+                <key>spriteSourceSize</key>
+                <string>{54,54}</string>
+                <key>textureRect</key>
+                <string>{{969,388},{52,52}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>buttonLabelRefresh.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{-1,1}</string>
+                <key>spriteSize</key>
+                <string>{50,53}</string>
+                <key>spriteSourceSize</key>
+                <string>{52,55}</string>
+                <key>textureRect</key>
+                <string>{{972,280},{50,53}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>buttonLabelSearch.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{-1,1}</string>
+                <key>spriteSize</key>
+                <string>{47,49}</string>
+                <key>spriteSourceSize</key>
+                <string>{49,51}</string>
+                <key>textureRect</key>
+                <string>{{975,197},{47,49}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>buttonLabelSettings.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{-1,1}</string>
+                <key>spriteSize</key>
+                <string>{51,51}</string>
+                <key>spriteSourceSize</key>
+                <string>{53,53}</string>
+                <key>textureRect</key>
+                <string>{{969,442},{51,51}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>buttonLabelStar.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{-1,1}</string>
+                <key>spriteSize</key>
+                <string>{60,56}</string>
+                <key>spriteSourceSize</key>
+                <string>{62,58}</string>
+                <key>textureRect</key>
+                <string>{{81,448},{60,56}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>dedo_0001.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{204,168},{57,82}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{57,82}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{57,82}</string>
+                <key>spriteSourceSize</key>
+                <string>{57,82}</string>
+                <key>textureRect</key>
+                <string>{{85,389},{57,82}}</string>
+                <key>textureRotated</key>
+                <true/>
             </dict>
             <key>dedo_0002.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{266,873},{77,63}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <true/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{77,63}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{77,63}</string>
+                <key>spriteSourceSize</key>
+                <string>{77,63}</string>
+                <key>textureRect</key>
+                <string>{{2,444},{77,63}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>keyDown0001.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{266,790},{81,81}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{81,81}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{81,81}</string>
+                <key>spriteSourceSize</key>
+                <string>{81,81}</string>
+                <key>textureRect</key>
+                <string>{{401,397},{81,81}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>keyDown0002.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{183,916},{81,81}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{81,81}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{81,81}</string>
+                <key>spriteSourceSize</key>
+                <string>{81,81}</string>
+                <key>textureRect</key>
+                <string>{{484,397},{81,81}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>keyLeft0001.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{183,833},{81,81}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{81,81}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{81,81}</string>
+                <key>spriteSourceSize</key>
+                <string>{81,81}</string>
+                <key>textureRect</key>
+                <string>{{567,397},{81,81}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>keyLeft0002.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{390,750},{81,81}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{81,81}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{81,81}</string>
+                <key>spriteSourceSize</key>
+                <string>{81,81}</string>
+                <key>textureRect</key>
+                <string>{{650,395},{81,81}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>keyNaked0001.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{390,667},{81,81}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{81,81}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{81,81}</string>
+                <key>spriteSourceSize</key>
+                <string>{81,81}</string>
+                <key>textureRect</key>
+                <string>{{733,395},{81,81}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>keyNaked0002.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{398,584},{81,81}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{81,81}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{81,81}</string>
+                <key>spriteSourceSize</key>
+                <string>{81,81}</string>
+                <key>textureRect</key>
+                <string>{{809,197},{81,81}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>keyRight0001.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{402,501},{81,81}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{81,81}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{81,81}</string>
+                <key>spriteSourceSize</key>
+                <string>{81,81}</string>
+                <key>textureRect</key>
+                <string>{{892,197},{81,81}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>keyRight0002.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{402,418},{81,81}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{81,81}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{81,81}</string>
+                <key>spriteSourceSize</key>
+                <string>{81,81}</string>
+                <key>textureRect</key>
+                <string>{{806,280},{81,81}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>keySpace0001.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,85},{259,81}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{259,81}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{259,81}</string>
+                <key>spriteSourceSize</key>
+                <string>{259,81}</string>
+                <key>textureRect</key>
+                <string>{{2,183},{259,81}}</string>
+                <key>textureRotated</key>
+                <true/>
             </dict>
             <key>keySpace0002.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{2,2},{259,81}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{259,81}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{259,81}</string>
+                <key>spriteSourceSize</key>
+                <string>{259,81}</string>
+                <key>textureRect</key>
+                <string>{{183,2},{259,81}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>keyUp0001.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{404,335},{81,81}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{81,81}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{81,81}</string>
+                <key>spriteSourceSize</key>
+                <string>{81,81}</string>
+                <key>textureRect</key>
+                <string>{{889,280},{81,81}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>keyUp0002.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{404,252},{81,81}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{81,81}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{81,81}</string>
+                <key>spriteSourceSize</key>
+                <string>{81,81}</string>
+                <key>textureRect</key>
+                <string>{{816,363},{81,81}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>seta_0001.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{469,2},{19,28}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <true/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{19,28}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{19,28}</string>
+                <key>spriteSourceSize</key>
+                <string>{19,28}</string>
+                <key>textureRect</key>
+                <string>{{410,85},{19,28}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
             <key>seta_0002.png</key>
             <dict>
-                <key>frame</key>
-                <string>{{469,23},{15,21}}</string>
-                <key>offset</key>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
                 <string>{0,0}</string>
-                <key>rotated</key>
-                <true/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{15,21}}</string>
-                <key>sourceSize</key>
+                <key>spriteSize</key>
                 <string>{15,21}</string>
+                <key>spriteSourceSize</key>
+                <string>{15,21}</string>
+                <key>textureRect</key>
+                <string>{{993,2},{15,21}}</string>
+                <key>textureRotated</key>
+                <false/>
             </dict>
         </dict>
         <key>metadata</key>
         <dict>
             <key>format</key>
-            <integer>2</integer>
+            <integer>3</integer>
+            <key>pixelFormat</key>
+            <string>RGBA8888</string>
+            <key>premultiplyAlpha</key>
+            <false/>
             <key>realTextureFileName</key>
             <string>input.png</string>
             <key>size</key>
-            <string>{512,1024}</string>
+            <string>{1024,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:07aae004cfecfda4de1f3d5cfaeebc2e$</string>
+            <string>$TexturePacker:SmartUpdate:f767f9b7c9364d02b48d673cba0055ef:9586dda9ab49364915712e4b13dd9da7:6a01e16181a1fd16826e9db02fbc2741$</string>
             <key>textureFileName</key>
             <string>input.png</string>
         </dict>

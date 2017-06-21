@@ -3,17 +3,18 @@
  *
  * @class
  * @extends {cc.Sprite}
- * @mixes {pd.EventDispatcher}
+ * @mixes {pd.decorators.EventDispatcher}
+ * @mixes {pd.decorators.ClickableNode}
  * @classdesc Classe base para botões de interface.
  */
-pd.Button = cc.Sprite.extend({/** @lends pd.Button#**/
+pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators.ClickableNode).extend({/** @lends pd.Button#**/
     /**
      * O ID do touch que está interagindo com o botão.
      * @type {Number}
      */
     _touchID:-1,
     /**
-     * O KeyCode da tecla vinculado ao botão.
+     * O keyCode da tecla vinculado ao botão.
      * @type {Number}
      */
     _attachedKeyCode:-1,
@@ -67,11 +68,6 @@ pd.Button = cc.Sprite.extend({/** @lends pd.Button#**/
      * @type {cc.SpriteFrame}
      */
     _pressedSpriteFrame:null,
-    /**
-     * O mecanismo de callback utilizado pelo botão.
-     * @type {pd.Button.CALLBACK_MODE_EXPLICIT|pd.Button.CALLBACK_MODE_EVENT_BASED}
-     */
-    _callbackMode:"",
 
     /**
      * @constructs
@@ -98,7 +94,7 @@ pd.Button = cc.Sprite.extend({/** @lends pd.Button#**/
             this._pressedSpriteFrame = cc.spriteFrameCache.getSpriteFrame(pressedImage ? pressedImage : normalImage);
             this.attr(attr);
             this._pressedScale = pressedScale;
-            this._callbackMode = eventBased ? pd.Button.CALLBACK_MODE_EVENT_BASED : pd.Button.CALLBACK_MODE_EXPLICIT;
+            this.setCallbackMode(eventBased);
 
             this._handler = handler;
             this._handlerFunc = handlerFunc;
@@ -203,25 +199,11 @@ pd.Button = cc.Sprite.extend({/** @lends pd.Button#**/
     },
 
     /**
-     * Verifica se as coordenadas do evento estão dentro do bounding box do botão.
-     * @param event {Object}
-     * @private
-     */
-    _isColliding: function(event) {
-        if(!event)
-            return false;
-
-        const location = event.getLocation();
-        const collisionBox = cc.rect(location.x, location.y, 1, 1);
-        return cc.rectIntersectsRect(this.getBoundingBox(), collisionBox);
-    },
-
-    /**
      * @param eventOrTouch {Object|Array}
      * @private
      */
     _onMouseDown: function(eventOrTouch) {
-        const isColliding = this._isColliding(eventOrTouch);
+        const isColliding = this.isInside(eventOrTouch.getLocationX(), eventOrTouch.getLocationY());
         if(!isColliding)
             return;
 
@@ -249,7 +231,7 @@ pd.Button = cc.Sprite.extend({/** @lends pd.Button#**/
             return;
 
         if(this._isPressed) {
-            if(this._isColliding(eventOrTouch)) {
+            if(this.isInside(eventOrTouch.getLocationX(), eventOrTouch.getLocationY())) {
                 this.setSpriteFrame(this._pressedSpriteFrame);
                 this.setScale(this._pressedScale);
                 this._shouldDispatchMouseUpCall = false;
@@ -275,7 +257,7 @@ pd.Button = cc.Sprite.extend({/** @lends pd.Button#**/
             this.setSpriteFrame(this._normalSpriteFrame);
             this.setScale(this._normalScale);
             this._setPressed(false);
-            if(this._shouldDispatchMouseUpCall || this._isColliding(eventOrTouch))
+            if(this._shouldDispatchMouseUpCall || this.isInside(eventOrTouch.getLocationX(), eventOrTouch.getLocationY()))
                 this._performCallback(false);
         }
     },
@@ -312,17 +294,15 @@ pd.Button = cc.Sprite.extend({/** @lends pd.Button#**/
      * @private
      */
     _performCallback: function(pressed) {
-        if(this._callbackMode == pd.Button.CALLBACK_MODE_EXPLICIT) {
-            if (typeof(this._handlerFunc) == "function") {
-                this._handlerFunc.apply(this._handler, [this, pressed, this._handlerFuncArgs]);
-            }
-            else {
-                this._handler[this._handlerFunc].apply(this._handler, [this, pressed, this._handlerFuncArgs]);
-            }
+        if(this._shouldDispatchEvent()) {
+            pd.inputManager.setEventMetadata("_buttonMeta", this);
+            this._dispatchInputEvent(pressed ? pd.InputManager.EVENT_BUTTON_PRESSED : pd.InputManager.EVENT_BUTTON_RELEASED, pd.inputManager["_buttonMeta"]);
+        }
+        else if(this._handler && this._handlerFunc) {
+            this._performCall(this._handler, this._handlerFunc, [this, pressed, this._handlerFuncArgs]);
         }
         else {
-            pd.inputManager.setEventMetadata("_buttonMeta", this);
-            pd.inputManager.call(this, pressed ? pd.InputManager.EVENT_BUTTON_PRESSED : pd.InputManager.EVENT_BUTTON_RELEASED, pd.inputManager._buttonMeta);
+            cc.log("[pd.Button] Aviso: Não foi registrada uma função de callback para um botão em modo explícito!");
         }
     }
 });

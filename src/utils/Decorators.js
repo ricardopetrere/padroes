@@ -17,14 +17,13 @@
 
 /**
  * 'Package' responsável por encapsular as implementações de objetos decorators.
- * @type {Object}
  */
 pd.decorators = {};
 
 //<editor-fold desc="#Node Behaviour">
 /**
  * Implementa a capacidade de um node resetar suas propriedades de exibição. <br />
- * Este decorator é útil para objetos de Numbererface e cenário que animam, e eventualmente, precisam resetar-se para seu estado inicial em algum ponto da aplicação.
+ * Este decorator é útil para objetos de interface e cenário que animam, e eventualmente, precisam resetar-se para seu estado inicial em algum ponto da aplicação.
  * @mixin
  */
 pd.decorators.ResetableNode = {/** @lends pd.decorators.ResetableNode#*/
@@ -57,7 +56,7 @@ pd.decorators.ResetableNode = {/** @lends pd.decorators.ResetableNode#*/
     },
 
     /**
-     * Obtém a ação de reset, responsável por Numbererpolar o objeto de volta para todos os valores das propriedades do estado inicial.
+     * Obtém a ação de reset, responsável por interpolar o objeto de volta para todos os valores das propriedades do estado inicial.
      * @param time {Number}
      * @param easingFunction {Function}
      * @returns {cc.Action}
@@ -72,7 +71,7 @@ pd.decorators.ResetableNode = {/** @lends pd.decorators.ResetableNode#*/
     },
 
     /**
-     * Numbererpola para o estado de exibição salvo.
+     * interpola para o estado de exibição salvo.
      * @param time {Number}
      * @param easingFunction {Function}
      * @param [callback=null] {Function}
@@ -104,6 +103,9 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
     /** @type {cc.Rect} **/
     _preCachedRect:null,
 
+    /** @type {cc.Rect} **/
+    _collisionBox:null,
+
     /**
      * @param _x {Number}
      * @param _y {Number}
@@ -111,37 +113,55 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
      * @param _height {Number}
      * @private
      */
-    _setPreCachedRect: function(_x, _y, _width, _height) {
+    _setPreCachedCollisionRect: function(_x, _y, _width, _height) {
         if(!this._preCachedRect)
             this._preCachedRect = cc.rect();
         this._preCachedRect.x = _x;
         this._preCachedRect.y = _y;
-        this._preCachedRect.width = _width;
-        this._preCachedRect.height = _height;
+        this._preCachedRect.width = _width || 1;
+        this._preCachedRect.height = _height || 1;
     },
 
     /**
-     * Verifica se um ponto local (x,y) está contido dentro do bounding box do node.
+     * Seta uma caixa de colisão customizada.
+     * @param _xOrRect {Number|cc.Rect}
+     * @param [_y=null] {Number}
+     * @param [_width=null] {Number}
+     * @param [_height=null] {Number}
+     */
+    setCollisionBox: function(_xOrRect, _y, _width, _height) {
+        if(typeof _xOrRect != 'number') {
+            this._collisionBox = _xOrRect;
+            return;
+        }
+
+        if(!this._collisionBox)
+            this._collisionBox = cc.rect();
+
+        this._collisionBox.x = _x;
+        this._collisionBox.y = _y;
+        this._collisionBox.width = _width;
+        this._collisionBox.height = _height;
+    },
+
+    /**
+     * Cacheia a boundingBox to objeto atual.
+     * @param toWorld {Boolean}
+     */
+    cacheBoundingBoxAsCollisionBox: function(toWorld) {
+        this._collisionBox = toWorld == true ? this.getBoundingBoxToWorld() : this.getBoundingBox();
+    },
+
+    /**
+     * Verifica se um ponto local (x,y) está contido dentro da collision box/bounding box do node.
      * @param _x {Number}
      * @param _y {Number}
      * @param [tolerance = 1] {Number}
      * @returns {Boolean}
      */
-    isInsideLocal: function(_x, _y, tolerance) {
-        this._setPreCachedRect(_x, _y, tolerance, tolerance);
-        return cc.rectIntersectsRect(cc.rect(this._preCachedRect, this.getBoundingBox()));
-    },
-
-    /**
-     * Verifica se um ponto global (x,y) está contido dentro do bounding box do node.
-     * @param _x {Number}
-     * @param _y {Number}
-     * @param [tolerance = 1] {Number}
-     * @returns {Boolean}
-     */
-    isInsideGlobal: function(_x, _y, tolerance) {
-        this._setPreCachedRect(_x, _y, tolerance, tolerance);
-        return cc.rectIntersectsRect(this._preCachedRect, this.getBoundingBoxToWorld());
+    isInside: function(_x, _y, tolerance) {
+        this._setPreCachedCollisionRect(_x, _y, tolerance, tolerance);
+        return cc.rectIntersectsRect(this._preCachedRect, this._collisionBox ? this._collisionBox : this.getBoundingBox());
     },
 
     /**
@@ -155,6 +175,79 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
     }
 };
 //</editor-fold">
+//<editor-fold desc="#Event Dispatching">
+/**
+ * Implementa a capacidade de um componente de disparar eventos via pd.InputManager.
+ * @mixin
+ */
+pd.decorators.EventDispatcher = { /** @lends pd.decorators.EventDispatcher#*/
+    /**
+     * O mecanismo de callback utilizado pelo botão.
+     * @type {pd.decorators.EventDispatcher.CALLBACK_MODE_EXPLICIT|pd.decorators.EventDispatcher.CALLBACK_MODE_EVENT_BASED}
+     */
+    _callbackMode:"",
+    
+    /**
+     * Seta o mecanismo de callback do componente.
+     * @function
+     * @param eventBased {Boolean}
+     */
+    setCallbackMode: function(eventBased) {
+        this._callbackMode = eventBased ? pd.decorators.EventDispatcher.CALLBACK_MODE_EVENT_BASED : pd.decorators.EventDispatcher.CALLBACK_MODE_EXPLICIT;
+    },
+
+    /**
+     * Indica se o componente deve disparar eventos.
+     * @returns {Boolean}
+     */
+    _shouldDispatchEvent: function() {
+        return this._callbackMode == pd.decorators.EventDispatcher.CALLBACK_MODE_EVENT_BASED;
+    },
+
+    /**
+     * Realiza uma chamada explícia ao método de callback.
+     * @param handler {*}
+     * @param handlerFunc {Function|String}
+     * @param handlerArgs {Array}
+     */
+    _performCall: function(handler, handlerFunc, handlerArgs) {
+        if(this._callbackMode == pd.decorators.EventDispatcher.CALLBACK_MODE_EVENT_BASED)
+            throw new Error("[pd.decorators.EventDispatcher] O modo de callback do componente é baseado em eventos!");
+
+        if (typeof(handlerFunc) == "function") {
+            handlerFunc.apply(handler, handlerArgs);
+        }
+        else {
+            handler[handlerFunc].apply(handler, handlerArgs);
+        }
+    },
+
+    /**
+     * Dispara um evento.
+     * @param eventType {String}
+     * @param eventMetadata {Array} - metadados pré-setados (utilizar o mecanismo de cache do pd.InputManager}
+     * @protected
+     */
+    _dispatchInputEvent: function(eventType, eventMetadata) {
+        if(this._callbackMode == pd.decorators.EventDispatcher.CALLBACK_MODE_EXPLICIT)
+            throw new Error("[pd.decorators.EventDispatcher] O modo de callback do componente é baseado em chamadas explícitas!");
+
+        pd.inputManager.call(this, eventType, eventMetadata);
+    }
+};
+
+/**
+ * @constant
+ * @type {string}
+ */
+pd.decorators.EventDispatcher.CALLBACK_MODE_EVENT_BASED = "callbackModeEventBased";
+
+/**
+ * @constant
+ * @type {string}
+ */
+pd.decorators.EventDispatcher.CALLBACK_MODE_EXPLICIT = "callbackModeExplicit";
+//</editor-fold>
 //<editor-fold desc="#MVC Components">
 /**
  * Implementa as funcionalidades básicas de uma view principal da aplicação. <br />
@@ -211,16 +304,16 @@ pd.decorators.View = {/** @lends pd.decorators.View#*/
             this.controller.handleNotification(eventID, eventData);
 
         if(this.verbose)
-            cc.log("[ViewEvent " + eventID + "] fired. Metadata received: " +
+            cc.log("[ViewEvent " + eventID + "] fired. Metadata sent: " +
                 (eventData !== undefined ? "[" + JSON.stringify(eventData) + "]" : "[]"));
     }
 };
 
 /**
  * Implementa as funcionalidades básicas de um controlador de uma view. <br />
- * O objeto controlador é o único observador dentro da arquitetura. Sua Numbereração com o 'model' e a 'view' da aplicação ocorre: <br />
- * - de maneira explícita: quando é ele quem está Numbereragindo com um componente. <br />
- * - via notificações: quando um componente Numbererage com ele. <br />
+ * O objeto controlador é o único observador dentro da arquitetura. Sua interação com o 'model' e a 'view' da aplicação ocorre: <br />
+ * - de maneira explícita: quando é ele quem está interagindo com um componente. <br />
+ * - via notificações: quando um componente interage com ele. <br />
  * Um controlador de uma view precisa estar vinculado obrigatóriamente a um objeto de view. <br />
  * @mixin
  */
@@ -290,7 +383,7 @@ pd.decorators.Model = {/** @lends pd.decorators.Model#*/
 
     /**
      * Seta o controlador-álvo. <br >
-     * Diferentemente da Numbereração controller-view, nāo ocorre o processo de databinding, pois o objeto model pertence à arquitetura, e não ao controlador, permitindo que o objeto para qual ele responda seja redefinido. <br >
+     * Diferentemente da interação controller-view, nāo ocorre o processo de databinding, pois o objeto model pertence à arquitetura, e não ao controlador, permitindo que o objeto para qual ele responda seja redefinido. <br >
      */
     setTargetController: function(controller) {
         this.controller = controller;
@@ -306,7 +399,7 @@ pd.decorators.Model = {/** @lends pd.decorators.Model#*/
             this.controller.handleNotification(eventID, eventData);
 
         if(this.verbose)
-            cc.log("[ModelEvent " + eventID + "] fired. Metadata received: " +
+            cc.log("[ModelEvent " + eventID + "] fired. Metadata sent: " +
                 (eventData !== undefined ? "[" + JSON.stringify(eventData) + "]" : "[]"));
     }
 };

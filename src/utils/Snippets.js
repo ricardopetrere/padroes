@@ -103,7 +103,7 @@ pd.randomInterval = function(min, max) {
  * @returns {cc.SpriteFrame}
  */
 pd.getSpriteFrame = function(spriteFrameName) {
-    if(spriteFrameName.lastIndexOf("png") == -1)
+    if(spriteFrameName.lastIndexOf(".png") == -1)
         spriteFrameName += ".png";
 
     return cc.spriteFrameCache.getSpriteFrame(spriteFrameName);
@@ -201,8 +201,8 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
  * @param [delay=0.5] {Number}
  */
 pd.switchScene = function(transition, layer, delay) {
-    if(!layer.didGetDestroyed) {
-        layer.didGetDestroyed = true;
+    if(!layer._didGetDestroyed) {
+        layer._didGetDestroyed = true;
         var delayTime = new cc.DelayTime(delay || 0.5);
         var funcChange = new cc.CallFunc(function(){
             cc.director.runScene(transition);
@@ -218,12 +218,29 @@ pd.switchScene = function(transition, layer, delay) {
  * Obtém a cena atual -> utilizar a chamada direta pd.currentScene (útil para acessar elementos via console).
  * @type {cc.Scene}
  */
-pd.mainScene = null;
-pd.__defineGetter__("mainScene", function() {
+pd.currentScene = null;
+pd.__defineGetter__("currentScene", function() {
    return cc.director._runningScene;
 });
 //</editor-fold>
 //<editor-fold desc="#Geometry">
+
+/**
+ * Gera o polígono (vetor de vértices) a partir de um rect.
+ * @param rect {cc.Rect}
+ * @returns {Array}
+ */
+pd.rectToPolygon = function(rect) {
+    var vertexes = [
+        cc.p(rect.x, rect.y),
+        cc.p(rect.x + rect.width, rect.y),
+        cc.p(rect.x + rect.width, rect.y + rect.height),
+        cc.p(rect.x, rect.y + rect.height),
+    ];
+
+    return vertexes;
+};
+
 /**
  * Verifica se um ponto está em um segmento de reta.
  * @param p {cc.Point}
@@ -409,7 +426,7 @@ pd.pointToSegmentDistance = function(p, l) {
  */
 pd.throb = function(time, pulsations, initialScale, targetScale) {
     if(!time || !pulsations || !initialScale || !targetScale)
-        throw new Error("[pd.Throb] Argumentos obrigatórios não foram fornecidos para a função!");
+        throw new Error("[pd.throb] Argumentos obrigatórios não foram fornecidos para a função!");
 
     const sequenceSteps = [];
     for(var i = 0 ; i < pulsations ; i++) {
@@ -432,7 +449,7 @@ pd.throb = function(time, pulsations, initialScale, targetScale) {
  */
 pd.shake = function(time, cycles, initialRotation, strength) {
     if(!time || !cycles || (!initialRotation && initialRotation != 0) || !strength)
-        throw new Error("[pd.Shake] Argumentos obrigatórios não foram fornecidos para a função!");
+        throw new Error("[pd.shake] Argumentos obrigatórios não foram fornecidos para a função!");
 
     const sequenceSteps = [];
     for(var i = 0 ; i < cycles ; i++) {
@@ -444,6 +461,20 @@ pd.shake = function(time, cycles, initialRotation, strength) {
     }
 
     return cc.sequence(sequenceSteps);
+};
+
+/**
+ * Cria uma sequência para 'piscar' um objeto.
+ * @param time {Number} - o tempo da animação.
+ * @param flicks {Number} - o número de piscadas.
+ * @param initialColor {Number} - a cor inicial.
+ * @param targetColor {Number} - a cor final.
+ * @returns {cc.Sequence}
+ */
+pd.flicker = function(time, flicks, initialColor, targetColor) {
+    const sequenceSteps = [];
+    //TO-DO...
+    return cc.sequence();
 };
 //</editor-fold>
 //<editor-fold desc="#Native Capabilities">
