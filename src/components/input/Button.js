@@ -183,7 +183,12 @@ pd.Button = cc.Sprite.extend({/** @lends pd.Button#**/
         if(!this._isEnabled)
             return;
 
-        pd.inputManager.clean(this);
+        pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_DOWN, this);
+        pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_MOVE, this);
+        pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_UP, this);
+
+        pd.inputManager.remove(pd.InputManager.EVENT_KEY_DOWN, this);
+        pd.inputManager.remove(pd.InputManager.EVENT_KEY_UP, this);
         this._isEnabled = false;
     },
 
