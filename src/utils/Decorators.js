@@ -57,8 +57,8 @@ pd.decorators.ResetableNode = {/** @lends pd.decorators.ResetableNode#*/
 
     /**
      * Obtém a ação de reset, responsável por interpolar o objeto de volta para todos os valores das propriedades do estado inicial.
-     * @param time {Number}
-     * @param easingFunction {Function}
+     * @param {Number} time
+     * @param {Function} easingFunction
      * @returns {cc.Action}
      */
     getResetAction: function(time, easingFunction) {
@@ -72,10 +72,10 @@ pd.decorators.ResetableNode = {/** @lends pd.decorators.ResetableNode#*/
 
     /**
      * interpola para o estado de exibição salvo.
-     * @param time {Number}
-     * @param easingFunction {Function}
-     * @param [callback=null] {Function}
-     * @param [callbackHandler=null] {*}
+     * @param {Number} time
+     * @param {Function} easingFunction
+     * @param {Function} [callback=null]
+     * @param {*} [callbackHandler=null]
      */
     tweenBackToDisplayState: function(time, easingFunction, callback, callbackHandler) {
         if(!this.displayState)
@@ -100,79 +100,71 @@ pd.decorators.ResetableNode.DISPLAY_PROPERTIES = ['x', 'y', 'scaleX', 'scaleY', 
  * @mixin
  */
 pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
-    /** @type {cc.Rect} **/
-    _preCachedRect:null,
-
-    /** @type {cc.Rect} **/
-    _collisionBox:null,
+    /**
+     * Os dados de posição pré-cacheados do objeto.
+     * @type {{local:cc.Point, global:cc.Point}}
+     */
+    _positionData: null,
 
     /**
-     * @param _x {Number}
-     * @param _y {Number}
-     * @param _width {Number}
-     * @param _height {Number}
+     * Bounding Box utilizada para a colisão por intersecção.
+     * @type {cc.Rect}
+     */
+    _cachedBoundingBox:null,
+
+    /**
+     * Salva uma cópia dos dados de exibição do objeto. <br >
+     * Esse método tem o intuito de reaproveitar objetos geométricos utilizados em colisões, visando otimizar o uso da memória.
      * @private
      */
-    _setPreCachedCollisionRect: function(_x, _y, _width, _height) {
-        if(!this._preCachedRect)
-            this._preCachedRect = cc.rect();
+    cacheCollisionData: function() {
+        this._positionData = this._positionData || {local:cc.p(null, null), global:null};
 
-        this._preCachedRect.x = _x;
-        this._preCachedRect.y = _y;
-        this._preCachedRect.width = _width || 1;
-        this._preCachedRect.height = _height || 1;
-    },
-
-    /**
-     * Seta uma caixa de colisão customizada.
-     * @param _xOrRect {Number|cc.Rect}
-     * @param [_y=null] {Number}
-     * @param [_width=null] {Number}
-     * @param [_height=null] {Number}
-     */
-    setCollisionBox: function(_xOrRect, _y, _width, _height) {
-        if(typeof _xOrRect != 'number') {
-            this._collisionBox = _xOrRect;
-            return;
+        if(this._positionData.local.x != this.x || this._positionData.local.y != this.y) {
+            this._positionData.local.x = this.x;
+            this._positionData.local.y = this.y;
+            this._positionData.global = this.convertToWorldSpace(this._positionData.local);
+            this._cachedBoundingBox = this.getBoundingBoxToWorld();
         }
-
-        if(!this._collisionBox)
-            this._collisionBox = cc.rect();
-
-        this._collisionBox.x = _x;
-        this._collisionBox.y = _y;
-        this._collisionBox.width = _width;
-        this._collisionBox.height = _height;
     },
 
     /**
-     * Cacheia a boundingBox to objeto atual.
-     * @param toWorld {Boolean}
+     * Atualiza o retângulo de colisão .
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} size
+     * @private
      */
-    cacheBoundingBoxAsCollisionBox: function(toWorld) {
-        this._collisionBox = toWorld == true ? this.getBoundingBoxToWorld() : this.getBoundingBox();
+    _updateCollisionRect: function(x, y, size) {
+        pd.decorators.ClickableNode._collisionRect = pd.decorators.ClickableNode._collisionRect || cc.rect(0, 0, 0, 0);
+        var rect = pd.decorators.ClickableNode._collisionRect;
+        rect.x = x;
+        rect.y = y;
+        rect.width = size || 1;
+        rect.height = size || 1;
     },
 
     /**
      * Verifica se um ponto local (x,y) está contido dentro da collision box/bounding box do node.
-     * @param _x {Number}
-     * @param _y {Number}
-     * @param [tolerance = 1] {Number}
+     * @param {Number} _x
+     * @param {Number} _y
+     * @param {Number} [tolerance = 1]
      * @returns {Boolean}
      */
     isInside: function(_x, _y, tolerance) {
-        this._setPreCachedCollisionRect(_x, _y, tolerance, tolerance);
-        return cc.rectIntersectsRect(this._preCachedRect, this._collisionBox ? this._collisionBox : this.getBoundingBox());
+        this._updateCollisionRect(_x, _y, tolerance);
+        return cc.rectIntersectsRect(this._cachedBoundingBox || this.getBoundingBoxToWorld(), pd.decorators.ClickableNode._collisionRect);
     },
 
     /**
      * Calcula a distância entre a sprite e um ponto, para o caso de colisões por distância.
-     * @param _x {Number}
-     * @param _y {Number}
+     * @param {Number} _x
+     * @param {Number} _y
      * @returns {number}
      */
     getRelativeDistanceTo: function(_x, _y) {
-        return Math.sqrt(Math.pow(_x - this.x, 2) + Math.pow(_y - this.y, 2));
+        var globalPosition = this._positionData ? this._positionData.global : this.convertToWorldSpace(this.getPosition());
+        return pd.pointDistance(_x, _y, this._positionData.global.x, this._positionData.global.y);
     }
 };
 //</editor-fold">
@@ -191,7 +183,7 @@ pd.decorators.EventDispatcher = { /** @lends pd.decorators.EventDispatcher#*/
     /**
      * Seta o mecanismo de callback do componente.
      * @function
-     * @param eventBased {Boolean}
+     * @param {Boolean} eventBased
      */
     setCallbackMode: function(eventBased) {
         this._callbackMode = eventBased ? pd.decorators.EventDispatcher.CALLBACK_MODE_EVENT_BASED : pd.decorators.EventDispatcher.CALLBACK_MODE_EXPLICIT;
@@ -207,9 +199,9 @@ pd.decorators.EventDispatcher = { /** @lends pd.decorators.EventDispatcher#*/
 
     /**
      * Realiza uma chamada explícia ao método de callback.
-     * @param handler {*}
-     * @param handlerFunc {Function|String}
-     * @param handlerArgs {Array}
+     * @param {*} handler
+     * @param {Function|String} handlerFunc
+     * @param {Array} handlerArgs
      */
     _performCall: function(handler, handlerFunc, handlerArgs) {
         if(this._callbackMode == pd.decorators.EventDispatcher.CALLBACK_MODE_EVENT_BASED)
@@ -225,8 +217,8 @@ pd.decorators.EventDispatcher = { /** @lends pd.decorators.EventDispatcher#*/
 
     /**
      * Dispara um evento.
-     * @param eventType {String}
-     * @param eventMetadata {Array} - metadados pré-setados (utilizar o mecanismo de cache do pd.InputManager}
+     * @param {String} eventType
+     * @param {Array} eventMetadata - metadados pré-setados (utilizar o mecanismo de cache do pd.InputManager}
      * @protected
      */
     _dispatchInputEvent: function(eventType, eventMetadata) {
@@ -238,12 +230,14 @@ pd.decorators.EventDispatcher = { /** @lends pd.decorators.EventDispatcher#*/
 };
 
 /**
+ * Modo de callback explícito: as funções de callback são definidas no construtor do objeto, e são invocadas de maneira explícita.
  * @constant
  * @type {string}
  */
 pd.decorators.EventDispatcher.CALLBACK_MODE_EVENT_BASED = "callbackModeEventBased";
 
 /**
+ * Modo de callback baseado em eventos: os objetos disparam notificações, permitindo que as funções de callback sejam injetadas por um controlador externo.
  * @constant
  * @type {string}
  */
@@ -267,7 +261,7 @@ pd.decorators.View = {/** @lends pd.decorators.View#*/
 
     /**
      * Injeta um controlador na view, registrando-o como seu observador. <br />
-     * @param controller {pd.decorators.ViewController}
+     * @param {pd.decorators.ViewController} controller
      */
     bind: function(controller) {
         if(!this.controller) {
@@ -280,7 +274,7 @@ pd.decorators.View = {/** @lends pd.decorators.View#*/
 
     /**
      * Seta o modo 'verboso' (emitir logs mediante notificações enviadas).
-     * @param verbose
+     * @param {Boolean} verbose
      */
     setVerbose: function(verbose) {
         this.verbose = verbose;
@@ -288,7 +282,7 @@ pd.decorators.View = {/** @lends pd.decorators.View#*/
 
     /**
      * Dá o controle do 'update' ao objeto controlador.
-     * @param dt
+     * @param {Number} dt
      */
     update: function(dt) {
         if(this.controller)
@@ -297,8 +291,8 @@ pd.decorators.View = {/** @lends pd.decorators.View#*/
 
     /**
      * Notifica o controlador acerca de um evento, se houver um controlador.
-     * @param eventID {String}
-     * @param [eventData=null] {*}
+     * @param {String} eventID
+     * @param {*} [eventData=null]
      */
     notify: function(eventID, eventData) {
         if(this.controller)
@@ -331,7 +325,7 @@ pd.decorators.ViewController = {/** @lends pd.decorators.ViewController#*/
 
     /**
      * Seta a view a ser controlada.
-     * @param view {Object}
+     * @param {Object} view
      */
     setTargetView: function(view) {
         view.bind(this);
@@ -340,8 +334,8 @@ pd.decorators.ViewController = {/** @lends pd.decorators.ViewController#*/
 
     /**
      * Define o método a ser executado mediante o recebimento de uma notificação.
-     * @param eventID {String}
-     * @param handlingFunc {Function}
+     * @param {String} eventID
+     * @param {Function} handlingFunc
      */
     observe: function(eventID, handlingFunc) {
         this._handlingMap = this._handlingMap || {};
@@ -350,8 +344,8 @@ pd.decorators.ViewController = {/** @lends pd.decorators.ViewController#*/
 
     /**
      * Manipula notificações provenientes de um objeto observável.
-     * @param eventID {String}
-     * @param eventData {*}
+     * @param {String} eventID
+     * @param {*} eventData
      */
     handleNotification: function(eventID, eventData) {
         if(!this._handlingMap || !this._handlingMap[eventID])
@@ -392,8 +386,8 @@ pd.decorators.Model = {/** @lends pd.decorators.Model#*/
 
     /**
      * Notifica o controlador acerca de um evento, se houver um controlador.
-     * @param eventID {String}
-     * @param [eventData=null] {*}
+     * @param {String} eventID
+     * @param {*} [eventData=null]
      */
     notify: function(eventID, eventData) {
         if(this.controller)

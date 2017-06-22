@@ -28,11 +28,11 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
     
     /**
      * Realiza um efeito de fade no volume da música de fundo.
-     * @param target {cc.Node}
-     * @param duration {Number}
-     * @param from {Number}
-     * @param to {Number}
-     * @param cb {Function}
+     * @param {cc.Node} target
+     * @param {Number} duration
+     * @param {Number} from
+     * @param {Number} to
+     * @param {Function} cb
      */
     fadeMusic: function(target, duration, from, to, cb) {
         duration = duration * 100;
@@ -98,9 +98,9 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
 
     /**
      * Toca uma música de fundo.
-     * @param music {string}
-     * @param loop {boolean}
-     * @param volume {number}
+     * @param {string} music
+     * @param {boolean} loop
+     * @param {number} volume
      */
     playMusic: function (music, loop, volume) {
         if (music) {
@@ -116,7 +116,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
 
     /**
      * Despausa um efeito.
-     * @param effectId {Number}
+     * @param {Number} effectId
      * @returns {Number}
      */
     resumeEffect: function (effectId) {
@@ -124,7 +124,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
     },
 
     /**
-     * @param volume {number}
+     * @param {Number} volume
      */
     setEffectsVolume: function (volume) {
         if (this.isMuted) {
@@ -135,7 +135,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
     },
 
     /**
-     * @param volume {number}
+     * @param {Number} volume
      */
     setMusicVolume: function (volume) {
         if (!this.isMuted) {
@@ -145,7 +145,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
     },
 
     /**
-     * @param mute {boolean}
+     * @param {Boolean} mute
      */
     setMute: function (mute) {
         this.isMuted = mute;
@@ -169,7 +169,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
 
     /**
      * Para um efeito específico.
-     * @param effectId {Number}
+     * @param {Number} effectId
      */
     stopEffect: function (effectId) {
         cc.audioEngine.stopEffect(effectId);
@@ -177,7 +177,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
 
     /**
      * Para a música de fundo.
-     * @param releaseData {Boolean}
+     * @param {Boolean} releaseData
      */
     stopMusic: function (releaseData) {
         cc.audioEngine.stopMusic(releaseData);
@@ -193,7 +193,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
 
 /**
  * Obtém a instância singleton do objeto.
- * @returns {pd.AudionEngine}
+ * @returns {pd.AudioEngine}
  */
 pd.AudioEngine.getInstance = function () {
     if (pd.AudioEngine.prototype._singleton == null) {

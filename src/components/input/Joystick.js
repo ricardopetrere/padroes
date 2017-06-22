@@ -5,7 +5,7 @@
  * @extends {cc.Sprite}
  * @mixes {pd.decorators.EventDispatcher}
  * @mixes {pd.decorators.ClickableNode}
- * @classdesc Implementação funcional de um joystick virtual analógico.
+ * @classdesc Implementação de um joystick virtual analógico.
  */
 pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators.ClickableNode).extend({/** @lends pd.Joystick#**/
     /**
@@ -19,7 +19,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
      */
     _isGrabbed: false,
     /**
-     * O objeto responsável por controlar o joystick.
+     * O objeto responsável por gerenciar o joystick.
      * @type {cc.Node}
      */
     _handler:null,
@@ -33,7 +33,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
      */
     _targetPoint:null,
     /**
-     * O ID to touch interagindo com o joystick.
+     * O ID do touch interagindo com o joystick.
      * @type {Number}
      */
     _touchID:-1,
@@ -82,22 +82,20 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
 
     /**
      * @constructs
-     * @param attr {{x:Number, y:Number, scaleX:Number, scaleY:Number, opacity:Number, visible:Boolean, rotation:Number}} - as propriedades de exibição do joystick.
-     * @param autoEnable {Boolean} - indica se os listeners do joystick devem ser adicionados automaticamente após a sua construção.
-     * @param eventBased {Boolean} - indica se o mecanismo de callbacks do joystick será baseado em eventos.
+     * @param {Object} [attr=] - as propriedades de exibição do joystick.
+     * @param {Boolean} [autoEnable=false] - indica se os listeners do joystick devem ser adicionados automaticamente após a sua construção.
+     * @param {Boolean} [eventBased=false] - indica se o mecanismo de callbacks do joystick será baseado em eventos.
      * @param [handler=null] {*|null} - para o método de callback explícito: o objeto que irá executar a função de callback.
      * @param [handlerFunc=null] {Function|String|null} - para o método de callback explícito: a função de callback a ser executada.
      */
     ctor: function(attr, autoEnable, eventBased, handler, handlerFunc) {
-        if(typeof arguments[0] == 'number') {
+        if(typeof arguments[0] == 'number') { // não teremos suporte ao legado.
             throw new Error("[pd.Joystick] Utilizando construtor antigo não mais suportado para instanciar um joystick!")
         }
 
         this._super(pd.getSpriteFrame("JoystickBackGround.png"));
         this._radius = this.getBoundingBox().width/2;
-
         this._pad = pd.createSprite("JoystickStick.png", this._radius, this._radius, this);
-
         this._isGrabbed = false;
 
         if(attr)
@@ -141,7 +139,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
 
     /**
      * Seta a cor do joystick.
-     * @param color {cc.Color}
+     * @param {cc.Color} color
      */
     setColor: function(color) {
         this._super(color);
@@ -150,9 +148,9 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
 
     /**
      * Seta o joystick para simular um movimento com direções pré-setadas, simulando um input de teclado.
-     * @param keyboardMode {Boolean} - true, para ativar. false, para desativar.
-     * @param [allow8Directions=false] {Boolean} - indica se o joystick deverá aceitar 8 direções (up, down, left, right, up+left, up+right, down+left, down+right). Caso false, ele será configurado apenas para 4 direções (up, down, left e right).
-     * @param [threshold=0.1] {Number} - um valor entre 0 e 1, que indica a porcentagem da distância que o 'pad' deve estar do centro do joystick para computar o movimento.
+     * @param {Boolean} keyboardMode - true, para ativar. false, para desativar.
+     * @param {Boolean} [allow8Directions=false] - indica se o joystick deverá aceitar 8 direções (up, down, left, right, up+left, up+right, down+left, down+right). Caso false, ele será configurado apenas para 4 direções (up, down, left e right).
+     * @param {Number} [threshold=0.1] - um valor entre 0 e 1, que indica a porcentagem da distância que o 'pad' deve estar do centro do joystick para computar o movimento.
      */
     setKeyboardMode: function(keyboardMode, allow8Directions, threshold) {
         this._keyboardMode = keyboardMode;
@@ -164,8 +162,8 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
 
     /**
      * Seta o joystick para 'seguir' o toque do usuário, aparecendo na posição inicial do evento de toque toda a vez que o usuário tocar na área indicada.
-     * @param followMode {Boolean} - true, para ativar. false, para desativar.
-     * @param [touchArea=null] {cc.Rect} - a área disponível em que o joystick pode aparecer. Caso seja null, a área disponível será a tela inteira.
+     * @param {Boolean} followMode - true, para ativar. false, para desativar.
+     * @param {cc.Rect} [touchArea=null] - a área disponível em que o joystick pode aparecer. Caso seja null, a área disponível será a tela inteira.
      */
     setFollowMode: function(followMode, touchArea) {
         this._followMode = followMode;
@@ -177,8 +175,8 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
 
     /**
      * Atualiza as coordenadas do ponto-álvo.
-     * @param x {Number}
-     * @param y {Number}
+     * @param {Number} x
+     * @param {Number} y
      * @private
      */
     _setTargetPoint: function(x, y) {
@@ -202,7 +200,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     },
 
     /**
-     * @param eventOrTouch {Object|Array}
+     * @param {Object|Array} eventOrTouch
      * @private
      */
     _onMouseDown: function(eventOrTouch) {
@@ -230,7 +228,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     },
 
     /**
-     * @param eventOrTouch {Object|Array}
+     * @param {Object|Array} eventOrTouch
      * @private
      */
     _onMouseDragged: function(eventOrTouch) {
@@ -241,7 +239,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     },
 
     /**
-     * @param eventOrTouch {Object|Array}
+     * @param {Object|Array} eventOrTouch
      * @private
      */
     _onMouseUp: function(eventOrTouch) {

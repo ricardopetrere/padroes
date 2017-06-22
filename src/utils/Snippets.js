@@ -7,7 +7,7 @@
 /**
  * Embaralha um array.
  * @type {Function}
- * @param array {Array}
+ * @param {Array} array
  * @returns {Array}
  */
 pd.shuffle = function(array) {
@@ -18,8 +18,8 @@ pd.shuffle = function(array) {
 /**
  * Elimina um elemento do array e reorganiza-o (fazendo shifting de todos elementos à frente do item removido para a esquerda).
  * @type {Function}
- * @param array {Array}
- * @param index {Number}
+ * @param {Array} array
+ * @param {Number} index
  */
 pd.rearrange = function(array, index) {
     array.splice(index, 1);
@@ -31,7 +31,7 @@ pd.rearrange = function(array, index) {
 /**
  * Clona um array.
  * @type {Function}
- * @param array {Array}
+ * @param {Array} array
  * @returns {Array}
  */
 pd.cloneArray = function(array) {
@@ -43,7 +43,7 @@ pd.cloneArray = function(array) {
 
 /**
  * Clona todas as propriedades de um objeto dentro de um array.
- * @param object {Object}
+ * @param {Object} object
  * @returns {Array}
  */
 pd.objectToArray = function(object) {
@@ -56,9 +56,9 @@ pd.objectToArray = function(object) {
 /**
  * Troca a posição de dois elementos de um array entre eles.
  * @type {Function}
- * @param array {Array}
- * @param i {Number} - índice do primeiro elemento.
- * @param j {Number} - índice do segundo elemento.
+ * @param {Array} array
+ * @param {Number} i - índice do primeiro elemento.
+ * @param {Number} j - índice do segundo elemento.
  */
 pd.arraySwap = function(array, i, j) {
     const temp = array[i];
@@ -69,9 +69,9 @@ pd.arraySwap = function(array, i, j) {
 /**
  * Ordena um array.
  * @type {Function}
- * @param array {Array}
- * @param [key = null] {Number} - a propriedade dos elementos do array que será usada como chave de ordenação. Se for null, o elemento do array será a própria chave.
- * @param [crescentOrder=true] {Boolean}
+ * @param {Array} array
+ * @param {Number} [key = null] - a propriedade dos elementos do array que será usada como chave de ordenação. Se for null, o elemento do array será a própria chave.
+ * @param {Boolean} [crescentOrder=true]
  */
 pd.orderBy = function(array, key, crescentOrder) {
     crescentOrder = crescentOrder == null || crescentOrder == undefined ? true : crescentOrder;
@@ -84,12 +84,31 @@ pd.orderBy = function(array, key, crescentOrder) {
     }  
 };
 //</editor-fold>
+//<editor-fold desc = "#String">
+/**
+ * Formata um número para string com um comprimento mínimo fixo.
+ * @type {Function}
+ * @param {Number} number - um número qualquer.
+ * @param {Number} [minLength=4] - o comprimento mínimo.
+ * @returns {String}
+ */
+pd.numberToString = function(number, minLength) {
+    if(minLength === undefined)
+        minLength = 4;
+
+    var str = number.toString();
+    for(var n = str.length ; n < minLength ; n++) {
+        str = "0" + str;
+    }
+    return str;
+};
+//</editor-fold>
 //<editor-fold desc="#Randomization">
 /**
  * Retorna um número aleatório dentro de um intervalo pré-definido.
  * @type {Function}
- * @param min {Number}
- * @param max {Number}
+ * @param {Number} min
+ * @param {Number} max
  * @returns {Number}
  */
 pd.randomInterval = function(min, max) {
@@ -111,11 +130,11 @@ pd.getSpriteFrame = function(spriteFrameName) {
 
 /**
  * Cria uma sprite.
- * @param spriteFrameName {String}
- * @param x {Number}
- * @param y {Number}
- * @param parentNode {cc.Node}
- * @param zOrder {Number}
+ * @param {String} spriteFrameName
+ * @param {Number} x
+ * @param {Number} y
+ * @param {cc.Node} parentNode
+ * @param {Number} zOrder
  * @returns {cc.Sprite}
  */
 pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder){
@@ -155,7 +174,6 @@ pd.createText = function(fontPath, fontName, x, y, fontSize, color, text, alignm
     if(alignment)
         labelTTF.setHorizontalAlignment(alignment);
 
-
     if(parentNode)
         parentNode.addChild(labelTTF);
 
@@ -164,14 +182,14 @@ pd.createText = function(fontPath, fontName, x, y, fontSize, color, text, alignm
 
 /**
  * Cria uma caixa de texto com uma fonte padrão.
- * @param fontID {pd.Fonts}
- * @param x {Number}
- * @param y {Number}
- * @param fontSize {Number}
- * @param [color=] {cc.Color}
- * @param [text=""] {String}
- * @param [alignment=null] {cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_RIGHT}
- * @param [parentNode=null] {cc.Node}
+ * @param {pd.Fonts} fontID
+ * @param {Number} x
+ * @param {Number} y
+ * @param {Number} fontSize
+ * @param {cc.Color} [color=]
+ * @param {String} [text=""]
+ * @param {cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_RIGHT} [alignment=null]
+ * @param {cc.Node} [parentNode=null]
  * @returns {cc.LabelTTF}
  */
 pd.createTextWithStandardFont = function(fontID, x, y, fontSize, color, text, alignment, parentNode) {
@@ -193,15 +211,15 @@ pd.createTextWithStandardFont = function(fontID, x, y, fontSize, color, text, al
 
 /**
  * Cria um clipping node.
- * @param parent {cc.Node}
- * @param xOrClippingNodeRect {Number | cc.Rect}
- * @param yOrMaskRect {Number | cc.Rect}
- * @param width {Number}
- * @param height {Number}
- * @param maskX {Number}
- * @param maskY {Number}
- * @param maskWidth {Number}
- * @param maskHeight {Number}
+ * @param {cc.Node} parent
+ * @param {Number | cc.Rect} xOrClippingNodeRect
+ * @param {Number | cc.Rect} yOrMaskRect
+ * @param {Number} width
+ * @param {Number} height
+ * @param {Number} maskX
+ * @param {Number} maskY
+ * @param {Number} maskWidth
+ * @param {Number} maskHeight
  * @returns {cc.ClippingNode}
  */
 pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width, height, maskX, maskY, maskWidth, maskHeight) {
@@ -231,9 +249,9 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
 /**
  * Troca a cena atual para a cena informada (antigo pd.trocaCena()).
  * @type {Function}
- * @param transition {cc.Class}
- * @param layer {cc.Node}
- * @param [delay=0.5] {Number}
+ * @param {cc.Class} transition
+ * @param {cc.Node} layer
+ * @param {Number} [delay=0.5]
  */
 pd.switchScene = function(transition, layer, delay) {
     if(!layer._didGetDestroyed) {
@@ -262,7 +280,7 @@ pd.__defineGetter__("currentScene", function() {
 
 /**
  * Gera o polígono (vetor de vértices) a partir de um rect.
- * @param rect {cc.Rect}
+ * @param {cc.Rect} rect
  * @returns {Array}
  */
 pd.rectToPolygon = function(rect) {
@@ -278,9 +296,9 @@ pd.rectToPolygon = function(rect) {
 
 /**
  * Verifica se um ponto está em um segmento de reta.
- * @param p {cc.Point}
- * @param l {{p1:cc.Point, p2:cc.Point}}
- * @param w {Number} Distância máxima para considerar um ponto como dentro de uma reta
+ * @param {cc.Point} p
+ * @param {{p1:cc.Point, p2:cc.Point}} l
+ * @param {Number} w - distância máxima para considerar um ponto como dentro de uma reta
  * @returns {boolean}
  */
 pd.pointInLineIntersection = function(p, l, w) {
@@ -290,8 +308,8 @@ pd.pointInLineIntersection = function(p, l, w) {
 
 /**
  * Verifica se dois segmentos de reta se interceptam.
- * @param l1 {{p1:cc.Point, p2:cc.Point}}
- * @param l2 {{p1:cc.Point, p2:cc.Point}}
+ * @param {{p1:cc.Point, p2:cc.Point}} l1
+ * @param {{p1:cc.Point, p2:cc.Point}} l2
  * @returns {boolean}
  */
 pd.lineInLineIntersection = function(l1, l2) {
@@ -323,8 +341,8 @@ pd.lineInLineIntersection = function(l1, l2) {
 
 /**
  * Verifica se um ponto está dentro de um polígono.
- * @param p {cc.Point}
- * @param vertexes {cc.Point[]}
+ * @param {cc.Point} p
+ * @param {cc.Point[]} vertexes
  * @returns {boolean}
  */
 pd.pointInPolygonIntersection = function(p, vertexes) {
@@ -340,9 +358,9 @@ pd.pointInPolygonIntersection = function(p, vertexes) {
 
 /**
  * Verifica se um polígono intercepta outro polígono.
- * @param polygon1 {cc.Point[]}
- * @param polygon2 {cc.Point[]}
- * @returns {boolean}
+ * @param {cc.Point[]} polygon1
+ * @param {cc.Point[]} polygon2
+ * @returns {Boolean}
  * @author Ricardo Petrére
  */
 pd.polygonInPolygonIntersection = function(polygon1, polygon2) {
@@ -388,33 +406,26 @@ pd.polygonInRectCollision = function (array, rect) {
 
 /**
  * Calcula a distância entre dois pontos.
- * @param p1 {cc.Point}
- * @param p2 {cc.Point}
+ * @param {Number} x1ORp1
+ * @param {Number} y1ORp2
+ * @param {Number} x2
+ * @param {Number} y2
  * @returns {number}
  * @author Ricardo Petrére
  */
-pd.pointDistance = function(p1, p2) {
-    //TODO Revisar a assinatura da função. Ser obrigado a criar cc.Point pode impactar performance em alguns jogos
-    // Ricardo Petrére: Na minha versão, está assim:
-    // jogo4av3mat1.distance = function (x1, y1, x2, y2) {
-    var x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y;
-    if (x1.x !== undefined) {
-        x2 = y1;
-        y2 = x2;
-        y1 = x1.y;
-        x1 = x1.x;
-        if (x2.x !== undefined) {
-            y2 = x2.y;
-            x2 = x2.x;
-        }
-    }
+pd.pointDistance = function(x1ORp1, y1ORp2, x2, y2) {
+    var x1 = typeof x1ORp1 == "number" ? x1ORp1 : x1ORp1.x;
+    var y1 = typeof x1ORp1 == "number" ? y1ORp2 : x1ORp1.y;
+    x2 = typeof y1ORp2 == "number" ? x2 : y1ORp2.x;
+    y2 = typeof y1ORp2 == "number" ? y2 : y1ORp2.y;
+
     return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 };
 
 /**
  * Calcula a distância entre um ponto e um segmento.
- * @param p {cc.Point}
- * @param l {{p1:cc.Point, p2:cc.Point}}
+ * @param {cc.Point} p
+ * @param {{p1:cc.Point, p2:cc.Point}} l
  * @author Ricardo Petrére
  */
 pd.pointToSegmentDistance = function(p, l) {
@@ -453,13 +464,13 @@ pd.pointToSegmentDistance = function(p, l) {
 //<editor-fold desc="#Actions">
 /**
  * Cria uma sequência de 'palpitação'.
- * @param time {Number} - o tempo da animação.
- * @param pulsations {Number} - o número de palpitações que o objeto irá fazer dentro do intervalo de tempo.
- * @param initialScale {Number} - o valor de escala inicial do objeto.
- * @param targetScale {Number} - a escala que o objeto irá assumir ao encolher-se.
+ * @param {Number} time - o tempo da animação.
+ * @param {Number} pulsations - o número de palpitações que o objeto irá fazer dentro do intervalo de tempo.
+ * @param {Number} initialScale - o valor de escala inicial do objeto.
+ * @param {Number} targetScale - a escala que o objeto irá assumir ao encolher-se.
  * @returns {cc.Sequence}
  */
-pd.throb = function(time, pulsations, initialScale, targetScale) {
+pd.pulse = function(time, pulsations, initialScale, targetScale) {
     if(!time || !pulsations || !initialScale || !targetScale)
         throw new Error("[pd.throb] Argumentos obrigatórios não foram fornecidos para a função!");
 
@@ -476,10 +487,10 @@ pd.throb = function(time, pulsations, initialScale, targetScale) {
 
 /**
  * Cria uma sequência de 'balanço'.
- * @param time {Number} - o tempo da animação.
- * @param cycles {Number} - o número de ciclos da animação.
- * @param initialRotation {Number} - a rotação inicial do objeto.
- * @param strength {Number} - a 'força' da rotação (em pixels).
+ * @param {Number} time - o tempo da animação.
+ * @param {Number} cycles - o número de ciclos da animação.
+ * @param {Number} initialRotation - a rotação inicial do objeto.
+ * @param {Number} strength - a 'força' da rotação (em pixels).
  * @returns {cc.Sequence}
  */
 pd.shake = function(time, cycles, initialRotation, strength) {
@@ -500,10 +511,10 @@ pd.shake = function(time, cycles, initialRotation, strength) {
 
 /**
  * Cria uma sequência para 'piscar' um objeto.
- * @param time {Number} - o tempo da animação.
- * @param flicks {Number} - o número de piscadas.
- * @param initialColor {Number} - a cor inicial.
- * @param targetColor {Number} - a cor final.
+ * @param {Number} time - o tempo da animação.
+ * @param {Number} flicks - o número de piscadas.
+ * @param {Number} initialColor - a cor inicial.
+ * @param {Number} targetColor - a cor final.
  * @returns {cc.Sequence}
  */
 pd.flicker = function(time, flicks, initialColor, targetColor) {
@@ -516,7 +527,7 @@ pd.flicker = function(time, flicks, initialColor, targetColor) {
 /**
  * Abre uma URL.
  * @type {Function}
- * @param url {String}
+ * @param {String} url
  */
 pd.openURL = function(url) {
     if(cc.sys.os == cc.sys.OS_ANDROID)
@@ -586,8 +597,8 @@ pd.UI_COLOR_ORANGE = 'orangeUI';
 
 /**
  * Injeta um decorator em um objeto dinamicamente (em runtime).
- * @param object {*}
- * @param decorator {Object}
+ * @param {*} object
+ * @param {pd.decorators} decorator
  */
 pd.decorate = function(object, decorator) {
     for(var i in decorator) {

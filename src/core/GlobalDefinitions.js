@@ -7,7 +7,7 @@
 /**
  * Recursos utilizados pela tela de loading.
  * @static
- * @type {{s_logo: string, s_loadbar: string, s_loadbarBG: string, s_carregando: string, icon_plist: string, icon_sprite: string, s_loader: string, p_loader: string, fx_woosh: string}}
+ * @enum {string}
  */
 pd.resLoad = {
     s_loader: padroesPath+"/res/img/loading/loader.png",
@@ -134,7 +134,7 @@ pd.ZOrders = {
 };
 
 /**
- * Enumerador com as fontes padrão.
+ * Enumerador com as fontes padrões.
  * @enum {String}
  */
 pd.Fonts = {

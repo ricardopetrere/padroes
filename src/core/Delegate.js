@@ -6,7 +6,6 @@
 var pd = {};
 
 /**
- * @static
  * @global
  * @type {String}
  */
@@ -91,7 +90,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
     /**
      * Seta o contexto em que o jogo está a rodar.
-     * @param context {String}
+     * @param {String} context
      */
     setContext: function(context) {
         this.context = context;
@@ -102,7 +101,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
     /**
      * Seta o componente de validação.
-     * @param validator {cc.Class}
+     * @param {cc.Class} validator
      */
     setValidator: function(validator) {
         this.validator = validator;
@@ -110,7 +109,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
     /**
      * Seta o status de pause/resume.
-     * @param paused {Boolean}
+     * @param {Boolean} paused
      */
     setPaused: function(paused) {
         this.isPaused = paused;
@@ -119,9 +118,9 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
     /**
      * Realiza a inicialização de um namespace.
-     * @param resPath {String}
-     * @param srcPath {String}
-     * @param jsList {String[]}
+     * @param {String} resPath
+     * @param {String} srcPath
+     * @param {String[]} jsList
      * @returns {Object}
      */
     buildNamespace: function(resPath, srcPath, jsList) {
@@ -142,7 +141,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
     /**
      * Inicializa o namespace indicado.
-     * @param ns {Object}
+     * @param {Object} ns
      */
     initWithNamespace: function(ns) {
         this.activeNamespace = ns;
@@ -192,8 +191,8 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
     /**
      * Seta o tutorial do jogo.
-     * @param tutorialPages {pd.TutorialLayer[]}
-     * @param tutorialTitleSpriteFrameOrText {cc.SpriteFrame|cc.LabelTTF}
+     * @param {pd.TutorialLayer[]} tutorialPages
+     * @param {cc.SpriteFrame|cc.LabelTTF} tutorialTitleSpriteFrameOrText
      */
     setTutorial: function(tutorialPages, tutorialTitleSpriteFrameOrText) {
         this.activeNamespace.tutorialData = [];
@@ -236,7 +235,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
     /**
      * Retem um objeto.
-     * @param {cc.Node} target
+     * @param {cc.Node|cc.Action} target
      */
     retain: function(target) {
         if(!target.hasBeenRetained) {
@@ -250,7 +249,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
     /**
      * Libera um objeto.
-     * @param {cc.Node} target
+     * @param {cc.Node|cc.Action} target
      */
     release: function(target) {
         if(target.hasBeenRetained) {

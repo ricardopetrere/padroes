@@ -43,7 +43,7 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
     _bg:null,
     /**
      * Faixa indicativa ("você venceu" ou "tente outra vez").
-     *  @type {cc.Node}
+     * @type {cc.Node}
      */
     _strip:null,
     /**
@@ -79,11 +79,11 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
 
     /**
      * Inicializa a animação, adicionando-a ao handler.
-     * @param handler {cc.Node}
-     * @param type {pd.GameOverLayer.TYPE_WIN|pd.GameOverLayer.TYPE_LOSE}
-     * @param circleSpriteFrame {cc.SpriteFrame}
-     * @param labelSpriteFrame {cc.SpriteFrame}
-     * @param shouldTilt {Boolean}
+     * @param {cc.Node} handler
+     * @param {pd.GameOverLayer.TYPE_WIN|pd.GameOverLayer.TYPE_LOSE} type
+     * @param {cc.SpriteFrame} circleSpriteFrame
+     * @param {cc.SpriteFrame} labelSpriteFrame
+     * @param {Boolean} shouldTilt
      */
     init: function(handler, type, circleSpriteFrame, labelSpriteFrame, shouldTilt) {
         this._super();
@@ -166,8 +166,8 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
 
     /**
      * Adiciona a faixa que cobre o círculo laranja e configura suas tweens.
-     * @param id {String}
-     * @param targetScale {Number}
+     * @param {String} id
+     * @param {Number} targetScale
      * @private
      */
     _addStrip: function(id, targetScale) {
@@ -222,7 +222,7 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
 
     /**
      * Adiciona o círculo laranja com o personagem e configura suas tweens.
-     * @param offsetY {Number}
+     * @param {Number} offsetY
      * @private
      */
     _addCircle: function(offsetY) {
@@ -241,10 +241,10 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
 
     /**
      * Cria um 'canto' da faixa de derrota.
-     * @param x {Number}
-     * @param y {Number}
-     * @param anchorPointX {Number}
-     * @param flippedX {Boolean}
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} anchorPointX
+     * @param {Boolean} flippedX
      * @returns {cc.Sprite}
      * @private
      */
@@ -295,12 +295,12 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
 
     /**
      * Adiciona uma estrela à layer.
-     * @param id {String}
-     * @param x {Number} 
-     * @param y {Number}
-     * @param anchorPoint {cc.Point}
-     * @param flippedX {Boolean}
-     * @param maxScale {Number}
+     * @param {String} id
+     * @param {Number} x
+     * @param {Number} y
+     * @param {cc.Point} anchorPoint
+     * @param {Boolean} flippedX
+     * @param {Number} maxScale
      * @private
      */
     _addStar: function(id, x, y, anchorPoint, flippedX, maxScale) {
@@ -466,12 +466,12 @@ pd.GameOverLayer.TYPE_WIN = "animationTypeWin";
 
 /**
  * @constant
- * @type {string}
+ * @type {String}
  */
 pd.GameOverLayer.TYPE_LOSE = "animationTypeLose";
 
 /**
  * Indica se há uma instância ativa de uma GameOverLayer.
- * @type {boolean}
+ * @type {Boolean}
  */
 pd.GameOverLayer._hasInstance = false;

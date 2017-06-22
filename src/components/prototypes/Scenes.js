@@ -1,6 +1,6 @@
 /**
  * Created by Ryan Balieiro on 25/05/17.
- * @desc Protótipos de cena pré-implementados - utilizados como base para as cenas dos jogos.
+ * @desc Protótipos de cena pré-implementados utilizados como base para as cenas dos jogos.
  *
  * @class
  * @extends {cc.Scene}
@@ -8,6 +8,7 @@
  */
 pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
     /**
+     * Apontamento para o componente de debug.
      * @type {pd.Debugger}
      */
     debugger:null,
@@ -23,6 +24,7 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
      * @type {Array}
      */
     pausedActions:null,
+
     /**
      * Sobrescreve o ponto de entrada da cena.
      * @override
@@ -44,7 +46,7 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
 
     /**
      * Trata comandos de debug disparados via teclado.
-     * @param key {string}
+     * @param {String} key
      */
     onDebugKeyDown: function(key) {
         const intKey = parseInt(key);
@@ -212,8 +214,8 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
 
     /**
      * Callback do botão de pause.
-     * @param caller {cc.Node}
-     * @param isPressed {boolean}
+     * @param {cc.Node} caller
+     * @param {Boolean} isPressed
      */
     onPauseButton: function(caller, isPressed){
         if(this.pauseButton.isLocked)
@@ -229,9 +231,9 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
 
     /**
      * Executa a animação de vitória.
-     * @param circleSpriteFrame {cc.SpriteFrame}
-     * @param messageSpriteFrame {cc.SpriteFrame}
-     * @param tiltScreen {Boolean}
+     * @param {cc.SpriteFrame} circleSpriteFrame
+     * @param {cc.SpriteFrame} messageSpriteFrame
+     * @param {Boolean} [tiltScreen=true]
      */
     winGame: function(circleSpriteFrame, messageSpriteFrame, tiltScreen) {
         this.pauseButton.cleanup();
@@ -242,8 +244,8 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
 
     /**
      * Executa a animação de derrota.
-     * @param circleSpriteFrame {cc.SpriteFrame}
-     * @param tiltScreen {Boolean}
+     * @param {cc.SpriteFrame} circleSpriteFrame
+     * @param {Boolean} [tiltScreen=true]
      */
     loseGame: function(circleSpriteFrame, tiltScreen) {
         this.pauseButton.cleanup();

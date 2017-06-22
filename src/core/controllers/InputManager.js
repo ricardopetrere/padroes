@@ -3,8 +3,8 @@
  *
  * @class
  * @extends {cc.Class}
- * @classdesc Objeto singleton responsável por gerenciar os listeners de inputs da aplicação.
- * Pendência: transformar os tipos de evento em um enumerador.
+ * @classdesc Objeto singleton responsável por gerenciar os listeners de inputs da aplicação. <br >
+ *            Pendência: transformar os tipos de evento em um enumerador.
  */
 pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     /**
@@ -16,10 +16,10 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     /**
      * Altera as configurações de input do 'target'. <br />
      * Chamar este método antes de atribuir eventos ao node!
-     * @param target {*} - o node a ser configurado.
-     * @param allowMultiTouch {Boolean} - indica se os eventos de toque do node aceitam o recurso de multitouch.
-     * @param touchEventTypeCode {cc.EventListener.TOUCH_ALL_AT_ONCE|cc.EventListener.TOUCH_ONE_BY_ONE} - indica o tipo de evento que os eventos de toque do node devem possuir.
-     * @param priority {Number} - a prioridade que os listeners do node devem assumir.
+     * @param {*} target - o node a ser configurado.
+     * @param {Boolean} allowMultiTouch - indica se os eventos de toque do node aceitam o recurso de multitouch.
+     * @param {cc.EventListener.TOUCH_ALL_AT_ONCE|cc.EventListener.TOUCH_ONE_BY_ONE} touchEventTypeCode - indica o tipo de evento que os eventos de toque do node devem possuir.
+     * @param {Number} priority {Number} - a prioridade que os listeners do node devem assumir.
      */
     config: function(target, allowMultiTouch, touchEventTypeCode, priority) {
         if(!target._inputMetadata)
@@ -33,10 +33,10 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Seta um listener de evento para o álvo informado.
-     * @param eventType {String} - tipo do evento.
-     * @param target {*} - o objeto que dispara o evento.
-     * @param handlerFunc {Function|String} - a função a ser invocada pelo objeto que escuta o evento.
-     * @param [handler=null] {*} - o objeto que escuta o evento. Caso seja null, o target será utilizado como handler.
+     * @param {String} eventType - tipo do evento.
+     * @param {*} target - o objeto que dispara o evento.
+     * @param {Function|String} handlerFunc - a função a ser invocada pelo objeto que escuta o evento.
+     * @param {*} [handler=null] - o objeto que escuta o evento. Caso seja null, o target será utilizado como handler.
      */
     add: function(eventType, target, handlerFunc, handler) {
         if(!target._inputMetadata)
@@ -51,8 +51,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Verifica se o node possui um listener para o tipo de evento indicado.
-     * @param eventType {String} - tipo do evento.
-     * @param target {*} - o objeto que dispara o evento.
+     * @param {String} eventType - tipo do evento.
+     * @param {*} target - o objeto que dispara o evento.
      * @returns {Boolean}
      */
     hasListener: function(eventType, target) {
@@ -62,10 +62,10 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Sobrescreve a função de callback de um listener.
-     * @param eventType {String} - tipo do evento.
-     * @param target {*} - o objeto que dispara o evento.
-     * @param newHandlerFunc {Function|String} - a função a ser invocada pelo objeto que escuta o evento.
-     * @param [newHandler=null] {*} - o objeto que escuta o evento. Caso seja null, o target será utilizado como handler.
+     * @param {String} eventType - tipo do evento.
+     * @param {*} target - o objeto que dispara o evento.
+     * @param {Function|String} newHandlerFunc - a função a ser invocada pelo objeto que escuta o evento.
+     * @param {*} [newHandler=null] - o objeto que escuta o evento. Caso seja null, o target será utilizado como handler.
      */
     overrideCallback: function(eventType, target, newHandlerFunc, newHandler) {
         const metadata = target._inputMetadata;
@@ -80,8 +80,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Remove um listener de evento.
-     * @param eventType {String} - tipo do evento
-     * @param target {*} - o objeto que dispara o evento.
+     * @param {String} eventType - tipo do evento
+     * @param {*} target - o objeto que dispara o evento.
      */
     remove: function(eventType, target) {
         if(!target._inputMetadata)
@@ -96,7 +96,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Remove todos os listeners do node informado.
-     * @param target {*}
+     * @param {*} target
      */
     clean: function(target) {
         const metadata = target._inputMetadata;
@@ -109,8 +109,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Adiciona um listener a um cc.Node.
-     * @param target {cc.Node}
-     * @param listener {cc.EventListener}
+     * @param {cc.Node} target
+     * @param {cc.EventListener} listener
      */
     _addListener: function(target, listener) {
         cc.eventManager.addListener(listener, target);
@@ -120,8 +120,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Realiza um callback de um listener.
-     * @param target {*}
-     * @param eventType {String}
+     * @param {*} target
+     * @param {String} eventType
      * @param args
      */
     call: function(target, eventType, args) {
@@ -139,9 +139,9 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Adiciona/remove um listener ao objeto, dependendo do tipo do evento informado.
-     * @param target {*}
-     * @param eventType {String}
-     * @param didAddCallback {Boolean}
+     * @param {*} target
+     * @param {String} eventType
+     * @param {Boolean} didAddCallback
      * @private
      */
     _checkInputSources: function(target, eventType, didAddCallback) {
@@ -178,7 +178,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Ativa o mouse.
-     * @param target {*}
+     * @param {*} target
      * @private
      */
     _activateMouse: function(target) {
@@ -299,7 +299,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Desativa o mouse.
-     * @param target {*}
+     * @param {*} target
      * @private
      */
     _deactivateMouse: function(target) {
@@ -311,7 +311,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Ativa o teclado.
-     * @param target {*}
+     * @param {*} target
      * @private
      */
     _activateKeyboard: function(target) {
@@ -337,7 +337,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Verifica se o target não possui mais callbacks à eventos de teclado e, caso isso se confirme, remove o evento.
-     * @param target {*}
+     * @param {*} target
      * @private
      */
     _deactivateKeyboard: function(target) {
@@ -349,7 +349,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Ativa o acelerômetro.
-     * @param target {cc.Node}
+     * @param {cc.Node} target
      * @private
      */
     _activateAccelerometer: function(target) {
@@ -374,7 +374,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Desativa o acelerômetro.
-     * @param target {cc.Node}
+     * @param {cc.Node} target
      * @private
      */
     _deactivateAccelerometer: function(target) {
@@ -490,4 +490,3 @@ pd.InputManager.Sources = {
     BUTTON: "inputSourceButton",
     JOYSTICK: "inputSourceJoystick"
 };
-

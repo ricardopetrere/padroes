@@ -4,12 +4,12 @@
  */
 
 /**
- * @param t {number}
- * @param s {cc.Scene}
- * @param layer {cc.Layer}
- * @param z {number}
- * @param x {number}
- * @param y {number}
+ * @param {Number} t
+ * @param {cc.Scene} s
+ * @param {cc.Layer} layer
+ * @param {Number} z
+ * @param {Number} x
+ * @param {Number} y
  * @constructor
  * @returns {cc.TransitionScene}
  */
@@ -23,8 +23,8 @@ var ZoomTo = function (t, s, layer, z, x, y) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -33,8 +33,8 @@ var JumpZoomTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -43,8 +43,8 @@ var FadeTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -53,8 +53,8 @@ var FadeWhiteTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -63,8 +63,8 @@ var FlipXLeftOver = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -73,8 +73,8 @@ var FlipXRightOver = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -83,8 +83,8 @@ var FlipYUpOver = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -93,8 +93,8 @@ var FlipYDownOver = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -103,8 +103,8 @@ var FlipAngularLeftOver = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -113,8 +113,8 @@ var FlipAngularRightOver = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -123,8 +123,8 @@ var ZoomFlipXLeftOver = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -133,8 +133,8 @@ var ZoomFlipXRightOver = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -143,8 +143,8 @@ var ZoomFlipYUpOver = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -153,8 +153,8 @@ var ZoomFlipYDownOver = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -163,8 +163,8 @@ var ZoomFlipAngularLeftOver = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -173,8 +173,8 @@ var ZoomFlipAngularRightOver = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -183,8 +183,8 @@ var ShrinkGrowTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -193,8 +193,8 @@ var RotoZoomTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -203,8 +203,8 @@ var MoveInLTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -213,8 +213,8 @@ var MoveInRTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -223,8 +223,8 @@ var MoveInTTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -233,8 +233,8 @@ var MoveInBTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -243,8 +243,8 @@ var SlideInLTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -253,8 +253,8 @@ var SlideInRTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -263,8 +263,8 @@ var SlideInTTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -273,8 +273,8 @@ var SlideInBTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -283,8 +283,8 @@ var CCTransitionCrossFade = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -293,8 +293,8 @@ var CCTransitionRadialCCW = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -303,8 +303,8 @@ var CCTransitionRadialCW = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -314,8 +314,8 @@ var PageTransitionForward = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -325,8 +325,8 @@ var PageTransitionBackward = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -335,8 +335,8 @@ var FadeTRTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -345,8 +345,8 @@ var FadeBLTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -355,8 +355,8 @@ var FadeUpTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -365,8 +365,8 @@ var FadeDownTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -375,8 +375,8 @@ var TurnOffTilesTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */
@@ -385,8 +385,8 @@ var SplitRowsTransition = function (t, s) {
 };
 
 /**
- * @param t {number}
- * @param s {number}
+ * @param {Number} t
+ * @param {Number} s
  * @returns {cc.TransitionScene}
  * @constructor
  */

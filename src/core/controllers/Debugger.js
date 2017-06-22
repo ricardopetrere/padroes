@@ -37,10 +37,10 @@ pd.Debugger = cc.Class.extend({/**@lends pd.Debugger#*/
 
     /**
      * Adiciona um atalho.
-     * @param targetSceneName {String|null} - o nome da cena para o qual deseja-se navegar. Ex: "GameScene" para navegar para pd.delegate.activeNamespace.GameScene.
-     * @param callbackFunction {Function|null} - a função de callback a ser executada.
-     * @param callbackCaller {*|null} - o objeto responsável por chamar a função de callback.
-     * @param callbackArguments {Array|null} - os argumentos a serem passados para a função de callback.
+     * @param {String|null} targetSceneName - o nome da cena para o qual deseja-se navegar. Ex: "GameScene" para navegar para pd.delegate.activeNamespace.GameScene.
+     * @param {Function|null} callbackFunction - a função de callback a ser executada.
+     * @param {*|null} callbackCaller - o objeto responsável por chamar a função de callback.
+     * @param {Array|null} callbackArguments - os argumentos a serem passados para a função de callback.
      */
     addShortcut: function(targetSceneName, callbackFunction, callbackCaller, callbackArguments) {
         if(!pd.debugMode || this._isPalco())
@@ -58,10 +58,10 @@ pd.Debugger = cc.Class.extend({/**@lends pd.Debugger#*/
 
     /**
      * Verifica se um atalho já foi adicionado para evitar duplicações (uso interno).
-     * @param targetSceneName {String|null} - a cena para qual deseja-se navegar.
-     * @param callbackFunction {Function|null} - a função de callback a ser executada.
-     * @param callbackCaller {*|null} - o objeto responsável por chamar a função de callback.
-     * @param callbackArguments {Array|null} - os argumentos a serem passados para a função de callback.
+     * @param {String|null} targetSceneName - a cena para qual deseja-se navegar.
+     * @param {Function|null} callbackFunction - a função de callback a ser executada.
+     * @param {*|null} callbackCaller - o objeto responsável por chamar a função de callback.
+     * @param {Array|null} callbackArguments - os argumentos a serem passados para a função de callback.
      * @private
      * @returns {Boolean}
      */
@@ -81,7 +81,7 @@ pd.Debugger = cc.Class.extend({/**@lends pd.Debugger#*/
 
     /**
      * Carrega o atalho especificado.
-     * @param id {Number}
+     * @param {Number} id
      */
     loadShortcut: function(id) {
         if(!pd.debugMode || this._isPalco() || !this._shortcuts || !this._shortcuts[id])

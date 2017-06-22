@@ -81,7 +81,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	/**
 	 * Construtor padrao - informar uma string ou um sprite frame para o texto inferior (instrução da página).
 	 * @constructs
-	 * @param txt {String | cc.SpriteFrame}
+	 * @param {String|cc.SpriteFrame} txt
 	 */
 	ctor: function(txt) {
 		this._super();
@@ -90,8 +90,8 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
     /**
      * Cria a animação do acelerômetro e adiciona-a à layer
-     * @param posX {Number}
-     * @param posY {Number}
+     * @param {Number} posX
+     * @param {Number} posY
      */
     createAccelerometer: function (posX, posY) {
         this.accelerometer = new pd.Animation();
@@ -136,9 +136,9 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
     /**
      * Cria um botão default, podendo ou não colocar uma imagem ou texto como label.
-     * @param posX {Number}
-     * @param posY {Number}
-     * @param [sprite = null] {cc.Sprite|cc.LabelTTF} Imagem ou LabelTTF para colocar como "texto" do botão.
+     * @param {Number} posX
+     * @param {Number} posY
+     * @param {cc.Sprite|cc.LabelTTF} [sprite = null] Imagem ou LabelTTF para colocar como "texto" do botão.
      * @returns {pd.Animation}
      */
     createNakedButton: function (posX, posY, sprite) {
@@ -152,7 +152,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
     /**
 	 * Cria o ponteiro (setinha do mouse ou mãozinha, se for mobile).
-     * @param initialPosition {cc.Point}
+     * @param {cc.Point} initialPosition
      */
 	createPointer:function(initialPosition) {
 		var frameName = "mouse" in cc.sys.capabilities ? "seta_" : "dedo_";
@@ -170,8 +170,8 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
     /**
      * Cria a barra de espaço e adiciona-a à layer.
-     * @param posX {Number}
-     * @param posY {Number}
+     * @param {Number} posX
+     * @param {Number} posY
      */
     createSpaceButton: function (posX, posY) {
         this.btnSpace = this._createButton('keySpace', posX, posY);
@@ -180,9 +180,9 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
 	/**
 	 * Cria um botão (apenas uso interno!)
-	 * @param frameName {String}
-	 * @param posX {Number}
-	 * @param posY {Number}
+	 * @param {String} frameName
+	 * @param {Number} posX
+	 * @param {Number} posY
 	 * @returns {pd.Animation}
 	 * @private
 	 */
@@ -197,7 +197,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
     /**
 	 * Cria o texto inferior.
-     * @param txt {String|cc.SpriteFrame}
+     * @param {String|cc.SpriteFrame} txt
 	 * @private
      */
 	_createBottomText: function(txt) {
@@ -238,8 +238,8 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
 	/**
 	 * Seta o status da layer.
-	 * @param running {Boolean} - indica se a animação deve rodar ou não.
-	 * @param [shouldResetAfterStopping=true] {Boolean}
+	 * @param {Boolean} running - indica se a animação deve rodar ou não.
+	 * @param {Boolean} [shouldResetAfterStopping=true]
 	 */
 	setStatus: function(running, shouldResetAfterStopping) {
 		if(running && this.isActiveAndRunning) {
@@ -261,7 +261,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 
 	/**
 	 * Limpa todas as ações rodando na layer recursivamente.
-	 * @param node {cc.Node}
+	 * @param {cc.Node} node
 	 * @private
 	 */
 	_cleanAllRunningActions: function(node) {

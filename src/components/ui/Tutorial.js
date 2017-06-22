@@ -116,8 +116,8 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
     /**
      * Construtor padrão - instancia, ativa e adiciona o tutorial ao _handler.
      * @constructs
-     * @param _handler {cc.Node}
-     * @param [shouldPauseHandler=true] {Boolean}
+     * @param {cc.Node} _handler
+     * @param {Boolean} [shouldPauseHandler=true]
      */
     ctor:function(_handler, shouldPauseHandler) {
         this._super(new cc.Color(255, 255, 255), 1028, 768);
@@ -250,8 +250,8 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
     },
 
     /**
-     * Seta o valor da propriedade _isControlEnabled.
-     * @param enabled {Boolean}
+     * Ativa/desativa o controle via input de mouse.
+     * @param {Boolean} enabled
      */
     setControlEnabled: function(enabled) {
         this._isControlEnabled = enabled;
@@ -274,9 +274,9 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
     /**
      * Verifica se um ponto (x,y) está contido dentro do bounding box de um botão.
-     * @param _x {int}
-     * @param _y {int}
-     * @param tolerance {int=1}
+     * @param {Number} _x
+     * @param {Number} _y
+     * @param {Number} [tolerance=1]
      * @returns {Boolean}
      */
     isInside: function(_button, _x, _y, tolerance) {
@@ -315,8 +315,8 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
     /**
      * Desabilita a página anterior após ela ser removida da tela.
-     * @param caller {cc.Node}
-     * @param oldPage {pd.TutorialLayer}
+     * @param {cc.Node} caller
+     * @param {pd.TutorialLayer} oldPage
      * @private
      */
     _onPageHidden: function(caller, oldPage) {
@@ -328,8 +328,8 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
     /**
      * Mostra a página para qual o usuário navegou.
-     * @param caller {pd.Tutorial}
-     * @param shouldAnimate {Boolean}
+     * @param {pd.Tutorial} caller
+     * @param {Boolean} shouldAnimate
      * @private
      */
     _showPage:function(caller, shouldAnimate) {
@@ -378,9 +378,9 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
     
     /**
      * Tweena para a página posterior à página atual.
-     * @param caller {cc.Node}
-     * @param isCallerPressed {Boolean}
-     * @param isSwiping {Boolean}
+     * @param {cc.Node} caller 
+     * @param {Boolean} isCallerPressed
+     * @param {Boolean} isSwiping
      * @private
      */
     _onNextPage:function(caller, isCallerPressed, isSwiping){
@@ -402,9 +402,9 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
     /**
      * Tweena para a página anterior à página atual.
-     * @param caller {cc.Node}
-     * @param isCallerPressed {Boolean}
-     * @param isSwiping {Boolean}
+     * @param {cc.Node} caller
+     * @param {Boolean} isCallerPressed
+     * @param {Boolean} isSwiping
      * @private
      */
     _onPreviousPage:function(caller,isCallerPressed, isSwiping){
@@ -425,7 +425,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
     /**
      * Manipula a inicialização de uma ação de swipe.
-     * @param e {Object}
+     * @param {Object} e
      * @private
      */
     _onSwipeBegin: function(e) {
@@ -449,7 +449,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
     /**
      * Manipula a movimentação da ação de swipe em andamento, se houver.
-     * @param e {Object}
+     * @param {Object} e
      * @private
      */
     _onSwipeMove: function(e) {
@@ -476,7 +476,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
     /**
      * Manipula a finalização da ação de swipe em andamento, se houver.
-     * @param e {Object}
+     * @param {Object} e
      * @private
      */
     _onSwipeFinish: function(e) {
@@ -532,8 +532,8 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
     /**
      * Fecha o tutorial.
-     * @param caller {cc.Node}
-     * @param isCallerPressed {Boolean}
+     * @param {cc.Node} caller
+     * @param {Boolean} isCallerPressed
      * @private
      */
     _onCloseButton:function(caller, isCallerPressed){
@@ -598,7 +598,7 @@ pd.Tutorial.setBottomTextOffset = function(offset) {
 
 /**
  * Seta a imagem ou texto do objetivo do tutorial
- * @param headerSpriteFrameOrText {cc.SpriteFrame|cc.LabelTTF}
+ * @param {cc.SpriteFrame|cc.LabelTTF} headerSpriteFrameOrText
  */
 pd.Tutorial.setHeader = function(headerSpriteFrameOrText) {
     pd.delegate.activeNamespace.tutorialData.txt_objetivo = headerSpriteFrameOrText;

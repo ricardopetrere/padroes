@@ -122,7 +122,7 @@ pd.PauseLayer = cc.Layer.extend({/**@lends pd.PauseLayer#*/
 
     /**
      * Realiza a entrada/saída do menu lateral.
-     * @param direction {pd.PauseLayer.SLIDE_DIRECTION_EXITING|pd.PauseLayer.SLIDE_DIRECTION_ENTERING}
+     * @param {pd.PauseLayer.SLIDE_DIRECTION_EXITING|pd.PauseLayer.SLIDE_DIRECTION_ENTERING} direction
      * @private
      */
     _slide: function(direction){
@@ -144,8 +144,8 @@ pd.PauseLayer = cc.Layer.extend({/**@lends pd.PauseLayer#*/
 
     /**
      * Manipula eventos de clique dentro da interface.
-     * @param caller {cc.Node}
-     * @param isPressed {Boolean}
+     * @param {cc.Node} caller
+     * @param {Boolean} isPressed
      * @private
      */
     _onButtonClick:function(caller, isPressed){

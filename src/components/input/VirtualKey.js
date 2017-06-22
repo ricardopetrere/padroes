@@ -9,23 +9,29 @@
  * @classdesc Implementação de uma tecla virtual.
  */
 pd.VirtualKey = pd.Button.extend({/** @lends pd.VirtualKey#**/
-    /** @type {String} **/
+    /**
+     * O tipo do label da tecla virtual (imagem ou texto).
+     * @type {String}
+     **/
     _labelType:"",
 
-    /** @type {cc.Sprite|cc.LabelTTF} **/
+    /**
+     * @type {cc.Sprite|cc.LabelTTF}
+     **/
     _label:null,
+
 
     /**
      * @constructs
-     * @param labelType {pd.VirtualKey.LabelTypes} - o tipo do botão.
-     * @param label {String} - o label do botão. Caso o tipo do botão seja 'SPRITE', passar um dos ícones do enumerador pd.Virtual.Icons. Caso o tipo do botão seja 'TEXT', passar uma string com um caracter.
-     * @param attr {Object} - as propriedades de exibição do botão.
-     * @param autoEnable {Boolean} - indica se os listeners do botão devem ser adicionados automaticamente após a sua construção.
-     * @param eventBased {Boolean} - indica se o mecanismo de callbacks do botão será baseado em eventos.
-     * @param [keyCode=null] {Number} - o 'keyCode' da tecla.
-     * @param [handler=null] {*|null} - para o método de callback explícito: o objeto que irá executar a função de callback.
-     * @param [handlerFunc=null] {Function|String|null} - para o método de callback explícito: a função de callback a ser executada.
-     * @param [handlerFuncArgs=null] {Array|null} - para o método de callback explícito: os argumentos a serem passados para a função de callback.
+     * @param {pd.VirtualKey.LabelTypes} labelType - o tipo do botão.
+     * @param {pd.VirtualKey.Icons|String} label - o label do botão. Caso o tipo da label do botão seja 'SPRITE', passar um dos ícones do enumerador pd.Virtual.Icons ou um sprite frame name. Caso o tipo do botão seja 'TEXT', passar uma string com um caracter.
+     * @param {Object} [attr=null] - as propriedades de exibição do botão.
+     * @param {Boolean} [autoEnable=false] - indica se os listeners do botão devem ser adicionados automaticamente após a sua construção.
+     * @param {Boolean} [eventBased=false] - indica se o mecanismo de callbacks do botão será baseado em eventos.
+     * @param {Number} [keyCode=null] - o 'keyCode' da tecla.
+     * @param {*|null} [handler=null] - para o método de callback explícito: o objeto que irá executar a função de callback.
+     * @param {Function|String|null} [handlerFunc=null] - para o método de callback explícito: a função de callback a ser executada.
+     * @param {Array|null} [handlerFuncArgs=null] - para o método de callback explícito: os argumentos a serem passados para a função de callback.
      */
     ctor: function(labelType, label, attr, autoEnable, eventBased, keyCode, handler, handlerFunc, handlerFuncArgs) {
         this._super("keyNaked0001", "keyNaked0002", attr, 1, autoEnable, eventBased, handler, handlerFunc, handlerFuncArgs);
@@ -60,7 +66,7 @@ pd.VirtualKey.LabelTypes = {
 };
 
 /**
- * Ícones presets.
+ * Ícones pré-setados.
  * @enum {String}
  */
 pd.VirtualKey.Icons = {
@@ -84,7 +90,7 @@ pd.VirtualKey.Icons = {
  * @extends {cc.Layer}
  * @classdesc Implementação de um mini teclado de setas, simulando o comportamento de um teclado físico.
  */
-pd.ArrowKeys = cc.Layer.extend({
+pd.ArrowKeys = cc.Layer.extend({/** @lends pd.ArrowKeys#**/
     /**
      * @type {pd.Button}
      */
@@ -102,17 +108,18 @@ pd.ArrowKeys = cc.Layer.extend({
      */
     downButton:null,
     /**
+     * Array com apontamentos para todos os botões para facilitar o acesso em massa.
      * @type {Array}
      */
     _buttons: null,
 
     /**
      * @constructs
-     * @param hasLeftButton {Boolean}
-     * @param hasRightButton {Boolean}
-     * @param hasUpButton {Boolean}
-     * @param hasDownButton {Boolean}
-     * @param autoEnable {Boolean}
+     * @param {Boolean} [hasLeftButton=false]
+     * @param {Boolean} [hasRightButton=false]
+     * @param {Boolean} [hasUpButton=false]
+     * @param {Boolean} [hasDownButton=false]
+     * @param {Boolean} [autoEnable=false]
      */
     ctor: function(hasLeftButton, hasRightButton, hasUpButton, hasDownButton, autoEnable) {
         this._super();
@@ -132,22 +139,24 @@ pd.ArrowKeys = cc.Layer.extend({
 
     /**
      * Adiciona um botão de arrow key.
-     * @param normalSprite {string}
-     * @param pressedSprite {string}
-     * @param attr {Object}
-     * @param keyCode {Number}
+     * @param {String} normalSprite
+     * @param {String} pressedSprite
+     * @param {Number} attr
+     * @param {Number} keyCode
      * @private
      */
     _addButton: function(normalSprite, pressedSprite, attr, keyCode) {
         this._buttons = this._buttons || [];
         var btn = new pd.Button(normalSprite, pressedSprite, attr, 1, false, true);
+        btn.setDisabledOpacity(155);
         this._buttons.push(btn);
         this.addChild(btn);
         btn.setKeyCode(keyCode);
+        return btn;
     },
 
     /**
-     * Ativa os botões.
+     * Ativa os botões do teclado.
      */
     enable: function() {
         for(var i in this._buttons) {
@@ -156,12 +165,27 @@ pd.ArrowKeys = cc.Layer.extend({
     },
 
     /**
-     * Desativa os botões.
+     * Desativa os botões do teclado.
      */
     disable: function() {
         for(var i in this._buttons) {
             this._buttons[i].disable();
         }
-    }
+    },
 
+    /**
+     * Seta as funções de callback do componente.
+     * @param {keyboardCallback} [onKeyDown=null] - função de callback para eventos de onKeyDown.
+     * @param {keyboardCallback} [onKeyUp=null] - função de callback para eventos de onKeyUp.
+     * @param {Object} [handler=null] - handler da função. Caso não seja fornecido, o próprio teclado virtual será registrado como handler.
+     */
+    setCallbacks: function(onKeyDown, onKeyUp, handler) {
+        for(var i in this._buttons) {
+            var btn = this._buttons[i];
+            if(onKeyDown)
+                pd.inputManager.add(pd.InputManager.EVENT_BUTTON_PRESSED, btn, onKeyDown, handler || this);
+            if(onKeyUp)
+                pd.inputManager.add(pd.InputManager.EVENT_BUTTON_RELEASED, btn, onKeyUp, handler || this);
+        }
+    }
 });

@@ -38,7 +38,7 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
 
     /**
      * @constructs
-     * @param [didPreload=false] {Boolean}
+     * @param {Boolean} [didPreload=false]
      */
     ctor: function(didPreload) {
         this._super();
@@ -108,7 +108,7 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
 
     /**
      * Seta o tipo de animação a ser feita pela tela.
-     * @param animationType {String}
+     * @param {String} animationType
      */
     setAnimationType: function(animationType) {
         this._animationType = animationType;
@@ -212,7 +212,7 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
 
     /**
      * Exibe uma mensagem customizada.
-     * @param msg {String}
+     * @param {String} msg
      */
     displayMessage: function(msg) {
         if(this._textFeedback) {
@@ -230,7 +230,7 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
 
     /**
      * Exibe uma mensagem de erro.
-     * @param msg {String}
+     * @param {String} msg
      */
     displayWarning: function(msg) {
         if(this._textFeedback) {

@@ -81,15 +81,15 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
 
     /**
      * @constructs
-     * @param normalImage {String} - o sprite frame do botão quando ele está solto.
-     * @param [pressedImage=null] {String|null} - o sprite frame do botão quando ele está pressionado.
-     * @param attr {Object} - as propriedades de exibição do botão.
-     * @param pressedScale {Number} - o fator de escala do botão ao ser pressionado.
-     * @param autoEnable {Boolean} - indica se os listeners do botão devem ser adicionados automaticamente após a sua construção.
-     * @param eventBased {Boolean} - indica se o mecanismo de callbacks do botão será baseado em eventos.
-     * @param [handler=null] {*|null} - para o método de callback explícito: o objeto que irá executar a função de callback.
-     * @param [handlerFunc=null] {Function|String|null} - para o método de callback explícito: a função de callback a ser executada.
-     * @param [handlerFuncArgs=null] {Array|null} - para o método de callback explícito: os argumentos a serem passados para a função de callback.
+     * @param {String} normalImage - o sprite frame name do botão quando ele está solto.
+     * @param {String|null} [pressedImage=null] - o sprite frame name do botão quando ele está pressionado.
+     * @param {Object} [attr=null] - as propriedades de exibição do botão.
+     * @param {Number} [pressedScale=1] - o fator de escala do botão ao ser pressionado.
+     * @param {Boolean} [autoEnable=false] - indica se os listeners do botão devem ser adicionados automaticamente após a sua construção.
+     * @param {Boolean} [eventBased=false] - indica se o mecanismo de callbacks do botão será baseado em eventos.
+     * @param {*|null} [handler=null] - para o método de callback explícito: o objeto que irá executar a função de callback.
+     * @param {Function|String|null} [handlerFunc=null] - para o método de callback explícito: a função de callback a ser executada.
+     * @param {Array|null} [handlerFuncArgs=null] - para o método de callback explícito: os argumentos a serem passados para a função de callback.
      * @returns {pd.Button}
      */
     ctor: function(normalImage, pressedImage, attr, pressedScale, autoEnable, eventBased, handler, handlerFunc, handlerFuncArgs) {
@@ -103,7 +103,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
             this._normalSpriteFrame = pd.getSpriteFrame(normalImage);
             this._pressedSpriteFrame = pd.getSpriteFrame(pressedImage ? pressedImage : normalImage);
             this.attr(attr);
-            this._pressedScale = pressedScale;
+            this._pressedScale = pressedScale || 1;
             this.setCallbackMode(eventBased);
 
             this._handler = handler;
@@ -121,16 +121,6 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     /**
      * Construtor antigo - apenas para manter a compatibilidade
      * @deprecated
-     * @param x {Number}
-     * @param y {Number}
-     * @param handler {*}
-     * @param handlerFunc {Function|String}
-     * @param normalImage {String}
-     * @param pressedImage {String}
-     * @param handlerFuncArgs {Array}
-     * @param pressedScale {Number}
-     * @param forceMouseUpCall {Boolean}
-     * @param callbackMode {pd.Button.CALLBACK_MODE_EXPLICIT|pd.Button.CALLBACK_MODE_EVENT_BASED}
      */
     _legacyCtor: function(x, y, handler, handlerFunc, normalImage, pressedImage, handlerFuncArgs, pressedScale, forceMouseUpCall, callbackMode) {
         cc.log("[pd.Button] Construindo botão com o construtor legado - utilizar o novo padrão!");
@@ -150,16 +140,16 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     },
 
     /**
-     * Altera a sensibilidade do botão.
-     * @param forceMouseUpCall {Boolean}
+     * Determina se o evento de 'release' do botão deve ser disparado quando o usuário soltá-lo fora de sua região.
+     * @param {Boolean} forceMouseUpCall
      */
     setForceMouseUpCall: function(forceMouseUpCall) {
         this._forceMouseUpCall = forceMouseUpCall;
     },
 
     /**
-     * Seta o keycode do botão.
-     * @param keyCode {Number}
+     * Seta o keycode do botão, vinculando-o a uma tecla.
+     * @param {Number} keyCode
      */
     setKeyCode: function(keyCode) {
         this._attachedKeyCode = keyCode;
@@ -167,7 +157,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
 
     /**
      * Seta a opacidade do botão de quando ele está desabilitado.
-     * @param disabledOpacity
+     * @param {Number} disabledOpacity
      */
     setDisabledOpacity: function(disabledOpacity) {
         this._disabledOpacity = disabledOpacity;
@@ -199,6 +189,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     disable: function() {
         if(!this._isEnabled)
             return;
+
         this.setOpacity(this._disabledOpacity);
         pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_DOWN, this);
         pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_MOVE, this);
@@ -211,7 +202,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
 
     /**
      * Altera o indicador do status do botão.
-     * @param isPressed {Boolean}
+     * @param {Boolean} isPressed
      * @private
      */
     _setPressed: function(isPressed) {
@@ -220,7 +211,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     },
 
     /**
-     * @param eventOrTouch {Object|Array}
+     * @param {Object|Array} eventOrTouch
      * @private
      */
     _onMouseDown: function(eventOrTouch) {
@@ -244,7 +235,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     },
 
     /**
-     * @param eventOrTouch {Object|Array}
+     * @param {Object|Array} eventOrTouch
      * @private
      */
     _onMouseDragged: function(eventOrTouch) {
@@ -266,7 +257,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     },
 
     /**
-     * @param eventOrTouch {Object|Array}
+     * @param {Object|Array} eventOrTouch
      * @private
      */
     _onMouseUp: function(eventOrTouch) {
@@ -284,8 +275,8 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     },
 
     /**
-     * @param keyCode {Number}
-     * @param event {Object}
+     * @param {Number} keyCode
+     * @param {Object} event
      * @private
      */
     _onKeyDown: function(keyCode, event) {
@@ -297,8 +288,8 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     },
 
     /**
-     * @param keyCode {Number}
-     * @param event {Object}
+     * @param {Number} keyCode
+     * @param {Object} event
      * @private
      */
     _onKeyUp: function(keyCode, event) {
@@ -311,7 +302,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
 
     /**
      * Executa a função de callback.
-     * @param pressed {Boolean}
+     * @param {Boolean} pressed
      * @private
      */
     _performCallback: function(pressed) {
@@ -327,16 +318,3 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
         }
     }
 });
-
-/**
- * Modo de callback explícito: as funções de callback são definidas no construtor do botão, e são invocadas de maneira explícita.
- * @constant
- * @type {string}
- */
-pd.Button.CALLBACK_MODE_EXPLICIT = "buttonCallbackModeExplicit";
-
-/**
- * Modo de callback baseado em eventos: os botões disparam notificações, permitindo que as funções de callback sejam injetadas por um controlador externo.
- * @type {string}
- */
-pd.Button.CALLBACK_MODE_EVENT_BASED = "buttonCallbackModeEventBased";
