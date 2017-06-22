@@ -134,46 +134,48 @@ pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder){
 
 /**
  * Cria uma caixa de texto.
- * @param fontPath {String}
- * @param fontName {String}
- * @param x {Number}
- * @param y {Number}
- * @param size {Number}
- * @param [color=] {cc.Color}
- * @param [parentNode=null] {cc.Node}
- * @param [text=""] {String}
- * @param [alignment=null] {cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_RIGHT}
+ * @param {String} fontPath
+ * @param {String} fontName
+ * @param {Number} x
+ * @param {Number} y
+ * @param {Number} fontSize
+ * @param {cc.Color} [color=]
+ * @param {String} [text=""]
+ * @param {cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_RIGHT} [alignment=null]
+ * @param {cc.Node} [parentNode=null]
  * @returns {cc.LabelTTF}
  */
-pd.createText = function(fontPath, fontName, x, y, size, color, parentNode, text, alignment) {
-    const txt = new cc.LabelTTF(text, cc.sys.isNative ? fontPath : fontName, size);
-    txt.fillStyle = color || cc.color(0, 0, 0, 255);
+pd.createText = function(fontPath, fontName, x, y, fontSize, color, text, alignment, parentNode) {
+    if(!text)
+        text = "";
+    console.log("Path: "+fontPath+", Name: "+fontName);
+    const labelTTF = new cc.LabelTTF(text, cc.sys.isNative ? fontPath : fontName, fontSize);
+    labelTTF.setPosition(x, y);
+    labelTTF.fillStyle = color || cc.color(0, 0, 0, 255);
 
-    if(!alignment)
-        txt.setHorizontalAlignment(alignment);
+    if(alignment)
+        labelTTF.setHorizontalAlignment(alignment);
 
-    if(!txt)
-        txt.setString(text);
 
     if(parentNode)
-        parentNode.addChild(txt);
+        parentNode.addChild(labelTTF);
 
-    return txt;
+    return labelTTF;
 };
 
 /**
  * Cria uma caixa de texto com uma fonte padrão.
- * @param fontID {String}
+ * @param fontID {pd.Fonts}
  * @param x {Number}
  * @param y {Number}
- * @param size {Number}
+ * @param fontSize {Number}
  * @param [color=] {cc.Color}
- * @param [parentNode=null] {cc.Node}
  * @param [text=""] {String}
  * @param [alignment=null] {cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_RIGHT}
+ * @param [parentNode=null] {cc.Node}
  * @returns {cc.LabelTTF}
  */
-pd.createTextWithStandardFont = function(fontID, x, y, size, color, parentNode, text, alignment) {
+pd.createTextWithStandardFont = function(fontID, x, y, fontSize, color, text, alignment, parentNode) {
     switch(fontID) {
         case pd.Fonts.CALIBRI:
             var path = pd.res.calibri;
@@ -184,8 +186,10 @@ pd.createTextWithStandardFont = function(fontID, x, y, size, color, parentNode, 
         case pd.Fonts.DIMBO:
             path = pd.res.dimbo;
             break;
+        case pd.Fonts.GILL_SANS:
+            path = pd.res.gill_sans;
     }
-    return pd.createText(path, fontID, x, y, size, color, parentNode, text, alignment);
+    return pd.createText(path, fontID, x, y, fontSize, color, text, alignment, parentNode);
 };
 
 /**

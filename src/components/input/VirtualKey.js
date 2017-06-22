@@ -17,9 +17,9 @@ pd.VirtualKey = pd.Button.extend({/** @lends pd.VirtualKey#**/
 
     /**
      * @constructs
-     * @param labelType {pd.VirtualKey.LabelTypes.SPRITE|pd.VirtualKey.LabelTypes.TEXT} - o tipo do botão.
+     * @param labelType {pd.VirtualKey.LabelTypes} - o tipo do botão.
      * @param label {String} - o label do botão. Caso o tipo do botão seja 'SPRITE', passar um dos ícones do enumerador pd.Virtual.Icons. Caso o tipo do botão seja 'TEXT', passar uma string com um caracter.
-     * @param attr {{x:Number, y:Number, scaleX:Number, scaleY:Number, opacity:Number, visible:Boolean, rotation:Number}} - as propriedades de exibição do botão.
+     * @param attr {Object} - as propriedades de exibição do botão.
      * @param autoEnable {Boolean} - indica se os listeners do botão devem ser adicionados automaticamente após a sua construção.
      * @param eventBased {Boolean} - indica se o mecanismo de callbacks do botão será baseado em eventos.
      * @param keyCode {Number=null} - o 'keyCode' da tecla.
@@ -40,7 +40,7 @@ pd.VirtualKey = pd.Button.extend({/** @lends pd.VirtualKey#**/
         }
         else {
             var str = " " + label.charAt(0).toUpperCase() + " ";
-            this._label = new pd.createTextWithStandardFont(pd.Fonts.DIMBO, 0, 0, 60, cc.color(255, 255, 255, 255), null, str, cc.TEXT_ALIGNMENT_CENTER);
+            this._label = new pd.createTextWithStandardFont(pd.Fonts.DIMBO, 0, 0, 60, cc.color(255, 255, 255, 255), str, cc.TEXT_ALIGNMENT_CENTER, null);
             this._label.setPosition(boundingBox.width/2, boundingBox.height/2);
             this.addChild(this._label);
         }

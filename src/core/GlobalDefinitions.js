@@ -21,7 +21,7 @@ pd.resLoad = {
 /**
  * Recursos utilizados pelos padrões.
  * @static
- * @type {{mainDebugInterface: string, btn_fechar: string, btn_mais: string, btn_audio: string, btn_animation: string, btn_general: string, debuggerUi: string, debuggerUi2: string, uncheckedButton: string, checkedButton: string, textBoxImage: string, BoundingBox: string, cross: string, s_input: string, p_input: string, s_menus: string, p_menus: string, s_Padroes: string, p_Padroes: string, fx_Erro: string, fx_Acerto: string, fx_BgmLose: string, fx_BgmWin: string, fx_escrever: string, s_fundoPreto: string, fx_flip: string, fx_exp: string, fx_star: string, fx_button: string}}
+ * @enum {string}
  */
 pd.res = {
     
@@ -65,7 +65,8 @@ pd.res = {
     //Fonts
     carton_six: padroesPath+"/res/font/Carton Six.ttf",
     dimbo: padroesPath+"/res/font/Dimbo.ttf",
-    calibri: padroesPath+"/res/font/Calibri.ttf"
+    calibri: padroesPath+"/res/font/Calibri.ttf",
+    gill_sans: padroesPath+"/res/font/Gill Sans MT Condensed.ttf"
 
 };
 
@@ -138,7 +139,8 @@ pd.ZOrders = {
 pd.Fonts = {
     CALIBRI: "Calibri",
     CARTON_SIX: "Carton Six",
-    DIMBO: "Dimbo"
+    DIMBO: "Dimbo",
+    GILL_SANS: "Gill Sans MT Condensed"
 };
 
 //</editor-fold">
