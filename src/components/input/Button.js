@@ -171,6 +171,8 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
      */
     setDisabledOpacity: function(disabledOpacity) {
         this._disabledOpacity = disabledOpacity;
+        if (!this._isEnabled)
+            this.setOpacity(this._disabledOpacity);
     },
 
     /**
@@ -197,7 +199,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     disable: function() {
         if(!this._isEnabled)
             return;
-
+        this.setOpacity(this._disabledOpacity);
         pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_DOWN, this);
         pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_MOVE, this);
         pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_UP, this);

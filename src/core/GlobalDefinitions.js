@@ -111,7 +111,8 @@ pd.Keys = {
     SPACE: 32,
     DELETE: 46,
     ZERO: 48,
-    ESC: 27 //Cuidado: nas pd.GameLayer, essa tecla chama a pauseLayer.
+    ESC: 27, //Cuidado: nas pd.GameLayer, essa tecla chama a pauseLayer.
+    ENTER: 13
 };
 
 /**

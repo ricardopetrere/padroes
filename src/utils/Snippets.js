@@ -148,7 +148,6 @@ pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder){
 pd.createText = function(fontPath, fontName, x, y, fontSize, color, text, alignment, parentNode) {
     if(!text)
         text = "";
-    console.log("Path: "+fontPath+", Name: "+fontName);
     const labelTTF = new cc.LabelTTF(text, cc.sys.isNative ? fontPath : fontName, fontSize);
     labelTTF.setPosition(x, y);
     labelTTF.fillStyle = color || cc.color(0, 0, 0, 255);

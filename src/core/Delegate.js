@@ -22,7 +22,7 @@ pd.debugMode = cc.game.config[cc.game.CONFIG_KEY.debugMode] != cc.game.DEBUG_MOD
  * Versão atual dos padrões.
  * @type {string}
  */
-pd.version = "2.3.2";
+pd.version = "2.4";
 
 cc.log("[pd] Padrões Cocos Versão: " + pd.version);
 if(pd.debugMode)

@@ -22,14 +22,14 @@ pd.VirtualKey = pd.Button.extend({/** @lends pd.VirtualKey#**/
      * @param attr {Object} - as propriedades de exibição do botão.
      * @param autoEnable {Boolean} - indica se os listeners do botão devem ser adicionados automaticamente após a sua construção.
      * @param eventBased {Boolean} - indica se o mecanismo de callbacks do botão será baseado em eventos.
-     * @param keyCode {Number=null} - o 'keyCode' da tecla.
+     * @param [keyCode=null] {Number} - o 'keyCode' da tecla.
      * @param [handler=null] {*|null} - para o método de callback explícito: o objeto que irá executar a função de callback.
      * @param [handlerFunc=null] {Function|String|null} - para o método de callback explícito: a função de callback a ser executada.
      * @param [handlerFuncArgs=null] {Array|null} - para o método de callback explícito: os argumentos a serem passados para a função de callback.
      */
     ctor: function(labelType, label, attr, autoEnable, eventBased, keyCode, handler, handlerFunc, handlerFuncArgs) {
         this._super("keyNaked0001", "keyNaked0002", attr, 1, autoEnable, eventBased, handler, handlerFunc, handlerFuncArgs);
-
+        this.setCascadeOpacityEnabled(true);
         this._labelType = labelType;
         const boundingBox = this.getBoundingBox();
 
