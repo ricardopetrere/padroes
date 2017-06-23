@@ -32,7 +32,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      * @param {Number} duration
      * @param {Number} from
      * @param {Number} to
-     * @param {Function} cb
+     * @param {Function} [cb]
      */
     fadeMusic: function(target, duration, from, to, cb) {
         duration = duration * 100;
@@ -77,41 +77,49 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
     pauseEffect: function (effectId) {
         return cc.audioEngine.pauseEffect(effectId);
     },
-    
+    /**
+     *
+     * @param {String} res
+     * @param {boolean} loop
+     * @param {number} volume
+     * @param {string} funcPlay
+     * @param {string} funcVolume
+     * @private
+     */
+    _play: function (res, loop, volume, funcPlay, funcVolume) {
+        var ret = -1;
+        if (res) {
+            ret = cc.audioEngine[funcPlay](res, loop || false);
+        }
+        if (volume) {
+            this[funcVolume](volume);
+        }
+        return ret;
+    },
     /**
      * Toca um efeito.
      * @param {String} effect
-     * @param {boolean} loop 
-     * @param {number} volume
+     * @param {boolean} [loop]
+     * @param {number} [volume]
      * @returns {number} effectId
      */
     playEffect: function (effect, loop, volume) {
         var ret = -1;
-        if (effect) {
-            ret = cc.audioEngine.playEffect(effect, loop || false);
-        }
-        if (volume) {
-            this.setEffectsVolume(volume);
-        }
+        ret = this._play(effect, loop, volume, "playEffect", "setEffectsVolume");
         return ret;
     },
 
     /**
      * Toca uma música de fundo.
      * @param {string} music
-     * @param {boolean} loop
-     * @param {number} volume
+     * @param {boolean} [loop]
+     * @param {number} [volume]
      */
     playMusic: function (music, loop, volume) {
-        if (music) {
-            if (cc.audioEngine.willPlayMusic()) {
-                cc.audioEngine.stopMusic();
-            }
-            cc.audioEngine.playMusic(music, loop || false);
+        if (music && cc.audioEngine.willPlayMusic()) {
+            cc.audioEngine.stopMusic();
         }
-        if (volume) {
-            this.setMusicVolume(volume);
-        }
+        this._play(music, loop, volume, "playMusic", "setMusicVolume")
     },
 
     /**
