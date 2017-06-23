@@ -102,7 +102,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
         else {
             this._normalSpriteFrame = pd.getSpriteFrame(normalImage);
             this._pressedSpriteFrame = pd.getSpriteFrame(pressedImage ? pressedImage : normalImage);
-            this.attr(attr);
+            this.attr(pd.parseAttr(attr));
             this._pressedScale = pressedScale || 1;
             this.setCallbackMode(eventBased);
 

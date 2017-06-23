@@ -2,6 +2,12 @@
  * Created by Ryan Balieiro on 22/05/17.
  * Ponto de entrada da biblioteca - define o namespace 'pd'.
  * @namespace pd
+ *
+ * Lista de pendências:
+ * - transformar as arrow keys e os botões de interface (pause button e exit button) em pd.StandardButton.
+ * - alterar a pd.TutorialLayer para criar as 'teclas' no formato novo.
+ * - inserir um método para criar um joystick na pd.TutorialLayer.
+ * - desacoplar as dependências dos arquivos de boot da engine.
  */
 var pd = {};
 

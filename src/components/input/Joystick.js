@@ -99,7 +99,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
         this._isGrabbed = false;
 
         if(attr)
-            this.attr(attr);
+            this.attr(pd.parseAttr(attr));
 
         if(autoEnable)
             this.enable();

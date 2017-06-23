@@ -81,7 +81,7 @@ pd.orderBy = function(array, key, crescentOrder) {
                 pd.arraySwap(array, j, i);
             }
         }
-    }  
+    }
 };
 //</editor-fold>
 //<editor-fold desc = "#String">
@@ -147,7 +147,7 @@ pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder){
 
     if(pd.debugMode)
         pd.AddToDebugger(obj);
-    
+
     return obj;
 };
 
@@ -231,6 +231,19 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
     clippingNode.stencil = stencil;
     return clippingNode;
 };
+
+/**
+ * Parseia um objeto de configuração.
+ * @param attr {Object}
+ */
+pd.parseAttr = function(attr) {
+    if(attr.hasOwnProperty("scale")) {
+        attr.scaleX = scale;
+        attr.scaleY = scale;
+    }
+
+    return attr;
+};
 //</editor-fold>
 //<editor-fold desc="#Navigation">
 /**
@@ -260,7 +273,7 @@ pd.switchScene = function(transition, layer, delay) {
  */
 pd.currentScene = null;
 pd.__defineGetter__("currentScene", function() {
-   return cc.director._runningScene;
+    return cc.director._runningScene;
 });
 //</editor-fold>
 //<editor-fold desc="#Geometry">
@@ -271,14 +284,12 @@ pd.__defineGetter__("currentScene", function() {
  * @returns {Array}
  */
 pd.rectToPolygon = function(rect) {
-    var vertexes = [
+    return [
         cc.p(rect.x, rect.y),
         cc.p(rect.x + rect.width, rect.y),
         cc.p(rect.x + rect.width, rect.y + rect.height),
         cc.p(rect.x, rect.y + rect.height),
     ];
-
-    return vertexes;
 };
 
 /**
@@ -393,18 +404,18 @@ pd.polygonInRectCollision = function (array, rect) {
 
 /**
  * Calcula a distância entre dois pontos.
- * @param {Number|cc.Point} x1ORp1
- * @param {Number|cc.Point} y1ORp2
- * @param {Number} [x2]
- * @param {Number} [y2]
+ * @param {Number|cc.Point} x1Orp1
+ * @param {Number|cc.Point} y1Orp2
+ * @param {Number} x2
+ * @param {Number} y2
  * @returns {number}
  * @author Ricardo Petrére
  */
-pd.pointDistance = function(x1ORp1, y1ORp2, x2, y2) {
-    var x1 = typeof x1ORp1 == "number" ? x1ORp1 : x1ORp1.x;
-    var y1 = typeof x1ORp1 == "number" ? y1ORp2 : x1ORp1.y;
-    x2 = typeof y1ORp2 == "number" ? x2 : y1ORp2.x;
-    y2 = typeof y1ORp2 == "number" ? y2 : y1ORp2.y;
+pd.pointDistance = function(x1Orp1, y1Orp2, x2, y2) {
+    var x1 = typeof x1Orp1 == "number" ? x1Orp1 : x1Orp1.x;
+    var y1 = typeof x1Orp1 == "number" ? y1Orp2 : x1Orp1.y;
+    x2 = typeof y1Orp2 == "number" ? x2 : y1Orp2.x;
+    y2 = typeof y1Orp2 == "number" ? y2 : y1Orp2.y;
 
     return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 };
@@ -459,7 +470,7 @@ pd.pointToSegmentDistance = function(p, l) {
  */
 pd.pulse = function(time, pulsations, initialScale, targetScale) {
     if(!time || !pulsations || !initialScale || !targetScale)
-        throw new Error("[pd.throb] Argumentos obrigatórios não foram fornecidos para a função!");
+        throw new Error("[pd.pulse] Um ou mais argumentos obrigatórios não foram fornecidos para a função!");
 
     const sequenceSteps = [];
     for(var i = 0 ; i < pulsations ; i++) {
@@ -482,7 +493,7 @@ pd.pulse = function(time, pulsations, initialScale, targetScale) {
  */
 pd.shake = function(time, cycles, initialRotation, strength) {
     if(!time || !cycles || (!initialRotation && initialRotation != 0) || !strength)
-        throw new Error("[pd.shake] Argumentos obrigatórios não foram fornecidos para a função!");
+        throw new Error("[pd.shake] Um ou mais argumentos obrigatórios não foram fornecidos para a função!");
 
     const sequenceSteps = [];
     for(var i = 0 ; i < cycles ; i++) {
@@ -505,6 +516,8 @@ pd.shake = function(time, cycles, initialRotation, strength) {
  * @returns {cc.Sequence}
  */
 pd.flicker = function(time, flicks, initialColor, targetColor) {
+    if(!time || !flicks || !initialColor || !targetColor)
+        throw new Error("[pd.flicker] Um ou mais argumentos obrigatórios não foram fornecidos para a função!");
     const sequenceSteps = [];
     //TO-DO...
     return cc.sequence();
