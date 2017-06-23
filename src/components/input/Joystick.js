@@ -118,9 +118,9 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
 
         pd.inputManager.config(this, true, cc.EventListener.TOUCH_ONE_BY_ONE, 1);
 
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, this._onMouseDown);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, this, this._onMouseDragged);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, this, this._onMouseUp);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_DOWN, this, this._onMouseDown);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_MOVE, this, this._onMouseDragged);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_UP, this, this._onMouseUp);
         this._isEnabled = true;
     },
 
@@ -131,9 +131,9 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
         if(!this._isEnabled)
             return;
 
-        pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_DOWN, this);
-        pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_MOVE, this);
-        pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_UP, this);
+        pd.inputManager.remove(pd.InputManager.Events.MOUSE_DOWN, this);
+        pd.inputManager.remove(pd.InputManager.Events.MOUSE_MOVE, this);
+        pd.inputManager.remove(pd.InputManager.Events.MOUSE_UP, this);
         this._isEnabled = false;
     },
 
@@ -200,7 +200,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     },
 
     /**
-     * @param {Object|Array} eventOrTouch
+     * @param {Object} eventOrTouch
      * @private
      */
     _onMouseDown: function(eventOrTouch) {
@@ -228,7 +228,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     },
 
     /**
-     * @param {Object|Array} eventOrTouch
+     * @param {Object} eventOrTouch
      * @private
      */
     _onMouseDragged: function(eventOrTouch) {
@@ -239,7 +239,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     },
 
     /**
-     * @param {Object|Array} eventOrTouch
+     * @param {Object} eventOrTouch
      * @private
      */
     _onMouseUp: function(eventOrTouch) {
@@ -298,7 +298,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
 
         if(this._shouldDispatchEvent()) {
             pd.inputManager.setEventMetadata("_joystickMeta", this, this._delta, this._power);
-            this._dispatchInputEvent(pd.InputManager.EVENT_JOYSTICK_STATUS, pd.inputManager["_joystickMeta"]);
+            this._dispatchInputEvent(pd.InputManager.Events.JOYSTICK_STATUS, pd.inputManager["_joystickMeta"]);
 
             if(this._keyboardMode) {
                 this._checkKeyboardDirection("left", deltaX == -1, pd.Keys.LEFT);
@@ -322,12 +322,12 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     _checkKeyboardDirection: function(direction, active, keyCode) {
         if(this._keyboardModeMetadata[direction] == false && active) {
             pd.inputManager.setEventMetadata("_keyboardMeta", this, keyCode);
-            this._dispatchInputEvent(pd.InputManager.EVENT_KEY_DOWN, pd.inputManager["_keyboardMeta"]);
+            this._dispatchInputEvent(pd.InputManager.Events.KEY_DOWN, pd.inputManager["_keyboardMeta"]);
             this._keyboardModeMetadata[direction] = true;
         }
         else if(this._keyboardModeMetadata[direction] == true && !active) {
             pd.inputManager.setEventMetadata("_keyboardMeta", this, keyCode);
-            this._dispatchInputEvent(pd.InputManager.EVENT_KEY_UP, pd.inputManager["_keyboardMeta"]);
+            this._dispatchInputEvent(pd.InputManager.Events.KEY_UP, pd.inputManager["_keyboardMeta"]);
             this._keyboardModeMetadata[direction] = false;
         }
     }

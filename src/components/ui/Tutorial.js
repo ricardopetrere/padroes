@@ -175,11 +175,13 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this.addChild(this._btnRight, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._btnRight.setFlippedX(true);
         this._btnRight.setOpacity(0);
+        this._btnRight.setKeyCode(pd.Keys.RIGHT);
         this._btnRight.setVisible(pd.delegate.activeNamespace.tutorialData.length > 1);
 
         this._btnLeft = new pd.Button("btn_next_instrucoes.png", "btp_next_instrucoes.png", {x:37, y:360}, 1, true, false, this, "_onPreviousPage");
         this.addChild(this._btnLeft, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._btnLeft.setOpacity(0);
+        this._btnLeft.setKeyCode(pd.Keys.LEFT);
         this._btnLeft.setVisible(false);
 
         this.headerText = pd.cText(512, 660, pd.delegate.activeNamespace.tutorialData.txt_objetivo, "Calibri", 25);

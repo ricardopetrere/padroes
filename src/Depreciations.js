@@ -249,3 +249,86 @@ SingletonId_Animacoes = 0;
 pd.setInputForJoystick = function() {
     cc.log("[pd] Uso de função depreciada: 'setInputForJoystick'. Utilizar a função 'enable()' da instância de seu joystick.");
 };
+
+/**
+ * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_MOUSE_DOWN = "eventTypeMouseDown";
+
+/**
+ * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_MOUSE_HOVER = "eventMouseHover";
+
+/**
+ * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_MOUSE_PAN = "eventMousePan";
+
+/**
+ * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_MOUSE_MOVE = "eventTypeMouseMove";
+
+/**
+ * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_MOUSE_SCROLL = "eventMouseScroll";
+
+/**
+ * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_MOUSE_UP = "eventTypeMouseUp";
+
+/**
+ * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_KEY_DOWN = "eventTypeKeyDown";
+
+/**
+ * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_KEY_UP = "eventTypeKeyUp";
+
+/**
+ * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_ACCELEROMETER = "eventTypeAccelerometer";
+
+/**
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_BUTTON_PRESSED = "eventButtonPress";
+
+/**
+ * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_BUTTON_RELEASED = "eventButtonReleased";
+
+/**
+ * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
+ * @constant
+ * @type {string}
+ */
+pd.InputManager.EVENT_JOYSTICK_STATUS = "eventJoystickStatus";

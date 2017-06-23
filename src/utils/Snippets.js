@@ -193,20 +193,7 @@ pd.createText = function(fontPath, fontName, x, y, fontSize, color, text, alignm
  * @returns {cc.LabelTTF}
  */
 pd.createTextWithStandardFont = function(fontID, x, y, fontSize, color, text, alignment, parentNode) {
-    switch(fontID) {
-        case pd.Fonts.CALIBRI:
-            var path = pd.res.calibri;
-            break;
-        case pd.Fonts.CARTON_SIX:
-            path = pd.res.carton_six;
-            break;
-        case pd.Fonts.DIMBO:
-            path = pd.res.dimbo;
-            break;
-        case pd.Fonts.GILL_SANS:
-            path = pd.res.gill_sans;
-    }
-    return pd.createText(path, fontID, x, y, fontSize, color, text, alignment, parentNode);
+    return pd.createText(fontID.path, fontID.name, x, y, fontSize, color, text, alignment, parentNode);
 };
 
 /**

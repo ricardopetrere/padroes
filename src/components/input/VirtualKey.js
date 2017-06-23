@@ -175,17 +175,17 @@ pd.ArrowKeys = cc.Layer.extend({/** @lends pd.ArrowKeys#**/
 
     /**
      * Seta as funções de callback do componente.
-     * @param {keyboardCallback} [onKeyDown=null] - função de callback para eventos de onKeyDown.
-     * @param {keyboardCallback} [onKeyUp=null] - função de callback para eventos de onKeyUp.
+     * @param {Function} [onKeyDown=null] - função de callback para eventos de onKeyDown.
+     * @param {Function} [onKeyUp=null] - função de callback para eventos de onKeyUp.
      * @param {Object} [handler=null] - handler da função. Caso não seja fornecido, o próprio teclado virtual será registrado como handler.
      */
     setCallbacks: function(onKeyDown, onKeyUp, handler) {
         for(var i in this._buttons) {
             var btn = this._buttons[i];
             if(onKeyDown)
-                pd.inputManager.add(pd.InputManager.EVENT_BUTTON_PRESSED, btn, onKeyDown, handler || this);
+                pd.inputManager.add(pd.InputManager.Events.BUTTON_PRESSED, btn, onKeyDown, handler || this);
             if(onKeyUp)
-                pd.inputManager.add(pd.InputManager.EVENT_BUTTON_RELEASED, btn, onKeyUp, handler || this);
+                pd.inputManager.add(pd.InputManager.Events.BUTTON_RELEASED, btn, onKeyUp, handler || this);
         }
     }
 });

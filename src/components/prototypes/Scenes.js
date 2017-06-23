@@ -223,6 +223,15 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
         
         if(!this.pauseButton.isPaused && !isPressed){
             pd.audioEngine.playEffect(pd.res.fx_button);
+            this.pauseGame();
+        }
+    },
+
+    /**
+     * Pausa o jogo.
+     */
+    pauseGame: function() {
+        if(!this.pauseButton.isPaused) {
             var pLayer = new pd.PauseLayer(this, this.pausedOpacity);
             this.addChild(pLayer, pd.ZOrders.PAUSE_LAYER);
             cc.log("[pd.GameScene] O jogo foi pausado.");

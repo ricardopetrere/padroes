@@ -17,11 +17,12 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * Altera as configurações de input do 'target'. <br />
      * Chamar este método antes de atribuir eventos ao node!
      * @param {*} target - o node a ser configurado.
-     * @param {Boolean} allowMultiTouch - indica se os eventos de toque do node aceitam o recurso de multitouch.
-     * @param {cc.EventListener.TOUCH_ALL_AT_ONCE|cc.EventListener.TOUCH_ONE_BY_ONE} touchEventTypeCode - indica o tipo de evento que os eventos de toque do node devem possuir.
-     * @param {Number} priority {Number} - a prioridade que os listeners do node devem assumir.
+     * @param {Boolean} [allowMultiTouch=false] - indica se os eventos de toque do node aceitam o recurso de multitouch.
+     * @param {cc.EventListener.TOUCH_ALL_AT_ONCE|cc.EventListener.TOUCH_ONE_BY_ONE} [touchEventTypeCode] - indica o tipo de evento que os eventos de toque do node devem possuir.
+     * @param {Number} [priority=0] - a prioridade que os listeners do node devem assumir.
+     * @param {Boolean} [autoConvertWASDToArrowKeys=false] - indica se os eventos de teclado do objeto devem converter automaticamente as teclas WASD para Arrow Keys.
      */
-    config: function(target, allowMultiTouch, touchEventTypeCode, priority) {
+    config: function(target, allowMultiTouch, touchEventTypeCode, priority, autoConvertWASDToArrowKeys) {
         if(!target._inputMetadata)
             target._inputMetadata = {};
 
@@ -29,6 +30,19 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
         metadata.allowMultiTouch = allowMultiTouch;
         metadata.touchEventTypeCode = touchEventTypeCode;
         metadata.priority = priority;
+        metadata.autoConvertWASDToArrowKeys = autoConvertWASDToArrowKeys;
+    },
+
+    /**
+     * Configura o input de teclado do objeto informado.
+     * @param {*} target - o node a ser configurado.
+     * @param {Boolean} autoConvertWASDToArrowKeys - indica se os eventos de teclado do objeto devem converter automaticamente as teclas WASD para Arrow Keys.
+     */
+    setAutoConvertWASDToArrowKeys: function(target, autoConvertWASDToArrowKeys) {
+        if(!target._inputMetadata)
+            target._inputMetadata = {};
+
+        target._inputMetadata.autoConvertWASDToArrowKeys = autoConvertWASDToArrowKeys;
     },
 
     /**
@@ -209,19 +223,19 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             onTouchBegan: function (touch, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touch, event);
                 if(target._inputMetadata.allowMultiTouch || touch.getID() == 0)
-                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_DOWN, pd.inputManager._mouseMeta);
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_DOWN, pd.inputManager._mouseMeta);
                 return true;
             },
             onTouchMoved: function (touch, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touch, event);
                 if(target._inputMetadata.allowMultiTouch || touch.getID() == 0)
-                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_MOVE, pd.inputManager._mouseMeta);
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MOVE, pd.inputManager._mouseMeta);
                 return true;
             },
             onTouchEnded: function (touch, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touch, event);
                 if(target._inputMetadata.allowMultiTouch || touch.getID() == 0)
-                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_UP, pd.inputManager._mouseMeta);
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_UP, pd.inputManager._mouseMeta);
                 return true;
             }
         });
@@ -238,19 +252,19 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             onTouchesBegan: function (touches, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touches, event);
                 if(target._inputMetadata.allowMultiTouch || touches.length == 1)
-                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_DOWN, pd.inputManager._mouseMeta);
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_DOWN, pd.inputManager._mouseMeta);
                 return true;
             },
             onTouchesMoved: function (touches, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touches, event);
                 if(target._inputMetadata.allowMultiTouch || touches.length == 1)
-                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_MOVE, pd.inputManager._mouseMeta);
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MOVE, pd.inputManager._mouseMeta);
                 return true;
             },
             onTouchesEnded: function (touches, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touches, event);
                 if(target._inputMetadata.allowMultiTouch || touches.length == 1)
-                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_UP, pd.inputManager._mouseMeta);
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_UP, pd.inputManager._mouseMeta);
                 return true;
             }
         });
@@ -267,16 +281,16 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             onMouseDown: function (event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", event);
                 if (event.getButton() == 0)
-                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_DOWN, pd.inputManager._mouseMeta);
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_DOWN, pd.inputManager._mouseMeta);
                 return true;
             },
             onMouseMove: function (event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", event);
                 const btn = event.getButton();
                 switch(btn) {
-                    case null: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_HOVER, pd.inputManager._mouseMeta); break;
-                    case 0: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_MOVE, pd.inputManager._mouseMeta); break;
-                    case 1: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_PAN, pd.inputManager._mouseMeta); break;
+                    case null: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_HOVER, pd.inputManager._mouseMeta); break;
+                    case 0: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MOVE, pd.inputManager._mouseMeta); break;
+                    case 1: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_PAN, pd.inputManager._mouseMeta); break;
                 }
                 return true;
             },
@@ -285,13 +299,13 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
                 if (cc.sys.os === cc.sys.OS_OSX) { // rolagem natural.
                     event.setScrollData(event.getScrollX(), -event.getScrollY());
                 }
-                pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_SCROLL, pd.inputManager._mouseMeta);
+                pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_SCROLL, pd.inputManager._mouseMeta);
                 return true;
             },
             onMouseUp: function (event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", event);
                 if (event.getButton() == 0)
-                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_MOUSE_UP, pd.inputManager._mouseMeta);
+                    pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_UP, pd.inputManager._mouseMeta);
                 return true;
             }
         });
@@ -303,7 +317,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @private
      */
     _deactivateMouse: function(target) {
-        if(target._inputMetadata[pd.InputManager.Sources.MOUSE] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_DOWN] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_MOVE] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_SCROLL] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_UP] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_HOVER] && !target._inputMetadata[pd.InputManager.EVENT_MOUSE_PAN]) {
+        if(target._inputMetadata[pd.InputManager.Sources.MOUSE] && !target._inputMetadata[pd.InputManager.Events.MOUSE_DOWN] && !target._inputMetadata[pd.InputManager.Events.MOUSE_MOVE] && !target._inputMetadata[pd.InputManager.Events.MOUSE_SCROLL] && !target._inputMetadata[pd.InputManager.Events.MOUSE_UP]) {
             cc.eventManager.removeListener(target._inputMetadata[pd.InputManager.Sources.MOUSE]);
             delete target._inputMetadata[pd.InputManager.Sources.MOUSE];
         }
@@ -321,13 +335,15 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
         target._inputMetadata[pd.InputManager.Sources.KEYBOARD] = {
             event: cc.EventListener.KEYBOARD,
             onKeyPressed:  function(keyCode, event) {
+                keyCode = pd.inputManager._parseKeyCode(event.getCurrentTarget(), keyCode);
                 pd.inputManager.setEventMetadata("_keyboardMeta", keyCode, event);
-                pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_KEY_DOWN, pd.inputManager._keyboardMeta);
+                pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.KEY_DOWN, pd.inputManager._keyboardMeta);
                 return true;
             },
             onKeyReleased: function(keyCode, event) {
+                keyCode = pd.inputManager._parseKeyCode(event.getCurrentTarget(), keyCode);
                 pd.inputManager.setEventMetadata("_keyboardMeta", keyCode, event);
-                pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_KEY_UP, pd.inputManager._keyboardMeta);
+                pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.KEY_UP, pd.inputManager._keyboardMeta);
                 return true;
             }
         };
@@ -336,12 +352,31 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     },
 
     /**
+     * Parseia um keyCode proveniente de um evento de teclado.
+     * @param keyCode {Number}
+     * @private
+     */
+    _parseKeyCode: function(target, keyCode) {
+        if(!target._inputMetadata.autoConvertWASDToArrowKeys)
+            return keyCode;
+
+        switch(keyCode) {
+            case cc.KEY.a: return pd.Keys.LEFT;
+            case cc.KEY.s: return pd.Keys.DOWN;
+            case cc.KEY.d: return pd.Keys.RIGHT;
+            case cc.KEY.w: return pd.Keys.UP;
+        }
+
+        return keyCode;
+    },
+
+    /**
      * Verifica se o target não possui mais callbacks à eventos de teclado e, caso isso se confirme, remove o evento.
      * @param {*} target
      * @private
      */
     _deactivateKeyboard: function(target) {
-        if(target._inputMetadata[pd.InputManager.Sources.KEYBOARD] && !target._inputMetadata[pd.InputManager.EVENT_KEY_DOWN] && !target._inputMetadata[pd.InputManager.EVENT_KEY_UP]) {
+        if(target._inputMetadata[pd.InputManager.Sources.KEYBOARD] && !target._inputMetadata[pd.InputManager.Events.KEY_DOWN] && !target._inputMetadata[pd.InputManager.Events.KEY_UP]) {
             cc.eventManager.removeListener(target._inputMetadata[pd.InputManager.Sources.KEYBOARD]);
             delete target._inputMetadata[pd.InputManager.Sources.KEYBOARD];
         }
@@ -364,7 +399,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
             callback: function(acc, event) {
                 pd.inputManager.setEventMetadata("_accelerometerMeta", acc, event);
-                pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.EVENT_ACCELEROMETER, pd.inputManager._accelerometerMeta);
+                pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.ACCELEROMETER, pd.inputManager._accelerometerMeta);
                 return true;
             }
         });
@@ -378,7 +413,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @private
      */
     _deactivateAccelerometer: function(target) {
-        if(target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER] && !target._inputMetadata[pd.InputManager.EVENT_ACCELEROMETER]) {
+        if(target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER] && !target._inputMetadata[pd.InputManager.Events.ACCELEROMETER]) {
             cc.eventManager.removeListener(target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER]);
             delete target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER];
         }
@@ -408,76 +443,33 @@ pd.InputManager.getInstance = function () {
 pd.inputManager = pd.InputManager.getInstance();
 
 /**
- * @constant
- * @type {string}
+ * Atalho para facilitar a chamada ao método.
+ * @param {String} eventType - tipo do evento.
+ * @param {*} target - o objeto que dispara o evento.
+ * @param {Function|String} handlerFunc - a função a ser invocada pelo objeto que escuta o evento.
+ * @param {*} [handler=null] - o objeto que escuta o evento. Caso seja null, o target será utilizado como handler.
  */
-pd.InputManager.EVENT_MOUSE_DOWN = "eventTypeMouseDown";
+pd.addInput = function(eventType, target, handlerFunc, handler) {
+    pd.inputManager.add(eventType, target, handlerFunc, handler);
+};
 
 /**
- * @constant
- * @type {string}
+ * @enum {String}
  */
-pd.InputManager.EVENT_MOUSE_HOVER = "eventMouseHover";
-
-/**
- * @constant
- * @type {string}
- */
-pd.InputManager.EVENT_MOUSE_PAN = "eventMousePan";
-
-/**
- * @constant
- * @type {string}
- */
-pd.InputManager.EVENT_MOUSE_MOVE = "eventTypeMouseMove";
-
-/**
- * @constant
- * @type {string}
- */
-pd.InputManager.EVENT_MOUSE_SCROLL = "eventMouseScroll";
-
-/**
- * @constant
- * @type {string}
- */
-pd.InputManager.EVENT_MOUSE_UP = "eventTypeMouseUp";
-
-/**
- * @constant
- * @type {string}
- */
-pd.InputManager.EVENT_KEY_DOWN = "eventTypeKeyDown";
-
-/**
- * @constant
- * @type {string}
- */
-pd.InputManager.EVENT_KEY_UP = "eventTypeKeyUp";
-
-/**
- * @constant
- * @type {string}
- */
-pd.InputManager.EVENT_ACCELEROMETER = "eventTypeAccelerometer";
-
-/**
- * @constant
- * @type {string}
- */
-pd.InputManager.EVENT_BUTTON_PRESSED = "eventButtonPress";
-
-/**
- * @constant
- * @type {string}
- */
-pd.InputManager.EVENT_BUTTON_RELEASED = "eventButtonReleased";
-
-/**
- * @constant
- * @type {string}
- */
-pd.InputManager.EVENT_JOYSTICK_STATUS = "eventJoystickStatus";
+pd.InputManager.Events = {
+    MOUSE_DOWN: "eventTypeMouseDown",
+    MOUSE_HOVER: "eventMouseHover",
+    MOUSE_PAN: "eventMousePan",
+    MOUSE_MOVE: "eventTypeMouseMove",
+    MOUSE_SCROLL: "eventMouseScroll",
+    MOUSE_UP: "eventTypeMouseUp",
+    KEY_DOWN: "eventTypeKeyDown",
+    KEY_UP: "eventTypeKeyUp",
+    ACCELEROMETER: "eventTypeAccelerometer",
+    BUTTON_PRESSED: "eventButtonPress",
+    BUTTON_RELEASED: "eventButtonReleased",
+    JOYSTICK_STATUS: "eventJoystickStatus"
+};
 
 /**
  * Fontes de input disponíveis.

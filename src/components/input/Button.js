@@ -173,12 +173,12 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
             return;
 
         pd.inputManager.config(this, true, cc.EventListener.TOUCH_ONE_BY_ONE, 1);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, this._onMouseDown);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, this, this._onMouseDragged);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, this, this._onMouseUp);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_DOWN, this, this._onMouseDown);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_MOVE, this, this._onMouseDragged);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_UP, this, this._onMouseUp);
 
-        pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, this, this._onKeyDown);
-        pd.inputManager.add(pd.InputManager.EVENT_KEY_UP, this, this._onKeyUp);
+        pd.inputManager.add(pd.InputManager.Events.KEY_DOWN, this, this._onKeyDown);
+        pd.inputManager.add(pd.InputManager.Events.KEY_UP, this, this._onKeyUp);
         this.setOpacity(this._normalOpacity);
         this._isEnabled = true;
     },
@@ -191,12 +191,12 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
             return;
 
         this.setOpacity(this._disabledOpacity);
-        pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_DOWN, this);
-        pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_MOVE, this);
-        pd.inputManager.remove(pd.InputManager.EVENT_MOUSE_UP, this);
+        pd.inputManager.remove(pd.InputManager.Events.MOUSE_DOWN, this);
+        pd.inputManager.remove(pd.InputManager.Events.MOUSE_MOVE, this);
+        pd.inputManager.remove(pd.InputManager.Events.MOUSE_UP, this);
 
-        pd.inputManager.remove(pd.InputManager.EVENT_KEY_DOWN, this);
-        pd.inputManager.remove(pd.InputManager.EVENT_KEY_UP, this);
+        pd.inputManager.remove(pd.InputManager.Events.KEY_DOWN, this);
+        pd.inputManager.remove(pd.InputManager.Events.KEY_UP, this);
         this._isEnabled = false;
     },
 
@@ -308,7 +308,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     _performCallback: function(pressed) {
         if(this._shouldDispatchEvent()) {
             pd.inputManager.setEventMetadata("_buttonMeta", this._attachedKeyCode, this);
-            this._dispatchInputEvent(pressed ? pd.InputManager.EVENT_BUTTON_PRESSED : pd.InputManager.EVENT_BUTTON_RELEASED, pd.inputManager["_buttonMeta"]);
+            this._dispatchInputEvent(pressed ? pd.InputManager.Events.BUTTON_PRESSED : pd.InputManager.Events.BUTTON_RELEASED, pd.inputManager["_buttonMeta"]);
         }
         else if(this._handler && this._handlerFunc) {
             this._performCall(this._handler, this._handlerFunc, [this, pressed, this._handlerFuncArgs]);

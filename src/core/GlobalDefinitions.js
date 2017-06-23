@@ -135,13 +135,13 @@ pd.ZOrders = {
 
 /**
  * Enumerador com as fontes padrões.
- * @enum {String}
+ * @enum {{name:String, path:String}}
  */
 pd.Fonts = {
-    CALIBRI: "Calibri",
-    CARTON_SIX: "Carton Six",
-    DIMBO: "Dimbo",
-    GILL_SANS: "Gill Sans MT Condensed"
+    CALIBRI: {name: "Calibri", path:pd.res.calibri},
+    CARTON_SIX: {name: "Carton Six", path:pd.res.carton_six},
+    DIMBO: {name: "Dimbo", path:pd.res.dimbo},
+    GILL_SANS: {name: "Gill Sans MT Condensed", path:pd.res.gill_sans}
 };
 
 //</editor-fold">
