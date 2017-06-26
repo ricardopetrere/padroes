@@ -159,7 +159,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 		
 		this.pointer = new pd.Animation();
 		this.pointer.addAnimation('normal', 1, 1, frameName);
-		this.pointer.addAnimation('pressed', 1, 2, frameName);
+		this.pointer.addAnimation('pressed', 2, 2, frameName);
 		this.pointer.setPosition(initialPosition.x, initialPosition.y);
 		this.addChild(this.pointer, pd.ZOrders.TUTORIAL_POINTER);
 		this.pointer.setAnchorPoint(0,1);

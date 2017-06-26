@@ -16,10 +16,10 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * Velocidade em frames/segundo da animação.
      * @type {Number}
      */
-    speed:24,
+    defaultSpeed:24,
     /**
      * Vetor com os metadados dos 'estados' do componente animado.
-     * @type {{name:String, animation:cc.Animation, numFrames:Number}[]}
+     * @type {{name:String, animation:cc.Animation, numFrames:Number, speed: Number}[]}
      */
     animations:null,
     /**
@@ -29,7 +29,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     animAction:null,
     /**
      * Apontamento para os metadados da animação rodando.
-     * @type {{name:String, animation:cc.Animation, numFrames:Number}}
+     * @type {{name:String, animation:cc.Animation, numFrames:Number, speed: Number}}
      */
     currentAnimation:null,
     /**
@@ -67,7 +67,8 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     ctor: function() {
         this._super();
         this.animations = [];
-        this.speed = 24;
+        this.defaultSpeed = 24;
+        this.speed = this.defaultSpeed;// legado
         this._setRunning(false);
         this.Animations = this.animations; // legado.
     },
@@ -86,11 +87,11 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
         for(var i = firstFrame ; i <= lastFrame ; i++) {
             frames.push(cc.spriteFrameCache.getSpriteFrame(spriteFrameNamePattern + pd.numberToString(i, 4) + ".png"));
         }
-        this.speed = speed || this.speed;
-        var animation = new cc.Animation(frames, 1/this.speed);
+        // this.defaultSpeed = speed || this.defaultSpeed;
+        var animation = new cc.Animation(frames, 1/this.defaultSpeed);
         pd.delegate.retain(animation);
 
-        this.animations.push({name: name || this.animations.length + 1, animation: animation, numFrames: lastFrame - firstFrame + 1});
+        this.animations.push({name: name || this.animations.length + 1, animation: animation, numFrames: lastFrame - firstFrame + 1, speed: speed || this.defaultSpeed});
         if(this.animations.length == 1)
             this.changeAndStop(name);
     },
@@ -116,9 +117,10 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * Muda a velocidade da animação.
      * @param {Number} animationSpeed
      */
-    changeAnimationSpeed:function(animationSpeed) {
-        this.speed = animationSpeed;
-        this.currentAnimation.setDelayPerUnit(1/this.speed);
+    changeCurrentAnimationSpeed:function(animationSpeed) {
+        // this.defaultSpeed = animationSpeed;
+        this.currentAnimation.speed = animationSpeed;
+        this.currentAnimation.animation.setDelayPerUnit(1/this.currentAnimation.speed);
     },
 
     /**
@@ -172,7 +174,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * @private
      */
     play: function(isRepeatable, speed, repeatTimes) {
-        this._displayAnimation(this.currentAnimation.name, isRepeatable || false, speed || this.speed, repeatTimes || -1);
+        this._displayAnimation(this.currentAnimation.name, isRepeatable || false, speed, repeatTimes || -1);
     },
 
     /**
@@ -206,9 +208,9 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * Muda e dá play em uma nova animação.
      * @param {Number|String} frame - o índice ou o nome da animação.
      * @param {Number} [repeatTimes=0]
-     * @param {Number} speed
-     * @param {String|Function} onComplete - a função de callback.
-     * @param {cc.Node} onCompleteHandler - o caller da função de callback.
+     * @param {Number} [speed]
+     * @param {String|Function} [onComplete] - a função de callback.
+     * @param {cc.Node} [onCompleteHandler] - o caller da função de callback.
      */
     changeAndPlay: function(frame, repeatTimes, speed, onComplete, onCompleteHandler) {
         this._displayAnimation(frame, repeatTimes ? true : false, speed, repeatTimes);
@@ -222,7 +224,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * @param {Number} [speed=null]
      */
     changeAndLoop: function(frame, speed) {
-        this._displayAnimation(frame, true, speed || this.speed);
+        this._displayAnimation(frame, true, speed);
     },
 
     /**
@@ -251,7 +253,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      */
     _run: function(isRepeatable, repeatTimes) {
         this._disposeAnimAction();
-        this.currentAnimation.animation.setDelayPerUnit(1/this.speed);
+        this.currentAnimation.animation.setDelayPerUnit(1/this.currentAnimation.speed);
         this.animAction = new cc.Animate(this.currentAnimation.animation);
 
         if(isRepeatable == true) {
@@ -313,7 +315,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     _displayAnimation: function(targetFrame, isRepeatable, speed, repeatTimes) {
         this.stop();
         this.setAnimation(targetFrame);
-        this.speed = speed || this.speed;
+        // this.defaultSpeed = speed || this.currentAnimation.speed;
         this._run(Boolean(isRepeatable), repeatTimes);
     },
 
