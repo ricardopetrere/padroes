@@ -23,7 +23,7 @@ pd.shuffle = function(array) {
  */
 pd.rearrange = function(array, index) {
     array.splice(index, 1);
-    for(i = index; i < array.length; i++) {
+    for(var i = index; i < array.length; i++) {
         array[i].indice = array[i].indice - 1;
     }
 };
