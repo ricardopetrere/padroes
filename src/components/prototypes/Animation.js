@@ -230,7 +230,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     /**
      * Muda a animação atual, sem dar play na nova animação.
      * @param {Number|String} frame - o índice ou o nome da animação.
-     * @param {Number} [innerFrame=0] - frame interno (frame da nova animação a ser exibido pelo objeto).
+     * @param {Number} [innerFrame=0] - número do frame interno (frame da nova animação a ser exibido pelo objeto).
      */
     changeAndStop: function(frame, innerFrame) {
         this._displayAnimationFrame(frame, innerFrame || 0);
@@ -327,6 +327,9 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      */
     _displayAnimationFrame: function(targetFrame, targetInnerFrame) {
         this.stop();
+        if (targetInnerFrame > 0) {
+            targetInnerFrame--;
+        }
         const staticImg = this.getAnimation(targetFrame).getFrames()[targetInnerFrame || 0].getSpriteFrame();
         this.setSpriteFrame(staticImg);
     }
