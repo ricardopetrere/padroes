@@ -201,11 +201,14 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	 * @private
      */
 	_createBottomText: function(txt) {
-		if(!pd.delegate.activeNamespace.tutoriais.txtOffSetY)
-			pd.delegate.activeNamespace.tutoriais.txtOffSetY = 0;
+		if (!pd.delegate.activeNamespace.tutorialData) {
+			pd.delegate.activeNamespace.tutorialData = [];
+		}
+		if(!pd.delegate.activeNamespace.tutorialData.txtOffSetY)
+			pd.delegate.activeNamespace.tutorialData.txtOffSetY = 0;
 
 		const label = pd.cText(0, 0, txt, "Calibri", 25);
-		label.setPosition(512, 140 + pd.delegate.activeNamespace.tutoriais.txtOffSetY);
+		label.setPosition(512, 140 + pd.delegate.activeNamespace.tutorialData.txtOffSetY);
 		this.addChild(label, pd.ZOrders.TUTORIAL_PAGE_BOTTOM_TEXT);
 	},
 

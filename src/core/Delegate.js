@@ -81,6 +81,12 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     isPaused:false,
 
     /**
+     * Indica se o tutorial já foi instanciado
+     * @type {Boolean}
+     */
+    isTutorialSet: false,
+
+    /**
      * O tempo de transição da tela de loading para a tela de entrada de um namespace no modo debug.
      * @type {number}
      */
@@ -189,7 +195,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
             this.transitionTime = 0.8;
             mainScene = FadeWhiteTransition(this.transitionTime, new this.activeNamespace.MainScene());
         }
-
+        this.isTutorialSet = false;
         cc.director.runScene(mainScene);
         pd.debugger.init();
         pd.debugger.addShortcut("MainScene");
@@ -201,13 +207,16 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
      * @param {cc.SpriteFrame|cc.LabelTTF} tutorialTitleSpriteFrameOrText
      */
     setTutorial: function(tutorialPages, tutorialTitleSpriteFrameOrText) {
-        this.activeNamespace.tutorialData = [];
-        pd.Tutorial.setHeader(tutorialTitleSpriteFrameOrText);
-        for(var i in tutorialPages) {
-            this.activeNamespace.tutorialData.push(tutorialPages[i]);
-        }
+        if (!this.isTutorialSet) {
+            this.isTutorialSet = true;
+            this.activeNamespace.tutorialData = this.activeNamespace.tutorialData || [];
+            pd.Tutorial.setHeader(tutorialTitleSpriteFrameOrText);
+            for (var i in tutorialPages) {
+                this.activeNamespace.tutorialData.push(tutorialPages[i]);
+            }
 
-        this.activeNamespace.tutoriais = this.activeNamespace.tutorialData; //legado.
+            this.activeNamespace.tutoriais = this.activeNamespace.tutorialData; //legado.
+        }
     },
 
     /**

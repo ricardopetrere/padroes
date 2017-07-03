@@ -352,7 +352,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         newLayer.setStatus(false);
         newLayer.setPosition(newLayer._initialPosition.x, newLayer._initialPosition.y);
         newLayer.attr({opacity:shouldAnimate ? 255 : 0, x:shouldAnimate ? newLayer.x-this._slideDirection*pd.Tutorial.PAGE_SPACING : newLayer.x});
-        if (newLayer._slideTween)
+        if (newLayer._slideTween && !newLayer._slideTween.isDone())
             newLayer.stopAction(newLayer._slideTween);
         newLayer.runAction(newLayer._slideTween = cc.sequence(
             cc.spawn(cc.moveTo(0.25, shouldAnimate ? newLayer.x + this._slideDirection*pd.Tutorial.PAGE_SPACING : newLayer.x, newLayer._initialPosition.y), cc.fadeIn(0.2)).easing(cc.easeSineOut()),
@@ -438,7 +438,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._swipeInitialX = x;
         this._accumulatedX = this._activeLayer.x;
 
-        if (this._activeLayer._slideTween)
+        if (this._activeLayer._slideTween && !this._activeLayer._slideTween.isDone())
             this._activeLayer.stopAction(this._activeLayer._slideTween);
 
         this._activeLayer.setOpacity(255);
