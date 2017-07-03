@@ -311,7 +311,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
             this._performCall(this._handler, this._handlerFunc, [this, this._delta, this._power]);
         }
         else {
-            cc.log("[pd.Joystick] Aviso: Não foi registrada uma função de callback para o joystick (modo explícito)!");
+            cc.warn("[pd.Joystick] Aviso: Não foi registrada uma função de callback para o joystick (modo explícito)!");
         }
     },
 

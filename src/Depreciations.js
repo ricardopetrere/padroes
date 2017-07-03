@@ -129,7 +129,7 @@ pd.TutorialLayer.prototype.createPonteiro = pd.TutorialLayer.prototype.createPoi
  * @deprecated - desde a versão 2.3 - utilizar a função {@link pd.debugger.addShortcut}.
  */
 pd.Debugger.prototype.addScene = function() {
-    cc.log("[pd] Uso de função depreciada: 'addScene'. Utilizar 'addShortcut' a partir de agora.");
+    cc.warn("[pd] Uso de função depreciada: 'addScene'. Utilizar 'addShortcut' a partir de agora.");
 };
 
 /**
@@ -247,7 +247,7 @@ SingletonId_Animacoes = 0;
  * @deprecated - desde a versão 2.3 - utilizar {@link pd.Joystick.prototype.enable}
  */
 pd.setInputForJoystick = function() {
-    cc.log("[pd] Uso de função depreciada: 'setInputForJoystick'. Utilizar a função 'enable()' da instância de seu joystick.");
+    cc.warn("[pd] Uso de função depreciada: 'setInputForJoystick'. Utilizar a função 'enable()' da instância de seu joystick.");
 };
 
 /**

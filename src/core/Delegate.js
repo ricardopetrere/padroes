@@ -23,6 +23,11 @@ var padroesPath = cc.game.config["padroesPath"];
  */
 pd.debugMode = cc.game.config[cc.game.CONFIG_KEY.debugMode] != cc.game.DEBUG_MODE_NONE;
 
+if (cc.game.config[cc.game.CONFIG_KEY.renderMode] != 1) {
+    //Não colocar o renderMode para 1 já ocorreu erro ao utilizar DrawNode e ClippingNode
+    cc.error("[pd] O render mode está num valor que muito provavelmente dará erro no jogo! Mudar para 1!!!");
+}
+
 /**
  * Versão atual dos padrões.
  * @type {string}
@@ -31,7 +36,7 @@ pd.version = "2.4";
 
 cc.log("[pd] Padrões Cocos Versão: " + pd.version);
 if(pd.debugMode)
-    cc.log("[pd] O modo de debug está ativo!");
+    cc.warn("[pd] O modo de debug está ativo!");
 
 /**
  * @class

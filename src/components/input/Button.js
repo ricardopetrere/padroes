@@ -123,7 +123,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
      * @deprecated
      */
     _legacyCtor: function(x, y, handler, handlerFunc, normalImage, pressedImage, handlerFuncArgs, pressedScale, forceMouseUpCall, callbackMode) {
-        cc.log("[pd.Button] Construindo botão com o construtor legado - utilizar o novo padrão!");
+        cc.warn("[pd.Button] Construindo botão com o construtor legado - utilizar o novo padrão!");
 
         this._handler = handler;
         this._handlerFunc = handlerFunc;
@@ -314,7 +314,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
             this._performCall(this._handler, this._handlerFunc, [this, pressed, this._handlerFuncArgs]);
         }
         else {
-            cc.log("[pd.Button] Aviso: Não foi registrada uma função de callback para um botão em modo explícito!");
+            cc.warn("[pd.Button] Aviso: Não foi registrada uma função de callback para um botão em modo explícito!");
         }
     }
 });

@@ -58,7 +58,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
         const metadata = target._inputMetadata;
         if(metadata[eventType])
-            cc.log("[pd.InputManager] Aviso: tentando attachar dois callbacks a um mesmo tipo de evento para um mesmo target (não recomendado): " + eventType);
+            cc.warn("[pd.InputManager] Aviso: tentando attachar dois callbacks a um mesmo tipo de evento para um mesmo target (não recomendado): " + eventType);
         metadata[eventType] = {handler: handler ? handler : target, handlerFunc:handlerFunc};
         this._checkInputSources(target, eventType, true);
     },

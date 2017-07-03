@@ -200,7 +200,7 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
                 pd.loader._load();
         }
         else {
-            cc.log("[pd.Loader] Ocorreu um erro ao carregar os assets do jogo!");
+            cc.error("[pd.Loader] Ocorreu um erro ao carregar os assets do jogo!");
         }
     },
 

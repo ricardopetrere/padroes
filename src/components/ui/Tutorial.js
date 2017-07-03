@@ -117,9 +117,9 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
      * Construtor padrão - instancia, ativa e adiciona o tutorial ao _handler.
      * @constructs
      * @param {cc.Node} _handler
-     * @param {Boolean} [shouldPauseHandler=true]
+     * @param {Boolean} [shouldntPauseHandler=false]
      */
-    ctor:function(_handler, shouldPauseHandler) {
+    ctor:function(_handler, shouldntPauseHandler) {
         this._super(new cc.Color(255, 255, 255), 1028, 768);
         this.setOpacity(0);
         this.setCascadeOpacityEnabled(true);
@@ -129,7 +129,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         if(!(this._handler instanceof cc.Scene))
             this._handler = this._handler.getParent();
 
-        if(!shouldPauseHandler)
+        if(!shouldntPauseHandler)
             this._handler.onPause();
 
         this._handler.addChild(this, pd.ZOrders.TUTORIAL_LAYER);
@@ -160,9 +160,9 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._extraBgLayer = pd.createSprite('layer_instrucoes', 512, -500, this, 3);
         this._tweenableObjects.push(this._bgLayers[2]);
 
-        if(!pd.delegate.activeNamespace.tutorialData && pd.delegate.activeNamespace.tutoriais) {
+        if((pd.delegate.activeNamespace.tutoriais && pd.delegate.activeNamespace.tutorialData && pd.delegate.activeNamespace.tutoriais.length > pd.delegate.activeNamespace.tutorialData.length)) {
             pd.delegate.activeNamespace.tutorialData = pd.delegate.activeNamespace.tutoriais;
-            cc.log("[pd] Aviso: utilizando recurso depreciado: activeNamespace.tutoriais. Utilizar a função pd.delegate.setTutorial() para inicializar o tutorial do jogo.")
+            cc.warn("[pd] Aviso: utilizando recurso depreciado: activeNamespace.tutoriais. Utilizar a função pd.delegate.setTutorial() para inicializar o tutorial do jogo.")
         }
 
         this._title = pd.createSprite('txt_instrucoes', 512, 730, this, 99);
