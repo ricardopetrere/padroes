@@ -201,9 +201,6 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	 * @private
      */
 	_createBottomText: function(txt) {
-		if (!pd.delegate.activeNamespace.tutorialData) {
-			pd.delegate.activeNamespace.tutorialData = [];
-		}
 		if(!pd.delegate.activeNamespace.tutorialData.txtOffSetY)
 			pd.delegate.activeNamespace.tutorialData.txtOffSetY = 0;
 

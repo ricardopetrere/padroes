@@ -201,6 +201,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
             mainScene = FadeWhiteTransition(this.transitionTime, new this.activeNamespace.MainScene());
         }
         this.isTutorialSet = false;
+        pd.delegate.activeNamespace.tutorialData = [];
         cc.director.runScene(mainScene);
         pd.debugger.init();
         pd.debugger.addShortcut("MainScene");
@@ -214,7 +215,6 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     setTutorial: function(tutorialPages, tutorialTitleSpriteFrameOrText) {
         if (!this.isTutorialSet) {
             this.isTutorialSet = true;
-            this.activeNamespace.tutorialData = this.activeNamespace.tutorialData || [];
             pd.Tutorial.setHeader(tutorialTitleSpriteFrameOrText);
             for (var i in tutorialPages) {
                 this.activeNamespace.tutorialData.push(tutorialPages[i]);
