@@ -108,6 +108,7 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
         pd.GameOverLayer._hasInstance = true;
         pd.delegate.pause(handler);
         cc.eventManager.removeAllListeners();
+        this.getScheduler().unscheduleAll();
 
         this._buildUp();
     },

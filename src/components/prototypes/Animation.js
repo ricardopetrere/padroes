@@ -188,7 +188,17 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * Para a animação atual
      */
     stop: function() {
-        this.currentAnimation = this.animations[0];
+        // this.currentAnimation = this.animations[0];
+        this._stopAnimation();
+    },
+
+    /**
+     * Para todas as ações do objeto, inclusive a animação
+     * A sobrescrita foi para resetar o estado de execução da animação
+     */
+    stopAllActions: function () {
+        this._super();
+        cc.warn("[pd.Animation] A animação foi parada forçadamente devido a uma chamada à função stopAllActions");
         this._stopAnimation();
     },
 
@@ -337,7 +347,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * @private
      */
     _displayAnimation: function(targetFrame, isRepeatable, speed, repeatTimes, reversed) {
-        if (this._shouldResetAnimation || this.currentAnimation.animation !== this.getAnimation(targetFrame)) {
+        if (this._shouldResetAnimation || !this.isCurrentAnimationRunning || this.currentAnimation.animation !== this.getAnimation(targetFrame)) {
             this.stop();
             this.setAnimation(targetFrame);
             if (speed && speed !== this.currentAnimation.speed) {
