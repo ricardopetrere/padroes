@@ -42,6 +42,11 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * @type {cc.Node}
      */
     onCompleteHandler:null,
+    /**
+     * Indica se deve resetar a animação, caso seja requisitada uma troca para a mesma animação da atual
+     * @type {boolean}
+     */
+    _shouldResetAnimation: false,
 
     ///////////////////////////////////////////////////////////////////////
     /////////////////// -------- DEPRECIATIONS -------- ///////////////////
@@ -132,6 +137,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
         for(var i = 0; i < this.animations.length; i++){
             if(this.animations[i].name == name || i == parseInt(name) - 1){
                 this.currentAnimation = this.animations[i];
+                return;
             }
         }
     },
@@ -171,10 +177,11 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * @param {Boolean} isRepeatable
      * @param {Number} speed
      * @param {Number} repeatTimes
+     * @param {boolean} [reversed=false]
      * @private
      */
-    play: function(isRepeatable, speed, repeatTimes) {
-        this._displayAnimation(this.currentAnimation.name, isRepeatable || false, speed, repeatTimes || -1);
+    play: function(isRepeatable, speed, repeatTimes, reversed) {
+        this._displayAnimation(this.currentAnimation.name, isRepeatable || false, speed, repeatTimes || 0, reversed);
     },
 
     /**
@@ -190,15 +197,16 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * @param {Number|String} frame - o índice ou o nome da animação.
      * @param {Boolean} [repeatForever=true]
      * @param {Number} [repeatTimes=0]
-     * @param {Number} speed
-     * @param {String|Function} onComplete - a função de callback.
-     * @param {cc.Node} onCompleteHandler - o caller da função de callback.
+     * @param {Number} [speed]
+     * @param {String|Function} [onComplete] - a função de callback.
+     * @param {cc.Node} [onCompleteHandler] - o caller da função de callback.
+     * @param {boolean} [reversed=false]
      */
-    change: function (frame, repeatForever, repeatTimes, speed, onComplete, onCompleteHandler) {
+    change: function (frame, repeatForever, repeatTimes, speed, onComplete, onCompleteHandler, reversed) {
         if (repeatForever) {
-            this.changeAndLoop(frame, speed);
-        } else if (this.getAnimation(frame).numFrames > 1) {
-            this.changeAndPlay(frame, repeatTimes, speed, onComplete, onCompleteHandler);
+            this.changeAndLoop(frame, speed, reversed);
+        } else if (this.getAnimation(frame).getFrames().length > 1) {
+            this.changeAndPlay(frame, repeatTimes, speed, onComplete, onCompleteHandler, reversed);
         } else {
             this.changeAndStop(frame);
         }
@@ -211,9 +219,10 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * @param {Number} [speed]
      * @param {String|Function} [onComplete] - a função de callback.
      * @param {cc.Node} [onCompleteHandler] - o caller da função de callback.
+     * @param {boolean} [reversed=false]
      */
-    changeAndPlay: function(frame, repeatTimes, speed, onComplete, onCompleteHandler) {
-        this._displayAnimation(frame, repeatTimes ? true : false, speed, repeatTimes);
+    changeAndPlay: function(frame, repeatTimes, speed, onComplete, onCompleteHandler, reversed) {
+        this._displayAnimation(frame, repeatTimes ? true : false, speed, repeatTimes, reversed);
         this.onComplete = onComplete;
         this.onCompleteHandler = onCompleteHandler || this.getParent();
     },
@@ -222,9 +231,10 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * Muda e dá play em loop em uma nova animação.
      * @param {Number|String} frame - o índice ou o nome da animação.
      * @param {Number} [speed=null]
+     * @param {boolean} [reversed=false]
      */
-    changeAndLoop: function(frame, speed) {
-        this._displayAnimation(frame, true, speed);
+    changeAndLoop: function(frame, speed, reversed) {
+        this._displayAnimation(frame, true, speed, 0, reversed);
     },
 
     /**
@@ -244,23 +254,36 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
         this.isCurrentAnimationRunning = isCurrentAnimationRunning;
         this.running = this.isCurrentAnimationRunning; //legado.
     },
+    /**
+     * Configura se o objeto deve resetar a animação atual em toda chamada da função _run,
+     * ou apenas quando for para uma animação diferente da atual
+     * @param {boolean} value
+     */
+    setShouldResetAnimation: function (value) {
+        this._shouldResetAnimation = value;
+    },
 
     /**
      * Roda a animação.
      * @param {Boolean} isRepeatable
      * @param {Boolean} repeatTimes
+     * @param {boolean} [reversed=false]
      * @private
      */
-    _run: function(isRepeatable, repeatTimes) {
+    _run: function(isRepeatable, repeatTimes, reversed) {
         this._disposeAnimAction();
         this.currentAnimation.animation.setDelayPerUnit(1/this.currentAnimation.speed);
-        this.animAction = new cc.Animate(this.currentAnimation.animation);
+        if (reversed === true) {
+            var action = new cc.Animate(this.currentAnimation.animation).reverse();
+        } else {
+            action = new cc.Animate(this.currentAnimation.animation);
+        }
 
         if(isRepeatable == true) {
-            this.animAction = (repeatTimes == null || repeatTimes == -1) ? new cc.RepeatForever(this.animAction) : new cc.Repeat(this.animAction, repeatTimes);
+            this.animAction = repeatTimes ? new cc.Repeat(action, repeatTimes) : new cc.RepeatForever(action);
         }
         else {
-            this.animAction = new cc.Sequence([this.animAction, new cc.CallFunc(this._onAnimCompleted, this)]);
+            this.animAction = new cc.Sequence([action, new cc.CallFunc(this._onAnimCompleted, this)]);
         }
         pd.delegate.retain(this.animAction);
         this.runAction(this.animAction);
@@ -310,13 +333,18 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * @param {Boolean} [isRepeatable=false]
      * @param {Number} [speed=60]
      * @param {Number} [repeatTimes=0]
+     * @param {boolean} [reversed=false]
      * @private
      */
-    _displayAnimation: function(targetFrame, isRepeatable, speed, repeatTimes) {
-        this.stop();
-        this.setAnimation(targetFrame);
-        // this.defaultSpeed = speed || this.currentAnimation.speed;
-        this._run(Boolean(isRepeatable), repeatTimes);
+    _displayAnimation: function(targetFrame, isRepeatable, speed, repeatTimes, reversed) {
+        if (this._shouldResetAnimation || this.currentAnimation.animation !== this.getAnimation(targetFrame)) {
+            this.stop();
+            this.setAnimation(targetFrame);
+            if (speed && speed !== this.currentAnimation.speed) {
+                this.currentAnimation.speed = speed;
+            }
+            this._run(Boolean(isRepeatable), repeatTimes, reversed);
+        }
     },
 
     /**
