@@ -522,6 +522,52 @@ pd.flicker = function(time, flicks, initialColor, targetColor) {
     //TO-DO...
     return cc.sequence();
 };
+
+/**
+ * Adiciona uma layer de foco a layer informada.
+ * @param {cc.Node} layer
+ * @param {Number} time
+ * @param {Number} opacity
+ * @param {...*} nodes
+ */
+pd.addFocus = function(layer, time, opacity, nodes){
+    if(!layer._focusLayer) {
+        layer._focusLayer = new cc.LayerColor(cc.color(0, 0, 0), 1024, 768);
+        layer._focusLayer.setOpacity(0);
+        layer._focusLayer.targetOpacity = opacity;
+        layer._focusLayer.nodes = [];
+        layer.addChild(layer._focusLayer, 10000);
+    }
+
+    if(layer._focusLayer.opacity == 0) {
+        for (var i = 3; i < arguments.length; i++) {
+            layer._focusLayer.nodes.push(arguments[i]);
+            arguments[i]._zOrderAntigo = arguments[i].zIndex;
+            arguments[i].setLocalZOrder(10001);
+        }
+        if(time > 0)
+            layer._focusLayer.runAction(cc.fadeTo(time, opacity));
+        else
+            layer._focusLayer.setOpacity(opacity);
+    }
+}
+
+/**
+ * Remove uma layer de foco a layer informada.
+ * @param {cc.Node} layer
+ * @param {Number} time
+ */
+pd.removeFocus = function(layer, time){
+    if(layer._focusLayer.opacity == layer._focusLayer.targetOpacity && layer._focusLayer.nodes) {
+        for (var i in layer._focusLayer.nodes) {
+            layer._focusLayer.nodes[i].setLocalZOrder(layer._focusLayer.nodes[i]._zOrderAntigo);
+        }
+        if(time > 0)
+            layer._focusLayer.runAction(cc.fadeTo(time, 0));
+        else
+            layer._focusLayer.setOpacity(0);
+    }
+}
 //</editor-fold>
 //<editor-fold desc="#Native Capabilities">
 /**
