@@ -2258,7 +2258,7 @@ cc.game = /** @lends cc.game# */{
      * @prop {String} frameRate         - Sets the wanted frame rate for your game, but the real fps depends on your game implementation and the running environment.
      * @prop {String} id                - Sets the id of your canvas element on the web page, it's useful only on web.
      * @prop {String} renderMode        - Sets the renderer type, only useful on web, 0: Automatic, 1: Canvas, 2: WebGL
-     * @prop {String} jsList            - Sets the list of js files in your game - modificado para ser constante!
+     * @prop {String} jsList            - Sets the list of js files in your game.
      */
     CONFIG_KEY: {
         width: "width",
@@ -2272,33 +2272,7 @@ cc.game = /** @lends cc.game# */{
         frameRate: "frameRate",
         id: "id",
         renderMode: "renderMode",
-        jsList: [
-            "src/core/Delegate.js",
-            "src/core/GlobalDefinitions.js",
-            "src/core/controllers/AudioEngine.js",
-            "src/core/controllers/Debugger.js",
-            "src/core/controllers/EffectPlayer.js",
-            "src/core/controllers/TextCreator.js",
-            "src/core/controllers/InputManager.js",
-            "src/utils/Transitions.js",
-            "src/utils/Snippets.js",
-            "src/utils/Decorators.js",
-            "src/components/prototypes/Scenes.js",
-            "src/components/prototypes/Animation.js",
-            "src/components/prototypes/TutorialLayer.js",
-            "src/editor/Editor.js",
-            "src/editor/GeneralEditor.js",
-            "src/editor/GeneralEditor2.js",
-            "src/components/input/Button.js",
-            "src/components/input/Joystick.js",
-            "src/components/input/CustomInputSources.js",
-            "src/components/ui/Tutorial.js",
-            "src/components/ui/GameOverLayer.js",
-            "src/components/ui/PauseLayer.js",
-            "src/loading/LoaderScene.js",
-            "src/loading/Loader.js",
-            "src/Depreciations.js"
-        ]
+        jsList: "jsList"
     },
 
     // states
@@ -2492,22 +2466,24 @@ cc.game = /** @lends cc.game# */{
             this._runMainLoop();
 
             // Load game scripts
-            var jsList = CONFIG_KEY.jsList;
-            if (jsList) {
-                var indexSrcPadrao;
-                var padroesPath = config[CONFIG_KEY.padroesPath];
-                for (indexSrcPadrao = 0; indexSrcPadrao < jsList.length; indexSrcPadrao++) {
-                    jsList[indexSrcPadrao] = cc.path.join(padroesPath, jsList[indexSrcPadrao]);
+            cc.loader.loadJs(config[CONFIG_KEY.padroesPath], ["src/Boot.js"], function () {
+                var jsList = cc.game.config.jsList;
+                if (jsList) {
+                    var indexSrcPadrao;
+                    var padroesPath = config[CONFIG_KEY.padroesPath];
+                    for (indexSrcPadrao = 0; indexSrcPadrao < jsList.length; indexSrcPadrao++) {
+                        jsList[indexSrcPadrao] = cc.path.join(padroesPath, jsList[indexSrcPadrao]);
+                    }
+                    cc.loader.loadJsWithImg(jsList, function (err) {
+                        if (err) throw new Error(err);
+                        self._prepared = true;
+                        if (cb) cb();
+                    });
                 }
-                cc.loader.loadJsWithImg(jsList, function (err) {
-                    if (err) throw new Error(err);
-                    self._prepared = true;
+                else {
                     if (cb) cb();
-                });
-            }
-            else {
-                if (cb) cb();
-            }
+                }
+            })
 
             return;
         }
