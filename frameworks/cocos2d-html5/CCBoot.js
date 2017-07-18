@@ -32,6 +32,8 @@ var cc = cc || {};
 cc._tmp = cc._tmp || {};
 cc._LogInfos = {};
 
+cc._isNodeJs = typeof require !== 'undefined' && require("fs");
+
 var _p = window;
 /** @expose */
 _p.gl;
@@ -2247,6 +2249,7 @@ cc.game = /** @lends cc.game# */{
      * @constant
      * @type {Object}
      *
+     * @prop {String} padroesPath       - Caminho do repositório dos Padrões
      * @prop {String} engineDir         - In debug mode, if you use the whole engine to develop your game, you should specify its relative path with "engineDir".
      * @prop {String} modules           - Defines which modules you will need in your game, it's useful only on web
      * @prop {String} debugMode         - Debug mode, see DEBUG_MODE_XXX constant definitions.
@@ -2255,11 +2258,12 @@ cc.game = /** @lends cc.game# */{
      * @prop {String} frameRate         - Sets the wanted frame rate for your game, but the real fps depends on your game implementation and the running environment.
      * @prop {String} id                - Sets the id of your canvas element on the web page, it's useful only on web.
      * @prop {String} renderMode        - Sets the renderer type, only useful on web, 0: Automatic, 1: Canvas, 2: WebGL
-     * @prop {String} jsList            - Sets the list of js files in your game.
+     * @prop {String} jsList            - Sets the list of js files in your game - modificado para ser constante!
      */
     CONFIG_KEY: {
         width: "width",
         height: "height",
+        padroesPath: "padroesPath",
         engineDir: "engineDir",
         modules: "modules",
         debugMode: "debugMode",
@@ -2268,7 +2272,33 @@ cc.game = /** @lends cc.game# */{
         frameRate: "frameRate",
         id: "id",
         renderMode: "renderMode",
-        jsList: "jsList"
+        jsList: [
+            "src/core/Delegate.js",
+            "src/core/GlobalDefinitions.js",
+            "src/core/controllers/AudioEngine.js",
+            "src/core/controllers/Debugger.js",
+            "src/core/controllers/EffectPlayer.js",
+            "src/core/controllers/TextCreator.js",
+            "src/core/controllers/InputManager.js",
+            "src/utils/Transitions.js",
+            "src/utils/Snippets.js",
+            "src/utils/Decorators.js",
+            "src/components/prototypes/Scenes.js",
+            "src/components/prototypes/Animation.js",
+            "src/components/prototypes/TutorialLayer.js",
+            "src/editor/Editor.js",
+            "src/editor/GeneralEditor.js",
+            "src/editor/GeneralEditor2.js",
+            "src/components/input/Button.js",
+            "src/components/input/Joystick.js",
+            "src/components/input/CustomInputSources.js",
+            "src/components/ui/Tutorial.js",
+            "src/components/ui/GameOverLayer.js",
+            "src/components/ui/PauseLayer.js",
+            "src/loading/LoaderScene.js",
+            "src/loading/Loader.js",
+            "src/Depreciations.js"
+        ]
     },
 
     // states
@@ -2462,8 +2492,13 @@ cc.game = /** @lends cc.game# */{
             this._runMainLoop();
 
             // Load game scripts
-            var jsList = config[CONFIG_KEY.jsList];
+            var jsList = CONFIG_KEY.jsList;
             if (jsList) {
+                var indexSrcPadrao;
+                var padroesPath = config[CONFIG_KEY.padroesPath];
+                for (indexSrcPadrao = 0; indexSrcPadrao < jsList.length; indexSrcPadrao++) {
+                    jsList[indexSrcPadrao] = cc.path.join(padroesPath, jsList[indexSrcPadrao]);
+                }
                 cc.loader.loadJsWithImg(jsList, function (err) {
                     if (err) throw new Error(err);
                     self._prepared = true;
@@ -2602,7 +2637,7 @@ cc.game = /** @lends cc.game# */{
                 cb && cb();
             };
             var _src, txt, _resPath;
-            if (i < cocos_script.length) {
+            if (i < cocos_script.length && !cc._isNodeJs) {
                 _src = cocos_script[i].src;
                 if (_src) {
                     _resPath = /(.*)\//.exec(_src)[0];
@@ -2623,7 +2658,8 @@ cc.game = /** @lends cc.game# */{
 
         // Configs adjustment
         config[CONFIG_KEY.showFPS] = typeof config[CONFIG_KEY.showFPS] === 'undefined' ? true : config[CONFIG_KEY.showFPS];
-        config[CONFIG_KEY.engineDir] = config[CONFIG_KEY.engineDir] || "frameworks/cocos2d-html5";
+        config[CONFIG_KEY.padroesPath] = config[CONFIG_KEY.padroesPath] || "Padroes";
+        config[CONFIG_KEY.engineDir] = config[CONFIG_KEY.padroesPath] + "/" + (config[CONFIG_KEY.engineDir] || "frameworks/cocos2d-html5");
         if (config[CONFIG_KEY.debugMode] == null)
             config[CONFIG_KEY.debugMode] = 0;
         config[CONFIG_KEY.exposeClassName] = !!config[CONFIG_KEY.exposeClassName];

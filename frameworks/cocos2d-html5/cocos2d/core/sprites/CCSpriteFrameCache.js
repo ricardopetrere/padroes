@@ -305,6 +305,8 @@ cc.spriteFrameCache = /** @lends cc.spriteFrameCache# */{
                 }
             }
         }
+        if(self._frameConfigCache[url])
+            delete self._frameConfigCache[url];
     },
 
     /**
