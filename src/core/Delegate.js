@@ -1,44 +1,4 @@
 /**
- * Created by Ryan Balieiro on 22/05/17.
- * Ponto de entrada da biblioteca - define o namespace 'pd'.
- * @namespace pd
- *
- * Lista de pendências:
- * - transformar as arrow keys e os botões de interface (pause button e exit button) em pd.StandardButton.
- * - alterar a pd.TutorialLayer para criar as 'teclas' no formato novo.
- * - inserir um método para criar um joystick na pd.TutorialLayer.
- * - desacoplar as dependências dos arquivos de boot da engine.
- */
-var pd = {};
-
-/**
- * @global
- * @type {String}
- */
-var padroesPath = cc.game.config["padroesPath"];
-
-/**
- * Indica se o modo debug está ativo (não setar esta variável manualmente!).
- * @type {boolean}
- */
-pd.debugMode = cc.game.config[cc.game.CONFIG_KEY.debugMode] != cc.game.DEBUG_MODE_NONE;
-
-if (cc.game.config[cc.game.CONFIG_KEY.renderMode] != 1) {
-    //Não colocar o renderMode para 1 já ocorreu erro ao utilizar DrawNode e ClippingNode
-    cc.error("[pd] O render mode está num valor que muito provavelmente dará erro no jogo! Mudar para 1!!!");
-}
-
-/**
- * Versão atual dos padrões.
- * @type {string}
- */
-pd.version = "2.4";
-
-cc.log("[pd] Padrões Cocos Versão: " + pd.version);
-if(pd.debugMode)
-    cc.warn("[pd] O modo de debug está ativo!");
-
-/**
  * @class
  * @extends {cc.Class}
  * @classdesc Objeto singleton responsável por gerenciar as preferências do jogo e do ambiente onde a aplicação está rodando.
