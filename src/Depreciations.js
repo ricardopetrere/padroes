@@ -314,6 +314,7 @@ pd.InputManager.EVENT_KEY_UP = "eventTypeKeyUp";
 pd.InputManager.EVENT_ACCELEROMETER = "eventTypeAccelerometer";
 
 /**
+ * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
  * @constant
  * @type {string}
  */
