@@ -54,7 +54,7 @@ pd.Editor.Printer = cc.Scale9Sprite.extend({
         this.exitButton = new pd.Button('btn_fechar.png', 'btn_fechar.png', {x:550, y:12}, null, true, false, this, '_onExitButtonCall');
         this.cabecalho.addChild(this.exitButton, 99);
 
-        this.createButton = new pd.Button(280, 30, this, 'onPrintButtonCall', 'btn_printar.png', 'btn_printar.png', null, 1)
+        this.createButton = new pd.Button('btn_printar.png', 'btn_printar.png', {x: 280, y: 30}, null, true, false, this, 'onPrintButtonCall');
         this.addChild(this.createButton, 99);
     },
     _onExitButtonCall: function () {

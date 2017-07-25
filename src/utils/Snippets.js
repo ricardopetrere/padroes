@@ -148,7 +148,7 @@ pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder, name, addT
     if(parentNode != undefined && parentNode != null)
         parentNode.addChild(obj, zOrder);
 
-    if(pd.debugMode && addToEditor)
+    if(pd.debugMode && addToEditor && !cc.sys.isNative)
         pd.Editor.add(obj);
 
     return obj;

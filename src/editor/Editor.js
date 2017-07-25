@@ -169,7 +169,7 @@ pd.Editor.GeneralEditor = cc.Scale9Sprite.extend({
 
         //Organiza a lista de nodes em ordem alfabetica
         pd.Editor.activeGeneralEditor = this;
-        pd.Editor.SortEditorArrayByName();
+        pd.Editor.sortEditorArrayByName();
 
         //Listener manual para suportar o click do botão direito do mouse
         var listener = cc.EventListener.create({
@@ -581,7 +581,7 @@ pd.Editor.EditBoxDelegate = cc.EditBoxDelegate.extend({
         sender.funcCaller[sender.funcToCall]();
     }
 });
-pd.Editor.SortEditorArrayByName = function(){
+pd.Editor.sortEditorArrayByName = function(){
     var swapped;
     var a = pd.Editor.NodeList;
     do {
