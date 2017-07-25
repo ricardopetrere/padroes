@@ -227,6 +227,10 @@ pd.ArrowKeys = cc.Layer.extend({/** @lends pd.ArrowKeys#**/
      * @type {Array}
      */
     _buttons: null,
+    /**
+     * @type {number}
+     */
+    spacing: 90,
 
     /**
      * @constructs
@@ -241,13 +245,18 @@ pd.ArrowKeys = cc.Layer.extend({/** @lends pd.ArrowKeys#**/
         this._super();
 
         if(hasLeftButton)
-            this.leftButton = this._addButton("keyLeft0001", "keyLeft0002", {x: -90, y: 0}, pd.Keys.LEFT);
+            this.leftButton = this._addButton("keyLeft0001", "keyLeft0002", {x: -this.spacing, y: 0}, pd.Keys.LEFT);
         if(hasRightButton)
-            this.rightButton = this._addButton("keyRight0001", "keyRight0002", {x: 90, y: 0}, pd.Keys.RIGHT);
+            this.rightButton = this._addButton("keyRight0001", "keyRight0002", {x: this.spacing, y: 0}, pd.Keys.RIGHT);
         if(hasUpButton)
-            this.upButton = this._addButton("keyUp0001", "keyUp0002", {x: 0, y: 70}, pd.Keys.UP);
+            this.upButton = this._addButton("keyUp0001", "keyUp0002", {x: 0, y: this.spacing - 20}, pd.Keys.UP);
         if(hasDownButton)
             this.downButton = this._addButton("keyDown0001", "keyDown0002", {x: 0, y: -20}, pd.Keys.DOWN);
+
+        if (!hasDownButton && !hasUpButton) {
+            this.leftButton.x += (this.spacing / 2);
+            this.rightButton.x -= (this.spacing / 2);
+        }
 
         if(autoEnable)
             this.enable();
@@ -294,8 +303,8 @@ pd.ArrowKeys = cc.Layer.extend({/** @lends pd.ArrowKeys#**/
 
     /**
      * Seta as funções de callback do componente.
-     * @param {Function} [onKeyDown=null] - função de callback para eventos de onKeyDown.
-     * @param {Function} [onKeyUp=null] - função de callback para eventos de onKeyUp.
+     * @param {Function | string} [onKeyDown=null] - função de callback para eventos de onKeyDown.
+     * @param {Function | string} [onKeyUp=null] - função de callback para eventos de onKeyUp.
      * @param {Object} [handler=null] - handler da função. Caso não seja fornecido, o próprio teclado virtual será registrado como handler.
      */
     setCallbacks: function(onKeyDown, onKeyUp, handler) {

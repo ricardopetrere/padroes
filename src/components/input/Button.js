@@ -138,6 +138,17 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
         this.setPosition(x, y);
         this.enable();
     },
+    /**
+     * Muda o spriteFrame do pd.Button, entre normal e pressionado
+     * @param {string|pd.Button.States} sprite
+     */
+    changeSpriteFrame: function (sprite) {
+        if (sprite === pd.Button.States.SPRITEFRAME_NORMAL) {
+            this.setSpriteFrame(this._normalSpriteFrame);
+        } else if (sprite === pd.Button.States.SPRITEFRAME_PRESSED) {
+            this.setSpriteFrame(this._pressedSpriteFrame);
+        }
+    },
 
     /**
      * Determina se o evento de 'release' do botão deve ser disparado quando o usuário soltá-lo fora de sua região.
@@ -318,3 +329,12 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
         }
     }
 });
+
+/**
+ *
+ * @enum {string}
+ */
+pd.Button.States = {
+    SPRITEFRAME_NORMAL: "normal",
+    SPRITEFRAME_PRESSED: "pressed"
+};

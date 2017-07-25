@@ -198,7 +198,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      */
     stopAllActions: function () {
         this._super();
-        cc.warn("[pd.Animation] A animação foi parada forçadamente devido a uma chamada à função stopAllActions");
+        //cc.warn("[pd.Animation] A animação foi parada forçadamente devido a uma chamada à função stopAllActions");
         this._stopAnimation();
     },
 

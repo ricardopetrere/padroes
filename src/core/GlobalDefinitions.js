@@ -26,19 +26,8 @@ pd.resLoad = {
 pd.res = {
     
     //Debugger:
-    mainDebugInterface: padroesPath+"/res/img/debug/mainDebugInterface.png",
-    btn_fechar: padroesPath+"/res/img/debug/btn_fechar.png",
-    btn_mais: padroesPath+"/res/img/debug/btn_mais.png",
-    btn_audio: padroesPath+"/res/img/debug/btn_audioDebug.png",
-    btn_animation: padroesPath+"/res/img/debug/btn_animationDebug.png",
-    btn_general: padroesPath+"/res/img/debug/btn_generalDebug.png",
-    debuggerUi: padroesPath+"/res/img/debug/debugUi.png",
-    debuggerUi2: padroesPath+"/res/img/debug/debugUi2.png",
-    uncheckedButton: padroesPath+"/res/img/debug/unchecked.png",
-    checkedButton: padroesPath+"/res/img/debug/checked.png",
-    textBoxImage: padroesPath+"/res/img/debug/textBox.png",
-    BoundingBox: padroesPath+"/res/img/debug/boundingBox.png",
-    cross: padroesPath+"/res/img/debug/cross.png",
+    editorSpriteSheet_s: padroesPath+"/res/img/editor/editorAssets.png",
+    editorSpriteSheet_p: padroesPath+"/res/img/editor/editorAssets.plist",
 
     //UI:
     s_input: padroesPath+"/res/img/blueUI/input.png",
@@ -126,7 +115,7 @@ pd.ZOrders = {
     TUTORIAL_CONTROLLER_BUTTON:99,
     TUTORIAL_PAGE_BOTTOM_TEXT: 999,
     PAUSE_LAYER_UI_ELEMENTS:9000,
-    DEBUG_SCREEN: 1000,
+    EDITOR_SCREEN: 9010,
     PAUSE_BUTTON: 9000,
     GAME_OVER_LAYER: 9999,
     TUTORIAL_LAYER: 99999,
