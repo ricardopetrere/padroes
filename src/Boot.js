@@ -22,9 +22,6 @@ cc.game.config.jsList = [
     "src/components/prototypes/Scenes.js",
     "src/components/prototypes/Animation.js",
     "src/components/prototypes/TutorialLayer.js",
-    "src/editor/Editor.js",
-    "src/editor/GeneralEditor.js",
-    "src/editor/GeneralEditor2.js",
     "src/components/input/Button.js",
     "src/components/input/Joystick.js",
     "src/components/input/CustomInputSources.js",
@@ -33,8 +30,14 @@ cc.game.config.jsList = [
     "src/components/ui/PauseLayer.js",
     "src/loading/LoaderScene.js",
     "src/loading/Loader.js",
-    "src/Depreciations.js"
-];
+    "src/Depreciations.js"].concat((!cc.sys.isNative ?
+
+        //A versão mobile não utiliza o editor, não sendo necessário esses arquivos
+        ["src/editor/Editor.js",
+            "src/editor/SpriteCreator.js",
+            "src/editor/SpriteListViewer.js",
+            "src/editor/Printer.js"] : []
+));
 
 var pd = {};
 
