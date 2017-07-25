@@ -135,18 +135,21 @@ pd.getSpriteFrame = function(spriteFrameName) {
  * @param {Number} y
  * @param {cc.Node} parentNode
  * @param {Number} zOrder
+ * @param {String} name
+ * @param {Bool} addToEditor
  * @returns {cc.Sprite}
  */
-pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder){
+pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder, name, addToEditor){
     const obj = new cc.Sprite(pd.getSpriteFrame(spriteFrameName));
     obj.setPosition(x, y);
+    obj.name = name;
     zOrder = zOrder || 0;
 
     if(parentNode != undefined && parentNode != null)
         parentNode.addChild(obj, zOrder);
 
-    if(pd.debugMode)
-        pd.AddToDebugger(obj);
+    if(pd.debugMode && addToEditor)
+        pd.Editor.add(obj);
 
     return obj;
 };

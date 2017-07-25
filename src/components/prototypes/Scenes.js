@@ -51,14 +51,14 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
     onDebugKeyDown: function(key) {
         const intKey = parseInt(key);
         if(intKey == pd.Keys.F0 + 1) {
-            if(!this.debugScreen) {
-                this.debugScreen = new pd.DebugScreen();
-                this.addChild(this.debugScreen, pd.ZOrders.DEBUG_SCREEN);
-                this.debugScreen.init();
+            if(!this._editorScreen) {
+                this._editorScreen = new pd.Editor();
+                this.addChild(this._editorScreen, pd.ZOrders.EDITOR_SCREEN);
+                this._editorScreen.init();
             }
             else {
-                this.debugScreen.removeFromParent();
-                this.debugScreen = null;
+                this._editorScreen._onExitButtonCall();
+                this._editorScreen = null;
             }
         }
         else if (intKey == pd.Keys.F0 + 5) {
