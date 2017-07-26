@@ -39,6 +39,7 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
         if(!(pd.delegate.context == pd.Delegate.CONTEXT_PALCO)) {
             this.debugger = pd.debugger; // legado...
             if(pd.debugMode && !cc.sys.isNative) {
+                pd.Editor.NodeList = [];
                 pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, this, this.onDebugKeyDown);
             }
         }
