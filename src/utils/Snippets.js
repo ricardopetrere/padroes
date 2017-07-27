@@ -71,7 +71,7 @@ pd.arraySwap = function(array, i, j) {
  * @type {Function}
  * @param {Array} array
  * @param {Number} [key = null] - a propriedade dos elementos do array que será usada como chave de ordenação. Se for null, o elemento do array será a própria chave.
- * @param {Boolean} [crescentOrder=true]
+ * @param {boolean} [crescentOrder=true]
  */
 pd.orderBy = function(array, key, crescentOrder) {
     crescentOrder = crescentOrder == null || crescentOrder == undefined ? true : crescentOrder;
@@ -135,8 +135,8 @@ pd.getSpriteFrame = function(spriteFrameName) {
  * @param {Number} y
  * @param {cc.Node} parentNode
  * @param {Number} zOrder
- * @param {String} name
- * @param {Bool} addToEditor
+ * @param {String} [name]
+ * @param {boolean} [addToEditor]
  * @returns {cc.Sprite}
  */
 pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder, name, addToEditor){
@@ -361,7 +361,7 @@ pd.pointInPolygonIntersection = function(p, vertexes) {
  * Verifica se um polígono intercepta outro polígono.
  * @param {cc.Point[]} polygon1
  * @param {cc.Point[]} polygon2
- * @returns {Boolean}
+ * @returns {boolean}
  * @author Ricardo Petrére
  */
 pd.polygonInPolygonIntersection = function(polygon1, polygon2) {

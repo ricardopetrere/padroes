@@ -14,11 +14,13 @@ pd.Editor.SpriteListView = cc.Sprite.extend({
         this._willSelectObj = false;
         this._lastSearchIndex = -1;
 
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, "onMouseDown", this);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, this, "onMouseUp", this);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, this, "onMouseMove", this);
 
-        pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, this, "onKeyDown", this);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_SCROLL, this, "onMouseScroll", this);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_DOWN, this, "onMouseDown", this);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_UP, this, "onMouseUp", this);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_MOVE, this, "onMouseMove", this);
+
+        pd.inputManager.add(pd.InputManager.Events.KEY_DOWN, this, "onKeyDown", this);
 
         this.listController = [];
         this.listController.yOffset = 0;
@@ -148,9 +150,13 @@ pd.Editor.SpriteListView = cc.Sprite.extend({
         }
 
     },
+    onMouseScroll:function(e){
+        var diff = e.getScrollY() / 10;
+        this.updateListPosition(diff, true);
+        this.isDragging = false;
+    },
     onMouseDown:function(e){
         var clickPosition = e.getLocation();
-        //var loc = this.convertToNodeSpace(clickPosition);
         var mousePosition = cc.rect(clickPosition.x, clickPosition.y, 1, 1);
         if(cc.rectIntersectsRect(mousePosition, this.getBoundingBoxToWorld())){
             this._willSelectObj = true;
@@ -158,7 +164,6 @@ pd.Editor.SpriteListView = cc.Sprite.extend({
         }
         else
             this._lastCursorDown = null;
-
         mousePosition = cc.rect(clickPosition.x, clickPosition.y, 1, 1);
         //verifica drag do SpriteViewer
         if(cc.rectIntersectsRect(mousePosition, this.cabecalho.getBoundingBoxToWorld())){
@@ -175,7 +180,6 @@ pd.Editor.SpriteListView = cc.Sprite.extend({
                 var mp = e.getLocation();
                 mp = cc.p(mp.x + this.mouseOffset.x, mp.y + this.mouseOffset.y);
                 mp = this.getParent().convertToNodeSpace(mp);
-                //this.setPosition(mp.x, mp.y - this.getBoundingBox().y + this.y);
                 this.x = mp.x; this.y = mp.y;
             }
         }

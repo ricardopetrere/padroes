@@ -6,6 +6,9 @@ pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
         this._super(cc.spriteFrameCache.getSpriteFrame('editor_interface.png'));
     },
     init:function(){
+
+        this.editBoxDelegate = new pd.Editor.EditBoxDelegate();
+
         this.setAnchorPoint(0, 1);
         this.setContentSize(570, 250);
 
@@ -33,7 +36,7 @@ pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
         this.listParentButton = new pd.Button('btn_lista.png', 'btn_lista.png', {x:265, y:225}, null, true, false, this, '_onParentListButtonCall');
         this.addChild(this.listParentButton, 99);
 
-        this.selectedInfos.spriteName =  pd.Editor.createEditBox(this, {txt:"SpriteName:", size:14}, cc.p(15, 200), cc.size(155, 20), cc.EDITBOX_INPUT_MODE_ANY);
+        this.selectedInfos.spriteName =  pd.Editor.createEditBox(this, {txt:"SpriteName:", size:14}, cc.p(15, 200), cc.size(155, 20), cc.EDITBOX_INPUT_MODE_ANY, this, "onSpriteFrameTextChange");
         this.listSpriteFrameButton = new pd.Button('btn_lista.png', 'btn_lista.png', {x:265, y:200}, null, true, false, this, '_onSpriteFrameListButtonCall');
         this.addChild(this.listSpriteFrameButton, 99);
 
@@ -62,6 +65,7 @@ pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
         var drawNode = new cc.DrawNode();
         this.addChild(drawNode);
         drawNode.drawRect(cc.p(300, 20), cc.p(485, 205), cc.color(180, 180, 180), 4, cc.color(0, 0, 0));
+
 
         ///largura e altura maxima 185
     },
@@ -116,17 +120,27 @@ pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
             }
         }
     },
+    onSpriteFrameTextChange:function(sender){
+        this.createPreview(sender.getString());
+    },
+
     onParentListButtonCallBack:function(obj){
         this.selectedInfos.parent.setString(obj.name.toString());
     },
     onSpriteFrameListButtonCallBack:function(obj){
         this.selectedInfos.spriteName.setString(obj.toString());
+        this.createPreview(obj);
+    },
+    createPreview:function(obj){        
         if(this.previewSprite){
             this.previewSprite.removeFromParent();
             this.previewSprite = null;
         }
-        this.previewSprite = new cc.Sprite(pd.getSpriteFrame(obj));
-        //this.previewSprite.setAnchorPoint(0, 0);
+        var spriteFrame = pd.getSpriteFrame(obj);
+        if(!spriteFrame)
+            return;
+        
+        this.previewSprite = new cc.Sprite(spriteFrame);
         this.previewSprite.setPosition(392, 112);
         this.addChild(this.previewSprite);
 
@@ -136,10 +150,7 @@ pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
             scale.x = scale.y;
         if(scale.x > 1)
             scale.x = 1;
-        cc.log(scale);
-
         this.previewSprite.setScale(scale.x);
-
     },
 
     generateFrameList:function(){

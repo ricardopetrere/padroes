@@ -543,7 +543,6 @@ pd.Editor.createEditBox = function(layer, textInfo, position, size, type, funcCa
     if(funcCaller && funcToCall){
         editBox.funcCaller = funcCaller;
         editBox.funcToCall = funcToCall
-
         editBox.setDelegate(layer.editBoxDelegate);
     }
 

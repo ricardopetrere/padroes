@@ -113,6 +113,12 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
     _cachedBoundingBox:null,
 
     /**
+     *
+     * @type {cc.Rect}
+     */
+    _collisionRect: null,
+
+    /**
      * Salva uma cópia dos dados de exibição do objeto. <br >
      * Esse método tem o intuito de reaproveitar objetos geométricos utilizados em colisões, visando otimizar o uso da memória.
      * @private
@@ -136,8 +142,8 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
      * @private
      */
     _updateCollisionRect: function(x, y, size) {
-        pd.decorators.ClickableNode._collisionRect = pd.decorators.ClickableNode._collisionRect || cc.rect(0, 0, 0, 0);
-        var rect = pd.decorators.ClickableNode._collisionRect;
+        this._collisionRect = this._collisionRect || cc.rect(0, 0, 0, 0);
+        var rect = this._collisionRect;
         rect.x = x;
         rect.y = y;
         rect.width = size || 1;
@@ -153,7 +159,7 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
      */
     isInside: function(_x, _y, tolerance) {
         this._updateCollisionRect(_x, _y, tolerance);
-        return cc.rectIntersectsRect(this._cachedBoundingBox || this.getBoundingBoxToWorld(), pd.decorators.ClickableNode._collisionRect);
+        return cc.rectIntersectsRect(this._cachedBoundingBox || this.getBoundingBoxToWorld(), this._collisionRect);
     },
 
     /**
