@@ -32,7 +32,7 @@ if (cc.game.config[cc.game.CONFIG_KEY.renderMode] != 1) {
  * Versão atual dos padrões.
  * @type {string}
  */
-pd.version = "2.4";
+pd.version = "2.5";
 
 cc.log("[pd] Padrões Cocos Versão: " + pd.version);
 if(pd.debugMode)

@@ -127,9 +127,14 @@ pd.TutorialLayer.prototype.createPonteiro = pd.TutorialLayer.prototype.createPoi
 
 /**
  * @deprecated - desde a versão 2.3 - utilizar a função {@link pd.debugger.addShortcut}.
+ * @param {string} targetSceneName
+ * @param {Function} callbackFunction
+ * @param {Object} callbackCaller
+ * @param {*} callbackArguments
  */
-pd.Debugger.prototype.addScene = function() {
+pd.Debugger.prototype.addScene = function(targetSceneName, callbackFunction, callbackCaller, callbackArguments) {
     cc.warn("[pd] Uso de função depreciada: 'addScene'. Utilizar 'addShortcut' a partir de agora.");
+    pd.debugger.addShortcut(targetSceneName, callbackFunction, callbackCaller, callbackArguments);
 };
 
 /**
@@ -333,3 +338,11 @@ pd.InputManager.EVENT_BUTTON_RELEASED = "eventButtonReleased";
  * @type {string}
  */
 pd.InputManager.EVENT_JOYSTICK_STATUS = "eventJoystickStatus";
+
+/**
+ * @deprecated - desde a versão 2.5 - utilizar {@link pd.Editor.add}
+ */
+pd.AddToDebugger = function(obj, type, name) {
+    if (!cc.sys.isNative)
+        pd.Editor.add(obj, type, name);
+}
