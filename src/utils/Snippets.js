@@ -276,7 +276,7 @@ pd.switchScene = function(transition, layer, delay) {
  */
 pd.currentScene = null;
 pd.__defineGetter__("currentScene", function() {
-    return cc.director._runningScene;
+    return cc.director.getRunningScene();
 });
 //</editor-fold>
 //<editor-fold desc="#Geometry">

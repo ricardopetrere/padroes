@@ -133,7 +133,6 @@ pd.TutorialLayer.prototype.createPonteiro = pd.TutorialLayer.prototype.createPoi
  * @param {*} callbackArguments
  */
 pd.Debugger.prototype.addScene = function(targetSceneName, callbackFunction, callbackCaller, callbackArguments) {
-    cc.warn("[pd] Uso de função depreciada: 'addScene'. Utilizar 'addShortcut' a partir de agora.");
     pd.debugger.addShortcut(targetSceneName, callbackFunction, callbackCaller, callbackArguments);
 };
 
