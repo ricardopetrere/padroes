@@ -286,6 +286,13 @@ pd.Editor.GeneralEditor = cc.Scale9Sprite.extend({
         this._changeSelectedSprite(obj);
         this._updateBoundingBoxImage();
     },
+    deleteObject:function(){
+        var obj = this.selectedSprite;
+        pd.Editor.NodeList.splice(pd.Editor.NodeList.indexOf(obj), 1);
+        this.selectedSprite = null;
+        this.boundingBoxImage.setVisible(false);
+        obj.removeFromParent();
+    },
     _changeSelectedSprite:function(newSprite){
         this.selectedSprite = newSprite;
         this.selectedInfos.name.setString(this.selectedSprite.debugName);
@@ -481,8 +488,10 @@ pd.Editor.GeneralEditor = cc.Scale9Sprite.extend({
     },
     _onMouseUp:function(e){
         this.isDragging = false;
-        if(this.selectedSprite && this.dragObj == this.selectedSprite)
+        if(this.selectedSprite && this.dragObj == this.selectedSprite){
             this._updateEditBoxes("Position");
+            this._updateBoundingBoxImagePosition();
+        }
 
         this.dragObj = null;
     },
@@ -490,15 +499,26 @@ pd.Editor.GeneralEditor = cc.Scale9Sprite.extend({
         if(this.selectedSprite){
             if(e == 37){
                 this.selectedSprite.x -= 1;
+                this._updateEditBoxes("Position");
+                this._updateBoundingBoxImagePosition();
             }
             if(e == 38){
                 this.selectedSprite.y += 1;
+                this._updateEditBoxes("Position");
+                this._updateBoundingBoxImagePosition();
             }
             if(e == 39){
                 this.selectedSprite.x += 1;
+                this._updateEditBoxes("Position");
+                this._updateBoundingBoxImagePosition();
             }
             if(e == 40){
                 this.selectedSprite.y -= 1;
+                this._updateEditBoxes("Position");
+                this._updateBoundingBoxImagePosition();
+            }
+            if(e == 46){
+                this.deleteObject();
             }
         }
     },

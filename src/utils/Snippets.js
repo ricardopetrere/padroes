@@ -161,9 +161,9 @@ pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder, name, addT
  * @param {Number} x
  * @param {Number} y
  * @param {Number} fontSize
- * @param {cc.Color} [color=]
+ * @param {cc.Color} [color=cc.color.BLACK]
  * @param {String} [text=""]
- * @param {cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_RIGHT} [alignment=null]
+ * @param {cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_RIGHT} [alignment=cc.TEXT_ALIGNMENT_CENTER]
  * @param {cc.Node} [parentNode=null]
  * @returns {cc.LabelTTF}
  */
