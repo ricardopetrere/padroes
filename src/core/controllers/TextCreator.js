@@ -76,7 +76,7 @@ pd.TextCreator.setFadeType = function(target, numLinhasVisiveis){
 			for(var i = 0; i < target.textVector.length; i++){
 				target.textVector[i].runAction(new cc.MoveBy(0.5, 0, -target.basePosition[2]));
 			}
-			target.textVector[target.LinhaAtual - target.numLinhasVisiveis - 1].runAction(new cc.FadeOut(0.2));
+			target.textVector[target.LinhaAtual - target.numLinhasVisiveis].runAction(new cc.FadeOut(0.2));
 		}
 	}
 }
