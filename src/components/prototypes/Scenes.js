@@ -237,30 +237,5 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
             this.addChild(pLayer, pd.ZOrders.PAUSE_LAYER);
             cc.log("[pd.GameScene] O jogo foi pausado.");
         }
-    },
-
-    /**
-     * Executa a animação de vitória.
-     * @param {cc.SpriteFrame} circleSpriteFrame
-     * @param {cc.SpriteFrame} messageSpriteFrame
-     * @param {Boolean} [tiltScreen=true]
-     */
-    winGame: function(circleSpriteFrame, messageSpriteFrame, tiltScreen) {
-        this.pauseButton.cleanup();
-        const winLayer = new pd.GameOverLayer();
-        winLayer.init(this, pd.GameOverLayer.TYPE_WIN, circleSpriteFrame, messageSpriteFrame, tiltScreen);
-        this.addChild(winLayer, pd.ZOrders.GAME_OVER_LAYER);
-    },
-
-    /**
-     * Executa a animação de derrota.
-     * @param {cc.SpriteFrame} circleSpriteFrame
-     * @param {Boolean} [tiltScreen=true]
-     */
-    loseGame: function(circleSpriteFrame, tiltScreen) {
-        this.pauseButton.cleanup();
-        const loseLayer = new pd.GameOverLayer();
-        loseLayer.init(this, pd.GameOverLayer.TYPE_LOSE, circleSpriteFrame, null, tiltScreen);
-        this.addChild(loseLayer, pd.ZOrders.GAME_OVER_LAYER);
     }
 });

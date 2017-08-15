@@ -346,3 +346,24 @@ pd.AddToDebugger = function(obj, type, name) {
     if (!cc.sys.isNative)
         pd.Editor.add(obj, type, name);
 }
+
+/**
+ * Executa a animação de vitória.
+ * @param {cc.SpriteFrame} circleSpriteFrame
+ * @param {cc.SpriteFrame} messageSpriteFrame
+ * @param {Boolean} [tiltScreen=true]
+ * @deprecated desde a versão 3.0 - Usar {@link pd.delegate.winGame}
+ */
+pd.GameScene.prototype.winGame = function(circleSpriteFrame, messageSpriteFrame, tiltScreen) {
+    pd.delegate.winGame(circleSpriteFrame, messageSpriteFrame, tiltScreen);
+}
+
+/**
+ * Executa a animação de derrota.
+ * @param {cc.SpriteFrame} circleSpriteFrame
+ * @param {Boolean} [tiltScreen=true]
+ * @deprecated desde a versão 3.0 - Usar {@link pd.delegate.loseGame}
+ */
+pd.GameScene.prototype.loseGame = function(circleSpriteFrame, tiltScreen) {
+    pd.delegate.loseGame(circleSpriteFrame, tiltScreen);
+}

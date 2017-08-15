@@ -275,7 +275,31 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
             pd.delegate.retain(transition);
             cc.director.runScene(transition);
         }
+    },
 
+    /**
+     * Executa a animação de vitória.
+     * @param {cc.SpriteFrame} circleSpriteFrame
+     * @param {cc.SpriteFrame} messageSpriteFrame
+     * @param {Boolean} [tiltScreen=true]
+     */
+    winGame: function(circleSpriteFrame, messageSpriteFrame, tiltScreen) {
+        pd.currentScene.pauseButton.cleanup();
+        const winLayer = new pd.GameOverLayer();
+        winLayer.init(pd.currentScene, pd.GameOverLayer.TYPE_WIN, circleSpriteFrame, messageSpriteFrame, tiltScreen);
+        pd.currentScene.addChild(winLayer, pd.ZOrders.GAME_OVER_LAYER);
+    },
+
+    /**
+     * Executa a animação de derrota.
+     * @param {cc.SpriteFrame} circleSpriteFrame
+     * @param {Boolean} [tiltScreen=true]
+     */
+    loseGame: function(circleSpriteFrame, tiltScreen) {
+        pd.currentScene.pauseButton.cleanup();
+        const loseLayer = new pd.GameOverLayer();
+        loseLayer.init(pd.currentScene, pd.GameOverLayer.TYPE_LOSE, circleSpriteFrame, null, tiltScreen);
+        pd.currentScene.addChild(loseLayer, pd.ZOrders.GAME_OVER_LAYER);
     },
 
     /**
