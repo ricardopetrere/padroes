@@ -75,14 +75,14 @@ pd.Editor.Printer = cc.Scale9Sprite.extend({
         }
         for(var i in this.tempVector){
             text += "{";
-            if(this.selectedInfos.parent.isPressed){
-                text += "parent:" + this.tempVector[i].getParent().debugName.toString() + ",";
+            if(this.selectedInfos.parent.isPressed && this.tempVector[i].getParent().debugName){
+                text += "parent:'" + this.tempVector[i].getParent().debugName.toString() + "',";
             }
             if(this.selectedInfos.spriteName.isPressed && this.tempVector[i].spriteName){
-                text += "spriteName:" + this.tempVector[i].spriteName.toString() + ",";
+                text += "spriteName:'" + this.tempVector[i].spriteName.toString() + "',";
             }
-            if(this.selectedInfos.name.isPressed){
-                text += "name:" + this.tempVector[i].debugName.toString() + ",";
+            if(this.selectedInfos.name.isPressed && this.tempVector[i].debugName){
+                text += "name:'" + this.tempVector[i].debugName.toString() + "',";
             }
             if(this.selectedInfos.position.isPressed){
                 text += "x:" + parseInt(this.tempVector[i].x).toString() + ",";
@@ -90,20 +90,20 @@ pd.Editor.Printer = cc.Scale9Sprite.extend({
             }
             if(this.selectedInfos.scale.isPressed){
                 if(this.tempVector[i].getScaleX() == this.tempVector[i].getScaleY()){
-                    text += "scale:" + this.tempVector[i].getScaleX().toFixed(3) + ",";
+                    text += "scale:" + this.tempVector[i].getScaleX().toString() + ",";
                 }
                 else{
-                    text += "scaleX:" + this.tempVector[i].getScaleX().toFixed(3) + ",";
-                    text += "scaleY:" + this.tempVector[i].getScaleY().toFixed(3) + ",";
+                    text += "scaleX:" + this.tempVector[i].getScaleX().toString() + ",";
+                    text += "scaleY:" + this.tempVector[i].getScaleY().toString() + ",";
                 }
             }
             if(this.selectedInfos.rotation.isPressed){
                 if(this.tempVector[i].getRotationX() == this.tempVector[i].getRotationY()){
-                    text += "rotation:" + this.tempVector[i].getRotationX().toFixed(3) + ",";
+                    text += "rotation:" + this.tempVector[i].getRotationX().toString() + ",";
                 }
                 else{
-                    text += "rotationX:" + this.tempVector[i].getRotationX().toFixed(3) + ",";
-                    text += "rotationY:" + this.tempVector[i].getRotationY().toFixed(3) + ",";
+                    text += "rotationX:" + this.tempVector[i].getRotationX().toString() + ",";
+                    text += "rotationY:" + this.tempVector[i].getRotationY().toString() + ",";
                 }
             }
             if(this.selectedInfos.color.isPressed){

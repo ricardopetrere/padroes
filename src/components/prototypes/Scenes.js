@@ -32,10 +32,6 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
     onEnter: function() {
         this._super();
 
-        //deixar (lógica interna do antigo debugger, agora editor).
-        // pd.DebugArrayClickable = [];
-        // pd.DebugArrayNonClickable = [];
-        
         if(!(pd.delegate.context == pd.Delegate.CONTEXT_PALCO)) {
             this.debugger = pd.debugger; // legado...
             if(pd.debugMode && !cc.sys.isNative) {

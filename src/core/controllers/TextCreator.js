@@ -72,11 +72,11 @@ pd.TextCreator = cc.Node.extend({
 pd.TextCreator.setFadeType = function(target, numLinhasVisiveis){
 	target.numLinhasVisiveis = numLinhasVisiveis;
 	target.funcToCall = function(){
-		if(target.LinhaAtual > target.numLinhasVisiveis && target.LinhaAtual < target.textVector.length){
+		if(target.LinhaAtual >= target.numLinhasVisiveis && target.LinhaAtual < target.textVector.length){
 			for(var i = 0; i < target.textVector.length; i++){
-				target.textVector[i].runAction(new cc.MoveBy(0.5, 0, target.basePositionInfo[2]));
+				target.textVector[i].runAction(new cc.MoveBy(0.5, 0, -target.basePosition[2]));
 			}
-			target.textVector[target.LinhaAtual - target.numLinhasVisiveis - 1].runAction(new cc.FadeOut(0.2));
+			target.textVector[target.LinhaAtual - target.numLinhasVisiveis].runAction(new cc.FadeOut(0.2));
 		}
 	}
 }

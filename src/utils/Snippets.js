@@ -130,7 +130,7 @@ pd.getSpriteFrame = function(spriteFrameName) {
 
 /**
  * Cria uma sprite.
- * @param {String} spriteFrameName
+ * @param {String} spriteName
  * @param {Number} x
  * @param {Number} y
  * @param {cc.Node} parentNode
@@ -139,8 +139,11 @@ pd.getSpriteFrame = function(spriteFrameName) {
  * @param {boolean} [addToEditor]
  * @returns {cc.Sprite}
  */
-pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder, name, addToEditor){
-    const obj = new cc.Sprite(pd.getSpriteFrame(spriteFrameName));
+pd.createSprite = function(spriteName, x, y, parentNode, zOrder, name, addToEditor){
+    var SF = pd.getSpriteFrame(spriteName);
+    if (!SF)
+        SF = spriteName;
+    const obj = new cc.Sprite(SF);
     obj.setPosition(x, y);
     obj.name = name;
     zOrder = zOrder || 0;
@@ -148,7 +151,7 @@ pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder, name, addT
     if(parentNode != undefined && parentNode != null)
         parentNode.addChild(obj, zOrder);
 
-    if(pd.debugMode && addToEditor && !cc.sys.isNative)
+    if(!cc.sys.isNative && pd.debugMode && addToEditor)
         pd.Editor.add(obj);
 
     return obj;
@@ -161,9 +164,9 @@ pd.createSprite = function(spriteFrameName, x, y, parentNode, zOrder, name, addT
  * @param {Number} x
  * @param {Number} y
  * @param {Number} fontSize
- * @param {cc.Color} [color=]
+ * @param {cc.Color} [color=cc.color.BLACK]
  * @param {String} [text=""]
- * @param {cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_RIGHT} [alignment=null]
+ * @param {cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_RIGHT} [alignment=cc.TEXT_ALIGNMENT_CENTER]
  * @param {cc.Node} [parentNode=null]
  * @returns {cc.LabelTTF}
  */
@@ -241,8 +244,8 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
  */
 pd.parseAttr = function(attr) {
     if(attr.hasOwnProperty("scale")) {
-        attr.scaleX = scale;
-        attr.scaleY = scale;
+        attr.scaleX = attr.scale;
+        attr.scaleY = attr.scale;
     }
 
     return attr;
@@ -276,7 +279,7 @@ pd.switchScene = function(transition, layer, delay) {
  */
 pd.currentScene = null;
 pd.__defineGetter__("currentScene", function() {
-    return cc.director._runningScene;
+    return cc.director.getRunningScene();
 });
 //</editor-fold>
 //<editor-fold desc="#Geometry">

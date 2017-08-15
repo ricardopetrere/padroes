@@ -212,10 +212,17 @@ pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
                 cc.log('sprite frame invalida.');
                 return;
             }
-                cc.log(spriteFrame);
             if(this.selectedInfos.name)
                 var spriteID = this.selectedInfos.name.getString();
-            var position = cc.p(parseInt(this.selectedInfos.x.getString()), parseInt(this.selectedInfos.y.getString()));
+            
+            if(this.selectedInfos.x.getString() && this.selectedInfos.y.getString())
+                var position = cc.p(parseInt(this.selectedInfos.x.getString()), parseInt(this.selectedInfos.y.getString()));
+            else{
+                var p = cc.p(512, 384);
+                var p = parentNode.convertToNodeSpace(p);
+                var position = cc.p(p.x, p.y);
+                cc.log(p);
+            }
             var zOrder = parseInt(this.selectedInfos.zOrder.getString());
             var addToPrinter = this.selectedInfos.willAddToPrinter.isPressed;
             var newSprite = new cc.Sprite(spriteFrame);
