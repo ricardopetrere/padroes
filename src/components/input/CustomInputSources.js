@@ -40,7 +40,7 @@ pd.StandardButton = pd.Button.extend({/** @lends pd.StandardButton#**/
      * @param {Array|null} [handlerFuncArgs=null] - para o método de callback explícito: os argumentos a serem passados para a função de callback.
      */
     ctor: function(shape, label, attr, autoEnable, eventBased, keyCode, color, handler, handlerFunc, handlerFuncArgs) {
-        this._super(this._getLabel(shape, color, false), this._getLabel(shape, color, true), attr, 1, autoEnable, eventBased, handler, handlerFunc, handlerFuncArgs);
+        this._super(this._getLabel(shape, color, false), this._getLabel(shape, color, true), null, null, autoEnable, eventBased, handler, handlerFunc, handlerFuncArgs);
 
         this.setCascadeOpacityEnabled(true);
         if(pd.getSpriteFrame(label)) {
@@ -57,6 +57,9 @@ pd.StandardButton = pd.Button.extend({/** @lends pd.StandardButton#**/
 
         if(color)
             this.setColor(color);
+
+        if (attr)
+            this.attr(pd.parseAttr(attr));
     },
 
     /**
@@ -192,6 +195,7 @@ pd.StandardButton.Icons = {
     EYE: "buttonLabelEye",
     FLAME: "buttonLabelFlame",
     HAND: "buttonLabelHand",
+    NONE: "",
     PIN: "buttonLabelPin",
     REFRESH: "buttonLabelRefresh",
     SEARCH: "buttonLabelSearch",

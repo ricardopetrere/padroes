@@ -102,7 +102,8 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
         else {
             this._normalSpriteFrame = pd.getSpriteFrame(normalImage);
             this._pressedSpriteFrame = pd.getSpriteFrame(pressedImage ? pressedImage : normalImage);
-            this.attr(pd.parseAttr(attr));
+            if (attr)
+                this.attr(pd.parseAttr(attr));
             this._pressedScale = pressedScale || 1;
             this.setCallbackMode(eventBased);
 
@@ -174,6 +175,17 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
         this._disabledOpacity = disabledOpacity;
         if (!this._isEnabled)
             this.setOpacity(this._disabledOpacity);
+    },
+
+    /**
+     * Seta a escala para quando o botão for pressionado.<br/>
+     * Se estiver pressionado, a função já altera a escala do botão
+     * @param {number} pressedScale
+     */
+    setPressedScale: function (pressedScale) {
+        this._pressedScale = pressedScale;
+        if (this._isPressed)
+            this.setScale(this._pressedScale);
     },
 
     /**

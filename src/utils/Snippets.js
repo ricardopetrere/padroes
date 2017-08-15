@@ -244,8 +244,8 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
  */
 pd.parseAttr = function(attr) {
     if(attr.hasOwnProperty("scale")) {
-        attr.scaleX = scale;
-        attr.scaleY = scale;
+        attr.scaleX = attr.scale;
+        attr.scaleY = attr.scale;
     }
 
     return attr;
