@@ -2469,11 +2469,6 @@ cc.game = /** @lends cc.game# */{
             cc.loader.loadJs(config[CONFIG_KEY.padroesPath], ["src/Boot.js"], function () {
                 var jsList = cc.game.config.jsList;
                 if (jsList) {
-                    var indexSrcPadrao;
-                    var padroesPath = config[CONFIG_KEY.padroesPath];
-                    for (indexSrcPadrao = 0; indexSrcPadrao < jsList.length; indexSrcPadrao++) {
-                        jsList[indexSrcPadrao] = cc.path.join(padroesPath, jsList[indexSrcPadrao]);
-                    }
                     cc.loader.loadJsWithImg(jsList, function (err) {
                         if (err) throw new Error(err);
                         self._prepared = true;
