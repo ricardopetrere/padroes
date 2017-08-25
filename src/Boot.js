@@ -8,6 +8,7 @@
  * - alterar a pd.TutorialLayer para criar as 'teclas' no formato novo.
  * - inserir um método para criar um joystick na pd.TutorialLayer.
  */
+
 cc.game.config.jsList = [
     "src/core/Delegate.js",
     "src/core/GlobalDefinitions.js",
