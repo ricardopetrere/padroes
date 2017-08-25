@@ -136,9 +136,9 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._buildUI();
         this._performInitialTween();
 
-        if(pd.Tutorial._hasInstance)
+        if(pd.Tutorial.hasInstance)
             throw new Error("[pd.Tutorial] Não é possível instanciar dois tutoriais ao mesmo tempo!");
-        pd.Tutorial._hasInstance = true;
+        pd.Tutorial.hasInstance = true;
 
         pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, this._onSwipeBegin);
         pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, this, this._onSwipeMove);
@@ -584,7 +584,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
             page.removeFromParent();
         }
         this._handler.onResume();
-        pd.Tutorial._hasInstance = false;
+        pd.Tutorial.hasInstance = false;
     }
 });
 
@@ -617,4 +617,4 @@ pd.Tutorial.PAGE_SPACING = 1800;
  * @type {boolean}
  * @private
  */
-pd.Tutorial._hasInstance = false;
+pd.Tutorial.hasInstance = false;

@@ -119,7 +119,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
         if (music && cc.audioEngine.willPlayMusic()) {
             cc.audioEngine.stopMusic();
         }
-        this._play(music, loop, volume, "playMusic", "setMusicVolume")
+        this._play(music, loop, volume, "playMusic", "setMusicVolume");
     },
 
     /**

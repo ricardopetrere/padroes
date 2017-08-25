@@ -96,6 +96,8 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
         this._super(pd.getSpriteFrame("JoystickBackGround.png"));
         this._radius = this.getBoundingBox().width/2;
         this._pad = pd.createSprite("JoystickStick.png", this._radius, this._radius, this);
+        pd.decorate(this._pad, pd.decorators.ResetableNode);
+        this._pad.saveDisplayState();
         this._isGrabbed = false;
 
         if(attr)
@@ -171,6 +173,44 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
             this.setVisible(false);
             this._followModeTouchArea = touchArea;
         }
+    },
+
+    /**
+     * Anima o 'pad' do joystick, tweenando-o para uma posição customizada (útil para demonstrações/tutoriais).
+     * Apenas disponível se o joystick estiver desabilitado para interações com o usuário.
+     * @param {Number} time - o tempo da animação.
+     * @param {Number} dX - um valor entre -1 e 1. Se for 1, o pad irá tweenar para a extremidade direita do joystick, se for -1 irá tweenar para a extremidade esquerda do joystick.
+     * @param {Number} dY  - um valor entre -1 e 1.
+     * @param {Boolean} [autoRun=false] - indica se a ação deve ser rodada no momento em que a função for invocada.
+     * @param {Function} [easingFunc=null] - função de easing para a animação.
+     * @returns {cc.TargetedAction}
+     */
+    animate: function(time, dX, dY, autoRun, easingFunc) {
+        if(this._isEnabled)
+            cc.warn("[pd.Joystick] Foi aplicada uma animação à um joystick que está ativo para interações com o usuário. Rever!");
+
+        var offset = this._radius - 30;
+        const targetX = (dX || 0)*offset;
+        const targetY = (dY || 0)*offset;
+
+        this.resetPad();
+        if(time != 0)
+            this._customTween = cc.targetedAction(this._pad, cc.moveTo(time, this._pad.x + targetX, this._pad.y + targetY).easing(easingFunc || cc.easeSineIn()));
+        else
+            this._customTween = cc.targetedAction(this._pad, cc.place(this._pad.x + targetX, this._pad.y + targetY));
+
+        if(autoRun === true)
+            this.runAction(this._customTween);
+
+        return this._customTween;
+    },
+
+    /**
+     * Reseta a posição do 'pad' para o centro.
+     */
+    resetPad: function() {
+        this._pad.cleanup();
+        this._pad.loadDisplayState();
     },
 
     /**

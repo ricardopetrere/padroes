@@ -32,7 +32,7 @@ if (cc.game.config[cc.game.CONFIG_KEY.renderMode] != 1) {
  * Versão atual dos padrões.
  * @type {string}
  */
-pd.version = "2.5";
+pd.version = "2.6";
 
 cc.log("[pd] Padrões Cocos Versão: " + pd.version);
 if(pd.debugMode)
@@ -162,9 +162,8 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
      */
     initWithNamespace: function(ns) {
         this.activeNamespace = ns;
+        ns.tutorialData = [];
         activeGameSpace = ns; // legado - apenas para manter compatível!
-
-        pd.DebugScenes = [];
 
         if(this.context == pd.Delegate.CONTEXT_PALCO && ns.resPath.lastIndexOf("jogo") != -1) {
             if(ns.resPath.lastIndexOf("games") == -1)
@@ -201,7 +200,6 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
             mainScene = FadeWhiteTransition(this.transitionTime, new this.activeNamespace.MainScene());
         }
         this.isTutorialSet = false;
-        pd.delegate.activeNamespace.tutorialData = [];
         cc.director.runScene(mainScene);
         pd.debugger.init();
         pd.debugger.addShortcut("MainScene");

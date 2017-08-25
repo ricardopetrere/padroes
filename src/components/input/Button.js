@@ -94,7 +94,6 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
      */
     ctor: function(normalImage, pressedImage, attr, pressedScale, autoEnable, eventBased, handler, handlerFunc, handlerFuncArgs) {
         this._super();
-        this._setPressed(false);
 
         if(typeof arguments[0] == 'number') { // construtor legado.
             this._legacyCtor.apply(this, arguments);
@@ -115,6 +114,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
                 this.enable();
         }
 
+        this.setPressed(false);
         this.setSpriteFrame(this._normalSpriteFrame);
         return this;
     },
@@ -144,9 +144,9 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
      * @param {string|pd.Button.States} sprite
      */
     changeSpriteFrame: function (sprite) {
-        if (sprite === pd.Button.States.SPRITEFRAME_NORMAL) {
+        if (sprite === pd.Button.States.NORMAL) {
             this.setSpriteFrame(this._normalSpriteFrame);
-        } else if (sprite === pd.Button.States.SPRITEFRAME_PRESSED) {
+        } else if (sprite === pd.Button.States.PRESSED) {
             this.setSpriteFrame(this._pressedSpriteFrame);
         }
     },
@@ -224,13 +224,58 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     },
 
     /**
-     * Altera o indicador do status do botão.
-     * @param {Boolean} isPressed
-     * @private
+     * Muda o estado do botão, animando-o para o estado desejado (útil para demonstrações/tutoriais).
+     * Apenas disponível se o botão estiver desabilitado para interações com o usuário.
+     * @param {Number} time - o tempo da animação de escala.
+     * @param {Boolean} pressed - indica se o botão deve ser pressionado (true) ou solto (false).
+     * @param {Boolean} [autoRun=false] - indica se a ação deve ser rodada no momento em que a função for invocada.
+     * @param {Function} [easingFunc=null] - função de easing para a animação de escala.
+     * @returns {cc.TargetedAction|*}
      */
-    _setPressed: function(isPressed) {
-        this._isPressed = isPressed;
-        this.isGrabbed = isPressed; // legado.
+    animate: function(time, pressed, autoRun, easingFunc) {
+        if(this._isEnabled)
+            cc.warn("[pd.Button] Foi aplicada uma animação à um botão que está ativo para interações com o usuário. Rever!");
+
+        const sequenceSteps = [];
+        if(pressed) {
+            var targetScale = this._pressedScale - 0.05;
+            sequenceSteps.push(cc.callFunc(function() {this.setSpriteFrame(this._pressedSpriteFrame)}, this));
+        }
+        else {
+            targetScale = this._normalScale;
+            sequenceSteps.push(cc.callFunc(function() {this.setSpriteFrame(this._normalSpriteFrame)}, this));
+        }
+
+        if(time != 0)
+            sequenceSteps.push(cc.targetedAction(this, cc.scaleTo(time, targetScale, targetScale).easing(easingFunc || cc.easeSineIn())));
+        else
+            sequenceSteps.push(cc.targetedAction(this, cc.callFunc(function() {this.setScale(targetScale, targetScale)}, this)));
+
+        this._customTween = cc.sequence(sequenceSteps);
+        if(autoRun === true)
+            this.runAction(this._customTween);
+
+        return this._customTween;
+    },
+
+    /**
+     * Seta o status do botão forçadamente.
+     * @param {Boolean} pressed
+     */
+    setPressed: function(pressed) {
+        this._isPressed = pressed;
+        this.isGrabbed = pressed; // legado.
+
+        if(pressed) {
+            this.setSpriteFrame(this._pressedSpriteFrame);
+            this._normalScale = this.getScale();
+            this._pressedScale = this._pressedScale ? this._pressedScale : this._normalScale;
+            this.setScale(this._pressedScale);
+        }
+        else {
+            this.setSpriteFrame(this._normalSpriteFrame);
+            this.setScale(this._normalScale);
+        }
     },
 
     /**
@@ -249,11 +294,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
                 return;
         }
 
-        this.setSpriteFrame(this._pressedSpriteFrame);
-        this._setPressed(true);
-        this._normalScale = this.getScale();
-        this._pressedScale = this._pressedScale ? this._pressedScale : this._normalScale;
-        this.setScale(this._pressedScale);
+        this.setPressed(true);
         this._performCallback(true);
     },
 
@@ -289,9 +330,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
 
         if(this._isPressed) {
             this._touchID = -1;
-            this.setSpriteFrame(this._normalSpriteFrame);
-            this.setScale(this._normalScale);
-            this._setPressed(false);
+            this.setPressed(false);
             if(this._shouldDispatchMouseUpCall || this.isInside(eventOrTouch.getLocationX(), eventOrTouch.getLocationY()))
                 this._performCallback(false);
         }
@@ -304,7 +343,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
      */
     _onKeyDown: function(keyCode, event) {
         if(this._attachedKeyCode == keyCode) {
-            this._setPressed(true);
+            this.setPressed(true);
             this.setSpriteFrame(this._pressedSpriteFrame);
             this._performCallback(true);
         }
@@ -317,7 +356,7 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
      */
     _onKeyUp: function(keyCode, event) {
         if(this._attachedKeyCode == keyCode) {
-            this._setPressed(false);
+            this.setPressed(false);
             this.setSpriteFrame(this._normalSpriteFrame);
             this._performCallback(false);
         }
@@ -343,10 +382,10 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
 });
 
 /**
- *
+ * Estados do botão.
  * @enum {string}
  */
 pd.Button.States = {
-    SPRITEFRAME_NORMAL: "normal",
-    SPRITEFRAME_PRESSED: "pressed"
+    NORMAL: "normal",
+    PRESSED: "pressed"
 };
