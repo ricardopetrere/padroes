@@ -25,16 +25,21 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      * @type {number}
      */
     musicVolume: 1,
-    
+
     /**
-     * Realiza um efeito de fade no volume da música de fundo.
-     * @param {cc.Node} target
-     * @param {Number} duration
-     * @param {Number} from
-     * @param {Number} to
-     * @param {Function} [cb]
+     *
+     * @param {Function} fnc_get - A função de get (getEffectsVolume ou getMusicVolume)
+     * @param {Function} fnc_set - A função de set (setEffectsVolume ou setMusicVolume)
+     * @param {cc.Node} [target] - O objeto que irá executar a ação
+     * @param {Number} duration - A duração do fade
+     * @param {Number} from - o fade inicial
+     * @param {Number} to - o fade final
+     * @param {Function} [cb] - A função para executar depois do fade
+     * @private
      */
-    fadeMusic: function(target, duration, from, to, cb) {
+    _fade: function (fnc_get, fnc_set, target, duration, from, to, cb) {
+        if (from == null)
+            from = fnc_get();
         duration = duration * 100;
         var d = 1 / duration;
         var elapsed = 0;
@@ -43,15 +48,33 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
             new cc.Repeat(new cc.Sequence(
                 new cc.DelayTime(0.01),
                 new cc.CallFunc(function(){
-                    pd.audioEngine.setMusicVolume(from + (to - from) * elapsed.toFixed(3));
+                    fnc_set(from + (to - from) * elapsed.toFixed(3));
                     elapsed += d;
-                },target)
+                })
             ), duration)
         );
         if (cb) {
             sequencia.push(new cc.CallFunc(cb, target));
         }
+        if (!(target instanceof cc.Node))
+            target = pd.currentScene;
         target.runAction(new cc.Sequence(sequencia));
+    },
+
+    fadeEffect: function (target, duration, from, to, cb) {
+        this._fade(pd.audioEngine.getEffectsVolume, pd.audioEngine.setEffectsVolume, target, duration, from, to, cb);
+    },
+    
+    /**
+     * Realiza um efeito de fade no volume da música de fundo.
+     * @param {cc.Node} [target] - O objeto que irá executar a ação
+     * @param {Number} duration - A duração do fade
+     * @param {Number} from - o fade inicial
+     * @param {Number} to
+     * @param {Function} [cb]
+     */
+    fadeMusic: function(target, duration, from, to, cb) {
+        this._fade(pd.audioEngine.getMusicVolume, pd.audioEngine.setMusicVolume, target, duration, from, to, cb);
     },
     
     /**
