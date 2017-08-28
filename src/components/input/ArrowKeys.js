@@ -49,9 +49,9 @@ pd.ArrowKeys = cc.Layer.extend({/** @lends pd.ArrowKeys#**/
         if(hasRightButton)
             this.rightButton = this._addButton("keyRight0001", "keyRight0002", {x: this.spacing, y: 0}, pd.Keys.RIGHT);
         if(hasUpButton)
-            this.upButton = this._addButton("keyUp0001", "keyUp0002", {x: 0, y: this.spacing - 20}, pd.Keys.UP);
+            this.upButton = this._addButton("keyUp0001", "keyUp0002", {x: 0, y: this.spacing }, pd.Keys.UP);
         if(hasDownButton)
-            this.downButton = this._addButton("keyDown0001", "keyDown0002", {x: 0, y: -20}, pd.Keys.DOWN);
+            this.downButton = this._addButton("keyDown0001", "keyDown0002", {x: 0, y: 0}, pd.Keys.DOWN);
 
         if (!hasDownButton && !hasUpButton) {
             this.leftButton.x += (this.spacing / 2);

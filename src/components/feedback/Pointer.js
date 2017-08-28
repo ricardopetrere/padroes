@@ -2,6 +2,7 @@
  * Created by Ryan Balieiro on 24/08/17.
  * @class {pd.Pointer}
  * @extends {pd.Animation}
+ * @mixes {pd.decorators.ResetableNode}
  * @classdesc Implementação de uma seta de mouse para feedbacks de indicação/clique.
  *            O componente é adaptativo, transformando-se em uma 'mão' quando estiver em uma aplicação mobile.
  */
@@ -41,7 +42,7 @@ pd.Pointer = pd.Animation.extend(pd.decorators.ResetableNode).extend({/**@lends 
 
     /**
      * Seta a duração do feedback de clique.
-     * @param clickDuration
+     * @param {Number} clickDuration
      */
     setClickDuration: function(clickDuration) {
         this._clickDuration = clickDuration;
@@ -95,6 +96,7 @@ pd.Pointer = pd.Animation.extend(pd.decorators.ResetableNode).extend({/**@lends 
 
         return this._customTween;
     },
+
     /**
      * Anima o ponteiro, de maneira relativa.
      * @param {Number} time - o tempo da animação.

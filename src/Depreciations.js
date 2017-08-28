@@ -19,7 +19,36 @@ isPaused = pd.delegate.isPaused;
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.createSprite}.
  * A função ainda é a mesma, apenas foi dado um nome mais claro à ela.
  */
-pd.cObject = pd.createSprite;
+pd.cObject = pd.legacyCreateSprite;
+
+/**
+ * Cria uma sprite.
+ * @param {String} spriteName
+ * @param {Number} x
+ * @param {Number} y
+ * @param {cc.Node} parentNode
+ * @param {Number} zOrder
+ * @param {String} [name]
+ * @param {boolean} [addToEditor]
+ * @returns {cc.Sprite}
+ */
+pd.legacyCreateSprite = function(spriteName, x, y, parentNode, zOrder, name, addToEditor){
+    var SF = pd.getSpriteFrame(spriteName);
+    if (!SF)
+        SF = spriteName;
+    const obj = new cc.Sprite(SF);
+    obj.setPosition(x, y);
+    obj.name = name;
+    zOrder = zOrder || 0;
+
+    if(parentNode != undefined && parentNode != null)
+        parentNode.addChild(obj, zOrder);
+
+    if(!cc.sys.isNative && pd.debugMode && addToEditor)
+        pd.Editor.add(obj);
+
+    return obj;
+};
 
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.createText}.
@@ -568,3 +597,13 @@ pd.TypewriterLabel.prototype.startUpdate = pd.TypewriterLabel.prototype.start;
 pd.TextCreator.setFadeType = function(target, displayingLinesAmount){
     target.config(displayingLinesAmount);
 };
+
+/**
+ * @deprecated - desde a versão 2.6 - utilizar {@link pd.Button.States.NORMAL}
+ */
+pd.Button.States.SPRITEFRAME_NORMAL = "normal";
+
+/**
+ * @deprecated - desde a versão 2.6 - utilizar {@link pd.Button.States.PRESSED}
+ */
+pd.Button.States.SPRITEFRAME_PRESSED = "pressed";

@@ -139,30 +139,30 @@ pd.getSpriteFrame = function(spriteFrameName) {
 };
 
 /**
- * Cria uma sprite.
- * @param {String} spriteName
- * @param {Number} x
- * @param {Number} y
- * @param {cc.Node} parentNode
- * @param {Number} zOrder
- * @param {String} [name]
- * @param {boolean} [addToEditor]
- * @returns {cc.Sprite}
+ * Cria e configura uma sprite.
+ * @param {String} spriteOrSpriteFrameName
+ * @param {Object} [attr=null]
+ * @param {cc.Node} [parentNode=null]
+ * @param {Number} [localZOrder=null]
+ * @param {String} [editorName=null]
+ * @returns {*}
  */
-pd.createSprite = function(spriteName, x, y, parentNode, zOrder, name, addToEditor){
-    var SF = pd.getSpriteFrame(spriteName);
-    if (!SF)
-        SF = spriteName;
-    const obj = new cc.Sprite(SF);
-    obj.setPosition(x, y);
-    obj.name = name;
-    zOrder = zOrder || 0;
+pd.createSprite = function(spriteOrSpriteFrameName, attr, parentNode, localZOrder, editorName) {
+    if(typeof arguments[1] == 'number')
+        return pd.legacyCreateSprite.apply(pd, arguments);
 
-    if(parentNode != undefined && parentNode != null)
-        parentNode.addChild(obj, zOrder);
+    const target = pd.getSpriteFrame(spriteOrSpriteFrameName) || spriteOrSpriteFrameName;
+    const obj = new cc.Sprite(target);
 
-    if(!cc.sys.isNative && pd.debugMode && addToEditor)
+    if(attr)
+        obj.attr(pd.parseAttr(attr));
+    if(parentNode)
+        parentNode.addChild(obj, localZOrder || 0);
+
+    if(!cc.sys.isNative && pd.debugMode && editorName) {
+        obj.name = editorName;
         pd.Editor.add(obj);
+    }
 
     return obj;
 };
@@ -181,9 +181,7 @@ pd.createSprite = function(spriteName, x, y, parentNode, zOrder, name, addToEdit
  * @returns {cc.LabelTTF}
  */
 pd.createText = function(fontPath, fontName, x, y, fontSize, color, text, alignment, parentNode) {
-    if(!text)
-        text = "";
-    const labelTTF = new cc.LabelTTF(text, cc.sys.isNative ? fontPath : fontName, fontSize);
+    const labelTTF = new cc.LabelTTF(text || "", cc.sys.isNative ? fontPath : fontName, fontSize);
     labelTTF.setPosition(x, y);
     labelTTF.fillStyle = color || cc.color(0, 0, 0, 255);
 
