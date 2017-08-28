@@ -1,45 +1,30 @@
 /**
- * Created by ??? on ???.
- *
+ * Created by Ryan Balieiro on 24/08/17.
  * @class {pd.TutorialLayer}
  * @extends {cc.Layer}
  * @classdesc Classe base para a implementação de layers de tutorial.
  */
 pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
-    /**
-     * @type {pd.Animation}
-     */
-    accelerometer:null,
-    /**
-	 * @type {pd.Animation}
-     */
-	btnArrowUp: null,
-    /**
-     * @type {pd.Animation}
-     */
-	btnArrowDown: null,
-    /**
-     * @type {pd.Animation}
-     */
-	btnArrowLeft:null,
-    /**
-     * @type {pd.Animation}
-     */
-	btnArrowRight:null,
-    /**
-     * @type {pd.Animation}
-     */
-    btnSpace:null,
-    /**
-	 * Vetor com referências para todas as teclas descritas acima.
-     * @type {pd.Animation[]}
-     */
+	/**
+	 * @type {pd.ArrowKeys}
+	 */
 	arrowKeys:null,
-    /**
-	 * Setinha do mouse (ou dedo, se for mobile).
-	 * @type {pd.Animation}
-     */
+	/**
+	 * @type {pd.Pointer}
+	 */
 	pointer:null,
+	/**
+	 * @type {pd.Joystick}
+	 */
+	joystick:null,
+	/**
+	 * @type {pd.Tablet}
+	 */
+	tablet:null,
+	/**
+	 * @type {pd.Button}
+	 */
+	spaceBar:null,
 	/**
 	 * Indica se a página está sendo exibida pelo tutorial e sua animação respecitva está rodando.
 	 * @type {Boolean}
@@ -51,33 +36,6 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	 */
 	pageID:-1,
 
-	/////////////////// DEPRECIATIONS //////////////////////
-    /**
-	 * @deprecated - utilizar {@link pd.TutorialLayer.btnArrowUp}.
-     */
-	tecla_cima:null,
-    /**
-	 * @deprecated - utilizar {@link pd.TutorialLayer.btnArrowDown}.
-     */
-	tecla_baixo:null,
-    /**
-	 * @deprecated - utilizar {@link pd.TutorialLayer.btnArrowLeft}.
-     */
-	tecla_esquerda:null,
-    /**
-	 * @deprecated - utilizar {@link pd.TutorialLayer.btnArrowRight}.
-     */
-	tecla_direita:null,
-    /**
-	 * @deprecated - utilizar {@link pd.TutorialLayer.arrowKeys}.
-     */
-	vTeclas:null,
-    /**
-	 * @deprecated - utilizar {@link pd.TutorialLayer.pointer}.
-     */
-	ponteiro:null,
-	///////////////////////////////////////////////////////////
-
 	/**
 	 * Construtor padrao - informar uma string ou um sprite frame para o texto inferior (instrução da página).
 	 * @constructs
@@ -88,152 +46,99 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 		this._createBottomText(txt);
 	},
 
-    /**
-     * Cria a animação do acelerômetro e adiciona-a à layer
-     * @param {Number} posX
-     * @param {Number} posY
-     */
-    createAccelerometer: function (posX, posY) {
-        this.accelerometer = new pd.Animation();
-        this.accelerometer.addAnimation('normal', 1, 1, 'accel_lateral');
-        this.accelerometer.addAnimation('left', 1, 10, 'accel_lateral');
-        this.accelerometer.addAnimation('right', 11, 20, 'accel_lateral');
-        this.accelerometer.addAnimation('up', 1, 10, 'accel_vertical');
-        this.accelerometer.addAnimation('down', 11, 20, 'accel_vertical');
-        this.accelerometer.setPosition(posX, posY);
-        this.addChild(this.accelerometer, pd.ZOrders.TUTORIAL_BUTTON);
-    },
-
-    /**
-	 * Cria as setas do teclado e adiciona-as à layer.
-     * @param offset {cc.Point} - ajuste relativo da posição das teclas.
-     * @returns {Array}
-     */
-	createArrowKeys: function(offset) {
-		this.btnArrowUp = this._createButton("keyUp", 0, 60);
-		this.btnArrowDown = this._createButton("keyDown", 0, 0);
-		this.btnArrowLeft = this._createButton("keyLeft", -60, 0);
-		this.btnArrowRight = this._createButton("keyRight", 60, 0);
-
-		this.arrowKeys = [this.btnArrowLeft, this.btnArrowUp, this.btnArrowRight, this.btnArrowDown];
-
-		////////// LEGADO: ///////////////
-		this.tecla_cima = this.btnArrowUp;
-		this.tecla_esquerda = this.btnArrowLeft;
-		this.tecla_baixo = this.btnArrowDown;
-		this.tecla_direita = this.btnArrowRight;
-		this.vTeclas = this.arrowKeys;
-		///////////////////////////////////
-
-		for(var i = 0; i < this.arrowKeys.length; i++) {
-			this.arrowKeys[i].setScale(0.75);
-			this.arrowKeys[i].x += offset.x;
-			this.arrowKeys[i].y += offset.y;
+	/**
+	 * Cria, configura e adiciona um feedback de input na layer de tutorial.
+	 * @param {pd.TutorialLayer.InputFeedbacks} feedbackType
+	 * @param {Number} posX - posição em X.
+	 * @param {Number} posY - posição em Y.
+	 * @param {cc.Node} [container=null] - o node em que o feedback será adicionado. Se for null, o feedback será adicionado ao 'this'.
+	 * @returns {cc.Node}
+	 */
+	_createInputFeedback: function(feedbackType, posX, posY, container) {
+		switch(feedbackType) {
+			case pd.TutorialLayer.InputFeedbacks.POINTER:
+				this.pointer = new pd.Pointer();
+				this.pointer.setPosition(posX, posY);
+				this.pointer.saveDisplayState();
+				break;
+			case pd.TutorialLayer.InputFeedbacks.TABLET:
+				this.tablet = new pd.Tablet();
+				this.tablet.setPosition(posX, posY);
+				break;
+			case pd.TutorialLayer.InputFeedbacks.ARROW_KEYS:
+				this.arrowKeys = new pd.ArrowKeys(true, true, true, true, {x:posX, y:posY}, false);
+				for(var i in this.arrowKeys.keys)
+					this.arrowKeys.keys[i].setDisabledOpacity(255);
+				break;
+			case pd.TutorialLayer.InputFeedbacks.JOYSTICK:
+				this.joystick = new pd.Joystick({x:posX, y:posY}, false, false);
+				this.joystick.setColor(cc.color(255, 0, 0));
+				break;
+			case pd.TutorialLayer.InputFeedbacks.SPACE_BAR:
+				this.spaceBar = new pd.Button("keySpace0001.png", "keySpace0002.png", {x:posX, y:posY}, 1, false);
+				break;
 		}
 
-		return this.arrowKeys;
+		const node = this[feedbackType];
+		container = container || this;
+		node.setScale(1/container.scaleX, 1/container.scaleY);
+		container.addChild(node);
+		return node;
 	},
-
-    /**
-     * Cria um botão default, podendo ou não colocar uma imagem ou texto como label.
-     * @param {Number} posX
-     * @param {Number} posY
-     * @param {cc.Sprite|cc.LabelTTF} [sprite = null] Imagem ou LabelTTF para colocar como "texto" do botão.
-     * @returns {pd.Animation}
-     */
-    createNakedButton: function (posX, posY, sprite) {
-        var botao = this._createButton("keyNaked", posX, posY);
-        if (sprite) {
-            botao.label = sprite;
-            botao.label.setPosition(botao.width / 2, botao.height / 2);
-            botao.addChild(botao.label, pd.ZOrders.TUTORIAL_BUTTON);
-        }
-    },
-
-    /**
-	 * Cria o ponteiro (setinha do mouse ou mãozinha, se for mobile).
-     * @param {cc.Point} initialPosition
-     */
-	createPointer:function(initialPosition) {
-		var frameName = "mouse" in cc.sys.capabilities ? "seta_" : "dedo_";
-		
-		this.pointer = new pd.Animation();
-		this.pointer.addAnimation('normal', 1, 1, frameName);
-		this.pointer.addAnimation('pressed', 2, 2, frameName);
-		this.pointer.setPosition(initialPosition.x, initialPosition.y);
-		this.addChild(this.pointer, pd.ZOrders.TUTORIAL_POINTER);
-		this.pointer.setAnchorPoint(0,1);
-		this.pointer.initialPosition = initialPosition;
-
-		this.ponteiro = this.pointer; //legado
-	},
-
-    /**
-     * Cria a barra de espaço e adiciona-a à layer.
-     * @param {Number} posX
-     * @param {Number} posY
-     */
-    createSpaceButton: function (posX, posY) {
-        this.btnSpace = this._createButton('keySpace', posX, posY);
-        this.btnSpace.setScale(0.7);
-    },
 
 	/**
-	 * Cria um botão (apenas uso interno!)
-	 * @param {String} frameName
-	 * @param {Number} posX
-	 * @param {Number} posY
-	 * @returns {pd.Animation}
-	 * @private
+	 * Cria o ponteiro/mãozinha.
+	 * @param {Number} posX - posição em X.
+	 * @param {Number} posY - posição em Y.
+	 * @param {cc.Node} [container=null] - o node em que o feedback será adicionado. Se for null, o feedback será adicionado ao 'this'.
+	 * @returns {pd.Pointer}
 	 */
-	_createButton: function(frameName, posX, posY) {
-		const btn = new pd.Animation();
-		btn.addAnimation('normal', 1, 1, frameName);
-		btn.addAnimation('pressed', 2, 2, frameName);
-		btn.setPosition(posX, posY);
-		this.addChild(btn, pd.ZOrders.TUTORIAL_BUTTON);
-		return btn;
+	createPointer: function(posX, posY, container) {
+		this._createInputFeedback(pd.TutorialLayer.InputFeedbacks.POINTER, posX, posY, container);
 	},
 
-    /**
-	 * Cria o texto inferior.
-     * @param {String|cc.SpriteFrame} txt
-	 * @private
-     */
-	_createBottomText: function(txt) {
-		if(!pd.delegate.activeNamespace.tutorialData.txtOffSetY)
-			pd.delegate.activeNamespace.tutorialData.txtOffSetY = 0;
-
-		const label = pd.cText(0, 0, txt, "Calibri", 25);
-		label.setPosition(512, 140 + pd.delegate.activeNamespace.tutorialData.txtOffSetY);
-		this.addChild(label, pd.ZOrders.TUTORIAL_PAGE_BOTTOM_TEXT);
+	/**
+	 * Cria as arrow keys.
+	 * @param {Number} posX - posição em X.
+	 * @param {Number} posY - posição em Y.
+	 * @param {cc.Node} [container=null] - o node em que o feedback será adicionado. Se for null, o feedback será adicionado ao 'this'.
+	 * @returns {pd.ArrowKeys}
+	 */
+	createArrowKeys: function(posX, posY, container) {
+		this._createInputFeedback(pd.TutorialLayer.InputFeedbacks.ARROW_KEYS, posX, posY, container);
 	},
 
-    /**
-	 * Mata e reseta todas as animaçoes dos componentes internos. <br />
-	 * Sobescrever esta função para parar e resetar componentes customizados.
-	 * @virtual
-     */
-	stop: function() {
-		if(this.arrowKeys){
-			for(var i = 0; i < 4; i++){
-				this.arrowKeys[i].changeAndStop('normal', false);
-			}
-		}
-
-		if(this.pointer){
-			this.pointer.changeAndStop('normal', false);
-			this.pointer.x = this.pointer.initialPosition.x;
-			this.pointer.y = this.pointer.initialPosition.y;
-		}
+	/**
+	 * Cria o tablet para feedbacks de acelerômetro.
+	 * @param {Number} posX - posição em X.
+	 * @param {Number} posY - posição em Y.
+	 * @param {cc.Node} [container=null] - o node em que o feedback será adicionado. Se for null, o feedback será adicionado ao 'this'.
+	 * @returns {pd.Tablet}
+	 */
+	createTablet: function(posX, posY, container) {
+		this._createInputFeedback(pd.TutorialLayer.InputFeedbacks.TABLET, posX, posY, container);
 	},
 
-    /**
-	 * Roda a animação da página.
-	 * @virtual.
-     */
-	run: function() {
+	/**
+	 * Cria o joystick.
+	 * @param {Number} posX - posição em X.
+	 * @param {Number} posY - posição em Y.
+	 * @param {cc.Node} [container=null] - o node em que o feedback será adicionado. Se for null, o feedback será adicionado ao 'this'.
+	 * @returns {pd.Joystick}
+	 */
+	createJoystick: function(posX, posY, container) {
+		this._createInputFeedback(pd.TutorialLayer.InputFeedbacks.JOYSTICK, posX, posY, container);
+	},
 
+	/**
+	 * Cria a barra de espaço.
+	 * @param {Number} posX - posição em X.
+	 * @param {Number} posY - posição em Y.
+	 * @param {cc.Node} [container=null] - o node em que o feedback será adicionado. Se for null, o feedback será adicionado ao 'this'.
+	 * @returns {pd.Joystick}
+	 */
+	createSpaceBar: function(posX, posY, container) {
+		this._createInputFeedback(pd.TutorialLayer.InputFeedbacks.SPACE_BAR, posX, posY, container);
 	},
 
 	/**
@@ -249,7 +154,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 		this.isActiveAndRunning = running;
 		if(!this.isActiveAndRunning) {
 			this.cleanup();
-			this._cleanAllRunningActions(this);
+			pd.cleanAllRunningActions(this);
 			this.unscheduleUpdate();
 			if(shouldResetAfterStopping != false)
 				this.stop();
@@ -260,27 +165,95 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 	},
 
 	/**
-	 * Limpa todas as ações rodando na layer recursivamente.
-	 * @param {cc.Node} node
-	 * @private
+	 * Mata e reseta todas as animaçoes dos componentes internos. <br />
+	 * Sobescrever esta função para parar e resetar componentes customizados.
+	 * @virtual
 	 */
-	_cleanAllRunningActions: function(node) {
-		const children = node.getChildren();
+	stop: function() {
+		if(this.pointer) {
+			this.pointer.cleanup();
+			this.pointer.loadDisplayState();
+			this.pointer.setAsReleased();
+		}
 
-		for(var i = 0; i < children.length ; i++) {
-			var child = children[i];
-			if(child) {
-				child.cleanup();
-				this._cleanAllRunningActions(child);
+		if(this.arrowKeys) {
+			this.arrowKeys.cleanup();
+			for(var i in this.arrowKeys.keys) {
+				var key = this.arrowKeys.keys[i];
+				key.cleanup();
+				key.setPressed(false);
 			}
+		}
+
+		if(this.tablet) {
+			this.tablet.cleanup();
+			this.tablet.changeAndStop('normal');
+		}
+
+		if(this.joystick) {
+			this.joystick.resetPad();
 		}
 	},
 
-    /**
+	/**
+	 * Roda a animação da página.
+	 * @virtual.
+	 */
+	run: function() {},
+
+	/**
 	 * Reseta a animação.
-     */
+	 */
 	reset: function() {
 		this.setStatus(false);
 		this.setStatus(true);
+	},
+
+	/**
+	 * Cria o texto inferior.
+	 * @param {String|cc.SpriteFrame} txt
+	 * @private
+	 */
+	_createBottomText: function(txt) {
+		if(!pd.delegate.activeNamespace.tutorialData.txtOffSetY)
+			pd.delegate.activeNamespace.tutorialData.txtOffSetY = 0;
+
+		const label = pd.cText(0, 0, txt, "Calibri", 25);
+		label.setPosition(512, 140 + pd.delegate.activeNamespace.tutorialData.txtOffSetY);
+		this.addChild(label, pd.ZOrders.TUTORIAL_PAGE_BOTTOM_TEXT);
+	},
+
+	/**
+	 * @param {Number} x
+	 * @param {Number} y
+	 * @param {String|cc.SpriteFrame} txt
+	 * @param {String} font
+	 * @param {Number} size
+	 * @returns {*}
+	 * @private
+	 */
+	_getText: function(x, y, txt, font, size) {
+		if (typeof txt == "string") {
+			var text = new cc.LabelTTF(txt, font, size);
+			text.setFontFillColor(new cc.Color(0, 0, 0));
+		}
+		else {
+			text = new cc.Sprite(txt);
+		}
+		text.setPosition(x, y);
+		text.setAnchorPoint(0.5, 1);
+		return text;
 	}
 });
+
+/**
+ * Nodes que contém feedback de inputs.
+ * @enum {String}
+ */
+pd.TutorialLayer.InputFeedbacks = {
+	POINTER		: 	"pointer",
+	JOYSTICK	: 	"joystick",
+	ARROW_KEYS	: 	"arrowKeys",
+	TABLET		: 	"tablet",
+	SPACE_BAR	:	"spaceBar"
+};

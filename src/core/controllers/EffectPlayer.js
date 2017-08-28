@@ -15,21 +15,7 @@ CustomEventVectorList = [];
  * CustomEventVectorList = [];
  */
 
-/*
- * O long effect player eh para tocar especialmente efeitos que tenham mais de 5s
- * mas tambem pode ser utilizado em qualquer efeito desejado
- * Vantagens de usar o LongEffectPlayer é que ele possui callback pra saber quando o efeito acabou
- */
-pd.playSimpleEffect = function(nome, loop, volume){
-	if(volume == null || volume == undefined)
-		volume = 1;
-	var audioId = null;
-	if(cc.sys.isNative)
-		audioId = pd.audioEngine.playEffect(nome, loop, 1, 0, volume);
-	else
-		audioId = pd.audioEngine.playEffect(nome, loop, volume);
-	return audioId;
-}
+
 pd.createLongEffectPlayer = function(nomePadrao, vetorDuracao, layerPai, callBack){
 	var effectSounds;
 	var longPlayer = new longEffectPlayer();
@@ -79,6 +65,7 @@ pd.longEffectPlayer = cc.Node.extend(
 	 */
 	init:function (longEffectVector, valor) {
 		this.inicializado = true;
+		cc.audioEngine
 		if(this.id == null){
 			this.id = Singleton_effectPlayerId;
 			Singleton_effectPlayerId++;
