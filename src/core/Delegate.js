@@ -135,6 +135,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
         }
 
         cc.loader.loadJs(ns.srcPath, ns.jsList, function() {
+            cc.log("[pd.Delegate] Lista de arquivos carregados: "+JSON.stringify(ns.jsList));
             if(ns.onInit)
                 ns.onInit.apply(ns);
 

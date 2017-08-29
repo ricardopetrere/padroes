@@ -5,7 +5,6 @@
  * @extends cc.Sprite
  * @classdesc Protótipo base para componentes com animação.
  */
-
 pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     /**
      * Indica se a animação atual está rodando.
@@ -80,13 +79,17 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
 
     /**
      * Adiciona uma animação à lista.
-     * @param {String} name - um nome customizado para a animação.
+     * @param {String|pd.AnimationData} nameOrAnimationData - um nome customizado para a animação, ou um objeto contendo todas as informações da animação.
      * @param {Number} firstFrame - o frame inicial da animação.
      * @param {Number} lastFrame - o último frame da animação.
      * @param {String} spriteFrameNamePattern - o padrão de nome da animação no spriteFrameCache.
      * @param {Number} speed - a velocidade da animação em frames/segundo.
      */
-    addAnimation: function(name, firstFrame, lastFrame, spriteFrameNamePattern, speed) {
+    addAnimation: function(nameOrAnimationData, firstFrame, lastFrame, spriteFrameNamePattern, speed) {
+        if (nameOrAnimationData instanceof pd.AnimationData) {
+            this.addAnimation(nameOrAnimationData.name, nameOrAnimationData.ini_frame, nameOrAnimationData.last_frame, nameOrAnimationData.anim_name, nameOrAnimationData.speed);
+            return;
+        }
         const frames = [];
 
         for(var i = firstFrame ; i <= lastFrame ; i++) {
@@ -96,9 +99,9 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
         var animation = new cc.Animation(frames, 1/this.defaultSpeed);
         pd.delegate.retain(animation);
 
-        this.animations.push({name: name || this.animations.length + 1, animation: animation, numFrames: lastFrame - firstFrame + 1, speed: speed || this.defaultSpeed});
+        this.animations.push({name: nameOrAnimationData || this.animations.length + 1, animation: animation, numFrames: lastFrame - firstFrame + 1, speed: speed || this.defaultSpeed});
         if(this.animations.length == 1)
-            this.changeAndStop(name);
+            this.changeAndStop(nameOrAnimationData);
     },
 
     /**
@@ -371,4 +374,71 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
         const staticImg = this.getAnimation(targetFrame).getFrames()[targetInnerFrame || 0].getSpriteFrame();
         this.setSpriteFrame(staticImg);
     }
+});
+
+/**
+ * @class
+ * @param {String} name
+ * @param {Number} ini_frame
+ * @param {Number} last_frame
+ * @param {Number} [speed]
+ * @param {String} [anim_name]
+ * @extends cc.Class
+ * @classdesc Estrutura-esqueleto de uma animação a ser usada em {@link jogo4av4geo1.ANIMACOES}
+ */
+pd.AnimationData = cc.Class.extend({
+    /**
+     * Nome da animação a ser informada em {@link pd.Animation.change}
+     * @type {String}
+     */
+    name: "",
+    /**
+     * Frame inicial da animação (index do primeiro arquivo de imagem da animação. <br/>
+     * Ex: no arquivo 'imagem0005.png', o index é 5
+     * @type {Number}
+     */
+    ini_frame: 0,
+    /**
+     * Frame final da animação (index do último arquivo de imagem da animação. <br/>
+     * Ex: no arquivo 'imagem0005.png', o index é 5
+     * @type {Number}
+     */
+    last_frame: 0,
+    /**
+     * Taxa de quadros por segundo desta animação
+     * @type {Number}
+     */
+    speed: 24,
+    /**
+     * Padrão de nome dos arquivos de imagem da animação <br/>
+     * Ex: no arquivo 'imagem0005.png', o padrão de nome é 'imagem'
+     * @type {String}
+     */
+    anim_name: "",
+    /**
+     * @constructs
+     * @param {String} name
+     * @param {Number} ini_frame
+     * @param {Number} last_frame
+     * @param {Number} [speed]
+     * @param {String} [anim_name]
+     */
+    ctor: function (name, ini_frame, last_frame, speed, anim_name) {
+        this.name = name;
+        this.ini_frame = ini_frame;
+        this.last_frame = last_frame;
+        this.speed = speed || 24;
+        this.anim_name = anim_name || name;
+    },
+
+    /**
+     * @param frame {Number}
+     * @returns {null|String}
+     */
+    getAnimationFrameName: function (frame) {
+        if (frame < this.ini_frame || frame > this.last_frame)
+            return null;
+        var retorno = this.anim_name + pd.numberToString(frame) + ".png";
+        return retorno;
+    },
 });
