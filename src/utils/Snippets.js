@@ -255,6 +255,16 @@ pd.parseAttr = function(attr) {
         attr.scaleX = attr.scale;
         attr.scaleY = attr.scale;
     }
+    if(attr.hasOwnProperty("rotation")) {
+        attr._rotationX = attr.rotation;
+        attr._rotationY = attr.rotation;
+    }
+    if(attr.hasOwnProperty("flippedX")) {
+        attr._flippedX = attr.flippedX;
+    }
+    if(attr.hasOwnProperty("flippedY")) {
+        attr._flippedY = attr.flippedY;
+    }
 
     return attr;
 };
@@ -704,5 +714,18 @@ pd.cleanAllRunningActions = function(node) {
             pd.cleanAllRunningActions(child);
         }
     }
+};
+
+/**
+ * Retorna uma estrutura com os dados da versão dos padrões. Útil para fazer workarounds de código em runtime
+ * @returns {{major: Number, minor: Number, bugfix: {*|Number}}}
+ */
+pd.getVersionInfo = function () {
+    var array = pd.version.split('.');
+    return {
+        major: array[0],
+        minor: array[1],
+        bugfix: array[2] || 0//Caso não haja
+    };
 };
 //</editor-fold>
