@@ -2,11 +2,6 @@
  * Created by Ryan Balieiro on 22/05/17.
  * Ponto de entrada da biblioteca - define o namespace 'pd'.
  * @namespace pd
- *
- * Lista de pendências:
- * - transformar as arrow keys e os botões de interface (pause button e exit button) em pd.StandardButton.
- * - alterar a pd.TutorialLayer para criar as 'teclas' no formato novo.
- * - inserir um método para criar um joystick na pd.TutorialLayer.
  */
 
 cc.game.config.jsList = [
@@ -15,7 +10,6 @@ cc.game.config.jsList = [
     "src/core/controllers/AudioEngine.js",
     "src/core/controllers/Debugger.js",
     "src/core/controllers/EffectPlayer.js",
-    "src/core/controllers/TextCreator.js",
     "src/core/controllers/InputManager.js",
     "src/utils/Transitions.js",
     "src/utils/Snippets.js",
@@ -23,12 +17,16 @@ cc.game.config.jsList = [
     "src/components/prototypes/Scenes.js",
     "src/components/prototypes/Animation.js",
     "src/components/prototypes/TutorialLayer.js",
+    "src/components/prototypes/TypewriterLabel.js",
     "src/components/input/Button.js",
     "src/components/input/Joystick.js",
-    "src/components/input/CustomInputSources.js",
+    "src/components/input/StandardButton.js",
+    "src/components/input/ArrowKeys.js",
     "src/components/ui/Tutorial.js",
     "src/components/ui/GameOverLayer.js",
     "src/components/ui/PauseLayer.js",
+    "src/components/feedback/Pointer.js",
+    "src/components/feedback/Tablet.js",
     "src/loading/LoaderScene.js",
     "src/loading/Loader.js",
     "src/Depreciations.js"].concat((!cc.sys.isNative ?

@@ -28,8 +28,8 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
 
     /**
      *
-     * @param {Function} fnc_get - A função de get (getEffectsVolume ou getMusicVolume)
-     * @param {Function} fnc_set - A função de set (setEffectsVolume ou setMusicVolume)
+     * @param {Function} getterFunction - A função de get (getEffectsVolume ou getMusicVolume)
+     * @param {Function} setterFunction - A função de set (setEffectsVolume ou setMusicVolume)
      * @param {cc.Node} [target] - O objeto que irá executar a ação
      * @param {Number} duration - A duração do fade
      * @param {Number} from - o fade inicial
@@ -37,28 +37,28 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      * @param {Function} [cb] - A função para executar depois do fade
      * @private
      */
-    _fade: function (fnc_get, fnc_set, target, duration, from, to, cb) {
+    _fade: function (getterFunction, setterFunction, target, duration, from, to, cb) {
         if (from == null)
-            from = fnc_get();
+            from = getterFunction();
         duration = duration * 100;
         var d = 1 / duration;
         var elapsed = 0;
-        var sequencia = [];
-        sequencia.push(
+        var sequenceSteps = [];
+        sequenceSteps.push(
             new cc.Repeat(new cc.Sequence(
                 new cc.DelayTime(0.01),
                 new cc.CallFunc(function(){
-                    fnc_set(from + (to - from) * elapsed.toFixed(3));
+                    setterFunction(from + (to - from) * elapsed.toFixed(3));
                     elapsed += d;
                 })
             ), duration)
         );
         if (cb) {
-            sequencia.push(new cc.CallFunc(cb, target));
+            sequenceSteps.push(new cc.CallFunc(cb, target));
         }
         if (!(target instanceof cc.Node))
             target = pd.currentScene;
-        target.runAction(new cc.Sequence(sequencia));
+        target.runAction(new cc.Sequence(sequenceSteps));
     },
 
     fadeEffect: function (target, duration, from, to, cb) {
@@ -74,28 +74,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      * @param {Function} [cb]
      */
     fadeMusic: function(target, duration, from, to, cb) {
-        this._fade(pd.audioEngine.getMusicVolume, pd.audioEngine.setMusicVolume, target, duration, from, to, cb)
-        // if (from == null)
-        //     from = pd.audioEngine.getMusicVolume();
-        // duration = duration * 100;
-        // var d = 1 / duration;
-        // var elapsed = 0;
-        // var sequencia = [];
-        // sequencia.push(
-        //     new cc.Repeat(new cc.Sequence(
-        //         new cc.DelayTime(0.01),
-        //         new cc.CallFunc(function(){
-        //             pd.audioEngine.setMusicVolume(from + (to - from) * elapsed.toFixed(3));
-        //             elapsed += d;
-        //         })
-        //     ), duration)
-        // );
-        // if (cb) {
-        //     sequencia.push(new cc.CallFunc(cb, target));
-        // }
-        // if (!(target instanceof cc.Node))
-        //     target = pd.currentScene;
-        // target.runAction(new cc.Sequence(sequencia));
+        this._fade(pd.audioEngine.getMusicVolume, pd.audioEngine.setMusicVolume, target, duration, from, to, cb);
     },
     
     /**
@@ -163,7 +142,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
         if (music && cc.audioEngine.willPlayMusic()) {
             cc.audioEngine.stopMusic();
         }
-        this._play(music, loop, volume, "playMusic", "setMusicVolume")
+        this._play(music, loop, volume, "playMusic", "setMusicVolume");
     },
 
     /**

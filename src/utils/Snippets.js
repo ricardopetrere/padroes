@@ -103,7 +103,7 @@ pd.numberToString = function(number, minLength) {
     return str;
 };
 //</editor-fold>
-//<editor-fold desc="#Randomization">
+//<editor-fold desc="#Math">
 /**
  * Retorna um número aleatório dentro de um intervalo pré-definido.
  * @type {Function}
@@ -113,6 +113,16 @@ pd.numberToString = function(number, minLength) {
  */
 pd.randomInterval = function(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+/**
+ * Retorna um número limitando o seu valor ao range especificado.
+ * @param {Number} min - o limite inferior.
+ * @param {Number} max - o limite superior.
+ * @returns {Number}
+ */
+pd.clamp = function(number, min, max) {
+    return Math.min(Math.max(number, min), max);
 };
 //</editor-fold>
 //<editor-fold desc="#Object Creation">
@@ -129,30 +139,30 @@ pd.getSpriteFrame = function(spriteFrameName) {
 };
 
 /**
- * Cria uma sprite.
- * @param {String} spriteName
- * @param {Number} x
- * @param {Number} y
- * @param {cc.Node} parentNode
- * @param {Number} zOrder
- * @param {String} [name]
- * @param {boolean} [addToEditor]
- * @returns {cc.Sprite}
+ * Cria e configura uma sprite.
+ * @param {String} spriteOrSpriteFrameName
+ * @param {Object} [attr=null]
+ * @param {cc.Node} [parentNode=null]
+ * @param {Number} [localZOrder=null]
+ * @param {String} [editorName=null]
+ * @returns {*}
  */
-pd.createSprite = function(spriteName, x, y, parentNode, zOrder, name, addToEditor){
-    var SF = pd.getSpriteFrame(spriteName);
-    if (!SF)
-        SF = spriteName;
-    const obj = new cc.Sprite(SF);
-    obj.setPosition(x, y);
-    obj.name = name;
-    zOrder = zOrder || 0;
+pd.createSprite = function(spriteOrSpriteFrameName, attr, parentNode, localZOrder, editorName) {
+    if(typeof arguments[1] == 'number')
+        return pd.legacyCreateSprite.apply(pd, arguments);
 
-    if(parentNode != undefined && parentNode != null)
-        parentNode.addChild(obj, zOrder);
+    const target = pd.getSpriteFrame(spriteOrSpriteFrameName) || spriteOrSpriteFrameName;
+    const obj = new cc.Sprite(target);
 
-    if(!cc.sys.isNative && pd.debugMode && addToEditor)
+    if(attr)
+        obj.attr(pd.parseAttr(attr));
+    if(parentNode)
+        parentNode.addChild(obj, localZOrder || 0);
+
+    if(!cc.sys.isNative && pd.debugMode && editorName) {
+        obj.name = editorName;
         pd.Editor.add(obj);
+    }
 
     return obj;
 };
@@ -171,9 +181,7 @@ pd.createSprite = function(spriteName, x, y, parentNode, zOrder, name, addToEdit
  * @returns {cc.LabelTTF}
  */
 pd.createText = function(fontPath, fontName, x, y, fontSize, color, text, alignment, parentNode) {
-    if(!text)
-        text = "";
-    const labelTTF = new cc.LabelTTF(text, cc.sys.isNative ? fontPath : fontName, fontSize);
+    const labelTTF = new cc.LabelTTF(text || "", cc.sys.isNative ? fontPath : fontName, fontSize);
     labelTTF.setPosition(x, y);
     labelTTF.fillStyle = color || cc.color(0, 0, 0, 255);
 
@@ -465,7 +473,7 @@ pd.pointToSegmentDistance = function(p, l) {
     return Math.sqrt(distToSegmentSquared(p, l.p1, l.p2));
 };
 //</editor-fold>
-//<editor-fold desc="#Actions">
+//<editor-fold desc="#Actions and Feedback">
 /**
  * Cria uma sequência de 'palpitação'.
  * @param {Number} time - o tempo da animação.
@@ -530,11 +538,11 @@ pd.flicker = function(time, flicks, initialColor, targetColor) {
 };
 
 /**
- * Adiciona uma layer de foco a layer informada.
- * @param {cc.Node} layer
- * @param {Number} time
- * @param {Number} opacity
- * @param {...*} nodes
+ * Adiciona uma layer de foco ao objeto informado.
+ * @param {cc.Node} layer {cc.Layer}
+ * @param {Number} time {Number} - o tempo da transição de aparecimento da layer de foco.
+ * @param {Number} opacity {Number} - a opacidade da layer de foco.
+ * @param {...*} nodes - lista de objetos a serem 'focados'.
  */
 pd.addFocus = function(layer, time, opacity, nodes){
     if(!layer._focusLayer) {
@@ -542,38 +550,55 @@ pd.addFocus = function(layer, time, opacity, nodes){
         layer._focusLayer.setOpacity(0);
         layer._focusLayer.targetOpacity = opacity;
         layer._focusLayer.nodes = [];
-        layer.addChild(layer._focusLayer, 10000);
+        layer.addChild(layer._focusLayer, pd.ZOrders.FOCUS_LAYER);
     }
 
     if(layer._focusLayer.opacity == 0) {
         for (var i = 3; i < arguments.length; i++) {
             layer._focusLayer.nodes.push(arguments[i]);
-            arguments[i]._zOrderAntigo = arguments[i].zIndex;
-            arguments[i].setLocalZOrder(10001);
+            arguments[i]._oldZOrder = arguments[i].zIndex;
+            arguments[i].setLocalZOrder(pd.ZOrders.FOCUS_OBJECTS);
         }
         if(time > 0)
             layer._focusLayer.runAction(cc.fadeTo(time, opacity));
         else
             layer._focusLayer.setOpacity(opacity);
     }
-}
+};
 
 /**
- * Remove uma layer de foco a layer informada.
- * @param {cc.Node} layer
- * @param {Number} time
+ * Remove a layer de foco do objeto informado, se houver.
+ * @param {cc.Node} layer {cc.Layer}
+ * @param {Number} time {Number} - o tempo de transição de fadeOut da layer de foco.
  */
 pd.removeFocus = function(layer, time){
     if(layer._focusLayer.opacity == layer._focusLayer.targetOpacity && layer._focusLayer.nodes) {
         for (var i in layer._focusLayer.nodes) {
-            layer._focusLayer.nodes[i].setLocalZOrder(layer._focusLayer.nodes[i]._zOrderAntigo);
+            layer._focusLayer.nodes[i].setLocalZOrder(layer._focusLayer.nodes[i]._oldZOrder);
         }
         if(time > 0)
             layer._focusLayer.runAction(cc.fadeTo(time, 0));
         else
             layer._focusLayer.setOpacity(0);
     }
-}
+};
+
+/**
+ * Cria e toca um efeito sonoro.
+ * @param url {String} - o caminho para o arquivo de som a ser tocado.
+ * @param loop {Boolean} - indica se o som deve loopar.
+ * @param volume {Number} - indica o volume do som.
+ * @returns {*}
+ */
+pd.playSimpleEffect = function(url, loop, volume) {
+    volume = volume || 1;
+    var audioId = null;
+    if(cc.sys.isNative)
+        audioId = pd.audioEngine.playEffect(url, loop, 1, 0, volume);
+    else
+        audioId = pd.audioEngine.playEffect(url, loop, volume);
+    return audioId;
+};
 //</editor-fold>
 //<editor-fold desc="#Native Capabilities">
 /**
@@ -653,12 +678,30 @@ pd.UI_COLOR_ORANGE = 'orangeUI';
  * @param {pd.decorators} decorator
  */
 pd.decorate = function(object, decorator) {
+    if(object._mixes && object._mixes.lastIndexOf(decorator) != -1)
+        return;
+
     for(var i in decorator) {
-        if(object[i] === undefined) {
-            object[i] = decorator[i];
-        }
-        else {
-            throw new Error("[pd] Tentando sobrescrever propriedade já existente.");
+        object[i] = decorator[i];
+    }
+
+    object._mixes = object[i]._mixes || [];
+    object._mixes.push(decorator);
+};
+//</editor-fold>
+//<editor-fold desc="#Others">
+/**
+ * Limpa todas as ações rodando em um layer recursivamente.
+ * @param {cc.Node} node
+ */
+pd.cleanAllRunningActions = function(node) {
+    const children = node.getChildren();
+
+    for(var i = 0; i < children.length ; i++) {
+        var child = children[i];
+        if(child) {
+            child.cleanup();
+            pd.cleanAllRunningActions(child);
         }
     }
 };

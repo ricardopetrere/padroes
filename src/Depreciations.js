@@ -19,7 +19,36 @@ isPaused = pd.delegate.isPaused;
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.createSprite}.
  * A função ainda é a mesma, apenas foi dado um nome mais claro à ela.
  */
-pd.cObject = pd.createSprite;
+pd.cObject = pd.legacyCreateSprite;
+
+/**
+ * Cria uma sprite.
+ * @param {String} spriteName
+ * @param {Number} x
+ * @param {Number} y
+ * @param {cc.Node} parentNode
+ * @param {Number} zOrder
+ * @param {String} [name]
+ * @param {boolean} [addToEditor]
+ * @returns {cc.Sprite}
+ */
+pd.legacyCreateSprite = function(spriteName, x, y, parentNode, zOrder, name, addToEditor){
+    var SF = pd.getSpriteFrame(spriteName);
+    if (!SF)
+        SF = spriteName;
+    const obj = new cc.Sprite(SF);
+    obj.setPosition(x, y);
+    obj.name = name;
+    zOrder = zOrder || 0;
+
+    if(parentNode != undefined && parentNode != null)
+        parentNode.addChild(obj, zOrder);
+
+    if(!cc.sys.isNative && pd.debugMode && addToEditor)
+        pd.Editor.add(obj);
+
+    return obj;
+};
 
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.createText}.
@@ -111,19 +140,213 @@ DebugMode = undefined;
 pd.TutorialScene = pd.Tutorial;
 
 /**
- * @deprecated - desde a versão 2.2.
+ * @deprecated
  */
-pd.TutorialLayer.prototype.criarTextoInferior = pd.TutorialLayer.prototype.createBottomText;
+pd.LegacyTutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
+    accelerometer:null,
+    btnArrowUp: null,
+    btnArrowDown: null,
+    btnArrowLeft:null,
+    btnArrowRight:null,
+    btnSpace:null,
+    arrowKeys:null,
+    pointer:null,
+    joystick:null,
+    isActiveAndRunning:false,
+    pageID:-1,
+
+    ctor: function(txt) {
+        this._super();
+        this._createBottomText(txt);
+    },
+
+    createAccelerometer: function (posX, posY) {
+        this.accelerometer = new pd.Animation();
+        this.accelerometer.addAnimation('normal', 1, 1, 'accel_lateral');
+        this.accelerometer.addAnimation('left', 1, 10, 'accel_lateral');
+        this.accelerometer.addAnimation('right', 11, 20, 'accel_lateral');
+        this.accelerometer.addAnimation('up', 1, 10, 'accel_vertical');
+        this.accelerometer.addAnimation('down', 11, 20, 'accel_vertical');
+        this.accelerometer.setPosition(posX, posY);
+        this.addChild(this.accelerometer, pd.ZOrders.TUTORIAL_BUTTON);
+    },
+
+    createArrowKeys: function(offset) {
+        this.btnArrowUp = this._createButton("keyUp", 0, 60);
+        this.btnArrowDown = this._createButton("keyDown", 0, 0);
+        this.btnArrowLeft = this._createButton("keyLeft", -60, 0);
+        this.btnArrowRight = this._createButton("keyRight", 60, 0);
+
+        this.arrowKeys = [this.btnArrowLeft, this.btnArrowUp, this.btnArrowRight, this.btnArrowDown];
+
+        ////////// LEGADO: ///////////////
+        this.tecla_cima = this.btnArrowUp;
+        this.tecla_esquerda = this.btnArrowLeft;
+        this.tecla_baixo = this.btnArrowDown;
+        this.tecla_direita = this.btnArrowRight;
+        this.vTeclas = this.arrowKeys;
+        ///////////////////////////////////
+
+        for(var i = 0; i < this.arrowKeys.length; i++) {
+            this.arrowKeys[i].setScale(0.75);
+            this.arrowKeys[i].x += offset.x;
+            this.arrowKeys[i].y += offset.y;
+        }
+
+        return this.arrowKeys;
+    },
+
+    createNakedButton: function (posX, posY, sprite) {
+        var botao = this._createButton("keyNaked", posX, posY);
+        if (sprite) {
+            botao.label = sprite;
+            botao.label.setPosition(botao.width / 2, botao.height / 2);
+            botao.addChild(botao.label, pd.ZOrders.TUTORIAL_BUTTON);
+        }
+    },
+
+    createPointer:function(initialPosition) {
+        var frameName = "mouse" in cc.sys.capabilities ? "seta_" : "dedo_";
+
+        this.pointer = new pd.Animation();
+        this.pointer.addAnimation('normal', 1, 1, frameName);
+        this.pointer.addAnimation('pressed', 2, 2, frameName);
+        this.pointer.setPosition(initialPosition.x, initialPosition.y);
+        this.addChild(this.pointer, pd.ZOrders.TUTORIAL_POINTER);
+        this.pointer.setAnchorPoint(0,1);
+        this.pointer.initialPosition = initialPosition;
+
+        this.ponteiro = this.pointer; //legado
+    },
+
+    createSpaceButton: function(posX, posY) {
+        this.btnSpace = this._createButton('keySpace', posX, posY);
+        this.btnSpace.setScale(0.7);
+        return this.btnSpace;
+    },
+
+    createJoystick: function(posX, posY) {
+        this.joystick = new pd.Joystick({x:posX, y:posY}, false, false, null, null);
+        this.addChild(this.joystick);
+        return this.joystick;
+    },
+
+    _createButton: function(frameName, posX, posY) {
+        const btn = new pd.Animation();
+        btn.addAnimation('normal', 1, 1, frameName);
+        btn.addAnimation('pressed', 2, 2, frameName);
+        btn.setPosition(posX, posY);
+        this.addChild(btn, pd.ZOrders.TUTORIAL_BUTTON);
+        return btn;
+    },
+
+    _createBottomText: function(txt) {
+        if(!pd.delegate.activeNamespace.tutorialData.txtOffSetY)
+            pd.delegate.activeNamespace.tutorialData.txtOffSetY = 0;
+
+        const label = pd.cText(0, 0, txt, "Calibri", 25);
+        label.setPosition(512, 140 + pd.delegate.activeNamespace.tutorialData.txtOffSetY);
+        this.addChild(label, pd.ZOrders.TUTORIAL_PAGE_BOTTOM_TEXT);
+    },
+
+    stop: function() {
+        if(this.arrowKeys){
+            for(var i = 0; i < 4; i++){
+                this.arrowKeys[i].changeAndStop('normal', false);
+            }
+        }
+
+        if(this.pointer){
+            this.pointer.changeAndStop('normal', false);
+            this.pointer.x = this.pointer.initialPosition.x;
+            this.pointer.y = this.pointer.initialPosition.y;
+        }
+    },
+
+    run: function() {
+
+    },
+
+    setStatus: function(running, shouldResetAfterStopping) {
+        if(running && this.isActiveAndRunning) {
+            return;
+        }
+
+        this.isActiveAndRunning = running;
+        if(!this.isActiveAndRunning) {
+            this.cleanup();
+            this._cleanAllRunningActions(this);
+            this.unscheduleUpdate();
+            if(shouldResetAfterStopping != false)
+                this.stop();
+        }
+        else {
+            this.run();
+        }
+    },
+
+    _cleanAllRunningActions: function(node) {
+        const children = node.getChildren();
+
+        for(var i = 0; i < children.length ; i++) {
+            var child = children[i];
+            if(child) {
+                child.cleanup();
+                this._cleanAllRunningActions(child);
+            }
+        }
+    },
+
+    reset: function() {
+        this.setStatus(false);
+        this.setStatus(true);
+    }
+});
 
 /**
  * @deprecated - desde a versão 2.2.
  */
-pd.TutorialLayer.prototype.createTeclas = pd.TutorialLayer.prototype.createArrowKeys;
+pd.LegacyTutorialLayer.prototype.criarTextoInferior = pd.LegacyTutorialLayer.prototype.createBottomText;
 
 /**
  * @deprecated - desde a versão 2.2.
  */
-pd.TutorialLayer.prototype.createPonteiro = pd.TutorialLayer.prototype.createPointer;
+pd.LegacyTutorialLayer.prototype.createTeclas = pd.LegacyTutorialLayer.prototype.createArrowKeys;
+
+/**
+ * @deprecated - desde a versão 2.2.
+ */
+pd.LegacyTutorialLayer.prototype.createPonteiro = pd.LegacyTutorialLayer.prototype.createPointer;
+
+/**
+ * @deprecated - desde a versão 2.6.
+ */
+pd.LegacyTutorialLayer.prototype.tecla_cima = pd.LegacyTutorialLayer.prototype.btnArrowUp;
+
+/**
+ * @deprecated - desde a versão 2.6.
+ */
+pd.LegacyTutorialLayer.prototype.tecla_baixo = pd.LegacyTutorialLayer.prototype.btnArrowDown;
+
+/**
+ * @deprecated - desde a versão 2.6.
+ */
+pd.LegacyTutorialLayer.prototype.tecla_esquerda = pd.LegacyTutorialLayer.prototype.btnArrowLeft;
+
+/**
+ * @deprecated - desde a versão 2.6.
+ */
+pd.LegacyTutorialLayer.prototype.tecla_direita = pd.LegacyTutorialLayer.prototype.btnArrowRight;
+
+/**
+ * @deprecated - desde a versão 2.6.
+ */
+pd.LegacyTutorialLayer.prototype.vTeclas = pd.LegacyTutorialLayer.prototype.arrowKeys;
+
+/**
+ * @deprecated - desde a versão 2.6.
+ */
+pd.LegacyTutorialLayer.prototype.ponteiro = pd.LegacyTutorialLayer.prototype.pointer;
 
 /**
  * @deprecated - desde a versão 2.3 - utilizar a função {@link pd.debugger.addShortcut}.
@@ -344,7 +567,7 @@ pd.InputManager.EVENT_JOYSTICK_STATUS = "eventJoystickStatus";
 pd.AddToDebugger = function(obj, type, name) {
     if (!cc.sys.isNative)
         pd.Editor.add(obj, type, name);
-}
+};
 
 /**
  * Executa a animação de vitória.
@@ -355,7 +578,7 @@ pd.AddToDebugger = function(obj, type, name) {
  */
 pd.GameScene.prototype.winGame = function(circleSpriteFrame, messageSpriteFrame, tiltScreen) {
     pd.delegate.winGame(circleSpriteFrame, messageSpriteFrame, tiltScreen);
-}
+};
 
 /**
  * Executa a animação de derrota.
@@ -365,4 +588,43 @@ pd.GameScene.prototype.winGame = function(circleSpriteFrame, messageSpriteFrame,
  */
 pd.GameScene.prototype.loseGame = function(circleSpriteFrame, tiltScreen) {
     pd.delegate.loseGame(circleSpriteFrame, tiltScreen);
-}
+};
+
+/**
+ * @deprecated - desde a versão 2.6 - utilizar {@link pd.TypewriterLabel}
+ */
+pd.TextCreator = pd.TypewriterLabel;
+
+/**
+ * @deprecated - desde a versão 2.6 - utilizar {@link pd.TypewriterLabel.prototype.setOnComplete}
+ */
+pd.TypewriterLabel.prototype.addFinishCallback = pd.TypewriterLabel.prototype.setOnComplete;
+
+/**
+ * @deprecated - desde a versão 2.6 - utilizar {@link pd.TypewriterLabel.prototype.setOnComplete}
+ */
+pd.TypewriterLabel.prototype.addTextLine = pd.TypewriterLabel.prototype.addLine;
+
+/**
+ * @deprecated - desde a versão 2.6 - utilizar {@link pd.TypewriterLabel.prototype.setOnComplete}
+ */
+pd.TypewriterLabel.prototype.startUpdate = pd.TypewriterLabel.prototype.start;
+
+/**
+ * @deprecated - desde a versão 2.6 utilizat {@link pd.TypewriterLabel.prototype.config}
+ * @param target
+ * @param displayingLinesAmount
+ */
+pd.TextCreator.setFadeType = function(target, displayingLinesAmount){
+    target.config(displayingLinesAmount);
+};
+
+/**
+ * @deprecated - desde a versão 2.6 - utilizar {@link pd.Button.States.NORMAL}
+ */
+pd.Button.States.SPRITEFRAME_NORMAL = "normal";
+
+/**
+ * @deprecated - desde a versão 2.6 - utilizar {@link pd.Button.States.PRESSED}
+ */
+pd.Button.States.SPRITEFRAME_PRESSED = "pressed";
