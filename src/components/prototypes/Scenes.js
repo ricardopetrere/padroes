@@ -174,6 +174,10 @@ pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
  */
 pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
     /**
+     * @type {cc.Point}
+     */
+    tipButtonPos: null,
+    /**
      * @type {number}
      */
     pausedOpacity: 100,
@@ -188,7 +192,7 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
      */
     ctor: function() {
         this._super();
-
+        this.tipButtonPos = cc.p(875, 715);
         this.uiButton = new pd.Button("pd_btn_pause_normal.png", "pd_btn_pause_pressed.png", {x:975, y:715}, null, true, false, this, this.onPauseButton);
         this.uiButton.setKeyCode(pd.Keys.ESC);
         this.uiButton.isLocked = false;
