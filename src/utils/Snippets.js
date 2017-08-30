@@ -705,4 +705,17 @@ pd.cleanAllRunningActions = function(node) {
         }
     }
 };
+
+/**
+ * Retorna uma estrutura com os dados da versão dos padrões. Útil para fazer workarounds de código em runtime
+ * @returns {{major: Number, minor: Number, bugfix: {Number}}}
+ */
+pd.getVersionInfo = function () {
+    var array = pd.version.split('.');
+    return {
+        major: parseInt(array[0]),
+        minor: parseInt(array[1]) || array[1],//Para casos como versão alpha/beta
+        bugfix: parseInt(array[2]) || 0//Caso não haja
+    };
+};
 //</editor-fold>
