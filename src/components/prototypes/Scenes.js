@@ -118,6 +118,7 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
         if(cc.sys.isNative) {
             cc.director.getTextureCache().removeUnusedTextures();
         }
+        pd.inputManager.reset();
     }
 });
 
