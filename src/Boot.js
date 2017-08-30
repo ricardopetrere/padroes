@@ -18,6 +18,7 @@ cc.game.config.jsList = [
     "src/components/prototypes/Animation.js",
     "src/components/prototypes/TutorialLayer.js",
     "src/components/prototypes/TypewriterLabel.js",
+    "src/components/prototypes/LifeHUD.js",
     "src/components/input/Button.js",
     "src/components/input/Joystick.js",
     "src/components/input/StandardButton.js",
