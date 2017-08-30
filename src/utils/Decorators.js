@@ -64,7 +64,7 @@ pd.decorators.ResetableNode = {/** @lends pd.decorators.ResetableNode#*/
             cc.warn("[pd.decorators.ResetableNode] Não foi salvo um estado de exibição para o objeto.");
             return;
         }
-
+        pd.parseAttr(attr);
         for(var i in attr) {
             if(pd.decorators.ResetableNode.DISPLAY_PROPERTIES.lastIndexOf(i) != -1)
                 this.displayState[i] = attr[i];
