@@ -341,25 +341,25 @@ pd.parseAttr = function(attr) {
 //</editor-fold>
 //<editor-fold desc="#Navigation">
 /**
- * Troca a cena atual para a cena informada (antigo pd.trocaCena()).
- * @type {Function}
- * @param {cc.Class} transition
- * @param {cc.Node} layer
- * @param {Number} [delay=0.5]
+ * Troca de cena. Essa função supõe que você utilize as funções de transição presentes em Transitions.js
+ * @param {cc.Scene|*} scene - Protótipo de cena ou objeto pronto
+ * @param {Number} [delay] - Tempo para transição, se necessário
+ * @param {Function} [transition] - Transição a ser usada, se for usar
+ * @returns {cc.Scene} A cena gerada/informada na função
  */
-pd.switchScene = function(transition, layer, delay) {
-    if(!layer._didGetDestroyed) {
-        layer._didGetDestroyed = true;
-        var delayTime = new cc.DelayTime(delay || 0.5);
-        var funcChange = new cc.CallFunc(function(){
-            cc.director.runScene(transition);
-        }, layer);
-        var switchSequence = cc.sequence(delayTime, funcChange);
-        pd.delegate.retain(transition);
-        pd.delegate.retain(switchSequence);
-        layer.runAction(switchSequence);
+pd.changeScene = function (scene, delay, transition) {
+    var sceneObj = scene instanceof cc.Scene ? scene : new scene();
+    pd.delegate.retain(sceneObj);
+    if (delay == null || delay === 0) {
+        cc.director.runScene(sceneObj);
+    } else {
+        // var transitionObj = transition(delay, sceneObj);
+        // pd.delegate.retain(transitionObj);
+        // cc.director.runScene(transitionObj);
+        cc.director.runScene(transition(delay, sceneObj));
     }
-};
+    return sceneObj;
+}
 
 /**
  * Obtém a cena atual -> utilizar a chamada direta pd.currentScene (útil para acessar elementos via console).
