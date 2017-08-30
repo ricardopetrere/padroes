@@ -628,3 +628,25 @@ pd.Button.States.SPRITEFRAME_NORMAL = "normal";
  * @deprecated - desde a versão 2.6 - utilizar {@link pd.Button.States.PRESSED}
  */
 pd.Button.States.SPRITEFRAME_PRESSED = "pressed";
+
+/**
+ * Troca a cena atual para a cena informada (antigo pd.trocaCena()).
+ * @type {Function}
+ * @param {cc.Class} transition
+ * @param {cc.Node} layer
+ * @param {Number} [delay=0.5]
+ * @deprecated Usar {@link pd.changeScene}
+ */
+pd.switchScene = function(transition, layer, delay) {
+    if(!layer._didGetDestroyed) {
+        layer._didGetDestroyed = true;
+        var delayTime = new cc.DelayTime(delay || 0.5);
+        var funcChange = new cc.CallFunc(function(){
+            cc.director.runScene(transition);
+        }, layer);
+        var switchSequence = cc.sequence(delayTime, funcChange);
+        pd.delegate.retain(transition);
+        pd.delegate.retain(switchSequence);
+        layer.runAction(switchSequence);
+    }
+};
