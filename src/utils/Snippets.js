@@ -83,6 +83,27 @@ pd.orderBy = function(array, key, crescentOrder) {
         }
     }
 };
+
+/**
+ * Retorna o array como um string, podendo usar uma função customizada para converter cada item do array para texto
+ * @param {Array} array
+ * @param {Function} [fncItens] - Uma função para imprimir cada item do vetor
+ * @returns {String}
+ */
+pd.arrayToString = function (array, fncItens) {
+    var text = "[";
+    for (var n = 0; n < array.length; n++) {
+        if (n !== 0)
+            text += ", ";
+        if (fncItens) {
+            text += fncItens(array[n]);
+        } else {
+            text += array[n];
+        }
+    }
+    text += "]";
+    return text;
+};
 //</editor-fold>
 //<editor-fold desc = "#String">
 /**
@@ -101,6 +122,15 @@ pd.numberToString = function(number, minLength) {
         str = "0" + str;
     }
     return str;
+};
+
+/**
+ * Converte um caractere (na realidade, o primeiro caractere do que for passado) para número. Usado para obter o código ASCII de uma letra
+ * @param {string} caract
+ * @returns {Number}
+ */
+pd.convertCharToInt = function (caract) {
+    return caract.charCodeAt(0);
 };
 //</editor-fold>
 //<editor-fold desc="#Math">
@@ -145,7 +175,7 @@ pd.getSpriteFrame = function(spriteFrameName) {
  * @param {cc.Node} [parentNode=null]
  * @param {Number} [localZOrder=null]
  * @param {String} [editorName=null]
- * @returns {*}
+ * @returns {cc.Sprite}
  */
 pd.createSprite = function(spriteOrSpriteFrameName, attr, parentNode, localZOrder, editorName) {
     if(typeof arguments[1] == 'number')
@@ -247,6 +277,46 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
 };
 
 /**
+ * Cria um {@link pd.Animation} passando uma lista de {@link pd.AnimationData} a serem adicionadas
+ * @param {Object} attr
+ * @param {pd.AnimationData[]} animacoes
+ * @returns {pd.Animation}
+ */
+pd.createAnimation = function (attr, animacoes) {
+    var animado = new pd.Animation();
+    if(attr)
+        animado.attr(pd.parseAttr(attr));
+    animado.setPosition(attr.x, attr.y);
+    var anim_array = [];
+    if (animacoes instanceof Array) {
+        anim_array = animacoes;
+    } else {
+        for (var n = 1; n < arguments.length; n++) {
+            anim_array.push(arguments[n]);
+        }
+    }
+    for (var i = 0; i < anim_array.length; i++) {
+        jogo4av4geo1.adicionarAnimacao(animado, anim_array[i]);
+    }
+    return animado;
+};
+
+/**
+ * Cria um background para o objeto passado em 'caller'
+ * @param {cc.Node} caller
+ * @param {String | cc.SpriteFrame} res
+ * @param {String} [name]
+ * @param {Object} [attr]
+ * @returns {*}
+ */
+pd.createBackground = function (caller, res, name, attr) {
+    name = name || "background";
+    caller[name] = pd.createSprite(res, attr, caller);
+    caller[name].setAnchorPoint(0, 0);
+    return caller[name];
+};
+
+/**
  * Parseia um objeto de configuração.
  * @param attr {Object}
  */
@@ -255,31 +325,41 @@ pd.parseAttr = function(attr) {
         attr.scaleX = attr.scale;
         attr.scaleY = attr.scale;
     }
+    if(attr.hasOwnProperty("rotation")) {
+        attr._rotationX = attr.rotation;
+        attr._rotationY = attr.rotation;
+    }
+    if(attr.hasOwnProperty("flippedX")) {
+        attr._flippedX = attr.flippedX;
+    }
+    if(attr.hasOwnProperty("flippedY")) {
+        attr._flippedY = attr.flippedY;
+    }
 
     return attr;
 };
 //</editor-fold>
 //<editor-fold desc="#Navigation">
 /**
- * Troca a cena atual para a cena informada (antigo pd.trocaCena()).
- * @type {Function}
- * @param {cc.Class} transition
- * @param {cc.Node} layer
- * @param {Number} [delay=0.5]
+ * Troca de cena. Essa função supõe que você utilize as funções de transição presentes em Transitions.js
+ * @param {cc.Scene|*} scene - Protótipo de cena ou objeto pronto
+ * @param {Number} [delay] - Tempo para transição, se necessário
+ * @param {Function} [transition] - Transição a ser usada, se for usar
+ * @returns {cc.Scene} A cena gerada/informada na função
  */
-pd.switchScene = function(transition, layer, delay) {
-    if(!layer._didGetDestroyed) {
-        layer._didGetDestroyed = true;
-        var delayTime = new cc.DelayTime(delay || 0.5);
-        var funcChange = new cc.CallFunc(function(){
-            cc.director.runScene(transition);
-        }, layer);
-        var switchSequence = cc.sequence(delayTime, funcChange);
-        pd.delegate.retain(transition);
-        pd.delegate.retain(switchSequence);
-        layer.runAction(switchSequence);
+pd.changeScene = function (scene, delay, transition) {
+    var sceneObj = scene instanceof cc.Scene ? scene : new scene();
+    pd.delegate.retain(sceneObj);
+    if (delay == null || delay === 0) {
+        cc.director.runScene(sceneObj);
+    } else {
+        // var transitionObj = transition(delay, sceneObj);
+        // pd.delegate.retain(transitionObj);
+        // cc.director.runScene(transitionObj);
+        cc.director.runScene(transition(delay, sceneObj));
     }
-};
+    return sceneObj;
+}
 
 /**
  * Obtém a cena atual -> utilizar a chamada direta pd.currentScene (útil para acessar elementos via console).
@@ -472,6 +552,67 @@ pd.pointToSegmentDistance = function(p, l) {
     }
     return Math.sqrt(distToSegmentSquared(p, l.p1, l.p2));
 };
+
+/**
+ * Realiza a soma vetorial entre dois {@link cc.Point} ou {@link cc.Rect}
+ @param {cc.Rect | cc.Point} posOrRect
+ @param {cc.Rect | cc.Point | number} rectOrPosOrX
+ @param {number} [y]
+ @param {number} [w]
+ @param {number} [h]
+ @param {cc.Rect | cc.Point} [returnPoint] - O último parâmetro informado. O resultado da soma dos valores, é também retornado na função
+ @returns {cc.Rect | cc.Point} O ponto que também foi retornado em 'returnPoint'
+ **/
+pd.pointAdd = function (posOrRect, rectOrPosOrX, y, w, h, returnPoint) {
+    if (arguments.length > 2 && arguments[arguments.length - 1] instanceof Object) {
+        var retorno = arguments[arguments.length - 1];
+    } else {
+        retorno = cc.rect();
+    }
+    retorno.x = posOrRect.x;
+    retorno.y = posOrRect.y;
+    if (rectOrPosOrX.x !== undefined) {//rectOrPosOrX isn't number
+        retorno.x += rectOrPosOrX.x;
+        retorno.y += rectOrPosOrX.y;
+    } else {
+        retorno.x += rectOrPosOrX;
+        if (y !== undefined) {
+            retorno.y += y;
+        }
+    }
+    if (posOrRect.width !== undefined) {//posOrRect is cc.rect
+        if (rectOrPosOrX.width !== undefined) {
+            w = rectOrPosOrX.width;
+        }
+        if (rectOrPosOrX.height !== undefined) {
+            h = rectOrPosOrX.height;
+        }
+        retorno.width = posOrRect.width + (w || 0);
+        retorno.height = posOrRect.height + (h || 0);
+    }
+    return retorno;
+};
+
+/**
+ * Calcula o ângulo entre dois pontos, podendo retornar o valor em graus ou radianos, e podendo inverter a ordem dos pontos no cálculo
+ * @param {cc.Point} pA
+ * @param {cc.Point} pB
+ * @param {boolean} [showInRadians]
+ * @param {boolean} [reverse] Troca a ordem dos pontos, mudando a referência de
+ * @returns {number} - Ângulo no sentido anti-horário
+ */
+pd.getAngle = function (pA, pB, showInRadians, reverse) {
+    if (reverse) {
+        var retorno = Math.atan2(pA.y - pB.y, pA.x - pB.x);
+    } else {
+        retorno = Math.atan2(pB.y - pA.y, pB.x - pA.x);
+    }
+    if (showInRadians) {
+        return retorno;
+    } else {
+        return cc.radiansToDegrees(retorno);
+    }
+};
 //</editor-fold>
 //<editor-fold desc="#Actions and Feedback">
 /**
@@ -599,6 +740,17 @@ pd.playSimpleEffect = function(url, loop, volume) {
         audioId = pd.audioEngine.playEffect(url, loop, volume);
     return audioId;
 };
+
+/**
+ * Retorna uma ação que executa um som
+ * @param {String} effect
+ * @returns {cc.CallFunc}
+ */
+pd.actionPlayEffect = function (effect) {
+    return new cc.CallFunc(function () {
+        pd.audioEngine.playEffect(effect);
+    });
+};
 //</editor-fold>
 //<editor-fold desc="#Native Capabilities">
 /**
@@ -704,5 +856,44 @@ pd.cleanAllRunningActions = function(node) {
             pd.cleanAllRunningActions(child);
         }
     }
+};
+
+/**
+ * Retorna uma estrutura com os dados da versão dos padrões. Útil para fazer workarounds de código em runtime
+ * @returns {{major: Number, minor: Number, bugfix: {Number}}}
+ */
+pd.getVersionInfo = function () {
+    var array = pd.version.split('.');
+    return {
+        major: parseInt(array[0]),
+        minor: parseInt(array[1]) || array[1],//Para casos como versão alpha/beta
+        bugfix: parseInt(array[2]) || 0//Caso não haja
+    };
+};
+
+/**
+ * Imprime em console a taxa de quadros atual
+ */
+pd.showFPS = function () {
+    cc.log((1 / cc.director._deltaTime).toFixed(1));
+};
+
+/**
+ * Calcula o valor de zOrder a partir do topo para baixo. Útil para dar sensação de profundidade, onde objetos no topo ficam atrás de objetos no fundo
+ * @param {number} max
+ * @param {number} y
+ * @returns {number}
+ */
+pd.getReversedZOrder = function (max, y) {
+    return Math.max(max - y, 0);
+};
+
+/**
+ * Calcula a posição do centro de uma imagem. Essa função não leva em consideração o anchorPoint do objeto
+ * @param {cc.Rect|cc.Sprite} obj
+ * @returns {cc.Point}
+ */
+pd.middleOf = function (obj) {
+    return cc.p(obj.width / 2, obj.height / 2);
 };
 //</editor-fold>

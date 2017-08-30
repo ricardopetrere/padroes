@@ -162,6 +162,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
         if((pd.delegate.activeNamespace.tutoriais && pd.delegate.activeNamespace.tutorialData && pd.delegate.activeNamespace.tutoriais.length > pd.delegate.activeNamespace.tutorialData.length)) {
             pd.delegate.activeNamespace.tutorialData = pd.delegate.activeNamespace.tutoriais;
+            pd.delegate.activeNamespace.tutorialData.txtOffSetY = 0;
             cc.warn("[pd] Aviso: utilizando recurso depreciado: activeNamespace.tutoriais. Utilizar a função pd.delegate.setTutorial() para inicializar o tutorial do jogo.")
         }
 
@@ -208,7 +209,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         var iniX = -(numPages/2 - 1) * 30;
         this._indicators = [];
 
-        for(i = 0; i < numPages; i++) {
+        for(var i = 0; i < numPages; i++) {
             var indicator = pd.createSprite("stage_instrucoes", 512 + iniX + i * 30, 30 + pd.delegate.activeNamespace.tutorialData.txtOffSetY, this, 50);
             indicator.setScale(0);
             this._indicators.push(indicator);
