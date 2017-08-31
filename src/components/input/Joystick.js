@@ -46,9 +46,9 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
      */
     _delta:null,
     /**
-     * @type {cc.Point}
+     * @type {Number}
      */
-    _power:null,
+    _angle:0,
     /**
      * Indica se o movimento do joystick é analógico (false) ou baseado em direções pré-setadas (true).
      * @type {Boolean}
@@ -64,6 +64,10 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
      * @type {Number}
      */
     _threshold:0,
+    /**
+     * Variável interna para a lógica do 'modo teclado'.
+     */
+    _thresholdPercentage: 0.383,
     /**
      * Variável interna para a lógica do 'modo teclado'.
      * @type {{left:Boolean, right:Boolean, up:Boolean, down:Boolean}}
@@ -301,23 +305,35 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
         var offset = this._radius - 15;
         this._pad.x = this._targetPoint.x;
         this._pad.y = this._targetPoint.y;
-        
-        if (Math.sqrt(Math.pow(this._pad.x - this._radius, 2) + Math.pow(this._pad.y - this._radius, 2)) > offset) {
-            var angle = Math.atan2(this._pad.y - this._radius, this._pad.x - this._radius);
+        var distance = Math.sqrt(Math.pow(this._pad.x - this._radius, 2) + Math.pow(this._pad.y - this._radius, 2));
+        var angle = Math.atan2(this._pad.y - this._radius, this._pad.x - this._radius);
+        if (distance > offset) {
             this._pad.x = this._radius + Math.cos(angle) * offset;
             this._pad.y = this._radius + Math.sin(angle) * offset;
         }
 
-        var proportionX = (this._pad.x - this._radius) / offset;
-        var proportionY = (this._pad.y - this._radius) / offset;
+        var percentageX = (this._pad.x - this._radius) / offset;
+        var percentageY = (this._pad.y - this._radius) / offset;
 
         if(this._keyboardMode) {
-            proportionX = Math.abs(proportionX) > this._threshold && (this._allow8Directions || (Math.abs(proportionX) > Math.abs(proportionY))) ? proportionX/Math.abs(proportionX) : 0;
-            proportionY = Math.abs(proportionY) > this._threshold && (this._allow8Directions || (Math.abs(proportionY) > Math.abs(proportionX))) ? proportionY/Math.abs(proportionY) : 0;
-            this._handleCallback(proportionX, proportionY, proportionX, proportionY);
+            percentageX = this._getKeyboardModePercentage(percentageX, percentageY);
+            percentageY = this._getKeyboardModePercentage(percentageY, percentageX);
         }
-        else {
-            this._handleCallback(proportionX, proportionY, (Math.exp(Math.abs(proportionX)) - 1) / 1.72, (Math.exp(Math.abs(proportionY)) - 1) / 1.72);
+        this._handleCallback(percentageX, percentageY, cc.radiansToDegrees(angle));
+    },
+
+    /**
+     * Retorna a porcentagem de deslocamento do stick, no modo de teclado (-1, 0 ou 1)
+     * @param {Number} percentageA
+     * @param {Number} percentageB
+     * @returns {Number}
+     * @private
+     */
+    _getKeyboardModePercentage: function (percentageA, percentageB) {
+        if (Math.abs(percentageA) > this._thresholdPercentage && (this._allow8Directions || (Math.abs(percentageA) > Math.abs(percentageB)))) {
+            return pd.roundToExtreme(percentageA, 1);
+        } else {
+            return 0;
         }
     },
 
@@ -325,19 +341,16 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
      * Manipula o mecanismo de callback.
      * @private
      */
-    _handleCallback: function(deltaX, deltaY, powerX, powerY) {
+    _handleCallback: function(deltaX, deltaY, angle) {
         if(!this._delta)
             this._delta = cc.p(0, 0);
         this._delta.x = deltaX;
         this._delta.y = deltaY;
 
-        if(!this._power)
-            this._power = cc.p(0, 0);
-        this._power.x = powerX;
-        this._power.y = powerY;
+        this._angle = angle;
 
         if(this._shouldDispatchEvent()) {
-            pd.inputManager.setEventMetadata("_joystickMeta", this, this._delta, this._power);
+            pd.inputManager.setEventMetadata("_joystickMeta", this, this._delta, this._angle);
             this._dispatchInputEvent(pd.InputManager.Events.JOYSTICK_STATUS, pd.inputManager["_joystickMeta"]);
 
             if(this._keyboardMode) {
@@ -348,7 +361,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
             }
         }
         else if(this._handler && this._handlerFunc) {
-            this._performCall(this._handler, this._handlerFunc, [this, this._delta, this._power]);
+            this._performCall(this._handler, this._handlerFunc, [this, this._delta, this._angle]);
         }
         else {
             cc.warn("[pd.Joystick] Aviso: Não foi registrada uma função de callback para o joystick (modo explícito)!");
@@ -361,12 +374,14 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
      */
     _checkKeyboardDirection: function(direction, active, keyCode) {
         if(this._keyboardModeMetadata[direction] == false && active) {
-            pd.inputManager.setEventMetadata("_keyboardMeta", this, keyCode);
+            pd.inputManager._setKeyPressed(keyCode);
+            pd.inputManager.setEventMetadata("_keyboardMeta", keyCode, this);
             this._dispatchInputEvent(pd.InputManager.Events.KEY_DOWN, pd.inputManager["_keyboardMeta"]);
             this._keyboardModeMetadata[direction] = true;
         }
         else if(this._keyboardModeMetadata[direction] == true && !active) {
-            pd.inputManager.setEventMetadata("_keyboardMeta", this, keyCode);
+            pd.inputManager._setKeyReleased(keyCode);
+            pd.inputManager.setEventMetadata("_keyboardMeta", keyCode, this);
             this._dispatchInputEvent(pd.InputManager.Events.KEY_UP, pd.inputManager["_keyboardMeta"]);
             this._keyboardModeMetadata[direction] = false;
         }

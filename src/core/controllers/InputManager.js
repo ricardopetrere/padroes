@@ -76,6 +76,16 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     },
 
     /**
+     *
+     * @param {pd.InputManager.Sources} sourceType
+     * @param {*} target
+     * @returns {cc.EventListener}
+     */
+    getListener: function (sourceType, target) {
+        return target._inputMetadata[sourceType];
+    },
+
+    /**
      * Verifica se o node possui um listener para o tipo de evento indicado.
      * @param {pd.InputManager.Events} eventType - tipo do evento.
      * @param {*} target - o objeto que dispara o evento.
@@ -133,19 +143,51 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
         }
     },
 
+    /**
+     * Reseta variáveis do inputManager
+     */
     reset: function() {
         this.clearPressedKeys();
     },
 
     /**
+     * Pausa os listeners do objeto
+     * @param {*} target
+     */
+    pauseListeners: function (target) {
+        var fnc = function (listener) {
+            if (listener) {
+                listener.setEnabled(false);
+            }
+        };
+        fnc(target._inputMetadata[pd.InputManager.Sources.MOUSE]);
+        fnc(target._inputMetadata[pd.InputManager.Sources.KEYBOARD]);
+        fnc(target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER]);
+    },
+    /**
+     * Reativa os listeners do objeto
+     * @param {*} target
+     */
+    resumeListeners: function (target) {
+        var fnc = function (listener) {
+            if (listener) {
+                listener.setEnabled(true);
+            }
+        };
+        fnc(target._inputMetadata[pd.InputManager.Sources.MOUSE]);
+        fnc(target._inputMetadata[pd.InputManager.Sources.KEYBOARD]);
+        fnc(target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER]);
+    },
+
+    /**
      * Adiciona um listener a um cc.Node.
-     * @param {cc.Node} target
+     * @param {*} target
      * @param {cc.EventListener} listener
      */
     _addListener: function(target, listener) {
         cc.eventManager.addListener(listener, target);
         if(target._inputMetadata.priority)
-            cc.eventManager.setPriority(listener, target._inputMetadata.priority)
+            cc.eventManager.setPriority(listener, target._inputMetadata.priority);
     },
 
     /**
@@ -305,8 +347,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             },
             onMouseMove: function (event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", event);
-                const btn = event.getButton();
-                switch(btn) {
+                switch(event.getButton()) {
                     case null: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_HOVER, pd.inputManager._mouseMeta); break;
                     case 0: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MOVE, pd.inputManager._mouseMeta); break;
                 }
@@ -362,7 +403,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
         if(cc.sys.isMobile || target._inputMetadata[pd.InputManager.Sources.KEYBOARD])
             return;
 
-        target._inputMetadata[pd.InputManager.Sources.KEYBOARD] = {
+        target._inputMetadata[pd.InputManager.Sources.KEYBOARD] = cc.EventListener.create({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed:  function(keyCode, event) {
                 keyCode = pd.inputManager._parseKeyCode(event.getCurrentTarget(), keyCode);
@@ -378,7 +419,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
                 pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.KEY_UP, pd.inputManager._keyboardMeta);
                 return true;
             }
-        };
+        });
 
         this._addListener(target, target._inputMetadata[pd.InputManager.Sources.KEYBOARD]);
     },
@@ -418,12 +459,22 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
         return this.pressedKeys.lastIndexOf(keyCode) >= 0;
     },
 
+    /**
+     * Registra no vetor de teclas pressionadas o pressionar da tecla
+     * @param {Number} keyCode
+     * @private
+     */
     _setKeyPressed: function(keyCode) {
         if (this.pressedKeys.lastIndexOf(keyCode) < 0) {
             this.pressedKeys.push(keyCode);
         }
     },
 
+    /**
+     * Registra no vetor de teclas pressionadas o liberar da tecla
+     * @param {Number} keyCode
+     * @private
+     */
     _setKeyReleased: function(keyCode) {
         var indexTecla = this.pressedKeys.lastIndexOf(keyCode);
         if (indexTecla >= 0) {
@@ -457,7 +508,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
         target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER] = cc.EventListener.create({
             event:cc.EventListener.ACCELERATION,
-
+            isLandscapeRight: false,
             /**
              *
              * <p>
@@ -473,7 +524,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              * @returns {boolean}
              */
             callback: function(acc, event) {
-                pd.inputManager._parseAcc(acc);
+                pd.inputManager._parseAcc(acc, this);
                 pd.inputManager.setEventMetadata("_accelerometerMeta", acc, event);
                 pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.ACCELEROMETER, pd.inputManager._accelerometerMeta);
                 return true;
@@ -499,14 +550,14 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * Converte os valores de acc, para casos como os do Android, onde o acelerômetro é absoluto (não inverte ao inverter o aparelho)
      * @param acc {cc.Acceleration}
     */
-    _parseAcc: function(acc) {
-        if (cc.sys.OS === cc.sys.ANDROID) {
+    _parseAcc: function(acc, listener) {
+        if (cc.sys.os === cc.sys.OS_ANDROID) {
             if (acc.y > 0.8) {
-                var isLandscapeRight = true;
+                listener.isLandscapeRight = true;
             } else if (acc.y < -0.8) {
-                isLandscapeRight = false;
+                listener.isLandscapeRight = false;
             }
-            if (!isLandscapeRight) {
+            if (!listener.isLandscapeRight) {
                 acc.x = -acc.x;
                 acc.y = -acc.y;
             }

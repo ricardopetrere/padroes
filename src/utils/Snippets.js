@@ -154,6 +154,25 @@ pd.randomInterval = function(min, max) {
 pd.clamp = function(number, min, max) {
     return Math.min(Math.max(number, min), max);
 };
+
+/**
+ * Dado um valor, retorna um extremo, informado, positivo ou negativo
+ * @example
+ * <p>
+ *     pd.roundToExtreme(5, 10) irá retornar 10
+ *     pd.roundToExtreme(-2, 1) irá retornar -1
+ *     pd.roundToExtreme(0, 5) irá retornar 0
+ * </p>
+ * @param {Number} number
+ * @param {Number} extreme
+ * @returns {Number}
+ */
+pd.roundToExtreme = function (number, extreme) {
+    if (number === 0) {
+        return 0;
+    }
+    return (number/Math.abs(number)) * extreme;
+};
 //</editor-fold>
 //<editor-fold desc="#Object Creation">
 /**
