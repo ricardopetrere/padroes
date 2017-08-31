@@ -565,8 +565,8 @@ pd.InputManager.EVENT_JOYSTICK_STATUS = "eventJoystickStatus";
  * @deprecated - desde a versão 2.5 - utilizar {@link pd.Editor.add}
  */
 pd.AddToDebugger = function(obj, type, name) {
-    if (!cc.sys.isNative)
-        pd.Editor.add(obj, type, name);
+    // if (!cc.sys.isNative && pd.debugMode)
+    //     pd.Editor.add(obj, type, name);
 };
 
 /**
