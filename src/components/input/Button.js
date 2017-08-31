@@ -370,7 +370,15 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     _performCallback: function(pressed) {
         if(this._shouldDispatchEvent()) {
             pd.inputManager.setEventMetadata("_buttonMeta", this._attachedKeyCode, this);
-            this._dispatchInputEvent(pressed ? pd.InputManager.Events.BUTTON_PRESSED : pd.InputManager.Events.BUTTON_RELEASED, pd.inputManager["_buttonMeta"]);
+            if (pressed) {
+                if(this._attachedKeyCode > 0)
+                    pd.inputManager._setKeyPressed(this._attachedKeyCode);
+                this._dispatchInputEvent(pressed ? pd.InputManager.Events.BUTTON_PRESSED : pd.InputManager.Events.BUTTON_RELEASED, pd.inputManager["_buttonMeta"]);
+            } else {
+                pd.inputManager._setKeyReleased(this._attachedKeyCode);
+                this._dispatchInputEvent(pd.InputManager.Events.BUTTON_RELEASED, pd.inputManager["_buttonMeta"]);
+            }
+
         }
         else if(this._handler && this._handlerFunc) {
             this._performCall(this._handler, this._handlerFunc, [this, pressed, this._handlerFuncArgs]);
