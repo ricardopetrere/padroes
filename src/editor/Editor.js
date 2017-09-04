@@ -624,4 +624,7 @@ pd.Editor.add = function(obj, type, name){
         name = "objSemNome";
     obj.debugName = obj.name || name;
     pd.Editor.NodeList.push(obj);
+
+    if(pd.debugMode)
+        cc.warn("[pd.Editor] Editor sendo utilizado em modo produção. Remover todas as chamadas para o pd.Editor no seu jogo.");
 }

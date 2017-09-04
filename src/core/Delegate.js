@@ -13,7 +13,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
     /**
      * Hash com os caminhos pré-carregados do paths.json.
-     * @type {{volumePath:String, palcoPath:String, videoFolderPath:String}}
+     * @type {{padroesPath:String, engineDir:String, volumePath:String, palcoPath:String, videoFolderPatj}}
      */
     paths:null,
 
@@ -138,6 +138,9 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     initWithNamespace: function(ns, customPath) {
         this.activeNamespace = ns;
         activeGameSpace = ns; // legado - apenas para manter compatível!
+
+        ns.resPath = "res/";
+        ns.srcPath = "src/";
 
         if(this.context == pd.Delegate.CONTEXT_PALCO && ns.resPath.lastIndexOf("jogo") != -1) {
 

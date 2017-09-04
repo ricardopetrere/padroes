@@ -6,12 +6,6 @@
 var pd = {};
 
 /**
- * @global
- * @type {String}
- */
-var padroesPath = cc.game.config["padroesPath"];
-
-/**
  * Indica se o modo debug está ativo (não setar esta variável manualmente!).
  * @type {boolean}
  */
@@ -26,13 +20,17 @@ if (cc.game.config[cc.game.CONFIG_KEY.renderMode] != 1) {
  * Versão atual dos padrões.
  * @type {string}
  */
-pd.version = "3.0alpha";
+pd.version = "3.0beta";
 
 cc.log("[pd] Padrões Cocos Versão: " + pd.version);
 if(pd.debugMode)
     cc.warn("[pd] O modo de debug está ativo!");
 
-cc.game.config.jsList = [
+/**
+ * Lista de arquivos a serem carregados pelos padrões.
+ * @type {Array.<string>}
+ */
+pd.jsList = [
     "src/core/Delegate.js",
     "src/core/GlobalDefinitions.js",
     "src/core/controllers/AudioEngine.js",
@@ -58,16 +56,43 @@ cc.game.config.jsList = [
     "src/components/feedback/Tablet.js",
     "src/loading/LoaderScene.js",
     "src/loading/Loader.js",
-    "src/Depreciations.js"].concat((!cc.sys.isNative && pd.debugMode ?
+    "src/Depreciations.js"].concat((!cc.sys.isNative /**&& pd.debugMode*/ ? 
 
-        //A versão mobile não utiliza o editor, não sendo necessário esses arquivos
-        ["src/editor/Editor.js",
-            "src/editor/SpriteCreator.js",
-            "src/editor/SpriteListViewer.js",
-            "src/editor/Printer.js"] : []
+    [ //A versão mobile não utiliza o editor, não sendo necessário esses arquivos
+        "src/editor/Editor.js",
+        "src/editor/SpriteCreator.js",
+        "src/editor/SpriteListViewer.js",
+        "src/editor/Printer.js"
+    ] : []
 ));
 
-var indexSrcPadrao;
-for (indexSrcPadrao = 0; indexSrcPadrao < cc.game.config.jsList.length; indexSrcPadrao++) {
-    cc.game.config.jsList[indexSrcPadrao] = cc.path.join(padroesPath, cc.game.config.jsList[indexSrcPadrao]);
-}
+/**
+ * Boota os padrões com os caminhos informados.
+ * @param {Object} paths
+ */
+pd.boot = function(paths) {
+    padroesPath = paths.padroesPath;
+    cc.loader.loadJs(paths.padroesPath, pd.jsList, function() {
+        pd.delegate.setPaths(paths);
+
+        if(paths.palcoPath)
+            pd.delegate.setContext(pd.Delegate.CONTEXT_PALCO);
+        else
+            pd.delegate.setContext(pd.Delegate.CONTEXT_STAND_ALONE);
+
+        //////////////////// MODO PALCO //////////////////////
+        if(pd.delegate.context == pd.Delegate.CONTEXT_PALCO) {
+            pd.loader.loadJSON(pd.delegate.paths.volumePath + "/metadata/modules.json", function(metadata) {
+                cc.loader.loadJs(pd.delegate.paths.palcoPath + "/src", ["Config.js"], function() {
+                    palco.boot(pd.delegate.paths.palcoPath + "/res/", pd.delegate.paths.palcoPath + "/src/", metadata.targetBuild);
+                });
+            });
+        }
+        /////////////////////////////////////////////////////
+        //////////////// MODO STAND-ALONE ///////////////////
+        else {
+            cc.loader.loadJs("src", ["Config.js"]);
+        }
+        /////////////////////////////////////////////////////
+    });
+};
