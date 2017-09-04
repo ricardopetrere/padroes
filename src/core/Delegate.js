@@ -12,6 +12,12 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     context: null,
 
     /**
+     * Hash com os caminhos pré-carregados do paths.json.
+     * @type {{padroesPath:String, engineDir:String, volumePath:String, palcoPath:String, videoFolderPatj}}
+     */
+    paths:null,
+
+    /**
      * Aponta para o namespace ativo.
      * @type {Object}
      */
@@ -94,6 +100,14 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     },
 
     /**
+     * Seta o objeto com os paths pré-carregados.
+     * @param {Object} paths
+     */
+    setPaths: function(paths) {
+        this.paths = paths;
+    },
+
+    /**
      * Realiza a inicialização de um namespace.
      * @param {String} resPath
      * @param {String} srcPath
@@ -119,23 +133,27 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     /**
      * Inicializa o namespace indicado.
      * @param {Object} ns
+     * @param {String} customPath - um caminho específico, caso o jogo não esteja na raíz do projeto.
      */
-    initWithNamespace: function(ns) {
+    initWithNamespace: function(ns, customPath) {
         this.activeNamespace = ns;
         activeGameSpace = ns; // legado - apenas para manter compatível!
 
-        pd.DebugScenes = [];
+        ns.resPath = "res/";
+        ns.srcPath = "src/";
 
         if(this.context == pd.Delegate.CONTEXT_PALCO && ns.resPath.lastIndexOf("jogo") != -1) {
-            if(ns.resPath.lastIndexOf("games") == -1)
-                ns.resPath = ns.resPath.replace("res/", "res/games/");
 
-            if(ns.srcPath.lastIndexOf("games") == -1)
-                ns.srcPath = ns.srcPath.replace("src/", "src/games/");
+            if(ns.resPath.lastIndexOf(customPath) == -1)
+                ns.resPath = ns.resPath.replace("res/", customPath + "/res/");
+
+            if(ns.srcPath.lastIndexOf(customPath) == -1)
+                ns.srcPath = ns.srcPath.replace("src/", customPath + "/src/");
         }
 
+        pd.DebugScenes = [];
+
         cc.loader.loadJs(ns.srcPath, ns.jsList, function() {
-            cc.log("[pd.Delegate] Lista de arquivos carregados: "+JSON.stringify(ns.jsList));
             if(ns.onInit)
                 ns.onInit.apply(ns);
 

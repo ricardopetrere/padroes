@@ -24,7 +24,7 @@ pd.resLoad = {
  * @enum {string}
  */
 pd.res = {
-    
+
     //Debugger:
     editorSpriteSheet_s: padroesPath+"/res/img/editor/editorAssets.png",
     editorSpriteSheet_p: padroesPath+"/res/img/editor/editorAssets.plist",

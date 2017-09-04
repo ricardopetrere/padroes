@@ -114,15 +114,15 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
     /**
      * Realiza o pré-carregamento de um módulo da aplicação.
      * @param {String} root
+     * @param {String} namespace
      */
-    preloadModule: function(root) {
+    preloadModule: function(root, namespace) {
         this.loaderScene = new pd.LoaderScene(true);
         this.loaderScene.init();
         cc.director.runScene(this.loaderScene);
 
-        cc.loader.loadJs(root, ["Config.js"], function() {
-            const pattern = root.substr(root.lastIndexOf("/") + 1, root.length - 1);
-            pd.delegate.initWithNamespace(eval(pattern));
+        cc.loader.loadJs(root, ["src/" + namespace + "/Config.js"], function() {
+            pd.delegate.initWithNamespace(eval(namespace), root);
         });
     },
 
