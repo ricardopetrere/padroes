@@ -785,6 +785,45 @@ pd.openURL = function(url) {
 };
 
 /**
+ * Realiza uma chamada à código nativo (Android: Java, iOS: Objetive-C)
+ * Verificar em:
+ * http://www.cocos2d-x.org/wiki/Invoking_Android_Java_methods_from_JavaScript
+ * e
+ * http://www.cocos2d-x.org/wiki/Invoking_Objective-C_methods_from_JavaScript
+ * IMPORTANTE: O método deve existir na classe
+ * @param {String} methodName O nome da função a ser chamada
+ * @param {"void"|"int"|"float"|"boolean"} returnType O tipo de retorno (exclusivo para Android)
+ * @param {...|*[]} args Argumentos a serem passados para a função
+ * @returns {*}
+ */
+pd.callNative = function (methodName, returnType, args) {
+    args = arguments.slice(1);
+    if(cc.sys.os == cc.sys.OS_ANDROID) {
+        var paramTypes = [];
+        var paramString = "";
+        for (var n = 0; n < args.length; n++) {
+
+        }
+        //Tipos:
+        //Ljava/lang/String; - String
+        //I - int
+        //F - float
+        //Z - boolean
+        var _returnType = "V";
+        //Retornos:
+        //V - void
+        //I - int
+        //F - float
+        //Z - boolean
+        //Ljava/lang/String; - NSString
+        jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", methodName, "(" + paramString + ")" + _returnType, args);
+    }
+    else if(cc.sys.os == cc.sys.OS_IOS) {
+        jsb.reflection.callStaticMethod("AppController", methodName, args);
+    }
+}
+
+/**
  * Salva a validação da aplicação localmente.
  * @type {Function}
  */
