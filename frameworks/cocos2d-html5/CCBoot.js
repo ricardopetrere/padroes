@@ -2466,19 +2466,19 @@ cc.game = /** @lends cc.game# */{
             this._runMainLoop();
 
             // Load game scripts
-            cc.loader.loadJs(config[CONFIG_KEY.padroesPath], ["src/Boot.js"], function () {
-                var jsList = cc.game.config.jsList;
-                if (jsList) {
-                    cc.loader.loadJsWithImg(jsList, function (err) {
-                        if (err) throw new Error(err);
-                        self._prepared = true;
-                        if (cb) cb();
-                    });
-                }
-                else {
+            //cc.loader.loadJs(config[CONFIG_KEY.padroesPath], ["src/Boot.js"], function () {
+            var jsList = cc.game.config.jsList;
+            if (jsList) {
+                cc.loader.loadJsWithImg(jsList, function (err) {
+                    if (err) throw new Error(err);
+                    self._prepared = true;
                     if (cb) cb();
-                }
-            })
+                });
+            }
+            else {
+                if (cb) cb();
+            }
+            //})
 
             return;
         }
@@ -2629,7 +2629,7 @@ cc.game = /** @lends cc.game# */{
 
         // Configs adjustment
         config[CONFIG_KEY.showFPS] = typeof config[CONFIG_KEY.showFPS] === 'undefined' ? true : config[CONFIG_KEY.showFPS];
-        config[CONFIG_KEY.padroesPath] = config[CONFIG_KEY.padroesPath] || "Padroes";
+        //config[CONFIG_KEY.padroesPath] = config[CONFIG_KEY.padroesPath] || "Padroes";
         config[CONFIG_KEY.engineDir] = config[CONFIG_KEY.engineDir] || "frameworks/cocos2d-html5";
         if (config[CONFIG_KEY.debugMode] == null)
             config[CONFIG_KEY.debugMode] = 0;
