@@ -185,12 +185,13 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._btnLeft.setKeyCode(pd.Keys.LEFT);
         this._btnLeft.setVisible(false);
 
-        this.headerText = pd.cText(512, 660, pd.delegate.activeNamespace.tutorialData.txt_objetivo, "Calibri", 25);
+        pd.delegate.activeNamespace.tutorialData.headerTextOffsetY = pd.delegate.activeNamespace.tutorialData.headerTextOffsetY || 0;
+        this.headerText = pd.cText(512, 660 + pd.delegate.activeNamespace.tutorialData.headerTextOffsetY, pd.delegate.activeNamespace.tutorialData.txt_objetivo, "Calibri", 25);
         this.addChild(this.headerText, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this.headerText.setOpacity(0);
         this.texto_objetivo = this.headerText; //legado!
 
-        this._extraHeaderText = pd.cText(512, 660, pd.delegate.activeNamespace.tutorialData.txt_objetivo, "Calibri", 25);
+        this._extraHeaderText = pd.cText(512, 660 + pd.delegate.activeNamespace.tutorialData.headerTextOffsetY, pd.delegate.activeNamespace.tutorialData.txt_objetivo, "Calibri", 25);
         this.addChild(this._extraHeaderText, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._extraHeaderText.setOpacity(0);
 
@@ -346,7 +347,6 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         const newLayer = this._activeLayer;
 
         newLayer.setVisible(true);
-        newLayer.setPosition(0, 0);
         if(!newLayer._initialPosition)
             newLayer._initialPosition = {x:this._activeLayer.x, y:this._activeLayer.y};
 
@@ -598,6 +598,10 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 pd.Tutorial.setBottomTextOffset = function(offset) {
     pd.delegate.activeNamespace.tutorialData.txtOffSetY = offset;
 };
+
+pd.Tutorial.setHeaderOffsetY = function (offset) {
+    pd.delegate.activeNamespace.tutorialData.headerTextOffsetY = offset;
+}
 
 /**
  * Seta a imagem ou texto do objetivo do tutorial

@@ -508,7 +508,6 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
         target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER] = cc.EventListener.create({
             event:cc.EventListener.ACCELERATION,
-            isLandscapeRight: false,
             /**
              *
              * <p>
@@ -552,12 +551,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     */
     _parseAcc: function(acc, listener) {
         if (cc.sys.os === cc.sys.OS_ANDROID) {
-            if (acc.y > 0.8) {
-                listener.isLandscapeRight = true;
-            } else if (acc.y < -0.8) {
-                listener.isLandscapeRight = false;
-            }
-            if (!listener.isLandscapeRight) {
+            if (jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "getRotation", "()I") >= 2) {
                 acc.x = -acc.x;
                 acc.y = -acc.y;
             }
