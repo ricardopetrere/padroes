@@ -13,7 +13,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
 
     /**
      * Hash com os caminhos pré-carregados do paths.json.
-     * @type {{padroesPath:String, engineDir:String, volumePath:String, palcoPath:String, videoFolderPatj}}
+     * @type {{padroesPath:String, volumePath:String, videoFolderPath:String}}
      */
     paths:null,
 
@@ -134,9 +134,8 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
      * Verifica se o namespace indicado é o palco.
      * @param {Object} ns
      * @returns {Boolean}
-     * @private
      */
-    _isNamespacePalco: function(ns) {
+    isNamespacePalco: function(ns) {
         return ns.hasOwnProperty("targetBuild");
     },
 
@@ -149,19 +148,15 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
         this.activeNamespace = ns;
         activeGameSpace = ns; // legado - apenas para manter compatível!
 
-        if(!this._isNamespacePalco(ns)) {
-            ns.resPath = "res/";
-            ns.srcPath = "src/";
-        }
+        ns.resPath = "res/";
+        ns.srcPath = "src/";
 
-        if(this.context == pd.Delegate.CONTEXT_PALCO) {
-            if(!this._isNamespacePalco(ns)) {
-                if (ns.resPath.lastIndexOf(customPath) == -1)
-                    ns.resPath = ns.resPath.replace("res/", customPath + "/res/");
+        if(this.context == pd.Delegate.CONTEXT_PALCO && !this.isNamespacePalco(ns)) {
+            if (ns.resPath.lastIndexOf(customPath) == -1)
+                ns.resPath = ns.resPath.replace("res/", customPath + "/res/");
 
-                if (ns.srcPath.lastIndexOf(customPath) == -1)
-                    ns.srcPath = ns.srcPath.replace("src/", customPath + "/src/");
-            }
+            if (ns.srcPath.lastIndexOf(customPath) == -1)
+                ns.srcPath = ns.srcPath.replace("src/", customPath + "/src/");
         }
 
         pd.DebugScenes = [];

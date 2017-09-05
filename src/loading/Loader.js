@@ -50,7 +50,7 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
      * - Se estiver no palco, e o usuário estiver abrindo no jogo, não há a necessidade de se fazer um pré-carregamento, pois os recursos utilizados pelos padrões já estão carregados na memória.
      */
     onModuleReady: function() {
-        if(pd.delegate.context != pd.Delegate.CONTEXT_PALCO || pd.delegate.activeNamespace.srcPath.lastIndexOf("palco") != -1)
+        if(pd.delegate.context != pd.Delegate.CONTEXT_PALCO || pd.delegate.isNamespacePalco(pd.delegate.activeNamespace))
             pd.loader.preload();
         else
             pd.loader.initModule();
