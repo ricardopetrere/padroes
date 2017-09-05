@@ -131,6 +131,16 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     },
 
     /**
+     * Verifica se o namespace indicado é o palco.
+     * @param {Object} ns
+     * @returns {Boolean}
+     * @private
+     */
+    _isNamespacePalco: function(ns) {
+        return ns.hasOwnProperty("targetBuild");
+    },
+
+    /**
      * Inicializa o namespace indicado.
      * @param {Object} ns
      * @param {String} customPath - um caminho específico, caso o jogo não esteja na raíz do projeto.
@@ -139,16 +149,19 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
         this.activeNamespace = ns;
         activeGameSpace = ns; // legado - apenas para manter compatível!
 
-        ns.resPath = "res/";
-        ns.srcPath = "src/";
+        if(!this._isNamespacePalco(ns)) {
+            ns.resPath = "res/";
+            ns.srcPath = "src/";
+        }
 
-        if(this.context == pd.Delegate.CONTEXT_PALCO && ns.resPath.lastIndexOf("jogo") != -1) {
+        if(this.context == pd.Delegate.CONTEXT_PALCO) {
+            if(!this._isNamespacePalco(ns)) {
+                if (ns.resPath.lastIndexOf(customPath) == -1)
+                    ns.resPath = ns.resPath.replace("res/", customPath + "/res/");
 
-            if(ns.resPath.lastIndexOf(customPath) == -1)
-                ns.resPath = ns.resPath.replace("res/", customPath + "/res/");
-
-            if(ns.srcPath.lastIndexOf(customPath) == -1)
-                ns.srcPath = ns.srcPath.replace("src/", customPath + "/src/");
+                if (ns.srcPath.lastIndexOf(customPath) == -1)
+                    ns.srcPath = ns.srcPath.replace("src/", customPath + "/src/");
+            }
         }
 
         pd.DebugScenes = [];

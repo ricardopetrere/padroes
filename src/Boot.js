@@ -84,7 +84,7 @@ pd.boot = function(paths) {
         if(pd.delegate.context == pd.Delegate.CONTEXT_PALCO) {
             pd.loader.loadJSON(pd.delegate.paths.volumePath + "/metadata/modules.json", function(metadata) {
                 cc.loader.loadJs(pd.delegate.paths.palcoPath + "/src", ["Config.js"], function() {
-                    palco.boot(pd.delegate.paths.palcoPath + "/res/", pd.delegate.paths.palcoPath + "/src/", metadata.targetBuild);
+                    palco.boot(metadata.targetBuild);
                 });
             });
         }

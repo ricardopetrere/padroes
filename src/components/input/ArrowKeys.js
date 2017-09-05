@@ -76,6 +76,7 @@ pd.ArrowKeys = cc.Layer.extend({/** @lends pd.ArrowKeys#**/
     _addButton: function(normalSprite, pressedSprite, attr, keyCode) {
         this.keys = this.keys || [];
         var btn = new pd.Button(normalSprite, pressedSprite, attr, 1, false, true);
+        btn.setForceMouseUpCall(true);
         btn.setDisabledOpacity(155);
         this.keys.push(btn);
         this.addChild(btn);
