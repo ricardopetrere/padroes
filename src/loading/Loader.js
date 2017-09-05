@@ -121,7 +121,7 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
         this.loaderScene.init();
         cc.director.runScene(this.loaderScene);
 
-        cc.loader.loadJs(root, ["src/" + namespace + "/Config.js"], function() {
+        cc.loader.loadJs(root, ["src/Config.js"], function() {
             pd.delegate.initWithNamespace(eval(namespace), root);
         });
     },
