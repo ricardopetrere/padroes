@@ -39,6 +39,7 @@ pd.jsList = [
     "src/core/controllers/InputManager.js",
     "src/utils/Transitions.js",
     "src/utils/Snippets.js",
+    "src/utils/Natives.js",
     "src/utils/Decorators.js",
     "src/components/prototypes/Scenes.js",
     "src/components/prototypes/Animation.js",

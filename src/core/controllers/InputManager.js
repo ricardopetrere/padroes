@@ -551,7 +551,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     */
     _parseAcc: function(acc, listener) {
         if (cc.sys.os === cc.sys.OS_ANDROID) {
-            if (jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "getRotation", "()I") >= 2) {
+            if (pd.natives.callNative("getRotation", null, pd.natives.JavaTypes.INT) >= 2) {
                 acc.x = -acc.x;
                 acc.y = -acc.y;
             }
