@@ -159,17 +159,33 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
                 ns.srcPath = ns.srcPath.replace("src/", customPath + "/src/");
         }
 
+        this._initGameResources(ns);
+
         pd.DebugScenes = [];
 
         cc.loader.loadJs(ns.srcPath, ns.jsList, function() {
             if(ns.onInit)
-                ns.onInit.apply(ns);
+                ns.onInit();
 
             pd.loader.setTargets(ns.g_resources ? [ns.g_resources, pd.g_resources] : [pd.g_resources]);
             pd.loader.onModuleReady();
         });
 
         this.init();
+    },
+
+    /**
+     * Inicializa os resources do jogo
+     * @param ns
+     * @private
+     */
+    _initGameResources: function (ns) {
+        if (ns.res && !ns.g_resources) {
+            for (var n in ns.res) {
+                ns.res[n] = cc.path.join(ns.resPath, ns.res[n]);
+            }
+            ns.g_resources = pd.cloneArray(ns.res);
+        }
     },
 
     /**
