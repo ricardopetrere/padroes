@@ -46,6 +46,7 @@ pd.jsList = [
     "src/components/prototypes/TutorialLayer.js",
     "src/components/prototypes/TypewriterLabel.js",
     "src/components/prototypes/LifeHUD.js",
+    "src/components/prototypes/MainLayer.js",
     "src/components/input/Button.js",
     "src/components/input/Joystick.js",
     "src/components/input/StandardButton.js",

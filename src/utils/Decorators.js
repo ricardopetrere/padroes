@@ -194,7 +194,7 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
  * Este objeto é utilizado pela classe pd.TypewritterLabel para customizar os seus labels internos.
  * @mixin
  */
-pd.decorators.UpdateableText = {/** @lends pd.decorators.UpdateableText#*/
+pd.decorators.TypewritterTextLabel = {/** @lends pd.decorators.UpdateableText#*/
     /** @type {pd.TypewriterLabel} **/
     _handler: null,
     /** @type {String} **/
@@ -257,6 +257,112 @@ pd.decorators.UpdateableText = {/** @lends pd.decorators.UpdateableText#*/
         if(this.callback){
             this._handler[this.callback](this);
         }
+    }
+};
+
+/**
+ * Transforma uma cc.LabelTTF em um display de pontuação animado.
+ * @mixin
+ */
+pd.decorators.UpdateableScoreDisplay = {/** @lends pd.decorators.UpdateableScoreDisplay#*/
+    /**
+     * @type {Number}
+     */
+    _currentScore:0,
+
+    /**
+     * @type {Number}
+     */
+    _targetDuration:0,
+
+    /**
+     * @type {Number}
+     */
+    _currentDuration:0,
+
+    /**
+     * @type {Number}
+     */
+    _dScore:0,
+
+    /**
+     * Seta o score atual.
+     * @param {String|Number} score - a pontuação atual.
+     * @param {Number} [duration=0] - a duração da animação.
+     */
+    setScore: function(score, duration) {
+        duration = duration || 0;
+        if(duration > 0) {
+            var current = parseInt(this.getString());
+            if (!current || isNaN(current))
+                current = 0;
+
+            this._currentScore = current;
+            this._targetDuration = duration;
+            this._currentDuration = 0;
+            this._dScore = score - current;
+
+            this.scheduleUpdate();
+        }
+        else {
+            this.setString(score.toString());
+        }
+    },
+
+    /**
+     * Atualiza a animação.
+     * @param dt
+     */
+    update: function(dt) {
+        this._currentDuration += dt;
+        const percentage = pd.clamp(this._currentDuration/this._targetDuration, 0, 1);
+        this.setString(Math.round(this._currentScore + this._dScore*percentage).toString());
+        if(percentage == 1) {
+            this.setString(this._currentScore + this._dScore);
+            this.unscheduleUpdate();
+        }
+    }
+};
+
+/**
+ * Implementa as funcionalidades básicas de um objeto que realiza parallax. <br/>
+ * Ao contrário de {@link cc.ParallaxNode}, neste caso é o objeto-filho que possui as configurações de parallax, assim fica mais versátil <br/>
+ * O comportamento normal ao se usar esse decorator é de aplicá-lo a um objeto filho da layer principal, que esteja com uma ação {@link cc.Follow} rodando
+ * @mixin
+ */
+pd.decorators.ParallaxObject = {/** @lends pd.decorators.ParallaxObject#*/
+    /**
+     * A posição default do objeto, para quando o {@link parallaxParent} estiver em cc.p(0,0)
+     * @type {cc.Point}
+     */
+    parallaxOffset: null,
+    /**
+     * O objeto-pai no parallax. Não necessariamente o pai do objeto, mas normalmente é a layer na qual o objeto está
+     * @type {cc.Node}
+     */
+    parallaxParent: null,
+    /**
+     * Taxa de correspondência de parallax com {@link parallaxParent}, em X e Y. Quanto mais próximos de 1, menos o objeto se movimentará na tela
+     * @type {cc.Point}
+     */
+    parallaxRatio: null,
+    /**
+     *
+     * @param {cc.Point} ratio
+     * @param {cc.Point} [offset]
+     */
+    parallaxConfigure: function (ratio, offset) {
+        this.parallaxParent = this.getParent();
+        this.parallaxOffset = cc.p(offset || this.getPosition());
+        this.parallaxRatio = cc.p(ratio || cc.p(1, 1));
+    },
+    /**
+     *
+     * @param {number} dt
+     */
+    parallaxMove: function (dt) {
+        this.x = this.parallaxOffset.x - (this.parallaxRatio.x * this.parallaxParent.x);
+        this.y = this.parallaxOffset.y - (this.parallaxRatio.y * this.parallaxParent.y);
     }
 };
 //</editor-fold">
@@ -490,47 +596,4 @@ pd.decorators.Model = {/** @lends pd.decorators.Model#*/
                 (eventData !== undefined ? "[" + JSON.stringify(eventData) + "]" : "[]"));
     }
 };
-//</editor-fold>
-//<editor-fold desc="Parallax">
-/**
- * Implementa as funcionalidades básicas de um objeto que realiza parallax. <br/>
- * Ao contrário de {@link cc.ParallaxNode}, neste caso é o objeto-filho que possui as configurações de parallax, assim fica mais versátil <br/>
- * O comportamento normal ao se usar esse decorator é de aplicá-lo a um objeto filho da layer principal, que esteja com uma ação {@link cc.Follow} rodando
- * @mixin
- */
-pd.decorators.ParallaxObject = {/** @lends pd.decorators.ParallaxObject#*/
-    /**
-     * A posição default do objeto, para quando o {@link parallaxParent} estiver em cc.p(0,0)
-     * @type {cc.Point}
-     */
-    parallaxOffset: null,
-    /**
-     * O objeto-pai no parallax. Não necessariamente o pai do objeto, mas normalmente é a layer na qual o objeto está
-     * @type {cc.Node}
-     */
-    parallaxParent: null,
-    /**
-     * Taxa de correspondência de parallax com {@link parallaxParent}, em X e Y. Quanto mais próximos de 1, menos o objeto se movimentará na tela
-     * @type {cc.Point}
-     */
-    parallaxRatio: null,
-    /**
-     *
-     * @param {cc.Point} ratio
-     * @param {cc.Point} [offset]
-     */
-    parallaxConfigure: function (ratio, offset) {
-        this.parallaxParent = this.getParent();
-        this.parallaxOffset = cc.p(offset || this.getPosition());
-        this.parallaxRatio = cc.p(ratio || cc.p(1, 1));
-    },
-    /**
-     *
-     * @param {number} dt
-     */
-    parallaxMove: function (dt) {
-        this.x = this.parallaxOffset.x - (this.parallaxRatio.x * this.parallaxParent.x);
-        this.y = this.parallaxOffset.y - (this.parallaxRatio.y * this.parallaxParent.y);
-    }
-}
 //</editor-fold>

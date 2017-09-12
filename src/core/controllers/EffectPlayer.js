@@ -1,3 +1,5 @@
+// CLASSE LEGADO: aguardando testes do Ricardo com a audioEngine para removê-la.
+
 //v1 estavel 06/01/15
 
 //Variavel utilizada para identificar o index do player (só serve pra debug)

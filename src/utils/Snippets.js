@@ -87,16 +87,16 @@ pd.orderBy = function(array, key, crescentOrder) {
 /**
  * Retorna o array como um string, podendo usar uma função customizada para converter cada item do array para texto
  * @param {Array} array
- * @param {Function} [fncItens] - Uma função para imprimir cada item do vetor
+ * @param {Function} [fncItems] - Uma função para imprimir cada item do vetor
  * @returns {String}
  */
-pd.arrayToString = function (array, fncItens) {
+pd.arrayToString = function (array, fncItems) {
     var text = "[";
     for (var n = 0; n < array.length; n++) {
         if (n !== 0)
             text += ", ";
-        if (fncItens) {
-            text += fncItens(array[n]);
+        if (fncItems) {
+            text += fncItems(array[n]);
         } else {
             text += array[n];
         }
@@ -372,13 +372,10 @@ pd.changeScene = function (scene, delay, transition) {
     if (delay == null || delay === 0) {
         cc.director.runScene(sceneObj);
     } else {
-        // var transitionObj = transition(delay, sceneObj);
-        // pd.delegate.retain(transitionObj);
-        // cc.director.runScene(transitionObj);
         cc.director.runScene(transition(delay, sceneObj));
     }
     return sceneObj;
-}
+};
 
 /**
  * Obtém a cena atual -> utilizar a chamada direta pd.currentScene (útil para acessar elementos via console).
