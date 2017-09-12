@@ -118,7 +118,7 @@ pd.LoaderScene = (cc.sys.isNative ? cc.Scene : cc.LoaderScene).extend({/** @lend
      * Realiza a construção dos elementos da cena, adicionando-os e animando-os.
      */
     buildUp: function() {
-        this._logo = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("portalLogo.png"));
+        this._logo = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.PORTAL_LOGO));
         this.addChild(this._logo);
 
         if(this._animationType == pd.LoaderScene.ANIMATION_TYPE_HIDDEN) {

@@ -79,14 +79,14 @@ pd.initGlobals = pd.delegate.init;
 pd.trocaCena = pd.switchScene;
 
 /**
- * @deprecated - desde a versão 2.2 - utilizar {@link pd.openURL}.
+ * @deprecated - desde a versão 2.2 - utilizar {@link pd.natives.openURL}.
  */
-abreLink = pd.openURL;
+abreLink = pd.natives.openURL;
 
 /**
- * @deprecated - desde a versão 2.2 - utilizar {@link pd.openURL}.
+ * @deprecated - desde a versão 2.2 - utilizar {@link pd.natives.openURL}.
  */
-abreLinkIOS = pd.openURL;
+abreLinkIOS = pd.natives.openURL;
 
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.validate}.

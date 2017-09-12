@@ -97,9 +97,9 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
             throw new Error("[pd.Joystick] Utilizando construtor antigo não mais suportado para instanciar um joystick!")
         }
 
-        this._super(pd.getSpriteFrame("JoystickBackGround.png"));
+        this._super(pd.getSpriteFrame(pd.SpriteFrames.JOYSTICK_BACKGROUND));
         this._radius = this.getBoundingBox().width/2;
-        this._pad = pd.createSprite("JoystickStick.png", this._radius, this._radius, this);
+        this._pad = pd.createSprite(pd.SpriteFrames.JOYSTICK_PAD, this._radius, this._radius, this);
         pd.decorate(this._pad, pd.decorators.ResetableNode);
         this._pad.saveDisplayState();
         this._isGrabbed = false;

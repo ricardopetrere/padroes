@@ -39,6 +39,7 @@ pd.jsList = [
     "src/core/controllers/InputManager.js",
     "src/utils/Transitions.js",
     "src/utils/Snippets.js",
+    "src/utils/Natives.js",
     "src/utils/Decorators.js",
     "src/components/prototypes/Scenes.js",
     "src/components/prototypes/Animation.js",
@@ -69,21 +70,22 @@ pd.jsList = [
 /**
  * Boota os padrões com os caminhos informados.
  * @param {Object} paths
+ * @param {String} context
  */
-pd.boot = function(paths) {
+pd.boot = function(paths, context) {
     padroesPath = paths.padroesPath;
     cc.loader.loadJs(paths.padroesPath, pd.jsList, function() {
         pd.delegate.setPaths(paths);
 
-        if(paths.palcoPath)
-            pd.delegate.setContext(pd.Delegate.CONTEXT_PALCO);
+        if(context)
+            pd.delegate.setContext("context" + context);
         else
             pd.delegate.setContext(pd.Delegate.CONTEXT_STAND_ALONE);
 
         //////////////////// MODO PALCO //////////////////////
         if(pd.delegate.context == pd.Delegate.CONTEXT_PALCO) {
             pd.loader.loadJSON(pd.delegate.paths.volumePath + "/metadata/modules.json", function(metadata) {
-                cc.loader.loadJs(pd.delegate.paths.palcoPath + "/src", ["Config.js"], function() {
+                cc.loader.loadJs("src", ["Config.js"], function() {
                     palco.boot(metadata.targetBuild);
                 });
             });

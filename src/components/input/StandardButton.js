@@ -111,11 +111,11 @@ pd.StandardButton = pd.Button.extend({/** @lends pd.StandardButton#**/
 
         const boundingBox = this.getBoundingBox();
         if(shape == pd.StandardButton.Shapes.ROUNDED) {
-            this._background = pd.createSprite("roundButtonBody.png", boundingBox.width/2 + 3, boundingBox.height/2, this, -1);
+            this._background = pd.createSprite(pd.SpriteFrames.ROUND_BUTTON_BODY, boundingBox.width/2 + 3, boundingBox.height/2, this, -1);
             this._label.setPosition(this._label.x + 6.5, this._label.y - 4);
         }
         else if(shape == pd.StandardButton.Shapes.SQUARED) {
-            this._background = pd.createSprite("squareButtonBody.png", boundingBox.width/2 + 3, boundingBox.height/2, this, -1);
+            this._background = pd.createSprite(pd.SpriteFrames.SQUARE_BUTTON_BODY, boundingBox.width/2 + 3, boundingBox.height/2, this, -1);
         }
     },
 
@@ -128,18 +128,18 @@ pd.StandardButton = pd.Button.extend({/** @lends pd.StandardButton#**/
     _getLabel: function(shape, color, pressed) {
         if(!color) {
             if (shape == pd.StandardButton.Shapes.ROUNDED) {
-                return pressed ? "pd_btn_naked_pressed" : "pd_btn_naked_normal";
+                return pressed ? pd.SpriteFrames.BTN_NAKED_PRESSED : pd.SpriteFrames.BTN_NAKED;
             }
             else {
-                return pressed ? "keyNaked0002" : "keyNaked0001";
+                return pressed ? pd.SpriteFrames.KEY_NAKED_PRESSED : pd.SpriteFrames.KEY_NAKED;
             }
         }
         else {
             if(shape == pd.StandardButton.Shapes.ROUNDED) {
-                return pressed ? "roundButtonTransparent0002" : "roundButtonTransparent0001";
+                return pressed ? pd.SpriteFrames.ROUND_BUTTON_TRANSPARENT_PRESSED : pd.SpriteFrames.ROUND_BUTTON_TRANSPARENT;
             }
             else {
-                return pressed ? "squareButtonTransparent0002" : "squareButtonTransparent0001";
+                return pressed ? pd.SpriteFrames.SQUARE_BUTTON_TRANSPARENT_PRESSED : pd.SpriteFrames.SQUARE_BUTTON_TRANSPARENT;
             }
         }
     },
