@@ -153,11 +153,11 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._tweenableObjects = [];
 
         this._bgLayers = [
-            pd.createSprite('background_01_instrucoes', 512, -500, this, 1),
-            pd.createSprite('background_02_instrucoes', 512, -500, this, 2),
-            pd.createSprite('layer_instrucoes', 512, -500, this, 3)
+            pd.createSprite(pd.SpriteFrames.BG_TUTORIAL_01, 512, -500, this, 1),
+            pd.createSprite(pd.SpriteFrames.BG_TUTORIAL_02, 512, -500, this, 2),
+            pd.createSprite(pd.SpriteFrames.TUTORIAL_LAYER, 512, -500, this, 3)
         ];
-        this._extraBgLayer = pd.createSprite('layer_instrucoes', 512, -500, this, 3);
+        this._extraBgLayer = pd.createSprite(pd.SpriteFrames.TUTORIAL_LAYER, 512, -500, this, 3);
         this._tweenableObjects.push(this._bgLayers[2]);
 
         if((pd.delegate.activeNamespace.tutoriais && pd.delegate.activeNamespace.tutorialData && pd.delegate.activeNamespace.tutoriais.length > pd.delegate.activeNamespace.tutorialData.length)) {
@@ -166,20 +166,20 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
             cc.warn("[pd] Aviso: utilizando recurso depreciado: activeNamespace.tutoriais. Utilizar a função pd.delegate.setTutorial() para inicializar o tutorial do jogo.")
         }
 
-        this._title = pd.createSprite('txt_instrucoes', 512, 730, this, 99);
+        this._title = pd.createSprite(pd.SpriteFrames.TUTORIAL_TEXT, 512, 730, this, 99);
         this._title.setOpacity(0);
 
-        this._btnExit = new pd.Button("btn_sair_instrucoes.png", "btp_sair_instrucoes.png", {x:1090, y:740}, 1, true, false, this, "_onCloseButton");
+        this._btnExit = new pd.Button(pd.SpriteFrames.BTN_EXIT, pd.SpriteFrames.BTN_EXIT_PRESSED, {x:1090, y:740}, 1, true, false, this, "_onCloseButton");
         this.addChild(this._btnExit, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
 
-        this._btnRight = new pd.Button("btn_next_instrucoes.png", "btp_next_instrucoes.png", {x:987, y:360}, 1, true, false, this, "_onNextPage");
+        this._btnRight = new pd.Button(pd.SpriteFrames.BTN_NEXT, pd.SpriteFrames.BTN_NEXT_PRESSED, {x:987, y:360}, 1, true, false, this, "_onNextPage");
         this.addChild(this._btnRight, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._btnRight.setFlippedX(true);
         this._btnRight.setOpacity(0);
         this._btnRight.setKeyCode(pd.Keys.RIGHT);
         this._btnRight.setVisible(pd.delegate.activeNamespace.tutorialData.length > 1);
 
-        this._btnLeft = new pd.Button("btn_next_instrucoes.png", "btp_next_instrucoes.png", {x:37, y:360}, 1, true, false, this, "_onPreviousPage");
+        this._btnLeft = new pd.Button(pd.SpriteFrames.BTN_NEXT, pd.SpriteFrames.BTN_NEXT_PRESSED, {x:37, y:360}, 1, true, false, this, "_onPreviousPage");
         this.addChild(this._btnLeft, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
         this._btnLeft.setOpacity(0);
         this._btnLeft.setKeyCode(pd.Keys.LEFT);

@@ -122,22 +122,22 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
     _buildUp: function() {
         this._addBackground();
         if(this._type == pd.GameOverLayer.TYPE_WIN) {
-            this._addStrip("faixa.png", 1.1);
+            this._addStrip(pd.SpriteFrames.STRIP, 1.1);
             this._addLabel();
             this._addCircle(80);
 
             //ficou meio vertical, mas está melhor do que o antigo...!
-            this._addStar("estrela_grande.png", cc.winSize.width / 2 - 82, cc.winSize.height / 2, cc.p(1,0));
-            this._addStar("estrela_grande.png",cc.winSize.width / 2 + 82, cc.winSize.height / 2, cc.p(0,0), true);
-            this._addStar("estrela1.png", 760, 270, null, null, 1);
-            this._addStar("estrela1.png", 730, 250, null, null, 0.5);
-            this._addStar("estrela2.png", 700, 200, null, null, 0.85);
-            this._addStar("estrela2.png", 670, 330, null, null, 1.4);
-            this._addStar("estrela2.png", 360, 330, null, null, 1);
-            this._addStar("estrela2.png", 330, 200, null, null, 1);
-            this._addStar("estrela3.png", 255, 240, null, null, 1);
-            this._addStar("estrela3.png", 220, 195, null, null, 0.5);
-            this._addStar("estrela3.png", 265, 175, null, null, 0.45);
+            this._addStar(pd.SpriteFrames.BIG_STAR, cc.winSize.width / 2 - 82, cc.winSize.height / 2, cc.p(1,0));
+            this._addStar(pd.SpriteFrames.BIG_STAR,cc.winSize.width / 2 + 82, cc.winSize.height / 2, cc.p(0,0), true);
+            this._addStar(pd.SpriteFrames.STAR_1, 760, 270, null, null, 1);
+            this._addStar(pd.SpriteFrames.STAR_1, 730, 250, null, null, 0.5);
+            this._addStar(pd.SpriteFrames.STAR_2, 700, 200, null, null, 0.85);
+            this._addStar(pd.SpriteFrames.STAR_2, 670, 330, null, null, 1.4);
+            this._addStar(pd.SpriteFrames.STAR_2, 360, 330, null, null, 1);
+            this._addStar(pd.SpriteFrames.STAR_2, 330, 200, null, null, 1);
+            this._addStar(pd.SpriteFrames.STAR_3, 255, 240, null, null, 1);
+            this._addStar(pd.SpriteFrames.STAR_3, 220, 195, null, null, 0.5);
+            this._addStar(pd.SpriteFrames.STAR_3, 265, 175, null, null, 0.45);
 
             this._setStars();
             this._setAudioSequence();
@@ -145,7 +145,7 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
             this._run();
         }
         else if(this._type == pd.GameOverLayer.TYPE_LOSE) {
-            this._addStrip("faixa_frente.png", 1);
+            this._addStrip(pd.SpriteFrames.STRIP_FRONT, 1);
             this._addCorners();
             this._addCircle(30);
             this._setAudioSequence();
@@ -252,7 +252,7 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
      * @private
      */
     _createCorner: function(x, y, anchorPointX, flippedX) {
-        var corner = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("faixa_aba.png"));
+        var corner = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.STRIP_CORNER));
         corner.setPosition(x, y);
         corner.setAnchorPoint(anchorPointX, 0.5);
         this.addChild(corner, 9);
@@ -378,7 +378,7 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
      * @private
      */
     _setImpact: function() {
-        this._wave = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame("impacto.png"));
+        this._wave = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.IMPACT_SHADOW));
         this._wave.setPosition(this._circle.getPosition());
         this.addChild(this._wave, 4);
         this._wave.setScale(0);

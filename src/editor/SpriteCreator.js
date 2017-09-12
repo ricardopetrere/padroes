@@ -3,7 +3,7 @@
  */
 pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
     ctor:function(){
-        this._super(cc.spriteFrameCache.getSpriteFrame('editor_interface.png'));
+        this._super(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_INTERFACE));
     },
     init:function(){
 
@@ -12,7 +12,7 @@ pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
         this.setAnchorPoint(0, 1);
         this.setContentSize(570, 250);
 
-        var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame('editor_cabecalho.png'), cc.p(0, 250), 570, 26);
+        var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.Editor.EDITOR_HEADER), cc.p(0, 250), 570, 26);
         cabecalho.setAnchorPoint(0, 0);
         this.addChild(cabecalho);
 
@@ -33,11 +33,11 @@ pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
 
         //Campo do Name
         this.selectedInfos.parent =  pd.Editor.createEditBox(this, {txt:"ParentByName:", size:14}, cc.p(15, 225), cc.size(135, 20), cc.EDITBOX_INPUT_MODE_ANY);
-        this.listParentButton = new pd.Button('btn_lista.png', 'btn_lista.png', {x:265, y:225}, null, true, false, this, '_onParentListButtonCall');
+        this.listParentButton = new pd.Button(pd.SpriteFrames.EDITOR_BTN_LIST, pd.SpriteFrames.EDITOR_BTN_LIST, {x:265, y:225}, null, true, false, this, '_onParentListButtonCall');
         this.addChild(this.listParentButton, 99);
 
         this.selectedInfos.spriteName =  pd.Editor.createEditBox(this, {txt:"SpriteName:", size:14}, cc.p(15, 200), cc.size(155, 20), cc.EDITBOX_INPUT_MODE_ANY, this, "onSpriteFrameTextChange");
-        this.listSpriteFrameButton = new pd.Button('btn_lista.png', 'btn_lista.png', {x:265, y:200}, null, true, false, this, '_onSpriteFrameListButtonCall');
+        this.listSpriteFrameButton = new pd.Button(pd.SpriteFrames.EDITOR_BTN_LIST, pd.SpriteFrames.EDITOR_BTN_LIST, {x:265, y:200}, null, true, false, this, '_onSpriteFrameListButtonCall');
         this.addChild(this.listSpriteFrameButton, 99);
 
         this.selectedInfos.name =  pd.Editor.createEditBox(this, {txt:"Name:", size:14}, cc.p(15, 175), cc.size(192, 20), cc.EDITBOX_INPUT_MODE_ANY);
@@ -49,13 +49,13 @@ pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
         //Região que controla ZOrder & boundingBox
         this.selectedInfos.zOrder = pd.Editor.createEditBox(this, {txt:"Z-Order:", size:17}, cc.p(15, 100), cc.size(60, 20), cc.EDITBOX_INPUT_MODE_NUMERIC);
 
-        this.selectedInfos.willAddToPrinter = pd.Editor.createCheckBox(this, {txt:"Adicionar ao Printer - ", size:17}, cc.p(15, 70), ["unchecked.png", "checked.png"]);
+        this.selectedInfos.willAddToPrinter = pd.Editor.createCheckBox(this, {txt:"Adicionar ao Printer - ", size:17}, cc.p(15, 70), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
 
-        this.exitButton = new pd.Button('btn_fechar.png', 'btn_fechar.png', {x:550, y:12}, null, true, false, this, '_onExitButtonCall');
+        this.exitButton = new pd.Button(pd.SpriteFrames.EDITOR_BTN_CLOSE, pd.SpriteFrames.EDITOR_BTN_CLOSE, {x:550, y:12}, null, true, false, this, '_onExitButtonCall');
         this.cabecalho.addChild(this.exitButton, 99);
 
 
-        this.createButton = new pd.Button('btn_criar.png', 'btn_criar.png', {x:130, y:30}, null, true, false, this, 'onCreateButtonCall');
+        this.createButton = new pd.Button(pd.SpriteFrames.EDITOR_BTN_CREATE, pd.SpriteFrames.EDITOR_BTN_CREATE, {x:130, y:30}, null, true, false, this, 'onCreateButtonCall');
         this.addChild(this.createButton, 99);
 
         var PreviewString = pd.createText("Arial", null, 350, 225, 20, null, "PREVIEW:");

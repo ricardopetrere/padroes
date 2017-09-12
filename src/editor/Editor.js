@@ -23,13 +23,13 @@ pd.Editor = cc.LayerColor.extend({
         pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, "onMouseDown", this);
 
         //inicializa os botões do editor.
-        this.btn_editor = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame('btn_editor.png'));
+        this.btn_editor = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_BTN));
         this.btn_editor.setPosition(45, 752);
         this.addChild(this.btn_editor);
-        this.btn_spriteCreator = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame('btn_spriteCreator.png'));
+        this.btn_spriteCreator = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_BTN_SPRITE_CREATOR));
         this.btn_spriteCreator.setPosition(160,752);
         this.addChild(this.btn_spriteCreator);
-        this.btn_printer = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame('btn_printer.png'));
+        this.btn_printer = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_BTN_PRINTER));
         this.btn_printer.setPosition(278,752);
         this.addChild(this.btn_printer);
 
@@ -146,13 +146,13 @@ pd.Editor = cc.LayerColor.extend({
  */
 pd.Editor.GeneralEditor = cc.Scale9Sprite.extend({
     ctor:function(){
-        this._super(cc.spriteFrameCache.getSpriteFrame('editor_interface.png'));
+        this._super(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_INTERFACE));
     },
     init:function(){
         this.setAnchorPoint(0, 1);
         this.setContentSize(570, 250);
 
-        var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame('editor_cabecalho.png'), cc.p(0, 250), 570, 26);
+        var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.Editor.EDITOR_HEADER), cc.p(0, 250), 570, 26);
         cabecalho.setAnchorPoint(0, 0);
         this.addChild(cabecalho);
 
@@ -191,10 +191,10 @@ pd.Editor.GeneralEditor = cc.Scale9Sprite.extend({
         //this.addChild(this, 50);
 
         //Adiciona o botão de fechar
-        this.exitButton = new pd.Button('btn_fechar.png', 'btn_fechar.png', {x:550, y:12}, null, true, false, this, '_onExitButtonCall');
+        this.exitButton = new pd.Button(pd.SpriteFrames.EDITOR_BTN_CLOSE, pd.SpriteFrames.EDITOR_BTN_CLOSE, {x:550, y:12}, null, true, false, this, '_onExitButtonCall');
         this.cabecalho.addChild(this.exitButton, 99);
         //Adiciona o botão de lista, para abrir a lista de sprites presentes no NodeList e permite selecionar a sprite para o general editor
-        this.listButton = new pd.Button('btn_lista.png', 'btn_lista.png', {x:20, y:225}, null, true, false, this, '_onListButtonCall');
+        this.listButton = new pd.Button(pd.SpriteFrames.EDITOR_BTN_LIST, pd.SpriteFrames.EDITOR_BTN_LIST, {x:20, y:225}, null, true, false, this, '_onListButtonCall');
         this.addChild(this.listButton, 99);
 
         //Array para organizar todos os campos de texto em um unico objeto
@@ -222,7 +222,7 @@ pd.Editor.GeneralEditor = cc.Scale9Sprite.extend({
         this.selectedInfos.scaleX = pd.Editor.createEditBox(this, {txt:"ScaleX:", size:16}, cc.p(10, 140), cc.size(60, 20), cc.EDITBOX_INPUT_MODE_NUMERIC, this, "_updateScale");
         this.selectedInfos.scaleY = pd.Editor.createEditBox(this, {txt:"ScaleY:", size:16}, cc.p(155, 140), cc.size(60, 20), cc.EDITBOX_INPUT_MODE_NUMERIC, this, "_updateScale");
         //Botão para associar a escala X e Y
-        this.selectedInfos.scaleChain = pd.Editor.createCheckBox(this, {txt:"", size:0}, cc.p(133, 140), ["unchained.png", "chained.png"]);
+        this.selectedInfos.scaleChain = pd.Editor.createCheckBox(this, {txt:"", size:0}, cc.p(133, 140), [pd.SpriteFrames.EDITOR_UNCHAINED, pd.ScenePrototype.EDITOR_CHAINED]);
 
         //Região que controla a rotação
         var rotationString = pd.createText("Arial", null, 285, 160, 12, null, "/ / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / Scale & Rotation / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /");
@@ -248,12 +248,12 @@ pd.Editor.GeneralEditor = cc.Scale9Sprite.extend({
         this.addChild(zOrderString);
         this.selectedInfos.zOrder = pd.Editor.createEditBox(this, {txt:"Z-Order:", size:17}, cc.p(10, 60), cc.size(60, 20), cc.EDITBOX_INPUT_MODE_NUMERIC, this, "_updateZOrder");
 
-        this.selectedInfos.showBoundingBox = pd.Editor.createCheckBox(this, {txt:"Show bounding box - ", size:17}, cc.p(155, 60), ["unchecked.png", "checked.png"]);
+        this.selectedInfos.showBoundingBox = pd.Editor.createCheckBox(this, {txt:"Show bounding box - ", size:17}, cc.p(155, 60), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
 
-        this.selectedInfos.willAddToPrinter = pd.Editor.createCheckBox(this, {txt:"Adicionar ao Printer - ", size:17}, cc.p(365, 60), ["unchecked.png", "checked.png"]);
+        this.selectedInfos.willAddToPrinter = pd.Editor.createCheckBox(this, {txt:"Adicionar ao Printer - ", size:17}, cc.p(365, 60), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
 
         //bounding box para mostrar a area de colisão da img
-        this.boundingBoxImage = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame('boundingBox.png'), cc.p(0, 0), 1, 1);
+        this.boundingBoxImage = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_BOUNDING_BOX), cc.p(0, 0), 1, 1);
         this.boundingBoxImage.setVisible(false);
         this.boundingBoxImage.setAnchorPoint(0, 0);
         this.addChild(this.boundingBoxImage, 10);
@@ -531,9 +531,9 @@ pd.Editor.createScale9Sprite = function(img, position, scaleX, scaleY){
     return sprite;
 }
 pd.Editor.createView = function(name, position, size){
-    var body = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame('editor_interface.png'), position, size.width, size.height);
+    var body = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_INTERFACE), position, size.width, size.height);
     //this.addChild(body);
-    var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame('editor_cabecalho.png'), cc.p(0, size.height), size.width, 26);
+    var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.Editor.EDITOR_HEADER), cc.p(0, size.height), size.width, 26);
     cabecalho.setAnchorPoint(0, 0);
     body.addChild(cabecalho);
 
@@ -552,7 +552,7 @@ pd.Editor.createEditBox = function(layer, textInfo, position, size, type, funcCa
     name.setFontFillColor(new cc.Color(0, 0, 0));
     layer.addChild(name);
 
-    var editBox = new cc.EditBox(size, new cc.Scale9Sprite(cc.spriteFrameCache.getSpriteFrame('textBox.png')));
+    var editBox = new cc.EditBox(size, new cc.Scale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_TEXT_BOX)));
     if(type) {editBox.setInputMode(type);}
     else {editBox.setInputMode(cc.EDITBOX_INPUT_MODE_ANY);}
     editBox.setFontColor(new cc.color(0,0,0,255));

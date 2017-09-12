@@ -4,13 +4,13 @@
 pd.Editor.PrintArray = [];
 pd.Editor.Printer = cc.Scale9Sprite.extend({
     ctor:function(){
-        this._super(cc.spriteFrameCache.getSpriteFrame('editor_interface.png'));
+        this._super(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_INTERFACE));
     },
     init:function(){
         this.setAnchorPoint(0, 1);
         this.setContentSize(570, 170);
 
-        var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame('editor_cabecalho.png'), cc.p(0, 170), 570, 26);
+        var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.Editor.EDITOR_HEADER), cc.p(0, 170), 570, 26);
         cabecalho.setAnchorPoint(0, 0);
         this.addChild(cabecalho);
 
@@ -33,16 +33,16 @@ pd.Editor.Printer = cc.Scale9Sprite.extend({
         this.selectedInfos = [];
 
         //Campo do Name
-        this.selectedInfos.parent = pd.Editor.createCheckBox(this, {txt:"ParentName:", size:20}, cc.p(15, 145), ["unchecked.png", "checked.png"]);
-        this.selectedInfos.spriteName = pd.Editor.createCheckBox(this, {txt:"SpriteName: ", size:20}, cc.p(180, 145), ["unchecked.png", "checked.png"]);
-        this.selectedInfos.name = pd.Editor.createCheckBox(this, {txt:"Name:", size:20}, cc.p(350, 145), ["unchecked.png", "checked.png"]);
+        this.selectedInfos.parent = pd.Editor.createCheckBox(this, {txt:"ParentName:", size:20}, cc.p(15, 145), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
+        this.selectedInfos.spriteName = pd.Editor.createCheckBox(this, {txt:"SpriteName: ", size:20}, cc.p(180, 145), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
+        this.selectedInfos.name = pd.Editor.createCheckBox(this, {txt:"Name:", size:20}, cc.p(350, 145), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
 
-        this.selectedInfos.position = pd.Editor.createCheckBox(this, {txt:"Position: ", size:18}, cc.p(15, 115), ["unchecked.png", "checked.png"]);
-        this.selectedInfos.scale = pd.Editor.createCheckBox(this, {txt:"Scale:", size:18}, cc.p(135, 115), ["unchecked.png", "checked.png"]);
-        this.selectedInfos.rotation = pd.Editor.createCheckBox(this, {txt:"Rotation:", size:18}, cc.p(235, 115), ["unchecked.png", "checked.png"]);
-        this.selectedInfos.color = pd.Editor.createCheckBox(this, {txt:"Color: ", size:18}, cc.p(355, 115), ["unchecked.png", "checked.png"]);
+        this.selectedInfos.position = pd.Editor.createCheckBox(this, {txt:"Position: ", size:18}, cc.p(15, 115), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
+        this.selectedInfos.scale = pd.Editor.createCheckBox(this, {txt:"Scale:", size:18}, cc.p(135, 115), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
+        this.selectedInfos.rotation = pd.Editor.createCheckBox(this, {txt:"Rotation:", size:18}, cc.p(235, 115), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
+        this.selectedInfos.color = pd.Editor.createCheckBox(this, {txt:"Color: ", size:18}, cc.p(355, 115), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
 
-        this.selectedInfos.zOrder = pd.Editor.createCheckBox(this, {txt:"Z-Order: ", size:18}, cc.p(440, 115), ["unchecked.png", "checked.png"]);
+        this.selectedInfos.zOrder = pd.Editor.createCheckBox(this, {txt:"Z-Order: ", size:18}, cc.p(440, 115), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
 
         var explanationText = new cc.LabelTTF("Campos adicionais. Separar com 'virgula' cada argumento a ser printado.", "Arial", 17);
         this.addChild(explanationText, 1);
@@ -51,10 +51,10 @@ pd.Editor.Printer = cc.Scale9Sprite.extend({
         explanationText.setPosition(14, 88);
         this.selectedInfos.adicional =  pd.Editor.createEditBox(this, {txt:"", size:14}, cc.p(15, 63), cc.size(540, 20), cc.EDITBOX_INPUT_MODE_ANY);
 
-        this.exitButton = new pd.Button('btn_fechar.png', 'btn_fechar.png', {x:550, y:12}, null, true, false, this, '_onExitButtonCall');
+        this.exitButton = new pd.Button(pd.SpriteFrames.EDITOR_BTN_CLOSE, pd.SpriteFrames.EDITOR_BTN_CLOSE, {x:550, y:12}, null, true, false, this, '_onExitButtonCall');
         this.cabecalho.addChild(this.exitButton, 99);
 
-        this.createButton = new pd.Button('btn_printar.png', 'btn_printar.png', {x: 280, y: 30}, null, true, false, this, 'onPrintButtonCall');
+        this.createButton = new pd.Button(pd.SpriteFrames.EDITOR_BTN_PRINT, pd.SpriteFrames.EDITOR_BTN_PRINT, {x: 280, y: 30}, null, true, false, this, 'onPrintButtonCall');
         this.addChild(this.createButton, 99);
     },
     _onExitButtonCall: function () {

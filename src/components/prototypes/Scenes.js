@@ -135,7 +135,7 @@ pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
         this._super();
 
         if(pd.delegate.context == pd.Delegate.CONTEXT_PALCO || pd.debugMode) {
-            this.uiButton = new pd.Button("pd_btn_close_normal.png", "pd_btn_close_pressed.png", {x:975, y:715}, 1, true, false, this, this.onExitButton);
+            this.uiButton = new pd.Button(pd.SpriteFrames.BTN_CLOSE, pd.SpriteFrames.BTN_CLOSE_PRESSED, {x:975, y:715}, 1, true, false, this, this.onExitButton);
             this.uiButton.isLocked = false;
             this.uiButton.unlock = function () {this.isLocked = false;};
             this.addChild(this.uiButton, pd.ZOrders.PAUSE_BUTTON);
@@ -189,7 +189,7 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
      */
     ctor: function() {
         this._super();
-        this.uiButton = new pd.Button("pd_btn_pause_normal.png", "pd_btn_pause_pressed.png", {x:975, y:715}, null, true, false, this, this.onPauseButton);
+        this.uiButton = new pd.Button(pd.SpriteFrames.BTN_PAUSE, pd.SpriteFrames.BTN_PAUSE_PRESSED, {x:975, y:715}, null, true, false, this, this.onPauseButton);
         this.uiButton.setKeyCode(pd.Keys.ESC);
         this.uiButton.isLocked = false;
         this.uiButton.unlock = function(){

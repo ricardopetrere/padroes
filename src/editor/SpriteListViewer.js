@@ -3,7 +3,7 @@
  */
 pd.Editor.SpriteListView = cc.Sprite.extend({
     ctor:function(){
-        this._super(cc.spriteFrameCache.getSpriteFrame('editor_list.png'));
+        this._super(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_LIST));
     },
     init:function(funcCaller, funcToCall, name){
         this.funcCaller = funcCaller;
@@ -30,7 +30,7 @@ pd.Editor.SpriteListView = cc.Sprite.extend({
         //this.addChild(corpo);
         //this = corpo;
 
-        var clipper = new cc.ClippingNode(new cc.Sprite(cc.spriteFrameCache.getSpriteFrame('editor_list.png')));
+        var clipper = new cc.ClippingNode(new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_LIST)));
         clipper.setPosition(this.getBoundingBox().width/2, this.getBoundingBox().height/2);
         this.addChild(clipper);
         this.listClipper = clipper;
@@ -43,7 +43,7 @@ pd.Editor.SpriteListView = cc.Sprite.extend({
         this.listView.maxY = this.getBoundingBox().height/2 - 4;
         this.listView.minY = -110;
 
-        var cabecalho = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame('editor_cabecalho.png'));
+        var cabecalho = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(pd.Editor.EDITOR_HEADER));
         cabecalho.setAnchorPoint(0, 0);
         cabecalho.setScaleX(0.5);
         cabecalho.setPosition(0, this.getBoundingBox().height);
@@ -56,13 +56,13 @@ pd.Editor.SpriteListView = cc.Sprite.extend({
         cabecalho.addChild(name);
         this.cabecalho = cabecalho;
 
-        this.selectedString = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame('boundingBox.png'), cc.p(0, 0), 1, 1);
+        this.selectedString = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_BOUNDING_BOX), cc.p(0, 0), 1, 1);
         this.selectedString.setVisible(false);
         this.selectedString.setAnchorPoint(0, 0);
         this.selectedString.setColor(0, 0, 255);
         this.listView.addChild(this.selectedString, 10);
 
-        this.exitButton = new pd.Button('btn_fechar.png', 'btn_fechar.png', {x:245, y:12}, null, true, false, this, '_onExitButtonCall');
+        this.exitButton = new pd.Button(pd.SpriteFrames.EDITOR_BTN_CLOSE, pd.SpriteFrames.EDITOR_BTN_CLOSE, {x:245, y:12}, null, true, false, this, '_onExitButtonCall');
         cabecalho.addChild(this.exitButton, 99);
 
     },

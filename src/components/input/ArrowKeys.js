@@ -45,13 +45,13 @@ pd.ArrowKeys = cc.Layer.extend({/** @lends pd.ArrowKeys#**/
         this._super();
 
         if(hasLeftButton)
-            this.leftButton = this._addButton("keyLeft0001", "keyLeft0002", {x: -this.spacing, y: 0}, pd.Keys.LEFT);
+            this.leftButton = this._addButton(pd.SpriteFrames.KEY_LEFT, pd.SpriteFrames.KEY_LEFT_PRESSED, {x: -this.spacing, y: 0}, pd.Keys.LEFT);
         if(hasRightButton)
-            this.rightButton = this._addButton("keyRight0001", "keyRight0002", {x: this.spacing, y: 0}, pd.Keys.RIGHT);
+            this.rightButton = this._addButton(pd.SpriteFrames.KEY_RIGHT, pd.SpriteFrames.KEY_RIGHT_PRESSED, {x: this.spacing, y: 0}, pd.Keys.RIGHT);
         if(hasUpButton)
-            this.upButton = this._addButton("keyUp0001", "keyUp0002", {x: 0, y: this.spacing }, pd.Keys.UP);
+            this.upButton = this._addButton(pd.SpriteFrames.KEY_UP, pd.SpriteFrames.KEY_UP_PRESSED, {x: 0, y: this.spacing }, pd.Keys.UP);
         if(hasDownButton)
-            this.downButton = this._addButton("keyDown0001", "keyDown0002", {x: 0, y: 0}, pd.Keys.DOWN);
+            this.downButton = this._addButton(pd.SpriteFrames.KEY_DOWN, pd.SpriteFrames.KEY_DOWN_PRESSED, {x: 0, y: 0}, pd.Keys.DOWN);
 
         if (!hasDownButton && !hasUpButton) {
             this.leftButton.x += (this.spacing / 2);

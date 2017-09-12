@@ -78,7 +78,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
                 this.joystick.setColor(cc.color(255, 0, 0));
                 break;
             case pd.TutorialLayer.InputFeedbacks.SPACE_BAR:
-                this.spaceBar = new pd.Button("keySpace0001.png", "keySpace0002.png", attr, 1, false);
+                this.spaceBar = new pd.Button(pd.SpriteFrames.KEY_SPACE, pd.SpriteFrames.KEY_SPACE_PRESSED, attr, 1, false);
                 break;
         }
 

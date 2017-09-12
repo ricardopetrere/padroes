@@ -97,9 +97,9 @@ pd.PauseLayer = cc.Layer.extend({/**@lends pd.PauseLayer#*/
     _buildUI: function() {
         this._sidebar = pd.createSprite("pd_pause_interface", -this.offset, cc.winSize.height/2, this, 1);
 
-        this._btnMenu = new pd.Button("pd_btn_menu_normal.png", "pd_btn_menu_pressed.png", {x:this.offset, y:480}, 1, true, false, this, this._onButtonClick);
+        this._btnMenu = new pd.Button(pd.SpriteFrames.BTN_MENU, pd.SpriteFrames.BTN_MENU_PRESSED, {x:this.offset, y:480}, 1, true, false, this, this._onButtonClick);
         this._sidebar.addChild(this._btnMenu, pd.ZOrders.PAUSE_LAYER_UI_ELEMENTS);
-        this._btnTutorial = new pd.Button("pd_btn_tutorial_normal.png", "pd_btn_tutorial_pressed.png", {x:this.offset, y:280}, 1, true, false, this, this._onButtonClick);
+        this._btnTutorial = new pd.Button(pd.SpriteFrames.BTN_TUTORIAL, pd.SpriteFrames.BTN_TUTORIAL_PRESSED, {x:this.offset, y:280}, 1, true, false, this, this._onButtonClick);
         this._sidebar.addChild(this._btnTutorial, pd.ZOrders.PAUSE_LAYER_UI_ELEMENTS);
         
         const muteButtonFrameName = pd.audioEngine.isMuted ? "pd_btn_muted" : "pd_btn_audio";
@@ -107,11 +107,11 @@ pd.PauseLayer = cc.Layer.extend({/**@lends pd.PauseLayer#*/
         this._sidebar.addChild(this._btnMute, pd.ZOrders.PAUSE_LAYER_UI_ELEMENTS);
 
         if(pd.delegate.context == pd.Delegate.CONTEXT_PALCO){
-            this._btnRestart = new pd.Button("pd_btn_restart_normal.png", "pd_btn_restart_pressed.png", {x:this.offset*1.5, y:80}, 1, true, false, this, this._onButtonClick);
+            this._btnRestart = new pd.Button(pd.SpriteFrames.BTN_RESTART, pd.SpriteFrames.BTN_RESTART_PRESSED, {x:this.offset*1.5, y:80}, 1, true, false, this, this._onButtonClick);
             this._sidebar.addChild(this._btnRestart, pd.ZOrders.PAUSE_LAYER_UI_ELEMENTS);
         }
 
-        this._btnResume = new pd.Button("pd_btn_resume_normal.png", "pd_btn_resume_pressed.png", {x:this.offset*2, y:cc.winSize.height/2}, 1, true, false, this, this._onButtonClick);
+        this._btnResume = new pd.Button(pd.SpriteFrames.BTN_RESUME, pd.SpriteFrames.BTN_RESUME_PRESSED, {x:this.offset*2, y:cc.winSize.height/2}, 1, true, false, this, this._onButtonClick);
         this._btnResume.setKeyCode(pd.Keys.ESC);
         this._sidebar.addChild(this._btnResume, pd.ZOrders.PAUSE_LAYER_UI_ELEMENTS);
 
@@ -215,13 +215,13 @@ pd.PauseLayer = cc.Layer.extend({/**@lends pd.PauseLayer#*/
         pd.audioEngine.toggleMute();
         
         if(pd.audioEngine.isMuted){
-            this._btnMute.normalImg = cc.spriteFrameCache.getSpriteFrame("pd_btn_muted_normal.png");
-            this._btnMute.pressedImg = cc.spriteFrameCache.getSpriteFrame("pd_btn_muted_pressed.png");
+            this._btnMute.normalImg = cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.BTN_MUTED);
+            this._btnMute.pressedImg = cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.BTN_MUTED_PRESSED);
         }
         else{
             pd.audioEngine.playEffect(pd.res.fx_button);
-            this._btnMute.normalImg = cc.spriteFrameCache.getSpriteFrame("pd_btn_audio_normal.png");
-            this._btnMute.pressedImg = cc.spriteFrameCache.getSpriteFrame("pd_btn_audio_pressed.png");
+            this._btnMute.normalImg = cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.BTN_AUDIO);
+            this._btnMute.pressedImg = cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.BTN_AUDIO_PRESSED);
         }
 
         this._btnMute.setSpriteFrame(this._btnMute.normalImg);
