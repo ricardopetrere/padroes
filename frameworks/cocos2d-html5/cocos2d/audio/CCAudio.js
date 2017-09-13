@@ -529,16 +529,17 @@ cc.Audio.WebAudio.prototype = {
          * Play music.
          * @param {String} url The path of the music file without filename extension.
          * @param {Boolean} loop Whether the music loop or not.
+         * @param {Number} volume Volume do áudio. Entre 0 e 1
          * @example
          * //example
          * cc.audioEngine.playMusic(path, false);
          */
-        playMusic: function(url, loop){
+        playMusic: function(url, loop, volume){
             var bgMusic = this._currMusic;
             if (bgMusic && bgMusic.getPlaying()) {
                 bgMusic.stop();
             }
-            var musicVolume = this._musicVolume;
+            var musicVolume = volume || this._musicVolume;
             var audio = cc.loader.getRes(url);
             if (!audio) {
                 cc.loader.load(url, function () {
@@ -680,8 +681,9 @@ cc.Audio.WebAudio.prototype = {
          * //example
          * var soundId = cc.audioEngine.playEffect(path);
          */
-        playEffect: function (url, loop) {
-
+        playEffect: function (url, loop, volume) {
+            if (volume == null)
+                volume = this._effectVolume;
             if (SWB && this._currMusic && this._currMusic.getPlaying()) {
                 cc.log('Browser is only allowed to play one audio');
                 return null;
@@ -709,7 +711,7 @@ cc.Audio.WebAudio.prototype = {
             var audio;
             if (effectList[i]) {
                 audio = effectList[i];
-                audio.setVolume(this._effectVolume);
+                audio.setVolume(volume);
                 audio.play(0, loop || false);
                 return audio;
             }
@@ -726,13 +728,13 @@ cc.Audio.WebAudio.prototype = {
                 if (SWA && audio._AUDIO_TYPE === 'AUDIO') {
                     loader.loadBuffer(url, function (error, buffer) {
                         audio.setBuffer(buffer);
-                        audio.setVolume(cc.audioEngine._effectVolume);
+                        audio.setVolume(volume);
                         if (!audio.getPlaying())
                             audio.play(0, loop || false);
                     });
                 } else {
                     audio = audio.cloneNode();
-                    audio.setVolume(this._effectVolume);
+                    audio.setVolume(volume);
                     audio.play(0, loop || false);
                     effectList.push(audio);
                     return audio;
@@ -745,7 +747,7 @@ cc.Audio.WebAudio.prototype = {
             cc.loader.load(url, function (audio) {
                 audio = cc.loader.getRes(url);
                 audio = audio.cloneNode();
-                audio.setVolume(cc.audioEngine._effectVolume);
+                audio.setVolume(volume);
                 audio.play(0, loop || false);
                 effectList.push(audio);
             });
