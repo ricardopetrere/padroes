@@ -84,7 +84,7 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
      */
     addLine:function(text, callback, _handler) {
         var label = new cc.LabelTTF('', this._font, this._fontSize);
-        pd.decorate(label, pd.decorators.UpdateableText);
+        pd.decorate(label, pd.decorators.TypewritterTextLabel);
         label._completedText = text;
         label.callback = callback;
         label._handler = _handler;

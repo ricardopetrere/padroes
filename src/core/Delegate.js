@@ -184,7 +184,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
             for (var n in ns.res) {
                 ns.res[n] = cc.path.join(ns.resPath, ns.res[n]);
             }
-            ns.g_resources = pd.cloneArray(ns.res);
+            ns.g_resources = pd.objectToArray(ns.res);
         }
     },
 
