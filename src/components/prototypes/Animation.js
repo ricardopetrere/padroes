@@ -384,7 +384,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
  * @param {Number} [speed]
  * @param {String} [anim_name]
  * @extends cc.Class
- * @classdesc Estrutura-esqueleto de uma animação a ser usada em {@link jogo4av4geo1.ANIMACOES}
+ * @classdesc Estrutura-esqueleto de uma animação a ser usada.
  */
 pd.AnimationData = cc.Class.extend({
     /**
@@ -421,14 +421,14 @@ pd.AnimationData = cc.Class.extend({
      * @param {Number} ini_frame
      * @param {Number} last_frame
      * @param {Number} [speed]
-     * @param {String} [anim_name]
+     * @param {String} [spriteFramePattern]
      */
-    ctor: function (name, ini_frame, last_frame, speed, anim_name) {
+    ctor: function (name, ini_frame, last_frame, speed, spriteFramePattern) {
         this.name = name;
         this.ini_frame = ini_frame;
         this.last_frame = last_frame;
         this.speed = speed || 24;
-        this.anim_name = anim_name || name;
+        this.anim_name = spriteFramePattern || name;
     },
 
     /**
@@ -438,7 +438,6 @@ pd.AnimationData = cc.Class.extend({
     getAnimationFrameName: function (frame) {
         if (frame < this.ini_frame || frame > this.last_frame)
             return null;
-        var retorno = this.anim_name + pd.numberToString(frame) + ".png";
-        return retorno;
-    },
+        return this.anim_name + pd.numberToString(frame) + ".png";
+    }
 });

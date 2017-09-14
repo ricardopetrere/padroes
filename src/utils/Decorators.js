@@ -17,6 +17,7 @@
 
 /**
  * 'Package' responsável por encapsular as implementações de objetos decorators.
+ * @namespace
  */
 pd.decorators = {};
 
@@ -186,77 +187,6 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
      */
     getRelativeDistanceTo: function(_x, _y) {
         return pd.pointDistance(_x, _y, this._positionData.global.x, this._positionData.global.y);
-    }
-};
-
-/**
- * Implementa a capacidade a um label ttf de atualizar-se visando produzir um efeito semelhante ao de uma máquina de escrever.
- * Este objeto é utilizado pela classe pd.TypewritterLabel para customizar os seus labels internos.
- * @mixin
- */
-pd.decorators.TypewritterTextLabel = {/** @lends pd.decorators.UpdateableText#*/
-    /** @type {pd.TypewriterLabel} **/
-    _handler: null,
-    /** @type {String} **/
-    _currentText: "",
-    /** @type {String} **/
-    _targetText: "",
-    /** @type {String} **/
-    _completedText: "",
-    /** @type {Number} **/
-    _dt:0,
-    /** @type {Boolean} **/
-    isDone: false,
-
-    /**
-     * Inicia a atualização do componente.
-     * @param _handler {cc.Node}
-     * @private
-     */
-    _startUpdate: function(_handler) {
-        this._handler = _handler;
-        this._currentText = "";
-        this._targetText = this._completedText.split("");
-        this.setString("");
-        this._dt = 0;
-        this.scheduleUpdate();
-        this.isDone = false;
-    },
-
-    /**
-     * Atualiza o componente
-     * @param _dt {Number}
-     */
-    update: function(_dt) {
-        if(pd.delegate.isPaused)
-            return;
-
-        this._dt += _dt;
-        if(this._dt >= this.timeSpanBetweenEachLetter) {
-            this._dt -= this.timeSpanBetweenEachLetter;
-            if(this._targetText[0] != " "){
-                pd.audioEngine.playEffect(this._handler._typeSfx ? this._handler._typeSfx : pd.res.fx_escrever);
-            }
-            this._currentText += this._targetText[0];
-            this._targetText.splice(0, 1);
-            this.setString(this._currentText);
-            if(this._targetText.length <= 0){
-                this._finish();
-            }
-        }
-    },
-
-    /**
-     * Finaliza a atualização do componente.
-     * @private
-     */
-    _finish: function() {
-        this.unscheduleUpdate();
-        this.isDone = true;
-        this._handler._onLineCompleted();
-        if(this.callback){
-            this._handler[this.callback](this);
-        }
     }
 };
 
