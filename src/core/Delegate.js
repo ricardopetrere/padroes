@@ -327,10 +327,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
      * @param {Boolean} [tiltScreen=true]
      */
     winGame: function(circleSpriteFrame, messageSpriteFrame, tiltScreen) {
-        pd.currentScene.pauseButton.cleanup();
-        const winLayer = new pd.GameOverLayer();
-        winLayer.init(pd.currentScene, pd.GameOverLayer.TYPE_WIN, circleSpriteFrame, messageSpriteFrame, tiltScreen);
-        pd.currentScene.addChild(winLayer, pd.ZOrders.GAME_OVER_LAYER);
+        this._gameOver(pd.GameOverLayer.TYPE_WIN, circleSpriteFrame, messageSpriteFrame, tiltScreen);
     },
 
     /**
@@ -339,10 +336,22 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
      * @param {Boolean} [tiltScreen=true]
      */
     loseGame: function(circleSpriteFrame, tiltScreen) {
-        pd.currentScene.pauseButton.cleanup();
-        const loseLayer = new pd.GameOverLayer();
-        loseLayer.init(pd.currentScene, pd.GameOverLayer.TYPE_LOSE, circleSpriteFrame, null, tiltScreen);
-        pd.currentScene.addChild(loseLayer, pd.ZOrders.GAME_OVER_LAYER);
+        this._gameOver(pd.GameOverLayer.TYPE_LOSE, circleSpriteFrame, null, tiltScreen);
+    },
+
+    /**
+     * Chamada a layer de GameOver, informando o tipo e os sprites utilizados
+     * @param {string} type
+     * @param {cc.SpriteFrame} circleSpriteFrame
+     * @param {cc.SpriteFrame} messageSpriteFrame
+     * @param {Boolean} [tiltScreen=true]
+     * @private
+     */
+    _gameOver: function (type, circleSpriteFrame, messageSpriteFrame, tiltScreen) {
+        pd.currentScene.uiButton.cleanup();
+        const gameOverLayer = new pd.GameOverLayer();
+        gameOverLayer.init(pd.currentScene, type, circleSpriteFrame, messageSpriteFrame, tiltScreen);
+        pd.currentScene.addChild(gameOverLayer, pd.ZOrders.GAME_OVER_LAYER);
     },
 
     /**
