@@ -2168,7 +2168,7 @@ cc.initEngine = function (config, cb) {
  * @name cc.game
  *
  */
-cc.game = /** @lends cc.game# */{
+cc.game = {/** @lends cc.game# */
     /**
      * Debug mode: No debugging. {@static}
      * @const {Number}
