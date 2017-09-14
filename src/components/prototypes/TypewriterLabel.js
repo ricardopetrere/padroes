@@ -83,8 +83,7 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
      * @param _handler {cc.Node}
      */
     addLine:function(text, callback, _handler) {
-        var label = new cc.LabelTTF('', this._font, this._fontSize);
-        pd.decorate(label, pd.decorators.TypewritterTextLabel);
+        var label = new pd.TypewritterInternalLabelTTF('', this._font, this._fontSize);
         label._completedText = text;
         label.callback = callback;
         label._handler = _handler;
@@ -137,6 +136,77 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
         }
         else if(this._onComplete) {
             this._onCompleteHandler[this._onComplete]();
+        }
+    }
+});
+
+/**
+ * @class
+ * @extends {cc.LabelTTF}
+ * @classdesc Caixa de texto atualizável (para uso interno).
+ */
+pd.TypewritterInternalLabelTTF = cc.LabelTTF.extend({/** @lends pd.decorators.UpdateableText#*/
+    /** @type {pd.TypewriterLabel} **/
+    _handler: null,
+    /** @type {String} **/
+    _currentText: "",
+    /** @type {String} **/
+    _targetText: "",
+    /** @type {String} **/
+    _completedText: "",
+    /** @type {Number} **/
+    _dt:0,
+    /** @type {Boolean} **/
+    isDone: false,
+
+    /**
+     * Inicia a atualização do componente.
+     * @param _handler {cc.Node}
+     * @private
+     */
+    _startUpdate: function(_handler) {
+        this._handler = _handler;
+        this._currentText = "";
+        this._targetText = this._completedText.split("");
+        this.setString("");
+        this._dt = 0;
+        this.scheduleUpdate();
+        this.isDone = false;
+    },
+
+    /**
+     * Atualiza o componente
+     * @param _dt {Number}
+     */
+    update: function(_dt) {
+        if(pd.delegate.isPaused)
+            return;
+
+        this._dt += _dt;
+        if(this._dt >= this.timeSpanBetweenEachLetter) {
+            this._dt -= this.timeSpanBetweenEachLetter;
+            if(this._targetText[0] != " "){
+                pd.audioEngine.playEffect(this._handler._typeSfx ? this._handler._typeSfx : pd.res.fx_escrever);
+            }
+            this._currentText += this._targetText[0];
+            this._targetText.splice(0, 1);
+            this.setString(this._currentText);
+            if(this._targetText.length <= 0){
+                this._finish();
+            }
+        }
+    },
+
+    /**
+     * Finaliza a atualização do componente.
+     * @private
+     */
+    _finish: function() {
+        this.unscheduleUpdate();
+        this.isDone = true;
+        this._handler._onLineCompleted();
+        if(this.callback){
+            this._handler[this.callback](this);
         }
     }
 });

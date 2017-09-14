@@ -15,6 +15,7 @@ pd.natives = {
      * F - float
      * Z - boolean
      * Ljava/lang/String; - NSString
+     * @enum {String}
      */
     JavaTypes: {
         VOID: "V",

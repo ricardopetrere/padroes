@@ -171,25 +171,16 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
         for(var i = 0; i < this._totalLives; i++) {
             this._lives[i] = new cc.Sprite(pd.getSpriteFrame(spriteFrameName));
             var life = this._lives[i];
-
-            if(this._hasBackground) {
-                life.setPosition((i * this._spacing) + this._lives[i].width, this._heightBackground/2);
-            }
-            else {
-                life.setPosition((i * this._spacing) + this._lives[i].width, 0);
-            }
-            
-            life.setVisible(false);
-            life.setScale(0);
+            life.setPosition((i * this._spacing) + this._lives[i].width/2, this._hasBackground ? this._heightBackground/2 : 0);
             life._value = 1;
-            this.addChild(life, 1);
+            this.addChild(life, 2);
 
             pd.decorate(life, pd.decorators.ResetableNode);
         }
     },
 
     /**
-     *Recebe o valor atual de vidas e atualiza a HUD.
+     * Recebe o valor atual de vidas e atualiza a HUD.
      * @param {Number} currentLives - Valor das vidas.
      */
     updateUI: function (currentLives) {
@@ -204,7 +195,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
         }
 
         else if(currentLives < this._livesRemaining) {
-            for(i = this._totalLives-1; i >= 0; i--) {
+            for(i = this._totalLives - 1; i >= 0; i--) {
                 this._updateValue(i, currentLives);
             }
         }
@@ -217,35 +208,36 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
     },
 
     /**
-     *Define o sprite para "meia-vida".
+     * Define o sprite para "meia-vida".
      * @param {String} spriteFrameName  - Nome do spriteFrame de metade da vida.
      */
     setHalfSpriteFrame: function (spriteFrameName) {
-        this._halfLifeSpriteFrameName    = spriteFrameName;
-        this._hasHalfLife       = true;
+        this._halfLifeSpriteFrameName = spriteFrameName;
+        this._hasHalfLife = true;
     },
 
     /**
-     *Define o sprite para "vida vazia".
+     * Define o sprite para "vida vazia".
      * @param {String} spriteFrameName  - Nome do spriteFrame de uma vida vazia.
      */
     setEmptySpriteFrame: function (spriteFrameName) {
-        this._emptyLifeSpriteFrameName   = spriteFrameName;
-        this._emptyLives        = [];
+        this._emptyLifeSpriteFrameName = spriteFrameName;
+        this._emptyLives = [];
 
         for (var i = 0; i < this._lives.length; i++) {
             var emptyLife = null;
 
             if (this._emptyLifeSpriteFrameName !== null) {
                 emptyLife = new cc.Sprite(pd.getSpriteFrame(this._emptyLifeSpriteFrameName));
+                emptyLife.setOpacity(255);
             }
             else {
                 emptyLife = new cc.Sprite(pd.getSpriteFrame(this._fullLifeSpriteFrameName));
-                emptyLife .setOpacity(50);
+                emptyLife.setOpacity(50);
             }
 
-            emptyLife.setPosition((i * this._spacing) + this._lives[i].width, this._heightBackground/2);
-            this.addChild(emptyLife, 0.5);
+            emptyLife.setPosition((i * this._spacing) + this._lives[i].width/2, this._heightBackground/2);
+            this.addChild(emptyLife, 1);
             this._emptyLives[i] = emptyLife;
         }
     },
@@ -322,7 +314,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
     /**
      *Inicia a animação de IDLE.
      */
-    startIdle: function () {
+    runIdleAction: function () {
         switch (this._idleActionType) {
             case pd.LifeHUD.IdleActionsTypes.ROTATING:
                 for (var i  = 0; i < this._livesRemaining; i++) {
@@ -459,7 +451,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
         this._introSequence.push(
             cc.delayTime(0.3),
             cc.callFunc(function () {
-                this.startIdle();
+                this.runIdleAction();
             }, this)
         )
     },
@@ -511,7 +503,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
                         );
                         break;
 
-                    case pd.LifeHUD._gainLifeActionType.SCALING:
+                    case pd.LifeHUD.GainLifeActionsTypes.SCALING:
                         this._sequenceActions.push(
                             cc.callFunc(function () {
                                 this.runAction(cc.scaleTo(0.2, 1).easing(cc.easeBackOut()));
@@ -519,7 +511,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
                         );
                         break;
 
-                    case pd.LifeHUD._gainLifeActionType.FADE:
+                    case pd.LifeHUD.GainLifeActionsTypes.FADE:
                         this._sequenceActions.push(
                             cc.callFunc(function () {
                                 this.runAction(cc.fadeIn(0.4));

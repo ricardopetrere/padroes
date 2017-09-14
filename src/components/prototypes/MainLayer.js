@@ -208,7 +208,6 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
     /**
      * Recebe um botão e muda seu status para pressionado.
      * Sobescrever esta função para alterar o comportamento do feedback de seleção de um botão.
-     * @virtual
      * @param {*} button
      */
     onButtonDown: function(button) {
@@ -218,7 +217,6 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
     /**
      * Recebe um botão e muda seu status para solto.
      * Sobescrever esta função para alterar o comportamento do feedback de desseleção de um botão.
-     * @virtual
      * @param {*} button
      */
     onButtonUp: function(button) {
@@ -228,7 +226,6 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
     /**
      * Recebe um botão e executa o feedback de 'aperto'.
      * Sobescrever esta função para alterar o comportamento do feedback indicado acima.
-     * @virtual
      * @param {*} button
      */
     onButtonPress: function(button) {
