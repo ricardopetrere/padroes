@@ -35,7 +35,6 @@ pd.jsList = [
     "src/core/GlobalDefinitions.js",
     "src/core/controllers/AudioEngine.js",
     "src/core/controllers/Debugger.js",
-    "src/core/controllers/EffectPlayer.js",
     "src/core/controllers/InputManager.js",
     "src/utils/Transitions.js",
     "src/utils/Snippets.js",

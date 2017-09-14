@@ -25,7 +25,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      * @type {number}
      */
     musicVolume: 1,
-
+//<editor-fold desc="Fade">
     /**
      *
      * @param {Function} getterFunction - A função de get (getEffectsVolume ou getMusicVolume)
@@ -61,6 +61,14 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
         target.runAction(new cc.Sequence(sequenceSteps));
     },
 
+    /**
+     * Realiza um efeito de fade nos efeitos sonoros
+     * @param {cc.Node} [target] - O objeto que irá executar a ação
+     * @param {Number} duration - A duração do fade
+     * @param {Number} from - o fade inicial
+     * @param {Number} to - o fade final
+     * @param {Function} [cb] - Uma função a ser executada após o fade
+     */
     fadeEffect: function (target, duration, from, to, cb) {
         this._fade(pd.audioEngine.getEffectsVolume, pd.audioEngine.setEffectsVolume, target, duration, from, to, cb);
     },
@@ -70,13 +78,14 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      * @param {cc.Node} [target] - O objeto que irá executar a ação
      * @param {Number} duration - A duração do fade
      * @param {Number} from - o fade inicial
-     * @param {Number} to
-     * @param {Function} [cb]
+     * @param {Number} to - o fade final
+     * @param {Function} [cb] - Uma função a ser executada após o fade
      */
     fadeMusic: function(target, duration, from, to, cb) {
         this._fade(pd.audioEngine.getMusicVolume, pd.audioEngine.setMusicVolume, target, duration, from, to, cb);
     },
-    
+//</editor-fold>
+//<editor-fold desc="Volume & Mute">
     /**
      * Obtém o volume dos efeitos.
      * @returns {Number} effectVolume
@@ -84,7 +93,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
     getEffectsVolume: function () {
         return cc.audioEngine.getEffectsVolume();
     },
-    
+
     /**
      * Obtém o volume da música de fundo.
      * @returns {Number} musicVolume
@@ -92,66 +101,34 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
     getMusicVolume: function () {
         return cc.audioEngine.getMusicVolume();
     },
-    
-    /**
-     * Pausa um efeito específico.
-     * @param {number} effectId
-     */
-    pauseEffect: function (effectId) {
-        return cc.audioEngine.pauseEffect(effectId);
-    },
-    /**
-     *
-     * @param {String} res
-     * @param {boolean} loop
-     * @param {number} volume
-     * @param {string} funcPlay
-     * @param {string} funcVolume
-     * @private
-     */
-    _play: function (res, loop, volume, funcPlay, funcVolume) {
-        var ret = -1;
-        if (res) {
-            ret = cc.audioEngine[funcPlay](res, loop || false);
-        }
-        if (volume) {
-            this[funcVolume](volume);
-        }
-        return ret;
-    },
-    /**
-     * Toca um efeito.
-     * @param {String} effect
-     * @param {boolean} [loop]
-     * @param {number} [volume]
-     * @returns {number} effectId
-     */
-    playEffect: function (effect, loop, volume) {
-        var ret = -1;
-        ret = this._play(effect, loop, volume, "playEffect", "setEffectsVolume");
-        return ret;
-    },
 
     /**
-     * Toca uma música de fundo.
-     * @param {string} music
-     * @param {boolean} [loop]
-     * @param {number} [volume]
-     */
-    playMusic: function (music, loop, volume) {
-        if (music && cc.audioEngine.willPlayMusic()) {
-            cc.audioEngine.stopMusic();
-        }
-        this._play(music, loop, volume, "playMusic", "setMusicVolume");
-    },
-
-    /**
-     * Despausa um efeito.
-     * @param {Number} effectId
+     * Retorna o volume de um áudio em específico
+     * @param {cc.Audio} audio
      * @returns {Number}
      */
-    resumeEffect: function (effectId) {
-        return cc.audioEngine.resumeEffect(effectId);
+    getAudioVolume: function (audio) {
+        if(cc.sys.isMobile) {
+            return 0.5;//Isso aqui ainda não funciona
+        } else {
+            return audio.getVolume();
+        }
+    },
+
+    /**
+     * Configura o volume de um áudio específico
+     * @param {cc.Audio} audio
+     * @param {Number} volume
+     * @returns {cc.Audio}
+     */
+    setAudioVolume: function (audio, volume) {
+        if (cc.sys.isMobile) {
+            //Isso aqui ainda não funciona
+        }
+        else {
+            audio.setVolume(volume);
+        }
+        return audio;
     },
 
     /**
@@ -192,6 +169,84 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
     },
 
     /**
+     * Inverte o status da variável isMuted.
+     */
+    toggleMute: function () {
+        this.setMute(!this.isMuted);
+    },
+//</editor-fold>
+//<editor-fold desc="Play/Pause/Stop">
+    /**
+     * Pausa um efeito específico.
+     * @param {number} effectId
+     */
+    pauseEffect: function (effectId) {
+        return cc.audioEngine.pauseEffect(effectId);
+    },
+
+    /**
+     *
+     * @param {String} res
+     * @param {boolean} loop
+     * @param {number} volume
+     * @param {string} funcPlay
+     * @param {string} funcVolume
+     * @private
+     */
+    _play: function (res, loop, volume, funcPlay, funcVolume, cb) {
+        var ret = -1;
+        if (res) {
+            if(cc.sys.isMobile) {
+                ret = cc.audioEngine[funcPlay](res, loop || false, 1, 0, volume);
+            }
+            else {
+                ret = cc.audioEngine[funcPlay](res, loop || false, volume);
+            }
+        }
+        return ret;
+    },
+
+    /**
+     * Toca um efeito.
+     * @param {String} effect
+     * @param {boolean} [loop]
+     * @param {number} [volume]
+     * @returns {number} effectId
+     */
+    playEffect: function (effect, loop, volume, cb) {
+        var ret = -1;
+        //No Desktop, playEffect retorna o objeto de WebAudio. No mobile, retorna o ID do áudio
+        ret = this._play(effect, loop, volume, "playEffect", "setEffectsVolume", function() {
+            console.log('fim do efeito');
+        });
+        return ret;
+    },
+
+    /**
+     * Toca uma música de fundo.
+     * @param {string} music
+     * @param {boolean} [loop]
+     * @param {number} [volume]
+     */
+    playMusic: function (music, loop, volume, cb) {
+        if (music && cc.audioEngine.willPlayMusic()) {
+            cc.audioEngine.stopMusic();
+        }
+        this._play(music, loop, volume, "playMusic", "setMusicVolume", function() {
+            cc.log('fim da música');
+        });
+    },
+
+    /**
+     * Despausa um efeito.
+     * @param {Number} effectId
+     * @returns {Number}
+     */
+    resumeEffect: function (effectId) {
+        return cc.audioEngine.resumeEffect(effectId);
+    },
+
+    /**
      * Para todos os efeitos.
      */
     stopAllEffects: function () {
@@ -200,10 +255,11 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
 
     /**
      * Para um efeito específico.
-     * @param {Number} effectId
+     * @param {Number | cc.WebAudio} effectId
      */
     stopEffect: function (effectId) {
-        cc.audioEngine.stopEffect(effectId);
+        if (effectId > 0 || effectId instanceof Object)
+            cc.audioEngine.stopEffect(effectId);
     },
 
     /**
@@ -212,14 +268,8 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      */
     stopMusic: function (releaseData) {
         cc.audioEngine.stopMusic(releaseData);
-    },
-
-    /**
-     * Inverte o status da variável isMuted.
-     */
-    toggleMute: function () {
-        this.setMute(!this.isMuted);
     }
+//</editor-fold>
 });
 
 /**

@@ -71,10 +71,10 @@ pd.arraySwap = function(array, i, j) {
  * @type {Function}
  * @param {Array} array
  * @param {Number} [key = null] - a propriedade dos elementos do array que será usada como chave de ordenação. Se for null, o elemento do array será a própria chave.
- * @param {boolean} [crescentOrder=true]
+ * @param {boolean} [crescentOrder=false]
  */
 pd.orderBy = function(array, key, crescentOrder) {
-    crescentOrder = crescentOrder == null || crescentOrder == undefined ? true : crescentOrder;
+    crescentOrder = crescentOrder == null || crescentOrder == undefined ? false : crescentOrder;
     for(var i = 0 ; i < array.length ; i++) {
         for(var j = i + 1 ; j < array.length; j++) {
             if(((array[j][key] || array[j]) < (array[i][key] || array[i])) == !crescentOrder) {
@@ -302,22 +302,22 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
  * @returns {pd.Animation}
  */
 pd.createAnimation = function (attr, animacoes) {
-    var animado = new pd.Animation();
+    const animation = new pd.Animation();
     if(attr)
-        animado.attr(pd.parseAttr(attr));
-    animado.setPosition(attr.x, attr.y);
-    var anim_array = [];
+        animation.attr(pd.parseAttr(attr));
+    animation.setPosition(attr.x, attr.y);
+    var animationDataArray = [];
     if (animacoes instanceof Array) {
-        anim_array = animacoes;
+        animationDataArray = animacoes;
     } else {
         for (var n = 1; n < arguments.length; n++) {
-            anim_array.push(arguments[n]);
+            animationDataArray.push(arguments[n]);
         }
     }
-    for (var i = 0; i < anim_array.length; i++) {
-        jogo4av4geo1.adicionarAnimacao(animado, anim_array[i]);
+    for (var i = 0; i < animationDataArray.length; i++) {
+        animation.addAnimation(animationDataArray[i]);
     }
-    return animado;
+    return animation;
 };
 
 /**
@@ -682,16 +682,21 @@ pd.shake = function(time, cycles, initialRotation, strength) {
  * Cria uma sequência para 'piscar' um objeto.
  * @param {Number} time - o tempo da animação.
  * @param {Number} flicks - o número de piscadas.
- * @param {Number} initialColor - a cor inicial.
- * @param {Number} targetColor - a cor final.
+ * @param {cc.Color} initialColor - a cor inicial.
+ * @param {cc.Color} targetColor - a cor final.
  * @returns {cc.Sequence}
  */
 pd.flicker = function(time, flicks, initialColor, targetColor) {
     if(!time || !flicks || !initialColor || !targetColor)
         throw new Error("[pd.flicker] Um ou mais argumentos obrigatórios não foram fornecidos para a função!");
     const sequenceSteps = [];
-    //TO-DO...
-    return cc.sequence();
+    for(var i = 0 ; i < flicks ; i++) {
+        sequenceSteps.push(
+            cc.tintTo(time/(flicks*2), targetColor.r, targetColor.g, targetColor.b),
+            cc.tintTo(time/(flicks*2), initialColor.r, initialColor.g, initialColor.b)
+        );
+    }
+    return cc.sequence(sequenceSteps);
 };
 
 /**

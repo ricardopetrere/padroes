@@ -41,10 +41,16 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
     _pressedButton:null,
 
     /**
-     * Indica o delay, em segundos, ao abrir a opção do botão após ele ser clicado.
+     * Indica o delay, em segundos, ao abrir a opção do botão Play após ele ser clicado.
      * @type {Number}
      */
-    _delayBeforeOpeningButtonOption:0,
+    _delayBeforeOpeningPlayOption:0,
+
+    /**
+     * Indica o delay, em segundos, ao abrir a opção do botão Tutorial após ele ser clicado.
+     * @type {Number}
+     */
+    _delayBeforeOpeningTutorialOption:0,
 
     /**
      * Indica a duração da transição.
@@ -72,10 +78,12 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
     },
 
     /**
-     * @param {Number} delayBeforeOpeningButtonOption - Indica o delay, em segundos, ao abrir a opção do botão após ele ser clicado.
+     * @param {Number} delayBeforeOpeningPlayOption - Indica o delay, em segundos, ao abrir a opção do botão Play após ele ser clicado.
+     * @param {Number} [delayBeforeOpeningTutorialOption] - Indica o delay, em segundos, ao abrir a opção do botão Tutorial após ele ser clicado.
      */
-    setDelayBeforeOpeningButtonOption: function(delayBeforeOpeningButtonOption) {
-        this._delayBeforeOpeningButtonOption = delayBeforeOpeningButtonOption;
+    setDelayBeforeOpeningButtonOption: function(delayBeforeOpeningPlayOption, delayBeforeOpeningTutorialOption) {
+        this._delayBeforeOpeningPlayOption = delayBeforeOpeningPlayOption;
+        this._delayBeforeOpeningTutorialOption = delayBeforeOpeningTutorialOption || delayBeforeOpeningPlayOption;
     },
 
     /**
@@ -182,8 +190,9 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
      */
     _onSelect: function() {
         const sequenceSteps = [];
-        if(this._delayBeforeOpeningButtonOption)
-            sequenceSteps.push(cc.delayTime(this._delayBeforeOpeningButtonOption));
+        var delay = (this._pressedButton == this._playBtn ? this._delayBeforeOpeningPlayOption : this._delayBeforeOpeningTutorialOption);
+        if(delay)
+            sequenceSteps.push(cc.delayTime(delay));
         sequenceSteps.push(cc.callFunc(this._onSelectionReady, this));
         this.runAction(new cc.Sequence(sequenceSteps));
         this._mouseEnabled = false;
@@ -208,7 +217,6 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
     /**
      * Recebe um botão e muda seu status para pressionado.
      * Sobescrever esta função para alterar o comportamento do feedback de seleção de um botão.
-     * @virtual
      * @param {*} button
      */
     onButtonDown: function(button) {
@@ -218,7 +226,6 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
     /**
      * Recebe um botão e muda seu status para solto.
      * Sobescrever esta função para alterar o comportamento do feedback de desseleção de um botão.
-     * @virtual
      * @param {*} button
      */
     onButtonUp: function(button) {
@@ -228,7 +235,6 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
     /**
      * Recebe um botão e executa o feedback de 'aperto'.
      * Sobescrever esta função para alterar o comportamento do feedback indicado acima.
-     * @virtual
      * @param {*} button
      */
     onButtonPress: function(button) {

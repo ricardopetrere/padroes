@@ -137,7 +137,9 @@ pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
         if(pd.delegate.context == pd.Delegate.CONTEXT_PALCO || pd.debugMode) {
             this.uiButton = new pd.Button(pd.SpriteFrames.BTN_CLOSE, pd.SpriteFrames.BTN_CLOSE_PRESSED, {x:975, y:715}, 1, true, false, this, this.onExitButton);
             this.uiButton.isLocked = false;
-            this.uiButton.unlock = function () {this.isLocked = false;};
+            this.uiButton.unlock = function () {
+                this.isLocked = false;
+            };
             this.addChild(this.uiButton, pd.ZOrders.PAUSE_BUTTON);
         }
 
@@ -195,7 +197,6 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
         this.uiButton.unlock = function(){
             this.isLocked = false;
         };
-
         this.pauseButton = this.uiButton; // manter compatibilidade (legado)...
         this.addChild(this.pauseButton, pd.ZOrders.PAUSE_BUTTON);
     },
