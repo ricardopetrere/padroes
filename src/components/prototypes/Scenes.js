@@ -26,6 +26,18 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
     pausedActions:null,
 
     /**
+     * A layer principal da cena.
+     * @type {*}
+     */
+    mainLayer:null,
+
+    /**
+     * Aponta para o protótipo da classe da main layer da cena.
+     * @type {Object}
+     */
+    mainLayerClass:null,
+
+    /**
      * Sobrescreve o ponto de entrada da cena.
      * @override
      */
@@ -39,6 +51,19 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
                 pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, this, this.onDebugKeyDown);
             }
         }
+
+        if(this.mainLayerClass)
+            this.initWithMainLayer(this.mainLayerClass);
+    },
+
+    /**
+     * Cria, adiciona e inicializa a 'main layer' da cena.
+     * @param {Object} mainLayerClass
+     */
+    initWithMainLayer: function(mainLayerClass) {
+        this.mainLayer = new mainLayerClass();
+        this.addChild(this.mainLayer);
+        this.mainLayer.init();
     },
 
     /**
@@ -128,6 +153,13 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
  * @classdesc Classe base para as cenas de menu principal.
  */
 pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
+
+    /**
+     * Aponta para o protótipo da classe da main layer da cena.
+     * @type {Object}
+     */
+    mainLayerClass:pd.MainLayer,
+
     /**
      * @constructs
      */
@@ -236,4 +268,13 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
         }
     }
 });
+
+/**
+ * @type {cc.Point}
+ */
 pd.GameScene.TIP_BUTTON_POS = cc.p(875, 715);
+
+/**
+ * @type {cc.Point}
+ */
+pd.GameScene.CENTER = cc.p(512, 384);
