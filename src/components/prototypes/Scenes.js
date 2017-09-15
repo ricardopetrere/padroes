@@ -58,10 +58,13 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
 
     /**
      * Cria, adiciona e inicializa a 'main layer' da cena.
-     * @param {Object} mainLayerClass
+     * @param {Object} mainLayerOrMainLayerClass
      */
-    initWithMainLayer: function(mainLayerClass) {
-        this.mainLayer = new mainLayerClass();
+    initWithMainLayer: function(mainLayerOrMainLayerClass) {
+        if(!(mainLayerOrMainLayerClass instanceof cc.Scene))
+            this.mainLayer = new mainLayerOrMainLayerClass();
+        else
+            this.mainLayer = mainLayerOrMainLayerClass;
         this.addChild(this.mainLayer);
         this.mainLayer.init();
     },

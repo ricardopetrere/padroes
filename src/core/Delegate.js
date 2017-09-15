@@ -152,6 +152,12 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
         ns.srcPath = "src/";
 
         if(this.context == pd.Delegate.CONTEXT_PALCO && !this.isNamespacePalco(ns)) {
+            if(ns.jsonList) {
+                for(var i in ns.jsonList) {
+                    ns.jsonList[i] = ns.jsonList[i].replace("res/", customPath + "/res/");
+                }
+            }
+
             if (ns.resPath.lastIndexOf(customPath) == -1)
                 ns.resPath = ns.resPath.replace("res/", customPath + "/res/");
 
@@ -162,15 +168,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
         this._initGameResources(ns);
 
         pd.DebugScenes = [];
-
-        cc.loader.loadJs(ns.srcPath, ns.jsList, function() {
-            if(ns.onInit)
-                ns.onInit();
-
-            pd.loader.setTargets(ns.g_resources ? [ns.g_resources, pd.g_resources] : [pd.g_resources]);
-            pd.loader.onModuleReady();
-        });
-
+        pd.loader.loadModuleDependencies();
         this.init();
     },
 

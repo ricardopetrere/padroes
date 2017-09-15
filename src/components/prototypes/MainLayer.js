@@ -70,7 +70,7 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
         this._playBtn = playBtn;
         this._tutorialBtn = tutorialBtn;
         this._transitionDuration = transitionDuration || 0.5;
-        this._gameSceneTransitionFunction = gameSceneTransitionFunction || FadeTransition;
+        this._gameSceneTransitionFunction = gameSceneTransitionFunction;
         this._decorateButton(this._playBtn);
         this._decorateButton(this._tutorialBtn);
         this._gameScenePrototype = gameScenePrototype;
@@ -204,6 +204,9 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
      */
     _onSelectionReady: function() {
         if(this._pressedButton == this._playBtn && this._gameScenePrototype) {
+            if(!this._gameSceneTransitionFunction)
+                this._transitionDuration = 0;
+
             pd.changeScene(new this._gameScenePrototype(), this._transitionDuration, this._gameSceneTransitionFunction);
         }
         else if(this._pressedButton == this._tutorialBtn) {

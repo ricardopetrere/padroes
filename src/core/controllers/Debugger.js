@@ -46,6 +46,7 @@ pd.Debugger = cc.Class.extend({/**@lends pd.Debugger#*/
         if(!pd.debugMode || this._isPalco())
             return;
 
+        cc.log(targetSceneName);
         if(!this._shortcuts)
             this._shortcuts = [];
 
