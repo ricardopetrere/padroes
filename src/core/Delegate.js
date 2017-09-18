@@ -142,7 +142,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     /**
      * Inicializa o namespace indicado.
      * @param {Object} ns
-     * @param {String} customPath - um caminho específico, caso o jogo não esteja na raíz do projeto.
+     * @param {String} [customPath] - um caminho específico, caso o jogo não esteja na raíz do projeto.
      */
     initWithNamespace: function(ns, customPath) {
         this.activeNamespace = ns;
@@ -151,10 +151,13 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
         ns.resPath = "res/";
         ns.srcPath = "src/";
 
+        if(!ns.res && ns.Resources)
+            ns.res = ns.Resources;
+
         if(this.context == pd.Delegate.CONTEXT_PALCO && !this.isNamespacePalco(ns)) {
-            if(ns.jsonList) {
-                for(var i in ns.jsonList) {
-                    ns.jsonList[i] = ns.jsonList[i].replace("res/", customPath + "/res/");
+            if(ns.JsonList) {
+                for(var i in ns.JsonList) {
+                    ns.JsonList[i] = ns.JsonList[i].replace("res/", customPath + "/res/");
                 }
             }
 

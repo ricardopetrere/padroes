@@ -232,7 +232,7 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
      * @param {*} button
      */
     onButtonUp: function(button) {
-        button.tweenBackToDisplayState(0.1, cc.easeSineIn);
+        button.setScale(button.displayState.scaleX, button.displayState.scaleY);
     },
 
     /**

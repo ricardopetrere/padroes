@@ -65,7 +65,7 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
      * - Se estiver no palco, e o usuário estiver abrindo no jogo, não há a necessidade de se fazer um pré-carregamento, pois os recursos utilizados pelos padrões já estão carregados na memória.
      */
     onModuleReady: function() {
-        pd.loader._currentJson = -1;
+        pd.loader._currentJson = 0;
         if(pd.delegate.context != pd.Delegate.CONTEXT_PALCO || pd.delegate.isNamespacePalco(pd.delegate.activeNamespace))
             pd.loader.preload();
         else
@@ -180,7 +180,7 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
     onJSListDidLoad: function() {
         const ns = pd.delegate.activeNamespace;
         pd.loader.setTargets(ns.g_resources ? [ns.g_resources, pd.g_resources] : [pd.g_resources]);
-        if(!ns.jsonList) {
+        if(!ns.JsonList) {
             pd.loader.onModuleReady();
         }
         else {
@@ -197,14 +197,16 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
      */
     preloadJSONList: function(onComplete, onCompleteHandler) {
         const ns = pd.delegate.activeNamespace;
-        const objectToArray = pd.objectToArray(ns.jsonList);
+        const objectToArray = pd.objectToArray(ns.JsonList);
         if(this._currentJson < objectToArray.length) {
             var jsonPath = objectToArray[this._currentJson];
+            cc.log("[pd.Loader] Loaded JSON file: " + jsonPath);
             cc.loader.loadJson(jsonPath, function(err, object) {
                 pd.loader.onJSONDidLoad(err, object, jsonPath, onComplete, onCompleteHandler);
             });
         }
         else {
+            this._currentJson = 0;
             onComplete.apply(onCompleteHandler);
         }
     },
@@ -236,6 +238,7 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
             this.preloadJSONList(onComplete, onCompleteHandler);
         }
         else if(onComplete && onCompleteHandler) {
+            this._currentJson = 0;
             onComplete.apply(onCompleteHandler);
         }
     },

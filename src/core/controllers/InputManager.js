@@ -69,9 +69,9 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             target._inputMetadata = {};
 
         const metadata = target._inputMetadata;
-        if(metadata[eventType])
-            cc.warn("[pd.InputManager] Aviso: tentando attachar dois callbacks a um mesmo tipo de evento para um mesmo target (não recomendado): " + eventType);
-        metadata[eventType] = {handler: handler ? handler : target, handlerFunc:handlerFunc};
+        if(!metadata[eventType])
+            metadata[eventType] = [];
+        metadata[eventType].push({handler: handler ? handler : target, handlerFunc:handlerFunc});
         this._checkInputSources(target, eventType, true);
     },
 
@@ -93,39 +93,30 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      */
     hasListener: function(eventType, target) {
         const metadata = target._inputMetadata;
-        return metadata[eventType] ? true : false;
-    },
-
-    /**
-     * Sobrescreve a função de callback de um listener.
-     * @param {pd.InputManager.Events} eventType - tipo do evento.
-     * @param {*} target - o objeto que dispara o evento.
-     * @param {Function|String} newHandlerFunc - a função a ser invocada pelo objeto que escuta o evento.
-     * @param {*} [newHandler=null] - o objeto que escuta o evento. Caso seja null, o target será utilizado como handler.
-     */
-    overrideCallback: function(eventType, target, newHandlerFunc, newHandler) {
-        const metadata = target._inputMetadata;
-        if(metadata[eventType]) {
-            metadata[eventType].handlerFunc = newHandlerFunc ? newHandlerFunc : metadata[eventType].handlerFunc;
-            metadata[eventType].handler = newHandler ? newHandler : metadata[eventType].handler;
-        }
-        else {
-            throw new Error("[pd.InputManager] Tentando sobescrever callback inexistente!");
-        }
+        return metadata[eventType];
     },
 
     /**
      * Remove um listener de evento.
      * @param {pd.InputManager.Events} eventType - tipo do evento
      * @param {*} target - o objeto que dispara o evento.
+     * @param {Function|String} [handlerFunc] - a função sendo invocada pelo objeto que escuta o evento.
      */
-    remove: function(eventType, target) {
+    remove: function(eventType, target, handlerFunc) {
         if(!target._inputMetadata)
             return;
 
         const metadata = target._inputMetadata;
         if(metadata[eventType]) {
-            delete metadata[eventType];
+            if(handlerFunc) {
+                for(var i in metadata[eventType]) {
+                    if(metadata[eventType][i].handlerFunc == handlerFunc)
+                        delete metadata[eventType][i];
+                }
+            }
+            else {
+                delete metadata[eventType];
+            }
             this._checkInputSources(target, eventType, false)
         }
     },
@@ -137,7 +128,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     clean: function(target) {
         const metadata = target._inputMetadata;
         for(var i in metadata) {
-            if(metadata[i].hasOwnProperty("handler")) {
+            if(metadata[i].hasOwnProperty("length") && metadata[i][0].hasOwnProperty("handler")) {
                 this.remove(i, target);
             }
         }
@@ -201,11 +192,13 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             return;
 
         const metadata = target._inputMetadata[eventType];
-        if(typeof metadata.handlerFunc == "string") {
-            metadata.handler[metadata.handlerFunc].apply(metadata.handler, args);
-        }
-        else {
-            metadata.handlerFunc.apply(metadata.handler, args);
+        for(var i in metadata) {
+            if (typeof metadata[i].handlerFunc == "string") {
+                metadata[i].handler[metadata[i].handlerFunc].apply(metadata[i].handler, args);
+            }
+            else {
+                metadata[i].handlerFunc.apply(metadata[i].handler, args);
+            }
         }
     },
 

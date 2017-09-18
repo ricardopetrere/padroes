@@ -94,8 +94,8 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
             pd.audioEngine.toggleMute();
             cc.log('[pd.ScenePrototype] ToggleMute: ' + pd.audioEngine.isMuted);
         }
-        else if(intKey > pd.Keys.ZERO && intKey < pd.Keys.ZERO + 10) {
-            pd.debugger.loadShortcut(intKey - 49);
+        else {
+            pd.debugger.loadShortcut(intKey);
         }
     },
 

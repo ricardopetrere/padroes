@@ -85,6 +85,20 @@ pd.orderBy = function(array, key, crescentOrder) {
 };
 
 /**
+ * Busca um elemento no array cujo elemento no campo 'key' tem o valor informado.
+ * @param {Array} array
+ * @param {String} key
+ * @param {*} value
+ */
+pd.findElementByKeyValue = function(array, key, value) {
+    for(var i in array) {
+        if(array[i][key] == value)
+            return array[i];
+    }
+    return null;
+};
+
+/**
  * Retorna o array como um string, podendo usar uma função customizada para converter cada item do array para texto
  * @param {Array} array
  * @param {Function} [fncItems] - Uma função para imprimir cada item do vetor
@@ -700,6 +714,32 @@ pd.flicker = function(time, flicks, initialColor, targetColor) {
 };
 
 /**
+ * Cria uma sequência de fluttering.
+ * @param {Number} time
+ * @param {Number} cycles
+ * @param {Number} dx
+ * @param {Number} dy
+ */
+pd.flutter = function(time, cycles, dx, dy) {
+    if(!time || !cycles)
+        throw new Error("[pd.shake] Um ou mais argumentos obrigatórios não foram fornecidos para a função!");
+
+    dx = dx || 0;
+    dy = dy || 0;
+
+    const sequenceSteps = [];
+    for(var i = 0 ; i < cycles ; i++) {
+        sequenceSteps.push(
+            cc.moveBy(time/(cycles*4), -dx, -dy),
+            cc.moveBy(time/(cycles*2), 2*dx, 2*dy),
+            cc.moveBy(time/(cycles*4), -dx, -dy)
+        )
+    }
+
+    return cc.sequence(sequenceSteps);
+};
+
+/**
  * Adiciona uma layer de foco ao objeto informado.
  * @param {cc.Node} layer {cc.Layer}
  * @param {Number} time {Number} - o tempo da transição de aparecimento da layer de foco.
@@ -904,5 +944,31 @@ pd.getReversedZOrder = function (max, y) {
  */
 pd.middleOf = function (obj) {
     return cc.p(obj.width / 2, obj.height / 2);
+};
+
+/**
+ * Dado o vetor de objetos, retorna o elemento colidindo mais próximo do ponto (locX, locY).
+ * @param {Number} locX
+ * @param {Number} locY
+ * @param {Array} objects
+ * @return {*|null}
+ */
+pd.getNearestCollidingObject = function(locX, locY, objects) {
+    var ret = null;
+    var minDistance = -1;
+    for(var i in objects) {
+        if(!objects[i].isInside)
+            pd.decorate(objects[i], pd.decorators.ClickableNode);
+
+        if(objects[i].isInside(locX, locY, 1)) {
+            var distance = objects[i].getRelativeDistanceTo(locX, locY);
+            if(minDistance == -1 || distance < minDistance) {
+                ret = objects[i];
+                minDistance = distance;
+            }
+        }
+    }
+
+    return ret;
 };
 //</editor-fold>

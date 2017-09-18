@@ -21,10 +21,17 @@ pd.Debugger = cc.Class.extend({/**@lends pd.Debugger#*/
     _shortcuts: null,
 
     /**
+     * @type {Number}
+     * @private
+     */
+    _autoKeyCodeIncrement:null,
+
+    /**
      * Inicializa os controladores internos, resetando-os para o estado inicial.
      */
     init: function() {
         this._shortcuts = null;
+        this._autoKeyCodeIncrement = pd.Keys.ZERO + 1;
     },
 
     /**
@@ -41,20 +48,36 @@ pd.Debugger = cc.Class.extend({/**@lends pd.Debugger#*/
      * @param {Function|null} callbackFunction - a função de callback a ser executada.
      * @param {*|null} callbackCaller - o objeto responsável por chamar a função de callback.
      * @param {Array|null} [callbackArguments] - os argumentos a serem passados para a função de callback.
+     * @param {Number} [keyCode] - o keyCode da tecla desejada.
      */
-    addShortcut: function(targetSceneName, callbackFunction, callbackCaller, callbackArguments) {
+    addShortcut: function(targetSceneName, callbackFunction, callbackCaller, callbackArguments, keyCode) {
         if(!pd.debugMode || this._isPalco())
             return;
 
-        cc.log(targetSceneName);
         if(!this._shortcuts)
             this._shortcuts = [];
 
+        if(!keyCode) {
+            keyCode = this._autoKeyCodeIncrement;
+            this._autoKeyCodeIncrement++;
+        }
+
         if(!this._hasShortcut(targetSceneName, callbackFunction, callbackCaller, callbackArguments)) {
             const shortcut = {targetSceneName:targetSceneName, callbackFunction:callbackFunction,
-                callbackCaller:callbackCaller, callbackArguments:callbackArguments};
-            this._shortcuts.push(shortcut);
+                callbackCaller:callbackCaller, callbackArguments:callbackArguments, keyCode:keyCode};
+            this._shortcuts[keyCode] = shortcut;
         }
+    },
+
+    /**
+     * Adiciona um atalho sem o mecanismo de navegação de cenas.
+     * @param {Function|null} callbackFunction - a função de callback a ser executada.
+     * @param {*|null} callbackCaller - o objeto responsável por chamar a função de callback.
+     * @param {Array|null} [callbackArguments] - os argumentos a serem passados para a função de callback.
+     * @param {Number} [keyCode] - o keyCode da tecla desejada.
+     */
+    addShortcutWithoutScene: function(callbackFunction, callbackCaller, callbackArguments, keyCode) {
+        this.addShortcut(null, callbackFunction, callbackCaller, callbackArguments, keyCode);
     },
 
     /**
@@ -97,10 +120,12 @@ pd.Debugger = cc.Class.extend({/**@lends pd.Debugger#*/
             var transition = FadeTransition(0.5, targetScene);
             pd.delegate.retain(transition);
             cc.director.runScene(transition);
+            cc.log("[pd.Debugger] Carregando shortcut vinculado à tecla: ["+ (id) +"]. Redirecionando para a cena: " +
+                (shortcut.targetSceneName ? shortcut.targetSceneName : "[MesmaCena]"));
         }
-
-        cc.log("[pd.Debugger] Carregando shortcut vinculado à tecla: ["+ (id+1) +"]. Redirecionando para a cena: " +
-            (shortcut.targetSceneName ? shortcut.targetSceneName : "[MesmaCena]"))
+        else {
+            cc.log("[pd.Debugger] Carregando shortcut vinculado à tecla: ["+ (id) +"]");
+        }
     }
 });
 
