@@ -62,8 +62,24 @@ pd.decorators.ObservableView = {/** @lends pd.decorators.ObservableView#*/
         if(this.verbose)
             cc.log("[ViewEvent " + eventID + "] fired. Metadata sent: " +
                 (eventData !== undefined ? "[" + JSON.stringify(eventData) + "]" : "[]"));
+    },
+
+    /**
+     * Notifica o controlador que um som deve ser tocado.
+     * @param {String} soundEffect
+     * @param {Number} [volume=1]
+     */
+    notifySoundEvent: function(soundEffect, volume) {
+        this._soundEventMetadata = {soundEffect:soundEffect, volume:volume || 1}
+        this.notify(pd.decorators.ObservableView.EVENT_SOUND, this._soundEventMetadata);
     }
 };
+
+/**
+ * @constant
+ * @type {string}
+ */
+pd.decorators.ObservableView.EVENT_SOUND = "viewEventSound";
 
 /**
  * Implementa as funcionalidades básicas de um controlador de uma view. <br />

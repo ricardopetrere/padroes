@@ -32,6 +32,11 @@ pd.DragAndDropInteraction = pd.Interaction.extend({/**  @lends pd.DragAndDropInt
     _initialTouchPoint: cc.p(0, 0),
 
     /**
+     * @type {String}
+     */
+    _className:"DragAndDropInteraction",
+
+    /**
      * @override
      * @param {*} actor
      */

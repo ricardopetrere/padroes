@@ -41,7 +41,7 @@ pd.jsList = [
     "src/utils/Natives.js",
     "src/utils/decorators/BuildableNode.js",
     "src/utils/decorators/ClickableNode.js",
-    "src/utils/decorators/DebugDraw.js",
+    "src/utils/decorators/DebugDrawNode.js",
     "src/utils/decorators/EventDispatcher.js",
     "src/utils/decorators/MVC.js",
     "src/utils/decorators/Observer.js",

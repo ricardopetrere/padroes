@@ -168,6 +168,9 @@ pd.decorators.BuildableNode = {/** @lends pd.decorators.BuildableNode#*/
         if(nodeInfo.anchorPoint) {
             node.setAnchorPoint(nodeInfo.anchorPoint);
         }
+
+        pd.decorate(node, pd.decorators.ResetableNode);
+        node.saveDisplayState();
     },
 
     /**
