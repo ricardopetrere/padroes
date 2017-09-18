@@ -226,3 +226,24 @@ pd.SpriteFrames = {
 };
 
 //</editor-fold">
+//<editor-fold desc="#Internal Namespaces">
+/**
+ * @namespace
+ * 'Package' responsável por encapsular as implementações de objetos decorators.
+ *
+ * @desc
+ * Conjunto de estruturas pré-implementadas que podem ser adicionadas à objetos nativos ou customizados. <br />
+ * Decorators podem ser utilizados para extender as funcionalidades de um objeto:
+ * - estaticamente: através de sua inserção no protótipo do objeto via {Class}.extend({Decorator}).
+ * - dinâmicamente: através de sua injeção no objeto em runtime, via pd.decorate({Object}, {Decorator}). A grande vantagem deste método é que as outras instâncias da classe do objeto extendido não serão afetadas.
+ *
+ * Método estático (inserindo o decorator pd.Model em um protótipo de um objeto):
+ * @example
+ * var prototype = cc.Class.extend(pd.Model).extend({...});
+ *
+ * Método dinâmico (inserindo o decorator pd.Model em uma instância de uma classe qualquer):
+ * @example
+ * pd.decorate(myObject, pd.Model);
+ */
+pd.decorators = {};
+//</editor-fold>

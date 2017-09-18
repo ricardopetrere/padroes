@@ -142,7 +142,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     /**
      * Inicializa o namespace indicado.
      * @param {Object} ns
-     * @param {String} customPath - um caminho específico, caso o jogo não esteja na raíz do projeto.
+     * @param {String} [customPath] - um caminho específico, caso o jogo não esteja na raíz do projeto.
      */
     initWithNamespace: function(ns, customPath) {
         this.activeNamespace = ns;
@@ -151,7 +151,16 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
         ns.resPath = "res/";
         ns.srcPath = "src/";
 
+        if(!ns.res && ns.Resources)
+            ns.res = ns.Resources;
+
         if(this.context == pd.Delegate.CONTEXT_PALCO && !this.isNamespacePalco(ns)) {
+            if(ns.JsonList) {
+                for(var i in ns.JsonList) {
+                    ns.JsonList[i] = ns.JsonList[i].replace("res/", customPath + "/res/");
+                }
+            }
+
             if (ns.resPath.lastIndexOf(customPath) == -1)
                 ns.resPath = ns.resPath.replace("res/", customPath + "/res/");
 
@@ -162,15 +171,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
         this._initGameResources(ns);
 
         pd.DebugScenes = [];
-
-        cc.loader.loadJs(ns.srcPath, ns.jsList, function() {
-            if(ns.onInit)
-                ns.onInit();
-
-            pd.loader.setTargets(ns.g_resources ? [ns.g_resources, pd.g_resources] : [pd.g_resources]);
-            pd.loader.onModuleReady();
-        });
-
+        pd.loader.loadModuleDependencies();
         this.init();
     },
 
@@ -327,10 +328,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
      * @param {Boolean} [tiltScreen=true]
      */
     winGame: function(circleSpriteFrame, messageSpriteFrame, tiltScreen) {
-        pd.currentScene.pauseButton.cleanup();
-        const winLayer = new pd.GameOverLayer();
-        winLayer.init(pd.currentScene, pd.GameOverLayer.TYPE_WIN, circleSpriteFrame, messageSpriteFrame, tiltScreen);
-        pd.currentScene.addChild(winLayer, pd.ZOrders.GAME_OVER_LAYER);
+        this._gameOver(pd.GameOverLayer.TYPE_WIN, circleSpriteFrame, messageSpriteFrame, tiltScreen);
     },
 
     /**
@@ -339,10 +337,22 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
      * @param {Boolean} [tiltScreen=true]
      */
     loseGame: function(circleSpriteFrame, tiltScreen) {
-        pd.currentScene.pauseButton.cleanup();
-        const loseLayer = new pd.GameOverLayer();
-        loseLayer.init(pd.currentScene, pd.GameOverLayer.TYPE_LOSE, circleSpriteFrame, null, tiltScreen);
-        pd.currentScene.addChild(loseLayer, pd.ZOrders.GAME_OVER_LAYER);
+        this._gameOver(pd.GameOverLayer.TYPE_LOSE, circleSpriteFrame, null, tiltScreen);
+    },
+
+    /**
+     * Chamada a layer de GameOver, informando o tipo e os sprites utilizados
+     * @param {string} type
+     * @param {cc.SpriteFrame} circleSpriteFrame
+     * @param {cc.SpriteFrame} messageSpriteFrame
+     * @param {Boolean} [tiltScreen=true]
+     * @private
+     */
+    _gameOver: function (type, circleSpriteFrame, messageSpriteFrame, tiltScreen) {
+        pd.currentScene.uiButton.cleanup();
+        const gameOverLayer = new pd.GameOverLayer();
+        gameOverLayer.init(pd.currentScene, type, circleSpriteFrame, messageSpriteFrame, tiltScreen);
+        pd.currentScene.addChild(gameOverLayer, pd.ZOrders.GAME_OVER_LAYER);
     },
 
     /**

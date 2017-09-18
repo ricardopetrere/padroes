@@ -41,10 +41,16 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
     _pressedButton:null,
 
     /**
-     * Indica o delay, em segundos, ao abrir a opção do botão após ele ser clicado.
+     * Indica o delay, em segundos, ao abrir a opção do botão Play após ele ser clicado.
      * @type {Number}
      */
-    _delayBeforeOpeningButtonOption:0,
+    _delayBeforeOpeningPlayOption:0,
+
+    /**
+     * Indica o delay, em segundos, ao abrir a opção do botão Tutorial após ele ser clicado.
+     * @type {Number}
+     */
+    _delayBeforeOpeningTutorialOption:0,
 
     /**
      * Indica a duração da transição.
@@ -64,7 +70,7 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
         this._playBtn = playBtn;
         this._tutorialBtn = tutorialBtn;
         this._transitionDuration = transitionDuration || 0.5;
-        this._gameSceneTransitionFunction = gameSceneTransitionFunction || FadeTransition;
+        this._gameSceneTransitionFunction = gameSceneTransitionFunction;
         this._decorateButton(this._playBtn);
         this._decorateButton(this._tutorialBtn);
         this._gameScenePrototype = gameScenePrototype;
@@ -72,10 +78,12 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
     },
 
     /**
-     * @param {Number} delayBeforeOpeningButtonOption - Indica o delay, em segundos, ao abrir a opção do botão após ele ser clicado.
+     * @param {Number} delayBeforeOpeningPlayOption - Indica o delay, em segundos, ao abrir a opção do botão Play após ele ser clicado.
+     * @param {Number} [delayBeforeOpeningTutorialOption] - Indica o delay, em segundos, ao abrir a opção do botão Tutorial após ele ser clicado.
      */
-    setDelayBeforeOpeningButtonOption: function(delayBeforeOpeningButtonOption) {
-        this._delayBeforeOpeningButtonOption = delayBeforeOpeningButtonOption;
+    setDelayBeforeOpeningButtonOption: function(delayBeforeOpeningPlayOption, delayBeforeOpeningTutorialOption) {
+        this._delayBeforeOpeningPlayOption = delayBeforeOpeningPlayOption;
+        this._delayBeforeOpeningTutorialOption = delayBeforeOpeningTutorialOption || delayBeforeOpeningPlayOption;
     },
 
     /**
@@ -182,8 +190,9 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
      */
     _onSelect: function() {
         const sequenceSteps = [];
-        if(this._delayBeforeOpeningButtonOption)
-            sequenceSteps.push(cc.delayTime(this._delayBeforeOpeningButtonOption));
+        var delay = (this._pressedButton == this._playBtn ? this._delayBeforeOpeningPlayOption : this._delayBeforeOpeningTutorialOption);
+        if(delay)
+            sequenceSteps.push(cc.delayTime(delay));
         sequenceSteps.push(cc.callFunc(this._onSelectionReady, this));
         this.runAction(new cc.Sequence(sequenceSteps));
         this._mouseEnabled = false;
@@ -195,6 +204,9 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
      */
     _onSelectionReady: function() {
         if(this._pressedButton == this._playBtn && this._gameScenePrototype) {
+            if(!this._gameSceneTransitionFunction)
+                this._transitionDuration = 0;
+
             pd.changeScene(new this._gameScenePrototype(), this._transitionDuration, this._gameSceneTransitionFunction);
         }
         else if(this._pressedButton == this._tutorialBtn) {
@@ -220,7 +232,7 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
      * @param {*} button
      */
     onButtonUp: function(button) {
-        button.tweenBackToDisplayState(0.1, cc.easeSineIn);
+        button.setScale(button.displayState.scaleX, button.displayState.scaleY);
     },
 
     /**

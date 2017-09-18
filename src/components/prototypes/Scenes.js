@@ -26,6 +26,18 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
     pausedActions:null,
 
     /**
+     * A layer principal da cena.
+     * @type {*}
+     */
+    mainLayer:null,
+
+    /**
+     * Aponta para o protótipo da classe da main layer da cena.
+     * @type {Object}
+     */
+    mainLayerClass:null,
+
+    /**
      * Sobrescreve o ponto de entrada da cena.
      * @override
      */
@@ -39,6 +51,22 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
                 pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, this, this.onDebugKeyDown);
             }
         }
+
+        if(this.mainLayerClass)
+            this.initWithMainLayer(this.mainLayerClass);
+    },
+
+    /**
+     * Cria, adiciona e inicializa a 'main layer' da cena.
+     * @param {Object} mainLayerOrMainLayerClass
+     */
+    initWithMainLayer: function(mainLayerOrMainLayerClass) {
+        if(!(mainLayerOrMainLayerClass instanceof cc.Scene))
+            this.mainLayer = new mainLayerOrMainLayerClass();
+        else
+            this.mainLayer = mainLayerOrMainLayerClass;
+        this.addChild(this.mainLayer);
+        this.mainLayer.init();
     },
 
     /**
@@ -66,8 +94,8 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
             pd.audioEngine.toggleMute();
             cc.log('[pd.ScenePrototype] ToggleMute: ' + pd.audioEngine.isMuted);
         }
-        else if(intKey > pd.Keys.ZERO && intKey < pd.Keys.ZERO + 10) {
-            pd.debugger.loadShortcut(intKey - 49);
+        else {
+            pd.debugger.loadShortcut(intKey);
         }
     },
 
@@ -128,6 +156,13 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
  * @classdesc Classe base para as cenas de menu principal.
  */
 pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
+
+    /**
+     * Aponta para o protótipo da classe da main layer da cena.
+     * @type {Object}
+     */
+    mainLayerClass:pd.MainLayer,
+
     /**
      * @constructs
      */
@@ -137,7 +172,9 @@ pd.MainScene = pd.ScenePrototype.extend({/**@lends pd.MainScene#*/
         if(pd.delegate.context == pd.Delegate.CONTEXT_PALCO || pd.debugMode) {
             this.uiButton = new pd.Button(pd.SpriteFrames.BTN_CLOSE, pd.SpriteFrames.BTN_CLOSE_PRESSED, {x:975, y:715}, 1, true, false, this, this.onExitButton);
             this.uiButton.isLocked = false;
-            this.uiButton.unlock = function () {this.isLocked = false;};
+            this.uiButton.unlock = function () {
+                this.isLocked = false;
+            };
             this.addChild(this.uiButton, pd.ZOrders.PAUSE_BUTTON);
         }
 
@@ -195,7 +232,6 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
         this.uiButton.unlock = function(){
             this.isLocked = false;
         };
-
         this.pauseButton = this.uiButton; // manter compatibilidade (legado)...
         this.addChild(this.pauseButton, pd.ZOrders.PAUSE_BUTTON);
     },
@@ -235,4 +271,13 @@ pd.GameScene = pd.ScenePrototype.extend({/**@lends pd.GameScene#*/
         }
     }
 });
+
+/**
+ * @type {cc.Point}
+ */
 pd.GameScene.TIP_BUTTON_POS = cc.p(875, 715);
+
+/**
+ * @type {cc.Point}
+ */
+pd.GameScene.CENTER = cc.p(512, 384);

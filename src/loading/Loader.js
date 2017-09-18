@@ -29,10 +29,25 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
     _currentRes:-1,
 
     /**
+     * Aponta para o índice i do json sendo carregado.
+     */
+    _currentJson:-1,
+
+    /**
+     * @type {Object}
+     */
+    _jsonCache:null,
+
+    /**
      * Objeto nativo responsável pelo carregamento de assets.
      * @type {cc.Loader}
      */
     _ccLoader:null,
+
+    /**
+     * @type {Boolean}
+     */
+    _hasLoadedCurrentModuleDependencies:false,
 
     /**
      * Construtor padrão.
@@ -50,6 +65,7 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
      * - Se estiver no palco, e o usuário estiver abrindo no jogo, não há a necessidade de se fazer um pré-carregamento, pois os recursos utilizados pelos padrões já estão carregados na memória.
      */
     onModuleReady: function() {
+        pd.loader._currentJson = 0;
         if(pd.delegate.context != pd.Delegate.CONTEXT_PALCO || pd.delegate.isNamespacePalco(pd.delegate.activeNamespace))
             pd.loader.preload();
         else
@@ -141,6 +157,99 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
      */
     setTargets:function(resArray) {
         this._res = resArray;
+    },
+
+    /**
+     * Carrega as dependências do módulo atual.
+     */
+    loadModuleDependencies: function() {
+        this._hasLoadedCurrentModuleDependencies = false;
+        const ns = pd.delegate.activeNamespace;
+
+        cc.loader.loadJs(ns.srcPath, ns.jsList, function() {
+            if(ns.onInit)
+                ns.onInit();
+
+            pd.loader.onJSListDidLoad();
+        });
+    },
+
+    /**
+     * Manipula o carregamento de um JSList.
+     */
+    onJSListDidLoad: function() {
+        const ns = pd.delegate.activeNamespace;
+        pd.loader.setTargets(ns.g_resources ? [ns.g_resources, pd.g_resources] : [pd.g_resources]);
+        if(!ns.JsonList) {
+            pd.loader.onModuleReady();
+        }
+        else {
+            this._jsonCache = {};
+            this._currentJson = 0;
+            this.preloadJSONList(this.onModuleReady, this);
+        }
+    },
+
+    /**
+     * Carrega uma lista de json.
+     * @param {Function} [onComplete=null]
+     * @param {Function} [onCompleteHandler=null]
+     */
+    preloadJSONList: function(onComplete, onCompleteHandler) {
+        const ns = pd.delegate.activeNamespace;
+        const objectToArray = pd.objectToArray(ns.JsonList);
+        if(this._currentJson < objectToArray.length) {
+            var jsonPath = objectToArray[this._currentJson];
+            cc.log("[pd.Loader] Loaded JSON file: " + jsonPath);
+            cc.loader.loadJson(jsonPath, function(err, object) {
+                pd.loader.onJSONDidLoad(err, object, jsonPath, onComplete, onCompleteHandler);
+            });
+        }
+        else {
+            this._currentJson = 0;
+            onComplete.apply(onCompleteHandler);
+        }
+    },
+
+    /**
+     * Recarrega o JSON informado.
+     * @param {String} jsonPath
+     * @param {Function} [onComplete=null]
+     * @param {Function} [onCompleteHandler=null]
+     */
+    reloadJSON: function(jsonPath, onComplete, onCompleteHandler) {
+        cc.loader.loadJson(jsonPath, function(err, object) {
+            pd.loader.onJSONDidLoad(err, object, jsonPath, onComplete, onCompleteHandler);
+        });
+    },
+
+    /**
+     * Manipula o carregamento de um JSON.
+     * @param {Object} err
+     * @param {Object} object
+     * @param {String} path
+     * @param {Function} [onComplete=null]
+     * @param {Function} [onCompleteHandler=null]
+     */
+    onJSONDidLoad: function(err, object, path, onComplete, onCompleteHandler) {
+        this._jsonCache[path] = object;
+        if(this._currentJson > -1) {
+            this._currentJson++;
+            this.preloadJSONList(onComplete, onCompleteHandler);
+        }
+        else if(onComplete && onCompleteHandler) {
+            this._currentJson = 0;
+            onComplete.apply(onCompleteHandler);
+        }
+    },
+
+    /**
+     * Retorna o objeto de dados parseados de um .json cacheado.
+     * @param {String} path
+     * @returns {Object}
+     */
+    getCachedJSONData: function(path) {
+        return this._jsonCache[path];
     },
 
     /**
