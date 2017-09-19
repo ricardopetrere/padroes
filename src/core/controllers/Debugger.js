@@ -130,17 +130,6 @@ pd.Debugger = cc.Class.extend({/**@lends pd.Debugger#*/
 });
 
 /**
- * Obtém a instância singleton do objeto.
- * @returns {pd.Debugger}
+ * @type {pd.Debugger}
  */
-pd.Debugger.getInstance = function () {
-    if (pd.Debugger.prototype._singleton == null) {
-        pd.Debugger.prototype._singleton = new pd.Debugger();
-    }
-    return pd.Debugger.prototype._singleton;
-};
-
-/**
- * @type pd.Debugger
- */
-pd.debugger = pd.Debugger.getInstance();
+pd.debugger = pd.getInstance(pd.Debugger);

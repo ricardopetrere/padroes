@@ -43,7 +43,7 @@ pd.Editor.SpriteListView = cc.Sprite.extend({
         this.listView.maxY = this.getBoundingBox().height/2 - 4;
         this.listView.minY = -110;
 
-        var cabecalho = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(pd.Editor.EDITOR_HEADER));
+        var cabecalho = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_HEADER));
         cabecalho.setAnchorPoint(0, 0);
         cabecalho.setScaleX(0.5);
         cabecalho.setPosition(0, this.getBoundingBox().height);

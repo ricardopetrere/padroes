@@ -12,7 +12,7 @@ pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
         this.setAnchorPoint(0, 1);
         this.setContentSize(570, 250);
 
-        var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.Editor.EDITOR_HEADER), cc.p(0, 250), 570, 26);
+        var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_HEADER), cc.p(0, 250), 570, 26);
         cabecalho.setAnchorPoint(0, 0);
         this.addChild(cabecalho);
 
@@ -49,7 +49,7 @@ pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
         //Região que controla ZOrder & boundingBox
         this.selectedInfos.zOrder = pd.Editor.createEditBox(this, {txt:"Z-Order:", size:17}, cc.p(15, 100), cc.size(60, 20), cc.EDITBOX_INPUT_MODE_NUMERIC);
 
-        this.selectedInfos.willAddToPrinter = pd.Editor.createCheckBox(this, {txt:"Adicionar ao Printer - ", size:17}, cc.p(15, 70), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
+        this.selectedInfos.willAddToPrinter = pd.Editor.createCheckBox(this, {txt:"Adicionar ao Printer - ", size:17}, cc.p(15, 70), [pd.SpriteFrames.EDITOR_UNCHECKED, pd.SpriteFrames.EDITOR_CHECKED]);
 
         this.exitButton = new pd.Button(pd.SpriteFrames.EDITOR_BTN_CLOSE, pd.SpriteFrames.EDITOR_BTN_CLOSE, {x:550, y:12}, null, true, false, this, '_onExitButtonCall');
         this.cabecalho.addChild(this.exitButton, 99);

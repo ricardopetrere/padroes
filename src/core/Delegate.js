@@ -297,7 +297,7 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
                 target.release();
             }
         }
-
+        pd.pool.reset();
         this._retainedNodes = [];
     },
 
@@ -392,26 +392,9 @@ pd.Delegate.CONTEXT_PALCO = "contextPalco";
 pd.Delegate.CONTEXT_PORTAL = "contextPortal";
 
 /**
- * Obtém a instância singleton da classe.
- * @function
- * @public
- * @static
- * @returns {pd.Delegate}
- */
-pd.Delegate.getInstance = function () {
-    if (pd.Delegate.prototype._singleton == null) {
-        pd.Delegate.prototype._singleton = new pd.Delegate();
-    }
-    else {
-        throw new Error("[pd.Delegate] Singleton...")
-    }
-    return pd.Delegate.prototype._singleton;
-};
-
-/**
  * @type pd.Delegate
  */
-pd.delegate = pd.Delegate.getInstance();
+pd.delegate = pd.getInstance(pd.Delegate);
 
 /**
  * Atalho para facilitar a chamada ao método de reter objetos.

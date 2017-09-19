@@ -62,9 +62,9 @@ pd.decorators.BuildableNode = {/** @lends pd.decorators.BuildableNode#*/
         pd.debugger.addShortcutWithoutScene(function () {
             pd.cleanAllRunningActions(this);
             if(!reloadAll)
-                pd.loader.reloadJSON(this._configFilePath, this.build ? this.build  : this.init, this);
+                pd.loader.reloadJSON(this._configFilePath, this.build ? this.build : this.init, this);
             else
-                pd.loader.preloadJSONList(this.reload ? this.build  : this.init, this);
+                pd.loader.preloadJSONList(this.build ? this.build : this.init, this);
         }, this, null, cc.KEY.r);
     },
 

@@ -163,8 +163,8 @@ pd.decorators.MVCSceneCapabilities = {/** @lends jogo5av1geo1.MVCSceneCapabiliti
 
     /**
      * Seta a view principal da cena e seu respectivo controlador.
-     * @param {*} viewPrototype
-     * @param {*} controllerPrototype
+     * @param {*} viewPrototype Um objeto que implemente o decorator {@link pd.decorators.ObservableView}
+     * @param {*} controllerPrototype Um objeto que implemente o decorator {@link pd.decorators.ViewController}
      */
     setup: function(viewPrototype, controllerPrototype) {
         this.mainLayer = new viewPrototype();

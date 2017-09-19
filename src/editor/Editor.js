@@ -152,7 +152,7 @@ pd.Editor.GeneralEditor = cc.Scale9Sprite.extend({
         this.setAnchorPoint(0, 1);
         this.setContentSize(570, 250);
 
-        var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.Editor.EDITOR_HEADER), cc.p(0, 250), 570, 26);
+        var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_HEADER), cc.p(0, 250), 570, 26);
         cabecalho.setAnchorPoint(0, 0);
         this.addChild(cabecalho);
 
@@ -222,7 +222,7 @@ pd.Editor.GeneralEditor = cc.Scale9Sprite.extend({
         this.selectedInfos.scaleX = pd.Editor.createEditBox(this, {txt:"ScaleX:", size:16}, cc.p(10, 140), cc.size(60, 20), cc.EDITBOX_INPUT_MODE_NUMERIC, this, "_updateScale");
         this.selectedInfos.scaleY = pd.Editor.createEditBox(this, {txt:"ScaleY:", size:16}, cc.p(155, 140), cc.size(60, 20), cc.EDITBOX_INPUT_MODE_NUMERIC, this, "_updateScale");
         //Botão para associar a escala X e Y
-        this.selectedInfos.scaleChain = pd.Editor.createCheckBox(this, {txt:"", size:0}, cc.p(133, 140), [pd.SpriteFrames.EDITOR_UNCHAINED, pd.ScenePrototype.EDITOR_CHAINED]);
+        this.selectedInfos.scaleChain = pd.Editor.createCheckBox(this, {txt:"", size:0}, cc.p(133, 140), [pd.SpriteFrames.EDITOR_UNCHAINED, pd.SpriteFrames.EDITOR_CHAINED]);
 
         //Região que controla a rotação
         var rotationString = pd.createText("Arial", null, 285, 160, 12, null, "/ / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / Scale & Rotation / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /");
@@ -248,9 +248,9 @@ pd.Editor.GeneralEditor = cc.Scale9Sprite.extend({
         this.addChild(zOrderString);
         this.selectedInfos.zOrder = pd.Editor.createEditBox(this, {txt:"Z-Order:", size:17}, cc.p(10, 60), cc.size(60, 20), cc.EDITBOX_INPUT_MODE_NUMERIC, this, "_updateZOrder");
 
-        this.selectedInfos.showBoundingBox = pd.Editor.createCheckBox(this, {txt:"Show bounding box - ", size:17}, cc.p(155, 60), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
+        this.selectedInfos.showBoundingBox = pd.Editor.createCheckBox(this, {txt:"Show bounding box - ", size:17}, cc.p(155, 60), [pd.SpriteFrames.EDITOR_UNCHECKED, pd.SpriteFrames.EDITOR_CHECKED]);
 
-        this.selectedInfos.willAddToPrinter = pd.Editor.createCheckBox(this, {txt:"Adicionar ao Printer - ", size:17}, cc.p(365, 60), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
+        this.selectedInfos.willAddToPrinter = pd.Editor.createCheckBox(this, {txt:"Adicionar ao Printer - ", size:17}, cc.p(365, 60), [pd.SpriteFrames.EDITOR_UNCHECKED, pd.SpriteFrames.EDITOR_CHECKED]);
 
         //bounding box para mostrar a area de colisão da img
         this.boundingBoxImage = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_BOUNDING_BOX), cc.p(0, 0), 1, 1);
@@ -533,7 +533,7 @@ pd.Editor.createScale9Sprite = function(img, position, scaleX, scaleY){
 pd.Editor.createView = function(name, position, size){
     var body = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_INTERFACE), position, size.width, size.height);
     //this.addChild(body);
-    var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.Editor.EDITOR_HEADER), cc.p(0, size.height), size.width, 26);
+    var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_HEADER), cc.p(0, size.height), size.width, 26);
     cabecalho.setAnchorPoint(0, 0);
     body.addChild(cabecalho);
 

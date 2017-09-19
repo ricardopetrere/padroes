@@ -197,7 +197,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
         var ret = -1;
         if (res) {
             if(cc.sys.isMobile) {
-                ret = cc.audioEngine[funcPlay](res, loop || false, 1, 0, volume);
+                ret = cc.audioEngine[funcPlay](res, loop || false, 1, 0, volume || 1);
             }
             else {
                 ret = cc.audioEngine[funcPlay](res, loop || false, volume);
@@ -273,17 +273,6 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
 });
 
 /**
- * Obtém a instância singleton do objeto.
- * @returns {pd.AudioEngine}
+ * @type {pd.AudioEngine}
  */
-pd.AudioEngine.getInstance = function () {
-    if (pd.AudioEngine.prototype._singleton == null) {
-        pd.AudioEngine.prototype._singleton = new pd.AudioEngine();
-    }
-    return pd.AudioEngine.prototype._singleton;
-};
-
-/**
- * @type pd.AudioEngine
- */
-pd.audioEngine = pd.AudioEngine.getInstance();
+pd.audioEngine = pd.getInstance(pd.AudioEngine);

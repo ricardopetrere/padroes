@@ -36,6 +36,7 @@ pd.jsList = [
     "src/core/controllers/AudioEngine.js",
     "src/core/controllers/Debugger.js",
     "src/core/controllers/InputManager.js",
+    "src/core/controllers/Pool.js",
     "src/utils/Transitions.js",
     "src/utils/Snippets.js",
     "src/utils/Natives.js",
@@ -63,6 +64,7 @@ pd.jsList = [
     "src/components/ui/PauseLayer.js",
     "src/components/feedback/Pointer.js",
     "src/components/feedback/Tablet.js",
+    "src/components/feedback/SimpleFeedback.js",
     "src/interactions/Interaction.js",
     "src/interactions/DragAndDropInteraction.js",
     "src/loading/LoaderScene.js",
@@ -76,6 +78,18 @@ pd.jsList = [
         "src/editor/Printer.js"
     ] : []
 ));
+
+/**
+ * Função padrão para geração de singletons
+ * @param {cc.Class | Function} prototype
+ * @returns {cc.Class}
+ */
+pd.getInstance = function (prototype) {
+    if (prototype.prototype._singleton == null) {
+        prototype.prototype._singleton = new prototype();
+    }
+    return prototype.prototype._singleton;
+};
 
 /**
  * Boota os padrões com os caminhos informados.
