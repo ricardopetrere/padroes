@@ -9,33 +9,54 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
 
     /**
      * @constructs
-     * @param _font {String}
-     * @param _fontSize {Number}
+     * @param {String} _font
+     * @param {Number} _fontSize
      */
-    ctor:function(_font, _fontSize) {
+    ctor: function(_font, _fontSize) {
         this._super();
         this._labels = [];
+        this.setFont(_font, _fontSize);
+    },
+
+    /**
+     * Seta a fonte do componente.
+     * @param {String} _font
+     * @param {Number} _fontSize
+     */
+    setFont: function(_font, _fontSize) {
         this._font = _font;
         this._fontSize = _fontSize;
     },
 
     /**
      * Seta a cor do texto.
-     * @param color {cc.Color}
+     * @param {cc.Color} color
      */
-    setFontColor:function(color) {
+    setFontColor: function(color) {
         for(var i = 0; i < this._labels.length; i++) {
             this._labels[i].setFontFillColor(color);
         }
     },
 
     /**
-     * Seta a posição e o espaçamento entre os textos.
-     * @param x {Number}
-     * @param y {Number}
-     * @param _spacingY {Number}
+     * Centraliza o texto do componente
+     * @param {Number} customWidth
+     * @param {Number} customHeight
      */
-    setTextPosition:function(x, y, _spacingY) {
+    centralize: function(customWidth, customHeight) {
+        for(var i = 0; i < this._labels.length; i++) {
+            this._labels[i].setHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);
+            this._labels[i].setDimensions(customWidth, customHeight);
+        }
+    },
+
+    /**
+     * Seta a posição e o espaçamento entre os textos.
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} _spacingY
+     */
+    setTextPosition: function(x, y, _spacingY) {
         this._spacingY = _spacingY;
         for(var i = 0; i < this._labels.length; i++) {
             this._labels[i].setPosition(x, y + (_spacingY * i));
@@ -44,26 +65,26 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
 
     /**
      * Seta o efeito sonoro a ser tocado a cada aparecimento da letra.
-     * @param _typeSfx {String}
+     * @param {String} _typeSfx
      */
-    setSound:function(_typeSfx) {
+    setSound: function(_typeSfx) {
         this._typeSfx = _typeSfx;
     },
 
     /**
      * Configura o componente.
-     * @param _displayingLinesAmount {Number}
-     * @param _typeSfx {String}
-     * @param x {Number}
-     * @param y {Number}
-     * @param _spacingY {Number}
+     * @param {Number} _displayingLinesAmount
+     * @param {String} [_typeSfx=null]
+     * @param {Number} [x=0]
+     * @param {Number} [y=0]
+     * @param {Number} [_spacingY=-30]
      */
     config: function(_displayingLinesAmount, _typeSfx, x, y, _spacingY) {
         this._displayingLinesAmount = _displayingLinesAmount;
         if(_typeSfx)
             this.setSound(_typeSfx);
         if(x != undefined && y != undefined && _spacingY != undefined)
-            this.setTextPosition(x, y, _spacingY);
+            this.setTextPosition(x, y, _spacingY || -30);
     },
 
     /**
@@ -71,7 +92,7 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
      * @param _handler {cc.Node}
      * @param callback {String}
      */
-    setOnComplete:function(_handler, callback) {
+    setOnComplete: function(_handler, callback) {
         this._onCompleteHandler = _handler;
         this._onComplete = callback;
     },
@@ -82,7 +103,7 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
      * @param callback {String}
      * @param _handler {cc.Node}
      */
-    addLine:function(text, callback, _handler) {
+    addLine: function(text, callback, _handler) {
         var label = new pd.TypewritterInternalLabelTTF('', this._font, this._fontSize);
         label._completedText = text;
         label.callback = callback;
@@ -97,7 +118,7 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
      * Inicializa a animação.
      * @param timeSpanBetweenEachLetter {Number}
      */
-    start:function(timeSpanBetweenEachLetter) {
+    start: function(timeSpanBetweenEachLetter) {
         this._currentLine = 0;
         for(var i = 0; i < this._labels.length; i++) {
             this._labels[i].timeSpanBetweenEachLetter = timeSpanBetweenEachLetter;
@@ -108,7 +129,7 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
     /**
      * Reseta a animação.
      */
-    reset:function() {
+    reset: function() {
         this._currentLine = 0;
         for(var i = 0; i < this._labels.length; i++) {
             this._labels[i].setString('');
@@ -121,7 +142,7 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
      * Manipula o término de uma animação de uma linha.
      * @private
      */
-    _onLineCompleted:function() {
+    _onLineCompleted: function() {
         this._currentLine++;
 
         if(this._currentLine >= this._displayingLinesAmount && this._currentLine < this._labels.length) {
@@ -158,6 +179,8 @@ pd.TypewritterInternalLabelTTF = cc.LabelTTF.extend({/** @lends pd.decorators.Up
     _dt:0,
     /** @type {Boolean} **/
     isDone: false,
+    /** @type {Number} **/
+    _soundDt:0,
 
     /**
      * Inicia a atualização do componente.
@@ -183,9 +206,11 @@ pd.TypewritterInternalLabelTTF = cc.LabelTTF.extend({/** @lends pd.decorators.Up
             return;
 
         this._dt += _dt;
+        this._soundDt += _dt;
         if(this._dt >= this.timeSpanBetweenEachLetter) {
             this._dt -= this.timeSpanBetweenEachLetter;
-            if(this._targetText[0] != " "){
+            if(this._targetText[0] != " " && this._soundDt > 0.05){
+                this._soundDt = 0;
                 pd.audioEngine.playEffect(this._handler._typeSfx ? this._handler._typeSfx : pd.res.fx_escrever);
             }
             this._currentText += this._targetText[0];
