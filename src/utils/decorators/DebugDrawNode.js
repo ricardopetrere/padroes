@@ -3,7 +3,7 @@
  * Implementa a capacidade de um node de desenhar elementos de 'debugging'.
  * @mixin
  */
-pd.decorators.DebugDraw = {/** @lends pd.decorators.DebugDraw#*/
+pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
 
     /**
      * @type {cc.LabelTTF}
