@@ -553,26 +553,9 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 });
 
 /**
- * Obtém a instância singleton da classe.
- * @function
- * @public
- * @static
- * @returns {pd.InputManager}
+ * @type {pd.InputManager}
  */
-pd.InputManager.getInstance = function () {
-    if (pd.InputManager.prototype._singleton == null) {
-        pd.InputManager.prototype._singleton = new pd.InputManager();
-    }
-    else {
-        throw new Error("[pd.InputManager] Tentando instanciar um objeto singleton mais de uma vez!");
-    }
-    return pd.InputManager.prototype._singleton;
-};
-
-/**
- * @type pd.InputManager
- */
-pd.inputManager = pd.InputManager.getInstance();
+pd.inputManager = pd.getInstance(pd.InputManager);
 
 /**
  * Atalho para facilitar a chamada ao método.

@@ -10,7 +10,7 @@ pd.Editor.Printer = cc.Scale9Sprite.extend({
         this.setAnchorPoint(0, 1);
         this.setContentSize(570, 170);
 
-        var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.Editor.EDITOR_HEADER), cc.p(0, 170), 570, 26);
+        var cabecalho = pd.Editor.createScale9Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_HEADER), cc.p(0, 170), 570, 26);
         cabecalho.setAnchorPoint(0, 0);
         this.addChild(cabecalho);
 
@@ -33,16 +33,16 @@ pd.Editor.Printer = cc.Scale9Sprite.extend({
         this.selectedInfos = [];
 
         //Campo do Name
-        this.selectedInfos.parent = pd.Editor.createCheckBox(this, {txt:"ParentName:", size:20}, cc.p(15, 145), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
-        this.selectedInfos.spriteName = pd.Editor.createCheckBox(this, {txt:"SpriteName: ", size:20}, cc.p(180, 145), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
-        this.selectedInfos.name = pd.Editor.createCheckBox(this, {txt:"Name:", size:20}, cc.p(350, 145), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
+        this.selectedInfos.parent = pd.Editor.createCheckBox(this, {txt:"ParentName:", size:20}, cc.p(15, 145), [pd.SpriteFrames.EDITOR_UNCHECKED, pd.SpriteFrames.EDITOR_CHECKED]);
+        this.selectedInfos.spriteName = pd.Editor.createCheckBox(this, {txt:"SpriteName: ", size:20}, cc.p(180, 145), [pd.SpriteFrames.EDITOR_UNCHECKED, pd.SpriteFrames.EDITOR_CHECKED]);
+        this.selectedInfos.name = pd.Editor.createCheckBox(this, {txt:"Name:", size:20}, cc.p(350, 145), [pd.SpriteFrames.EDITOR_UNCHECKED, pd.SpriteFrames.EDITOR_CHECKED]);
 
-        this.selectedInfos.position = pd.Editor.createCheckBox(this, {txt:"Position: ", size:18}, cc.p(15, 115), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
-        this.selectedInfos.scale = pd.Editor.createCheckBox(this, {txt:"Scale:", size:18}, cc.p(135, 115), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
-        this.selectedInfos.rotation = pd.Editor.createCheckBox(this, {txt:"Rotation:", size:18}, cc.p(235, 115), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
-        this.selectedInfos.color = pd.Editor.createCheckBox(this, {txt:"Color: ", size:18}, cc.p(355, 115), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
+        this.selectedInfos.position = pd.Editor.createCheckBox(this, {txt:"Position: ", size:18}, cc.p(15, 115), [pd.SpriteFrames.EDITOR_UNCHECKED, pd.SpriteFrames.EDITOR_CHECKED]);
+        this.selectedInfos.scale = pd.Editor.createCheckBox(this, {txt:"Scale:", size:18}, cc.p(135, 115), [pd.SpriteFrames.EDITOR_UNCHECKED, pd.SpriteFrames.EDITOR_CHECKED]);
+        this.selectedInfos.rotation = pd.Editor.createCheckBox(this, {txt:"Rotation:", size:18}, cc.p(235, 115), [pd.SpriteFrames.EDITOR_UNCHECKED, pd.SpriteFrames.EDITOR_CHECKED]);
+        this.selectedInfos.color = pd.Editor.createCheckBox(this, {txt:"Color: ", size:18}, cc.p(355, 115), [pd.SpriteFrames.EDITOR_UNCHECKED, pd.SpriteFrames.EDITOR_CHECKED]);
 
-        this.selectedInfos.zOrder = pd.Editor.createCheckBox(this, {txt:"Z-Order: ", size:18}, cc.p(440, 115), [pd.Editor.EDITOR_UNCHECKED, pd.Editor.EDITOR_CHECKED]);
+        this.selectedInfos.zOrder = pd.Editor.createCheckBox(this, {txt:"Z-Order: ", size:18}, cc.p(440, 115), [pd.SpriteFrames.EDITOR_UNCHECKED, pd.SpriteFrames.EDITOR_CHECKED]);
 
         var explanationText = new cc.LabelTTF("Campos adicionais. Separar com 'virgula' cada argumento a ser printado.", "Arial", 17);
         this.addChild(explanationText, 1);

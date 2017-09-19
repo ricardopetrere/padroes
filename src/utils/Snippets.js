@@ -312,7 +312,7 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
 /**
  * Cria um {@link pd.Animation} passando uma lista de {@link pd.AnimationData} a serem adicionadas
  * @param {Object} attr
- * @param {pd.AnimationData[]} animacoes
+ * @param {pd.AnimationData | pd.AnimationData[]} animacoes
  * @returns {pd.Animation}
  */
 pd.createAnimation = function (attr, animacoes) {
