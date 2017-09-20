@@ -166,6 +166,21 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
         this._hasLoadedCurrentModuleDependencies = false;
         const ns = pd.delegate.activeNamespace;
 
+        if(!ns.JsonList) {
+            this.loadJsList();
+        }
+        else {
+            this._jsonCache = {};
+            this._currentJson = 0;
+            this.preloadJSONList(this.loadJsList, this);
+        }
+    },
+
+    /**
+     *
+     */
+    loadJsList: function () {
+        const ns = pd.delegate.activeNamespace;
         cc.loader.loadJs(ns.srcPath, ns.jsList, function() {
             if(ns.onInit)
                 ns.onInit();
@@ -180,14 +195,7 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
     onJSListDidLoad: function() {
         const ns = pd.delegate.activeNamespace;
         pd.loader.setTargets(ns.g_resources ? [ns.g_resources, pd.g_resources] : [pd.g_resources]);
-        if(!ns.JsonList) {
-            pd.loader.onModuleReady();
-        }
-        else {
-            this._jsonCache = {};
-            this._currentJson = 0;
-            this.preloadJSONList(this.onModuleReady, this);
-        }
+        pd.loader.onModuleReady();
     },
 
     /**

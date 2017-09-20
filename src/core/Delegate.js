@@ -394,7 +394,7 @@ pd.Delegate.CONTEXT_PORTAL = "contextPortal";
 /**
  * @type pd.Delegate
  */
-pd.delegate = pd.getInstance(pd.Delegate);
+pd.delegate = pd.generateSingleton(pd.Delegate);
 
 /**
  * Atalho para facilitar a chamada ao método de reter objetos.
