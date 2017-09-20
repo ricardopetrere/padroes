@@ -742,6 +742,27 @@ pd.flutter = function(time, cycles, dx, dy) {
 };
 
 /**
+ * Retorna uma ação de callFunc que chama a função com os parâmetros originais sem injetar o primeiro parâmetro como o "this".
+ * @param {Function} func
+ * @param {*} caller
+ * @param {Array} args
+ */
+pd.perfectCallFunc = function(func, caller, args) {
+    if(arguments.length > 3 || Array.isArray(args[2]) == false) {
+        var _arguments = [];
+        for(var i = 2 ; i < arguments.length ; i++)
+            _arguments.push(arguments[i]);
+    }
+    else {
+        _arguments = args;
+    }
+
+    return cc.callFunc(function() {
+        func.apply(caller, _arguments);
+    }, caller);
+};
+
+/**
  * Adiciona uma layer de foco ao objeto informado.
  * @param {cc.Node} layer {cc.Layer}
  * @param {Number} time {Number} - o tempo da transição de aparecimento da layer de foco.
