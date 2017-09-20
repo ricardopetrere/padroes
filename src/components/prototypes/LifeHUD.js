@@ -305,7 +305,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
 
     /**
      *Inicia a animação de introdução.
-     * @param {Function} (easeFunction = [cc.easeSinOut])  - Função de easing;
+     * @param {Function} [easeFunction = cc.easeSineOut]  - Função de easing;
      */
     startIntro: function (easeFunction) {
         this.runAction(cc.sequence(this.getIntro(easeFunction)));

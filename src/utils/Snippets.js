@@ -241,9 +241,10 @@ pd.createSprite = function(spriteOrSpriteFrameName, attr, parentNode, localZOrde
  * @param {String} [text=""]
  * @param {cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_RIGHT} [alignment=cc.TEXT_ALIGNMENT_CENTER]
  * @param {cc.Node} [parentNode=null]
+ * @param {Number} [zOrder]
  * @returns {cc.LabelTTF}
  */
-pd.createText = function(fontPath, fontName, x, y, fontSize, color, text, alignment, parentNode) {
+pd.createText = function(fontPath, fontName, x, y, fontSize, color, text, alignment, parentNode, zOrder) {
     const labelTTF = new cc.LabelTTF(text || "", cc.sys.isNative ? fontPath : fontName, fontSize);
     labelTTF.setPosition(x, y);
     labelTTF.fillStyle = color || cc.color(0, 0, 0, 255);
@@ -252,7 +253,7 @@ pd.createText = function(fontPath, fontName, x, y, fontSize, color, text, alignm
         labelTTF.setHorizontalAlignment(alignment);
 
     if(parentNode)
-        parentNode.addChild(labelTTF);
+        parentNode.addChild(labelTTF, zOrder || 0);
 
     return labelTTF;
 };
@@ -267,10 +268,11 @@ pd.createText = function(fontPath, fontName, x, y, fontSize, color, text, alignm
  * @param {String} [text=""]
  * @param {cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_RIGHT} [alignment=null]
  * @param {cc.Node} [parentNode=null]
+ * @param {Number} [zOrder]
  * @returns {cc.LabelTTF}
  */
-pd.createTextWithStandardFont = function(fontID, x, y, fontSize, color, text, alignment, parentNode) {
-    return pd.createText(fontID.path, fontID.name, x, y, fontSize, color, text, alignment, parentNode);
+pd.createTextWithStandardFont = function(fontID, x, y, fontSize, color, text, alignment, parentNode, zOrder) {
+    return pd.createText(fontID.path, fontID.name, x, y, fontSize, color, text, alignment, parentNode, zOrder);
 };
 
 /**

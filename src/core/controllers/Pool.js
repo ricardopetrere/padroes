@@ -80,7 +80,7 @@ pd.Pool = cc.Class.extend({
 /**
  * @type {pd.Pool}
  */
-pd.pool = pd.getInstance(pd.Pool);
+pd.pool = pd.generateSingleton(pd.Pool);
 
 /**
  *

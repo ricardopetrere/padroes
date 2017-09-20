@@ -555,7 +555,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 /**
  * @type {pd.InputManager}
  */
-pd.inputManager = pd.getInstance(pd.InputManager);
+pd.inputManager = pd.generateSingleton(pd.InputManager);
 
 /**
  * Atalho para facilitar a chamada ao método.

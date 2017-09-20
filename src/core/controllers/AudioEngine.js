@@ -275,4 +275,4 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
 /**
  * @type {pd.AudioEngine}
  */
-pd.audioEngine = pd.getInstance(pd.AudioEngine);
+pd.audioEngine = pd.generateSingleton(pd.AudioEngine);

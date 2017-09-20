@@ -84,7 +84,7 @@ pd.jsList = [
  * @param {cc.Class | Function} prototype
  * @returns {cc.Class}
  */
-pd.getInstance = function (prototype) {
+pd.generateSingleton = function (prototype) {
     if (prototype.prototype._singleton == null) {
         prototype.prototype._singleton = new prototype();
     }

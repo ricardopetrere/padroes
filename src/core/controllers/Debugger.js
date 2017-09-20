@@ -132,4 +132,4 @@ pd.Debugger = cc.Class.extend({/**@lends pd.Debugger#*/
 /**
  * @type {pd.Debugger}
  */
-pd.debugger = pd.getInstance(pd.Debugger);
+pd.debugger = pd.generateSingleton(pd.Debugger);
