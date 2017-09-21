@@ -35,6 +35,11 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
      * @type {Number}
      */
     pageID:-1,
+    /**
+     * O texto inferior.
+     * @type {cc.LabelTTF|cc.Sprite}
+     */
+    bottomText:null,
 
     /**
      * Construtor padrao - informar uma string ou um sprite frame para o texto inferior (instrução da página).
@@ -213,10 +218,10 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
     _createBottomText: function(txt) {
         if(!pd.delegate.activeNamespace.tutorialData.txtOffSetY)
             pd.delegate.activeNamespace.tutorialData.txtOffSetY = 0;
-
-        const label = pd.cText(0, 0, txt, "Calibri", 25);
-        label.setPosition(512, 140 + pd.delegate.activeNamespace.tutorialData.txtOffSetY);
-        this.addChild(label, pd.ZOrders.TUTORIAL_PAGE_BOTTOM_TEXT);
+        
+        this.bottomText = this._getBottomText(0, 0, txt, cc.sys.isNative ? pd.Fonts.CALIBRI : "Calibri", 25);
+        this.bottomText.setPosition(512, 140 + pd.delegate.activeNamespace.tutorialData.txtOffSetY);
+        this.addChild(this.bottomText, pd.ZOrders.TUTORIAL_PAGE_BOTTOM_TEXT);
     },
 
     /**
@@ -228,7 +233,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
      * @returns {*}
      * @private
      */
-    _getText: function(x, y, txt, font, size) {
+    _getBottomText: function(x, y, txt, font, size) {
         if (typeof txt == "string") {
             var text = new cc.LabelTTF(txt, font, size);
             text.setFontFillColor(new cc.Color(0, 0, 0));

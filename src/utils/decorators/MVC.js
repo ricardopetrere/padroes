@@ -103,6 +103,23 @@ pd.decorators.ViewController = {/** @lends pd.decorators.ViewController#*/
         view.bind(this);
         this.view = view;
         pd.decorate(this, pd.decorators.Observer);
+        this.setSoundObserver();
+    },
+
+    /**
+     * Ativa o observador de eventos de som padrão.
+     */
+    setSoundObserver: function() {
+        this.observe(pd.decorators.ObservableView.EVENT_SOUND, this.onSoundEffect);
+    },
+
+    /**
+     * Toca um som notificado pela view.
+     * @param {String} eventID
+     * @param {{soundEffect:String, volume:1}} eventData
+     */
+    onSoundEffect: function(eventID, eventData) {
+        pd.audioEngine.playEffect(eventData.soundEffect, false, eventData.volume);
     }
 };
 

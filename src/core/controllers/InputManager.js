@@ -61,7 +61,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * Seta um listener de evento para o álvo informado.
      * @param {pd.InputManager.Events} eventType - tipo do evento.
      * @param {*} target - o objeto que dispara o evento.
-     * @param {Function|String} handlerFunc - a função a ser invocada pelo objeto que escuta o evento.
+     * @param {Function|String} [handlerFunc] - a função a ser invocada pelo objeto que escuta o evento.
      * @param {*} [handler=null] - o objeto que escuta o evento. Caso seja null, o target será utilizado como handler.
      */
     add: function(eventType, target, handlerFunc, handler) {
@@ -71,7 +71,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
         const metadata = target._inputMetadata;
         if(!metadata[eventType])
             metadata[eventType] = [];
-        metadata[eventType].push({handler: handler ? handler : target, handlerFunc:handlerFunc});
+        metadata[eventType].push({handler: handler ? handler : target, handlerFunc:handlerFunc || function() {}});
         this._checkInputSources(target, eventType, true);
     },
 

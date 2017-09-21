@@ -348,6 +348,7 @@ pd.createBackground = function (caller, res, name, attr) {
     name = name || "background";
     caller[name] = pd.createSprite(res, attr, caller);
     caller[name].setAnchorPoint(0, 0);
+    caller[name].setLocalZOrder(0);
     return caller[name];
 };
 
@@ -403,6 +404,17 @@ pd.__defineGetter__("currentScene", function() {
 });
 //</editor-fold>
 //<editor-fold desc="#Geometry">
+/**
+ * Gera o polígono (vetor de vértices a partir de um objeto
+ * @param {cc.Node} obj
+ * @param {boolean} [toWorld=true]
+ */
+pd.objectToPolygon = function (obj, toWorld) {
+    if(toWorld !== false)
+        return pd.rectToPolygon(obj.getBoundingBoxToWorld());
+    else
+        return pd.rectToPolygon(obj.getBoundingBox());
+};
 
 /**
  * Gera o polígono (vetor de vértices) a partir de um rect.
@@ -660,7 +672,7 @@ pd.pulse = function(time, pulsations, initialScale, targetScale) {
         throw new Error("[pd.pulse] Um ou mais argumentos obrigatórios não foram fornecidos para a função!");
 
     const sequenceSteps = [];
-    for(var i = 0 ; i < pulsations ; i++) {
+    for(var i = 0; i < pulsations; i++) {
         sequenceSteps.push(
             cc.scaleTo(time/(pulsations*2), targetScale, targetScale),
             cc.scaleTo(time/(pulsations*2), initialScale, initialScale)
@@ -683,7 +695,7 @@ pd.shake = function(time, cycles, initialRotation, strength) {
         throw new Error("[pd.shake] Um ou mais argumentos obrigatórios não foram fornecidos para a função!");
 
     const sequenceSteps = [];
-    for(var i = 0 ; i < cycles ; i++) {
+    for(var i = 0; i < cycles; i++) {
         sequenceSteps.push(
             cc.rotateTo(time/(cycles*4), initialRotation - strength, 0),
             cc.rotateTo(time/(cycles*2), initialRotation + strength, 0),
@@ -706,7 +718,7 @@ pd.flicker = function(time, flicks, initialColor, targetColor) {
     if(!time || !flicks || !initialColor || !targetColor)
         throw new Error("[pd.flicker] Um ou mais argumentos obrigatórios não foram fornecidos para a função!");
     const sequenceSteps = [];
-    for(var i = 0 ; i < flicks ; i++) {
+    for(var i = 0; i < flicks; i++) {
         sequenceSteps.push(
             cc.tintTo(time/(flicks*2), targetColor.r, targetColor.g, targetColor.b),
             cc.tintTo(time/(flicks*2), initialColor.r, initialColor.g, initialColor.b)
@@ -730,7 +742,7 @@ pd.flutter = function(time, cycles, dx, dy) {
     dy = dy || 0;
 
     const sequenceSteps = [];
-    for(var i = 0 ; i < cycles ; i++) {
+    for(var i = 0; i < cycles; i++) {
         sequenceSteps.push(
             cc.moveBy(time/(cycles*4), -dx, -dy),
             cc.moveBy(time/(cycles*2), 2*dx, 2*dy),
@@ -739,6 +751,54 @@ pd.flutter = function(time, cycles, dx, dy) {
     }
 
     return cc.sequence(sequenceSteps);
+};
+
+/**
+ * Cria uma ação de distorção do objeto (skew)
+ * @param {Number} time
+ * @param {Number} cycles
+ * @param {Number} [sx]
+ * @param {Number} [sy]
+ * @returns {cc.Sequence}
+ */
+pd.distort = function (time, cycles, sx, sy) {
+    if (!time || !cycles)
+        throw new Error("[pd.distort] Um ou mais argumentos obrigatórios não foram fornecidos para a função!");
+
+    sx = sx || 0;
+    sy = sy || 0;
+
+    const sequenceSteps = [];
+    for(var i = 0; i < cycles; i++) {
+        sequenceSteps.push(
+            cc.skewBy(time/(cycles*4), -sx, -sy),
+            cc.skewBy(time/(cycles*2), 2 * sx, 2 * sy),
+            cc.skewBy(time/(cycles*4), -sx, -sy)
+        );
+    }
+
+    return cc.sequence(sequenceSteps);
+};
+
+/**
+ * Retorna uma ação de callFunc que chama a função com os parâmetros originais sem injetar o primeiro parâmetro como o "this".
+ * @param {Function} func
+ * @param {*} caller
+ * @param {Array} args
+ */
+pd.perfectCallFunc = function(func, caller, args) {
+    if(arguments.length > 3 || Array.isArray(args[2]) == false) {
+        var _arguments = [];
+        for(var i = 2 ; i < arguments.length ; i++)
+            _arguments.push(arguments[i]);
+    }
+    else {
+        _arguments = args;
+    }
+
+    return cc.callFunc(function() {
+        func.apply(caller, _arguments);
+    }, caller);
 };
 
 /**

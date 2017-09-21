@@ -29,6 +29,23 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
     },
 
     /**
+     * Seta o modo para ignorar a variável isPaused no update.
+     * @param {Boolean} ignorePaused
+     */
+    setIgnorePaused: function(ignorePaused) {
+        this._ignorePaused = ignorePaused;
+    },
+
+    /**
+     * Limpa o texto sendo exibido.
+     */
+    cleanText: function() {
+        for(var i in this._labels) {
+            this._labels[i].setString("");
+        }
+    },
+
+    /**
      * Seta a cor do texto.
      * @param {cc.Color} color
      */
@@ -116,10 +133,11 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
 
     /**
      * Inicializa a animação.
-     * @param timeSpanBetweenEachLetter {Number}
+     * @param {Number} [timeSpanBetweenEachLetter=0.1]
      */
     start: function(timeSpanBetweenEachLetter) {
         this._currentLine = 0;
+        timeSpanBetweenEachLetter = timeSpanBetweenEachLetter || 0.1;
         for(var i = 0; i < this._labels.length; i++) {
             this._labels[i].timeSpanBetweenEachLetter = timeSpanBetweenEachLetter;
         }
@@ -202,14 +220,14 @@ pd.TypewritterInternalLabelTTF = cc.LabelTTF.extend({/** @lends pd.decorators.Up
      * @param _dt {Number}
      */
     update: function(_dt) {
-        if(pd.delegate.isPaused)
+        if(pd.delegate.isPaused && !this._handler._ignorePaused)
             return;
 
         this._dt += _dt;
         this._soundDt += _dt;
         if(this._dt >= this.timeSpanBetweenEachLetter) {
             this._dt -= this.timeSpanBetweenEachLetter;
-            if(this._targetText[0] != " " && this._soundDt > 0.05){
+            if(this._targetText[0] != " " && this._soundDt > 0.05 && !pd.delegate.isPaused){
                 this._soundDt = 0;
                 pd.audioEngine.playEffect(this._handler._typeSfx ? this._handler._typeSfx : pd.res.fx_escrever);
             }
