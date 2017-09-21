@@ -145,7 +145,16 @@ pd.decorators.BuildableNode = {/** @lends pd.decorators.BuildableNode#*/
                 node.setString(nodeInfo.defaultText || "cc.LabelTTF");
                 if(nodeInfo.strokeSize)
                     node.enableStroke(nodeInfo.strokeColor || cc.color(0, 0, 0), nodeInfo.strokeSize);
+                if(nodeInfo.center)
+                    node.setHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);
                 return node;
+
+            case "pd.Animation":
+                const animationData = [];
+                for(var i in nodeInfo.animationData)
+                    animationData.push(new pd.AnimationData(nodeInfo.animationData[i].name, nodeInfo.animationData[i].ini_frame, nodeInfo.animationData[i].last_frame, nodeInfo.animationData[i].speed, nodeInfo.animationData[i].anim_name))
+                return pd.createAnimation({x:0, y:0}, animationData);
+                break;
 
             default: // tipos ainda não suportados, apenas instancia um objeto do tipo especificado.
                 return eval("new " + nodeInfo.type + "()"); // migué básico... encontrar forma mais elegante de fazer isso.

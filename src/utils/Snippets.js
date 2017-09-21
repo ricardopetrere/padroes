@@ -348,6 +348,7 @@ pd.createBackground = function (caller, res, name, attr) {
     name = name || "background";
     caller[name] = pd.createSprite(res, attr, caller);
     caller[name].setAnchorPoint(0, 0);
+    caller[name].setLocalZOrder(0);
     return caller[name];
 };
 
