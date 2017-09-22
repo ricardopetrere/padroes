@@ -72,6 +72,15 @@ pd.decorators.ResetableNode = {/** @lends pd.decorators.ResetableNode#*/
     },
 
     /**
+     * Retorna um pd.perfectCallFunc que reseta o objeto.
+     * @param {Number} time
+     * @param {Function} ease
+     */
+    getResetCallFunc: function(time, ease) {
+        return pd.perfectCallFunc(this.tweenBackToDisplayState, this, time, ease)
+    },
+
+    /**
      * Interpola para o estado de exibição salvo.
      * @param {Number} time
      * @param {Function} [easingFunction]

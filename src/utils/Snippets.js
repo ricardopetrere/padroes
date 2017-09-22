@@ -787,7 +787,7 @@ pd.distort = function (time, cycles, sx, sy) {
  * @param {...} args
  */
 pd.perfectCallFunc = function(func, caller, args) {
-    if(arguments.length > 3 || Array.isArray(args[2]) == false) {
+    if(arguments.length > 3 || (args && Array.isArray(args[2]) == false)) {
         var _arguments = [];
         for(var i = 2 ; i < arguments.length ; i++)
             _arguments.push(arguments[i]);
