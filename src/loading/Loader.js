@@ -215,7 +215,8 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
         }
         else {
             this._currentJson = 0;
-            onComplete.apply(onCompleteHandler);
+            if (onComplete)
+                onComplete.apply(onCompleteHandler);
         }
     },
 
