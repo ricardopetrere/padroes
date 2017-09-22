@@ -77,7 +77,7 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
      */
     getRelativeDistanceTo: function(_x, _y) {
         if(!this._positionData) {
-            var globalPosition = this.convertToWorldSpace(this.getPosition());
+            var globalPosition = this.getParent().convertToWorldSpace(this.getPosition());
             return pd.pointDistance(_x, _y, globalPosition.x, globalPosition.y);
         }
 

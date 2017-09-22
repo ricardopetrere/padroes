@@ -55,12 +55,14 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
     setDebugDrawEnabled: function(enabled) {
         if(enabled) {
             pd.inputManager.add(pd.InputManager.Events.MOUSE_HOVER, this, this._onDebugMouseHover, this);
+            pd.inputManager.add(pd.InputManager.Events.MOUSE_MOVE, this, this._onDebugMouseHover, this);
             pd.inputManager.add(pd.InputManager.Events.MOUSE_RIGHT_DOWN, this, this._onDebugRightButton, this);
             pd.inputManager.add(pd.InputManager.Events.MOUSE_DOWN, this, this._onDebugClick, this);
             pd.inputManager.add(pd.InputManager.Events.MOUSE_MIDDLE_DOWN, this, this._onDebugMiddleDown, this);
         }
         else {
             pd.inputManager.remove(pd.InputManager.Events.MOUSE_HOVER, this, this._onDebugMouseHover, this);
+            pd.inputManager.remove(pd.InputManager.Events.MOUSE_MOVE, this, this._onDebugMouseHover, this);
             pd.inputManager.remove(pd.InputManager.Events.MOUSE_RIGHT_DOWN, this, this._onDebugRightButton, this);
             pd.inputManager.remove(pd.InputManager.Events.MOUSE_DOWN, this, this._onDebugClick, this);
             pd.inputManager.remove(pd.InputManager.Events.MOUSE_MIDDLE_DOWN, this, this._onDebugMiddleDown, this);
@@ -159,6 +161,8 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
     _onDebugRightButton: function(event) {
         if(pd.debugMode) {
             this.setShowDebugObjects(!this._showDebugObjects);
+            const position = this.convertToNodeSpace(event.getLocation());
+            this._txtCoords.setPosition(position.x, position.y + 10);
         }
     },
 
@@ -181,7 +185,7 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
      * @private
      */
     _onDebugClick: function(event) {
-        if(pd.debugMode) {
+        if(pd.debugMode && this._showDebugObjects) {
             const position = this.convertToNodeSpace(event.getLocation());
             if(!this._coordsLog)
                 this._coordsLog = "";

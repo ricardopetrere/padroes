@@ -784,7 +784,7 @@ pd.distort = function (time, cycles, sx, sy) {
  * Retorna uma ação de callFunc que chama a função com os parâmetros originais sem injetar o primeiro parâmetro como o "this".
  * @param {Function} func
  * @param {*} caller
- * @param {Array} args
+ * @param {...} args
  */
 pd.perfectCallFunc = function(func, caller, args) {
     if(arguments.length > 3 || Array.isArray(args[2]) == false) {
@@ -806,7 +806,7 @@ pd.perfectCallFunc = function(func, caller, args) {
  * @param {cc.Node} layer {cc.Layer}
  * @param {Number} time {Number} - o tempo da transição de aparecimento da layer de foco.
  * @param {Number} opacity {Number} - a opacidade da layer de foco.
- * @param {...*} nodes - lista de objetos a serem 'focados'.
+ * @param {...} nodes - lista de objetos a serem 'focados'.
  */
 pd.addFocus = function(layer, time, opacity, nodes){
     if(!layer._focusLayer) {

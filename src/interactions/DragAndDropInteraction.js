@@ -13,6 +13,12 @@ pd.DragAndDropInteraction = pd.Interaction.extend({/**  @lends pd.DragAndDropInt
     _draggingObject: null,
 
     /**
+     * A posição inicial do objeto sendo arrastado
+     * @type {cc.Point}
+     */
+    _draggingObjectInitialPosition: null,
+
+    /**
      * O fator de escala do objeto selecionado.
      * @type {Number}
      */
@@ -39,18 +45,21 @@ pd.DragAndDropInteraction = pd.Interaction.extend({/**  @lends pd.DragAndDropInt
     /**
      * @override
      * @param {*} actor
+     * @param {boolean} [shouldSaveDisplay=true]
      */
-    addActor: function(actor) {
+    addActor: function(actor, shouldSaveDisplay) {
         this._super(actor);
-        pd.decorate(actor, pd.decorators.ClickableNode);
-        pd.decorate(actor, pd.decorators.ResetableNode);
-        actor.saveDisplayState();
+        if(shouldSaveDisplay !== false) {
+            pd.decorate(actor, pd.decorators.ClickableNode);
+            pd.decorate(actor, pd.decorators.ResetableNode);
+            actor.saveDisplayState();
+        }
     },
 
     /**
      * Configura a interação.
-     * @param {Number} selectedScale
-     * @param {Number} selectedZOrder
+     * @param {Number} [selectedScale]
+     * @param {Number} [selectedZOrder]
      */
     config: function(selectedScale, selectedZOrder) {
         this._selectedScale = selectedScale;
@@ -89,6 +98,7 @@ pd.DragAndDropInteraction = pd.Interaction.extend({/**  @lends pd.DragAndDropInt
         var collidingObject = pd.getNearestCollidingObject(event.getLocationX(), event.getLocationY(), this._actors);
         if(collidingObject) {
             this._draggingObject = collidingObject;
+            this._draggingObjectInitialPosition = this._draggingObject.getPosition();
             if(!(this._draggingObject instanceof pd.Animation))
                 this._draggingObject.stopAllActions();
 
@@ -110,8 +120,8 @@ pd.DragAndDropInteraction = pd.Interaction.extend({/**  @lends pd.DragAndDropInt
      */
     _onDragMove: function(event) {
         if(this._draggingObject) {
-            this._draggingObject.x = event.getLocationX() - this._initialTouchPoint.x + this._draggingObject.displayState.x;
-            this._draggingObject.y = event.getLocationY() - this._initialTouchPoint.y + this._draggingObject.displayState.y;
+            this._draggingObject.x = event.getLocationX() - this._initialTouchPoint.x + this._draggingObjectInitialPosition.x;
+            this._draggingObject.y = event.getLocationY() - this._initialTouchPoint.y + this._draggingObjectInitialPosition.y;
         }
     },
 
@@ -122,8 +132,9 @@ pd.DragAndDropInteraction = pd.Interaction.extend({/**  @lends pd.DragAndDropInt
      */
     _onDragEnd: function(event) {
         if(this._draggingObject) {
-            this.notifyObserver(pd.DragAndDropInteraction.Events.DRAG_DID_END, this._draggingObject);
             this._draggingObject.resetZOrder();
+            this._draggingObject.setScale(this._draggingObject.displayState.scaleX, this._draggingObject.displayState.scaleY);
+            this.notifyObserver(pd.DragAndDropInteraction.Events.DRAG_DID_END, this._draggingObject);
             this._draggingObject = null;
         }
     }

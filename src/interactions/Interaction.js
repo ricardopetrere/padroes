@@ -77,7 +77,8 @@ pd.Interaction = cc.Class.extend({/** @lends pd.Interaction# **/
     addActor: function(actor) {
         if(!this._actors)
             this._actors = [];
-        this._actors.push(actor);
+        if (this._actors.lastIndexOf(actor) < 0)
+            this._actors.push(actor);
     },
 
     /**
