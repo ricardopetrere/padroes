@@ -158,8 +158,6 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
     setMute: function (mute) {
         this.isMuted = mute;
         if (mute) {
-            this.musicVolume = cc.audioEngine.getMusicVolume();
-            this.effectVolume = cc.audioEngine.getEffectsVolume();
             cc.audioEngine.setMusicVolume(0);
             cc.audioEngine.setEffectsVolume(0);
         } else {
@@ -214,6 +212,9 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      * @returns {number} effectId
      */
     playEffect: function (effect, loop, volume, cb) {
+        if(this.isMuted)
+            return -1;
+
         var ret = -1;
         //No Desktop, playEffect retorna o objeto de WebAudio. No mobile, retorna o ID do áudio
         ret = this._play(effect, loop, volume, "playEffect", "setEffectsVolume", function() {
@@ -229,9 +230,13 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      * @param {number} [volume]
      */
     playMusic: function (music, loop, volume, cb) {
+        if(this.isMuted)
+            return;
+
         if (music && cc.audioEngine.willPlayMusic()) {
             cc.audioEngine.stopMusic();
         }
+        this.musicVolume = volume;
         this._play(music, loop, volume, "playMusic", "setMusicVolume", function() {
             cc.log('fim da música');
         });

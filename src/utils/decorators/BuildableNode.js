@@ -31,7 +31,7 @@ pd.decorators.BuildableNode = {/** @lends pd.decorators.BuildableNode#*/
     /**
      * Constrói o node a partir do arquivo de configuração indicado.
      * @param {String} configFilePath
-     * @param {String} [injectAllPropertiesIntoRootNode=false]
+     * @param {Boolean} [injectAllPropertiesIntoRootNode=false]
      */
     buildUp: function(configFilePath, injectAllPropertiesIntoRootNode) {
         this._configFilePath = configFilePath;
@@ -143,10 +143,15 @@ pd.decorators.BuildableNode = {/** @lends pd.decorators.BuildableNode#*/
                 node.setFontSize(nodeInfo.fontSize || 30);
                 node.setFontFillColor(nodeInfo.color ? cc.color(nodeInfo.color.r, nodeInfo.color.g, nodeInfo.color.b) : cc.color(255, 255, 255));
                 node.setString(nodeInfo.defaultText || "cc.LabelTTF");
+
                 if(nodeInfo.strokeSize)
                     node.enableStroke(nodeInfo.strokeColor || cc.color(0, 0, 0), nodeInfo.strokeSize);
                 if(nodeInfo.center)
                     node.setHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);
+                if(nodeInfo.width && nodeInfo.height)
+                    node.setDimensions(nodeInfo.width, nodeInfo.height);
+
+                node.setVerticalAlignment(cc.TEXT_ALIGNMENT_CENTER);
                 return node;
 
             case "pd.Animation":

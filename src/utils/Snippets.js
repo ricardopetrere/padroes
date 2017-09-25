@@ -657,6 +657,18 @@ pd.getAngle = function (pA, pB, showInRadians, reverse) {
         return cc.radiansToDegrees(retorno);
     }
 };
+
+/**
+ * Dado um ângulo qualquer, normaliza-o para o intervalo [0-360]
+ * @param {Number} angle
+ */
+pd.normalizeAngle = function(angle) {
+    angle = angle % 360;
+    if(angle < 0)
+        angle = 360 + angle;
+
+    return angle;
+};
 //</editor-fold>
 //<editor-fold desc="#Actions and Feedback">
 /**
@@ -1032,5 +1044,19 @@ pd.getNearestCollidingObject = function(locX, locY, objects) {
     }
 
     return ret;
+};
+
+/**
+ * Verifica se as coordenadas do evento/ponto estão em colisão com a interface padrão.
+ * @param {*} eventOrPoint
+ */
+pd.isCollidingWithUIButton = function(eventOrPoint) {
+    const button = pd.currentScene.uiButton;
+    if(!eventOrPoint.x) {
+        return button.isInside(eventOrPoint.getLocationX(), eventOrPoint.getLocationY());
+    }
+    else {
+        return button.isInside(eventOrPoint.x, eventOrPoint.y);
+    }
 };
 //</editor-fold>
