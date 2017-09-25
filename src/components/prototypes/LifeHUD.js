@@ -173,6 +173,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
             var life = this._lives[i];
             life.setPosition((i * this._spacing) + this._lives[i].width/2, this._hasBackground ? this._heightBackground/2 : 0);
             life._value = 1;
+            this._lives[i].setVisible(false);
             this.addChild(life, 2);
 
             pd.decorate(life, pd.decorators.ResetableNode);
@@ -300,7 +301,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
         }
 
         this._buildIntroSequence(easeFunction);
-        return this._introSequence;
+        return cc.targetedAction(this, cc.sequence(this._introSequence));
     },
 
     /**
