@@ -140,7 +140,7 @@ pd.decorators.BuildableNode = {/** @lends pd.decorators.BuildableNode#*/
                     var node = pd.createTextWithStandardFont(font, 0, 0);
                 }
                 else {
-                    node = pd.createText(nodeInfo.res, nodeInfo.fontName, 0, 0);
+                    node = pd.createText(pd.delegate.activeNamespace.res[nodeInfo.res], nodeInfo.fontName, 0, 0);
                 }
 
                 node.setFontSize(nodeInfo.fontSize || 30);

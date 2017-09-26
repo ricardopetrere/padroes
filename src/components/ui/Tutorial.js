@@ -505,12 +505,8 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this.setControlEnabled(false);
         this._bgLayers[2].runAction(cc.moveTo(0.1, this._bgLayers[2].displayState.x, this._bgLayers[2].y).easing(cc.easeSineOut()));
         this.headerText.runAction(cc.moveTo(0.1, this.headerText.displayState.x, this.headerText.y).easing(cc.easeSineOut()));
-        this._activeLayer.runAction(this._activeLayer._slideTween = cc.sequence(
-            cc.moveTo(0.1, 0, this._activeLayer.y).easing(cc.easeSineOut()),
-            cc.callFunc(function() {
-                this.setControlEnabled(true);
-            }, this)
-        ));
+        this._activeLayer.slideBackToCenter();
+
         pd.retain(this._activeLayer._slideTween);
     },
 

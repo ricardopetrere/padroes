@@ -642,7 +642,7 @@ pd.pointAdd = function (posOrRect, rectOrPosOrX, y, w, h, returnPoint) {
  * @param {cc.Point} pA
  * @param {cc.Point} pB
  * @param {boolean} [showInRadians]
- * @param {boolean} [reverse] Troca a ordem dos pontos, mudando a referência de
+ * @param {boolean} [reverse] Troca a ordem dos pontos, mudando a referência de pontos
  * @returns {number} - Ângulo no sentido anti-horário
  */
 pd.getAngle = function (pA, pB, showInRadians, reverse) {
@@ -709,9 +709,9 @@ pd.shake = function(time, cycles, initialRotation, strength) {
     const sequenceSteps = [];
     for(var i = 0; i < cycles; i++) {
         sequenceSteps.push(
-            cc.rotateTo(time/(cycles*4), initialRotation - strength, 0),
-            cc.rotateTo(time/(cycles*2), initialRotation + strength, 0),
-            cc.rotateTo(time/(cycles*4), initialRotation, 0)
+            cc.rotateTo(time/(cycles*4), initialRotation - strength),
+            cc.rotateTo(time/(cycles*2), initialRotation + strength),
+            cc.rotateTo(time/(cycles*4), initialRotation)
         )
     }
 
