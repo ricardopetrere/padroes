@@ -60,7 +60,7 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
             if(!this._isUpdatingScore) {
                 pd.currentScene.mainLayer.runAction(this.updateAction = cc.repeatForever(cc.sequence(
                     cc.delayTime(factor),
-                    pd.perfectCallFunc(this.updateScore, this, factor)
+                    pd.perfectCallFunc(this._updateScore, this, factor)
                 )));
             }
             this._isUpdatingScore = true;
@@ -74,7 +74,7 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
      * Atualiza a animação.
      * @param dt
      */
-    updateScore: function(dt) {
+    _updateScore: function(dt) {
         this._currentDuration += dt;
         const percentage = pd.clamp(this._currentDuration/this._targetDuration, 0, 1);
 
