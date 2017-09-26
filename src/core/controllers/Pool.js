@@ -10,7 +10,7 @@ pd.Pool = cc.Class.extend({
      */
     _singleton: null,
     /**
-     * @type {*}
+     * @type {*[][]}
      */
     _refs: null,
     /**
@@ -22,22 +22,24 @@ pd.Pool = cc.Class.extend({
     /**
      * Retirar um objeto do pool, entregando-o para quem o chamou
      * @param {pd.Pool.Types} type O tipo de objeto a ser retornado
+     * @param {Function} [typePrototype] Classe para quando for criar um tipo customizado
      * @returns {*} Um objeto a ser retornado
      */
-    borrow: function (type) {
+    borrow: function (type, typePrototype) {
         if(this.has(type)) {
             return this._refs[type].shift();
         } else {
-            return this._createObject(type);
+            return this._createObject(type, typePrototype);
         }
     },
     /**
      * Gera um objeto, caso o pool não possua o objeto pedido em {@link pd.Pool.borrow}
      * @param {pd.Pool.Types} type O tipo a ser criado
+     * @param {Function} [typePrototype] Classe para quando for criar um tipo customizado
      * @private
      * @returns {*}
      */
-    _createObject: function (type) {
+    _createObject: function (type, typePrototype) {
         switch (type) {
             case pd.Pool.Types.Point:
                 return cc.p();
@@ -45,7 +47,30 @@ pd.Pool = cc.Class.extend({
                 return new cc.Sprite();
             case pd.Pool.Types.Object:
                 return {};
+            default:
+                if(!typePrototype)
+                    throw new Error("Se for para criar um objeto customizado, informar a classe.");
+                else
+                    return new typePrototype();
         }
+    },
+    /**
+     * Retorna a quantidade de itens no pool, podendo ou não filtrar por tipo de objeto
+     * @param {pd.Pool.Types} [type]
+     * @returns {number}
+     */
+    getAmount: function (type) {
+        var ret = 0;
+        if (type) {
+            if(this.has(type)) {
+                ret = this._refs[type].length;
+            }
+        } else {
+            for (var k in this._refs) {
+                ret += this.getAmount(k);
+            }
+        }
+        return ret;
     },
     /**
      * Verifica se existe no pool algum objeto do tipo informado
