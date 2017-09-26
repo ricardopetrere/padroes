@@ -396,8 +396,7 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
         pd.delegate.retain(impact);
 
         var bgmStart = cc.callFunc(function() {
-            pd.audioEngine.playMusic(this._type == pd.GameOverLayer.TYPE_WIN ? pd.res.fx_BgmWin : pd.res.fx_BgmLose, false);
-            pd.audioEngine.setMusicVolume(0.3);
+            pd.audioEngine.playMusic(this._type == pd.GameOverLayer.TYPE_WIN ? pd.res.fx_BgmWin : pd.res.fx_BgmLose, false, 0.3);
         }, this);
         pd.delegate.retain(bgmStart);
 

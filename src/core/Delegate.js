@@ -157,7 +157,8 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
         if(this.context == pd.Delegate.CONTEXT_PALCO && !this.isNamespacePalco(ns)) {
             if(ns.JsonList) {
                 for(var i in ns.JsonList) {
-                    ns.JsonList[i] = ns.JsonList[i].replace("res/", customPath + "/res/");
+                    if(ns.JsonList[i].lastIndexOf(customPath) == -1)
+                        ns.JsonList[i] = ns.JsonList[i].replace("res/", customPath + "/res/");
                 }
             }
 

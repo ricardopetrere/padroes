@@ -127,10 +127,11 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
      */
     resetDebugDrawData: function() {
         if(pd.debugMode) {
-            if (this._drawNode)
+            if (this._drawNode) {
                 this._drawNode.clear();
-            this.removeChild(this._drawNode);
-            this._drawNode = null;
+                this.removeChild(this._drawNode);
+                this._drawNode = null;
+            }
             this._debugDrawData = null;
         }
     },

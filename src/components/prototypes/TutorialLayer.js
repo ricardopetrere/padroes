@@ -159,6 +159,9 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
             this.unscheduleUpdate();
             if(shouldResetAfterStopping != false)
                 this.stop();
+
+            if(this._isSliding)
+                this.slideBackToCenter();
         }
         else {
             this.run();
@@ -219,29 +222,38 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
         if(!pd.delegate.activeNamespace.tutorialData.txtOffSetY)
             pd.delegate.activeNamespace.tutorialData.txtOffSetY = 0;
         
-        this.bottomText = this._getBottomText(0, 0, txt, cc.sys.isNative ? pd.Fonts.CALIBRI : "Calibri", 25);
+        this.bottomText = this._getBottomText(txt);
         this.bottomText.setPosition(512, 140 + pd.delegate.activeNamespace.tutorialData.txtOffSetY);
         this.addChild(this.bottomText, pd.ZOrders.TUTORIAL_PAGE_BOTTOM_TEXT);
     },
 
     /**
-     * @param {Number} x
-     * @param {Number} y
+     * Faz o slide de volta para o centro.
+     */
+    slideBackToCenter: function() {
+        this._isSliding = true;
+        this.runAction(this._slideTween = cc.sequence(
+            Math.abs(this.x) < 30 ? cc.place(0, this.y) : cc.moveTo(0.1, 0, this.y).easing(cc.easeSineOut()),
+            cc.callFunc(function() {
+                this.getParent().setControlEnabled(true);
+                this._isSliding = false;
+            }, this)
+        ));
+    },
+
+    /**
      * @param {String|cc.SpriteFrame} txt
-     * @param {String} font
-     * @param {Number} size
      * @returns {*}
      * @private
      */
-    _getBottomText: function(x, y, txt, font, size) {
+    _getBottomText: function(txt) {
         if (typeof txt == "string") {
-            var text = new cc.LabelTTF(txt, font, size);
-            text.setFontFillColor(new cc.Color(0, 0, 0));
+            var text = pd.createTextWithStandardFont(pd.Fonts.CALIBRI, 512, 140, 25, cc.color(0, 0, 0, 255));
+            text.setString(txt);
         }
         else {
             text = new cc.Sprite(txt);
         }
-        text.setPosition(x, y);
         text.setAnchorPoint(0.5, 1);
         return text;
     }

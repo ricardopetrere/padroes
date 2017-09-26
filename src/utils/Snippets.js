@@ -709,9 +709,9 @@ pd.shake = function(time, cycles, initialRotation, strength) {
     const sequenceSteps = [];
     for(var i = 0; i < cycles; i++) {
         sequenceSteps.push(
-            cc.rotateTo(time/(cycles*4), initialRotation - strength, 0),
-            cc.rotateTo(time/(cycles*2), initialRotation + strength, 0),
-            cc.rotateTo(time/(cycles*4), initialRotation, 0)
+            cc.rotateTo(time/(cycles*4), initialRotation - strength),
+            cc.rotateTo(time/(cycles*2), initialRotation + strength),
+            cc.rotateTo(time/(cycles*4), initialRotation)
         )
     }
 

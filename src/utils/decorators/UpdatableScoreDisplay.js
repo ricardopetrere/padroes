@@ -27,6 +27,11 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
     _dScore:0,
 
     /**
+     * Indica se o 'update' está ativo.
+     */
+    _isUpdatingScore:false,
+
+    /**
      * Parseia a string para o formato XXX XXX XXX
      * @returns {String}
      */
@@ -50,8 +55,15 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
             this._targetDuration = duration;
             this._currentDuration = 0;
             this._dScore = score - current;
+            const factor = cc.sys.isMobile ? 1/30 : 1/60;
 
-            this.scheduleUpdate();
+            if(!this._isUpdatingScore) {
+                pd.currentScene.mainLayer.runAction(this.updateAction = cc.repeatForever(cc.sequence(
+                    cc.delayTime(factor),
+                    pd.perfectCallFunc(this.updateScore, this, factor)
+                )));
+            }
+            this._isUpdatingScore = true;
         }
         else {
             this.setString(this._parseString(score));
@@ -62,13 +74,16 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
      * Atualiza a animação.
      * @param dt
      */
-    update: function(dt) {
+    updateScore: function(dt) {
         this._currentDuration += dt;
         const percentage = pd.clamp(this._currentDuration/this._targetDuration, 0, 1);
+
         this.setString(this._parseString(Math.round(this._currentScore + this._dScore*percentage)));
         if(percentage == 1) {
             this.setString(this._parseString(this._currentScore + this._dScore));
-            this.unscheduleUpdate();
+            if(this._isUpdatingScore)
+                pd.currentScene.mainLayer.stopAction(this.updateAction);
+            this._isUpdatingScore = false;
         }
     }
 };
