@@ -27,6 +27,14 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
     _dScore:0,
 
     /**
+     * Parseia a string para o formato XXX XXX XXX
+     * @returns {String}
+     */
+    _parseString: function(str) {
+        return str.toLocaleString().replace(".", "  ").replace(",", "  ");
+    },
+
+    /**
      * Seta o score atual.
      * @param {String|Number} score - a pontuação atual.
      * @param {Number} [duration=0] - a duração da animação.
@@ -34,7 +42,7 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
     setScore: function(score, duration) {
         duration = duration || 0;
         if(duration > 0) {
-            var current = parseInt(this.getString());
+            var current = parseInt(this.getString().replace("  ", ""));
             if (!current || isNaN(current))
                 current = 0;
 
@@ -46,7 +54,7 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
             this.scheduleUpdate();
         }
         else {
-            this.setString(score.toString());
+            this.setString(this._parseString(score));
         }
     },
 
@@ -57,9 +65,9 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
     update: function(dt) {
         this._currentDuration += dt;
         const percentage = pd.clamp(this._currentDuration/this._targetDuration, 0, 1);
-        this.setString(Math.round(this._currentScore + this._dScore*percentage).toString());
+        this.setString(this._parseString(Math.round(this._currentScore + this._dScore*percentage)));
         if(percentage == 1) {
-            this.setString(this._currentScore + this._dScore);
+            this.setString(this._parseString(this._currentScore + this._dScore));
             this.unscheduleUpdate();
         }
     }

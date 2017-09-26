@@ -126,7 +126,10 @@ pd.decorators.BuildableNode = {/** @lends pd.decorators.BuildableNode#*/
     _createNode: function(nodeInfo) {
         switch(nodeInfo.type) {
             case "cc.Sprite":
-                return pd.createSprite(nodeInfo.res ? pd.delegate.activeNamespace.res[nodeInfo.res] : nodeInfo.spriteFrameName);
+                var sprite = pd.createSprite(nodeInfo.res ? pd.delegate.activeNamespace.res[nodeInfo.res] : nodeInfo.spriteFrameName);
+                if(nodeInfo.rotation)
+                    sprite.rotation = nodeInfo.rotation;
+                return sprite;
 
             case "cc.LabelTTF":
                 if(nodeInfo.fontType != "custom") {
