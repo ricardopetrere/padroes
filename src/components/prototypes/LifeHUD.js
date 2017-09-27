@@ -183,8 +183,9 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
     /**
      * Recebe o valor atual de vidas e atualiza a HUD.
      * @param {Number} currentLives - Valor das vidas.
+     * @param {Function} [callback] - Callback para ser executado após a atualização das vidas
      */
-    updateUI: function (currentLives) {
+    updateUI: function (currentLives, callback) {
         this._sequenceActions = [];
 
         currentLives = pd.clamp(currentLives, 0, this._totalLives);
@@ -202,6 +203,8 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
         }
 
         if(this._sequenceActions.length > 0) {
+            if(callback)
+                this._sequenceActions.push(cc.callFunc(callback, this));
             this.runAction(cc.sequence(this._sequenceActions));
         }
 
