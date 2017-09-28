@@ -164,6 +164,10 @@ pd.decorators.BuildableNode = {/** @lends pd.decorators.BuildableNode#*/
                 return pd.createAnimation({x:0, y:0}, animationData);
                 break;
 
+            case "cc.LayerColor":
+                return new cc.LayerColor(cc.color(nodeInfo.color.r, nodeInfo.color.g, nodeInfo.color.b), nodeInfo.width, nodeInfo.height);
+                break;
+
             default: // tipos ainda não suportados, apenas instancia um objeto do tipo especificado.
                 return eval("new " + nodeInfo.type + "()"); // migué básico... encontrar forma mais elegante de fazer isso.
         }

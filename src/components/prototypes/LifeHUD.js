@@ -156,8 +156,6 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
     ctor: function (totalLives, livesRemaining, spacing, spriteFrameName, bgSpriteFrameName) {
         this._super();
         this._lives          = [];
-        this._totalLives     = totalLives;
-        this._livesRemaining = livesRemaining;
         this._spacing        = spacing;
         this._fullLifeSpriteFrameName = spriteFrameName;
 
@@ -168,8 +166,19 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
             this._hasBackground    = true;
         }
 
+        if(totalLives)
+            this.buildUp(totalLives, livesRemaining || 0);
+    },
+
+    /**
+     * @param {Number} totalLives                   - Número total de vidas.
+     * @param {Number} livesRemaining               - Número atual de vidas.
+     */
+    buildUp: function(totalLives, livesRemaining) {
+        this._totalLives     = totalLives;
+        this._livesRemaining = livesRemaining;
         for(var i = 0; i < this._totalLives; i++) {
-            this._lives[i] = new cc.Sprite(pd.getSpriteFrame(spriteFrameName));
+            this._lives[i] = new cc.Sprite(pd.getSpriteFrame(this._fullLifeSpriteFrameName));
             var life = this._lives[i];
             life.setPosition((i * this._spacing) + this._lives[i].width/2, this._hasBackground ? this._heightBackground/2 : 0);
             life._value = 1;
