@@ -308,6 +308,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * @private
      */
     _onAnimCompleted: function() {
+        this._disposeAnimAction();
         if(this.onComplete != null) {
             if(typeof this.onComplete == 'string') {
                 this.onCompleteHandler[this.onComplete]();
@@ -316,7 +317,6 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
                 this.onComplete.apply(this.onCompleteHandler);
             }
         }
-        this._disposeAnimAction();
     },
 
     /**
