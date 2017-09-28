@@ -71,7 +71,7 @@ pd.decorators.ObservableView = {/** @lends pd.decorators.ObservableView#*/
      */
     notifySoundEvent: function(soundEffect, volume) {
         this._soundEventMetadata = {soundEffect:soundEffect, volume:volume || 1}
-        this.notify(pd.decorators.ObservableView.EVENT_SOUND, this._soundEventMetadata);
+        this.notify(pd.decorators.ObservableView.Events.SOUND, this._soundEventMetadata);
     }
 };
 
@@ -79,7 +79,13 @@ pd.decorators.ObservableView = {/** @lends pd.decorators.ObservableView#*/
  * @constant
  * @type {string}
  */
-pd.decorators.ObservableView.EVENT_SOUND = "viewEventSound";
+pd.decorators.ObservableView.Events = {
+    SOUND: "viewEventSound",
+    VIEW_DID_INIT: "viewDidInit",
+    VIEW_DID_GET_READY: "viewDidGetReady",
+    VIEW_DID_FINISH_INTRO: "viewDidFinishIntro",
+    VIEW_DID_DESTROY: "viewDidDestroy"
+};
 
 /**
  * Implementa as funcionalidades básicas de um controlador de uma view. <br />
@@ -110,7 +116,7 @@ pd.decorators.ViewController = {/** @lends pd.decorators.ViewController#*/
      * Ativa o observador de eventos de som padrão.
      */
     setSoundObserver: function() {
-        this.observe(pd.decorators.ObservableView.EVENT_SOUND, this.onSoundEffect);
+        this.observe(pd.decorators.ObservableView.Events.SOUND, this.onSoundEffect);
     },
 
     /**

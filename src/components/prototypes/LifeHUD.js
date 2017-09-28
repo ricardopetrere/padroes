@@ -455,14 +455,15 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
             this._introSequence.push(
                 cc.delayTime(0.1),
                 cc.callFunc(function () {
-                    this.tweenBackToDisplayState(0.3, easeFunction);
-                    pd.audioEngine.playEffect(this._introSoundEffect, false);
+                    this.tweenBackToDisplayState(0.2, easeFunction, function() {
+                        pd.audioEngine.playEffect(this.getParent()._introSoundEffect, false);
+                    }, this);
                 }, this._lives[i])
             );
         }
 
         this._introSequence.push(
-            cc.delayTime(0.3),
+            cc.delayTime(0.2),
             cc.callFunc(function () {
                 this.runIdleAction();
             }, this)
