@@ -76,8 +76,7 @@ pd.decorators.ObservableView = {/** @lends pd.decorators.ObservableView#*/
 };
 
 /**
- * @constant
- * @type {string}
+ * @enum {String}
  */
 pd.decorators.ObservableView.Events = {
     SOUND: "viewEventSound",
