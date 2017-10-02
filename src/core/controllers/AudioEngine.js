@@ -239,10 +239,10 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
             cc.audioEngine.stopMusic();
         }
         this.musicVolume = volume || this.musicVolume;
-        this._play(music, loop, volume, "playMusic", function() {
+        this._play(music, loop, this.musicVolume, "playMusic", function() {
             cc.log('fim da música');
         });
-        this.setMusicVolume(volume);
+        this.setMusicVolume(this.musicVolume);
     },
 
     /**
