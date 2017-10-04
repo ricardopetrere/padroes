@@ -55,7 +55,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
      * Referência para o tipo de ação que será usada na intro.
      * @type {String}
      */
-    _introActionType: "standard",
+    _introActionType: null,
 
     /**
      * Referência para o tipo de ação que será usada ao perder vida.
@@ -155,15 +155,15 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
      */
     ctor: function (totalLives, livesRemaining, spacing, spriteFrameName, bgSpriteFrameName) {
         this._super();
-        this._lives          = [];
-        this._spacing        = spacing;
-        this._fullLifeSpriteFrameName = spriteFrameName;
+        this._lives                     = [];
+        this._spacing                   = spacing;
+        this._fullLifeSpriteFrameName   = spriteFrameName;
 
         if(bgSpriteFrameName) {
             this.setSpriteFrame(pd.getSpriteFrame(bgSpriteFrameName));
-            this._widthBackground   = this.width;
-            this._heightBackground  = this.height;
-            this._hasBackground    = true;
+            this._backgroundWidth   = this.width;
+            this._backgroundHeight  = this.height;
+            this._hasBackground     = true;
         }
 
         if(totalLives)
@@ -171,28 +171,36 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
     },
 
     /**
+     * Constrói o Life HUD.
      * @param {Number} totalLives                   - Número total de vidas.
      * @param {Number} livesRemaining               - Número atual de vidas.
      */
     buildUp: function(totalLives, livesRemaining) {
         this._totalLives     = totalLives;
         this._livesRemaining = livesRemaining;
+
+        if(this._lives.length > 0)
+            throw new Error("[pd.LifeHUD] O HUD já foi construído!");
+
         for(var i = 0; i < this._totalLives; i++) {
-            this._lives[i] = new cc.Sprite(pd.getSpriteFrame(this._fullLifeSpriteFrameName));
-            var life = this._lives[i];
-            life.setPosition((i * this._spacing) + this._lives[i].width/2, this._hasBackground ? this._heightBackground/2 : 0);
+            var life = new cc.Sprite(pd.getSpriteFrame(this._fullLifeSpriteFrameName));
+            life.setPosition((i * this._spacing) + life.width/2, this._hasBackground ? this._backgroundHeight/2 : 0);
             life._value = 1;
-            this._lives[i].setVisible(false);
             this.addChild(life, 2);
 
             pd.decorate(life, pd.decorators.ResetableNode);
+            life.saveDisplayState();
+            this._lives.push(life);
         }
+
+        if(this._introActionType)
+            this._hideAllLives();
     },
 
     /**
      * Recebe o valor atual de vidas e atualiza a HUD.
      * @param {Number} currentLives - Valor das vidas.
-     * @param {Function} [callback] - Callback para ser executado após a atualização das vidas
+     * @param {Function} [callback] - Callback para ser executado após a atualização das vidas.
      */
     updateUI: function (currentLives, callback) {
         this._sequenceActions = [];
@@ -249,7 +257,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
                 emptyLife.setOpacity(50);
             }
 
-            emptyLife.setPosition((i * this._spacing) + this._lives[i].width/2, this._heightBackground/2);
+            emptyLife.setPosition((i * this._spacing) + this._lives[i].width/2, this._backgroundHeight/2);
             this.addChild(emptyLife, 1);
             this._emptyLives[i] = emptyLife;
         }
@@ -259,7 +267,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
      * Retorna o numero atual de vidas sendo exibidas.
      * @returns {Number} - Vidas atuais.
      */
-    getLivesAmount: function(){
+    getDisplayingAmount: function(){
         return this._livesRemaining;
     },
 
@@ -281,35 +289,30 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
             if(i < this._livesRemaining) {
                 life.setScale(1);
                 life.setOpacity(255);
-                life.saveDisplayState();
+                life._value = 1;
+
+                switch(this._introActionType) {
+                    case pd.LifeHUD.IntroActionsTypes.SCALING:
+                        life.setScale(0);
+                        break;
+
+                    case pd.LifeHUD.IntroActionsTypes.COMING_FROM_THE_LEFT:
+                        life.setPosition(0 - this.x - life.width - 100, life.height);
+                        break;
+
+                    case pd.LifeHUD.IntroActionsTypes.COMING_FROM_THE_BOTTOM:
+                        life.setPosition((i * this._spacing) + life.width, 0 - this.y - life.height - 100);
+                        break;
+
+                    case pd.LifeHUD.IntroActionsTypes.COMING_FROM_THE_RIGHT:
+                        life.setPosition((1024 - this.x) + life.width + 100, life.height);
+                        break;
+
+                    case pd.LifeHUD.IntroActionsTypes.COMING_FROM_THE_TOP:
+                        life.setPosition((i * this._spacing) + life.width, (768 - this.y) + life.height + 100);
+                        break;
+                }
             }
-        }
-
-        switch (this._introActionType) {
-            case pd.LifeHUD.IntroActionsTypes.SCALING:
-                for (i = 0; i < this._livesRemaining; i++)
-                    this._lives[i].setScale(0);
-                break;
-
-            case pd.LifeHUD.IntroActionsTypes.COMING_FROM_THE_LEFT:
-                for (i = 0; i < this._livesRemaining; i++)
-                    this._lives[i].setPosition(0 - this.x - this._lives[i].width - 100, 0 + this._lives[i].height);
-                break;
-
-            case pd.LifeHUD.IntroActionsTypes.COMING_FROM_THE_BOTTOM:
-                for (i = 0; i < this._livesRemaining; i++)
-                    this._lives[i].setPosition((i * this._spacing) + this._lives[i].width, 0 - this.y - this._lives[i].height - 100);
-                break;
-
-            case pd.LifeHUD.IntroActionsTypes.COMING_FROM_THE_RIGHT:
-                for (i = 0; i < this._livesRemaining; i++)
-                    this._lives[i].setPosition((1024 - this.x) + this._lives[i].width + 100, 0 + this._lives[i].height);
-                break;
-
-            case pd.LifeHUD.IntroActionsTypes.COMING_FROM_THE_TOP:
-                for (i = 0; i < this._livesRemaining; i++)
-                    this._lives[i].setPosition((i * this._spacing) + this._lives[i].width, (768 - this.y) + this._lives[i].height + 100);
-                break;
         }
 
         this._buildIntroSequence(easeFunction);
@@ -374,11 +377,24 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
         for (var i = 0; i < this._lives.length; i++) {
             var life = this._lives[i];
 
+            life._value = 1;
             life.stopAllActions();
             life.setScale(1);
             life.setOpacity(255);
             life.setPosition((i * this._spacing) + this.x, this.y);
         }
+    },
+
+    /**
+     * Esconde todas as vidas.
+     * @private
+     */
+    _hideAllLives: function() {
+        if(!this._lives)
+            return;
+
+        for(var i in this._lives)
+            this._lives[i].attr({visible:false, scaleX:0, scaleY:0, opacity:0, _value:0});
     },
 
     /**
@@ -389,6 +405,8 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
     setIntroAction: function (typeAction, soundEffect) {
         this._introActionType = typeAction;
         if (soundEffect) this._introSoundEffect = soundEffect;
+
+        this._hideAllLives();
     },
 
     /**
@@ -455,14 +473,15 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
             this._introSequence.push(
                 cc.delayTime(0.1),
                 cc.callFunc(function () {
-                    this.tweenBackToDisplayState(0.3, easeFunction);
-                    pd.audioEngine.playEffect(this._introSoundEffect, false);
+                    this.tweenBackToDisplayState(0.2, easeFunction, function() {
+                        pd.audioEngine.playEffect(this.getParent()._introSoundEffect, false);
+                    }, this);
                 }, this._lives[i])
             );
         }
 
         this._introSequence.push(
-            cc.delayTime(0.3),
+            cc.delayTime(0.2),
             cc.callFunc(function () {
                 this.runIdleAction();
             }, this)
@@ -470,7 +489,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
     },
 
     /**
-     *Verifica para qual valor será atualizada uma vida e chama o método para troca de valor e sprite.
+     * Verifica para qual valor será atualizada uma vida e chama o método para troca de valor e sprite.
      * @param {Number} i            - Index da vida a ser atualizada.
      * @param {Number} currentLives - Número atual de vidas.
      */
@@ -497,39 +516,25 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
         var time        = 0.1;
         var oldValue    = this._lives[index]._value;
 
-        this._lives[index]._value = newValue;
-        this._sequenceActions.push(cc.delayTime(time));
-
-        //<editor-fold desc="Atualizar valor para 1">
+        var life = this._lives[index];
+        life._value = newValue;
 
         if(newValue === 1) {
             if(oldValue === 0) {
                 this._setSpriteLife(index, this._fullLifeSpriteFrameName);
-
                 switch (this._gainLifeActionType) {
                     case pd.LifeHUD.GainLifeActionsTypes.STANDARD:
-                        this._sequenceActions.push(
-                            cc.callFunc(function () {
-                                this.setOpacity(255);
-                                this.setScale(1);
-                            }, this._lives[index])
-                        );
+                        life.loadDisplayState();
                         break;
 
                     case pd.LifeHUD.GainLifeActionsTypes.SCALING:
-                        this._sequenceActions.push(
-                            cc.callFunc(function () {
-                                this.runAction(cc.scaleTo(0.2, 1).easing(cc.easeBackOut()));
-                            }, this._lives[index])
-                        );
+                        this._sequenceActions.push(cc.delayTime(time));
+                        life.tweenBackToDisplayState(0.2, cc.easeBackOut);
                         break;
 
                     case pd.LifeHUD.GainLifeActionsTypes.FADE:
-                        this._sequenceActions.push(
-                            cc.callFunc(function () {
-                                this.runAction(cc.fadeIn(0.4));
-                            }, this._lives[index])
-                        );
+                        this._sequenceActions.push(cc.delayTime(time));
+                        life.tweenBackToDisplayState(0.4);
                         break;
                 }
             }
@@ -537,16 +542,12 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
                 this._sequenceActions.push(
                     cc.callFunc(function (e, data) {
                         this.getParent()._setSpriteLife(data[0], this.getParent()._fullLifeSpriteFrameName);
-                    }, this._lives[index], [index])
+                    }, life, [index])
                 );
             }
         }
 
-        //</editor-fold>
-
-        //<editor-fold desc="Atualizar valor para 0">
-
-        else if(newValue === 0){
+        else if(newValue === 0 && (oldValue === 1 || oldValue === 0.5)){
             switch (this._loseLifeActionType) {
                 case pd.LifeHUD.LoseLifeActionsTypes.STANDARD:
                     this._sequenceActions.push(
@@ -573,11 +574,12 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
                     );
                     break;
             }
+
+            this._sequenceActions.push(cc.callFunc(function() {
+                if(this._loseLifeSoundEffect)
+                    pd.audioEngine.playEffect(this._loseLifeSoundEffect);
+            }, this));
         }
-
-        //</editor-fold>
-
-        //<editor-fold desc="Atualizar valor para 0.5">
 
         else if(newValue === 0.5) {
             this._sequenceActions.push(
@@ -589,8 +591,6 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
                 }, this._lives[index], [index])
             );
         }
-
-        //</editor-fold>
     }
 });
 
