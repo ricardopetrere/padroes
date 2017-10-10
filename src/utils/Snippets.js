@@ -1060,4 +1060,15 @@ pd.isCollidingWithUIButton = function(eventOrPoint) {
         return button.isInside(eventOrPoint.x, eventOrPoint.y);
     }
 };
+
+/**
+ * Gera um {@link cc.LabelTTF} no meio da tela, para ser usado dentro de um bloco try-catch (err)
+ * @param {Error} err
+ */
+pd.createErrorText = function (err) {
+    var texto = pd.createTextWithStandardFont(
+        pd.Fonts.DIMBO, 512, 384, 24, cc.color.WHITE, err.message + err.stack, cc.TEXT_ALIGNMENT_LEFT,
+        pd.currentScene, 100);
+    texto.setDimensions(cc.size(1000, 750));
+};
 //</editor-fold>
