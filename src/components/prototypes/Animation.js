@@ -99,7 +99,13 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
         var animation = new cc.Animation(frames, 1/this.defaultSpeed);
         pd.delegate.retain(animation);
 
-        this.animations.push({name: nameOrAnimationData || this.animations.length + 1, animation: animation, numFrames: lastFrame - firstFrame + 1, speed: speed || this.defaultSpeed});
+        this.animations.push({
+            name: nameOrAnimationData || this.animations.length + 1,
+            animation: animation, 
+            numFrames: lastFrame - firstFrame + 1, 
+            speed: speed || this.defaultSpeed
+        });
+        
         if(this.animations.length == 1)
             this.changeAndStop(nameOrAnimationData);
     },
@@ -107,18 +113,24 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     /**
      * Adiciona uma animação a partir de frames específicos.
      * @param {String} name - um nome customizado para a animação.
-     * @param {Number[]} vFrames - o vetor com o id dos frames desejados.
+     * @param {Number[]} frameIDs - o vetor com o id dos frames desejados.
      * @param {String} spriteFrameNamePattern - o padrão de nome da animação no spriteFrameCache.
+     * @param {Number} [speed=24] - a velocidade da animação.
      */
-    addAnimationWithFrames: function(name, vFrames, spriteFrameNamePattern) {
+    addAnimationWithFrames: function(name, frameIDs, spriteFrameNamePattern, speed) {
         const frames = [];
 
-        for(var i = firstFrame ; i <= numFrames ; i++) {
-            frames.push(cc.spriteFrameCache.getSpriteFrame(spriteFrameNamePattern + pd.numberToString(vFrames[i], 4) + ".png"));
+        for(var i = 0 ; i < frameIDs.length ; i++) {
+            frames.push(cc.spriteFrameCache.getSpriteFrame(spriteFrameNamePattern + pd.numberToString(frameIDs[i], 4) + ".png"));
         }
 
         var animation = new cc.Animation(frames, 1/24);
-        this.animations.push({name: name || this.animations.length + 1, animation: animation, numFrames: vFrames.length});
+        this.animations.push({
+            name: name || this.animations.length + 1,
+            animation: animation,
+            numFrames: frames.length,
+            speed: speed
+        });
     },
 
     /**

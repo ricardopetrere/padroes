@@ -41,7 +41,7 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
             this.addChild(this._txtCoords, pd.ZOrders.EDITOR_SCREEN);
             this.setDebugDrawEnabled(true);
             this._drawNode = new cc.DrawNode();
-            this.addChild(this._drawNode);
+            this.addChild(this._drawNode,pd.ZOrders.PAUSE_LAYER);
             this._drawNode.update = function (dt) {
                 this.getParent()._updateDebugPolygons();
             }
@@ -129,8 +129,8 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
         if(pd.debugMode) {
             if (this._drawNode) {
                 this._drawNode.clear();
-                this.removeChild(this._drawNode);
-                this._drawNode = null;
+                //this.removeChild(this._drawNode);
+                //this._drawNode = null;
             }
             this._debugDrawData = null;
         }
@@ -218,7 +218,7 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
      * @private
      */
     _updateDebugPolygons: function() {
-        if(pd.debugMode && this._showDebugObjects) {
+        if(pd.debugMode && this._showDebugObjects && this._drawNode) {
             this._drawNode.clear();
 
             for (var i in this._debugDrawData) {

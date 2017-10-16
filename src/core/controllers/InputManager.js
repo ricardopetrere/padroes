@@ -271,18 +271,36 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     _setMouseAsTouchOneByOne: function(target) {
         target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
             event: target._inputMetadata.touchEventTypeCode ? target._inputMetadata.touchEventTypeCode : cc.EventListener.TOUCH_ONE_BY_ONE,
+            /**
+             *
+             * @param {cc.Touch} touch
+             * @param {cc.EventTouch} event
+             * @returns {boolean}
+             */
             onTouchBegan: function (touch, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touch, event);
                 if(target._inputMetadata.allowMultiTouch || touch.getID() == 0)
                     pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_DOWN, pd.inputManager._mouseMeta);
                 return true;
             },
+            /**
+             *
+             * @param {cc.Touch} touch
+             * @param {cc.EventTouch} event
+             * @returns {boolean}
+             */
             onTouchMoved: function (touch, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touch, event);
                 if(target._inputMetadata.allowMultiTouch || touch.getID() == 0)
                     pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MOVE, pd.inputManager._mouseMeta);
                 return true;
             },
+            /**
+             *
+             * @param {cc.Touch} touch
+             * @param {cc.EventTouch} event
+             * @returns {boolean}
+             */
             onTouchEnded: function (touch, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touch, event);
                 if(target._inputMetadata.allowMultiTouch || touch.getID() == 0)
@@ -300,18 +318,36 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     _setMouseAsTouchAllAtOnce: function(target) {
         target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
             event: target._inputMetadata.touchEventTypeCode ? target._inputMetadata.touchEventTypeCode : cc.EventListener.TOUCH_ONE_BY_ONE,
+            /**
+             *
+             * @param {cc.Touch[]} touches
+             * @param {cc.EventTouch} event
+             * @returns {boolean}
+             */
             onTouchesBegan: function (touches, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touches, event);
                 if(target._inputMetadata.allowMultiTouch || touches.length == 1)
                     pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_DOWN, pd.inputManager._mouseMeta);
                 return true;
             },
+            /**
+             *
+             * @param {cc.Touch[]} touches
+             * @param {cc.EventTouch} event
+             * @returns {boolean}
+             */
             onTouchesMoved: function (touches, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touches, event);
                 if(target._inputMetadata.allowMultiTouch || touches.length == 1)
                     pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MOVE, pd.inputManager._mouseMeta);
                 return true;
             },
+            /**
+             *
+             * @param {cc.Touch[]} touches
+             * @param {cc.EventTouch} event
+             * @returns {boolean}
+             */
             onTouchesEnded: function (touches, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touches, event);
                 if(target._inputMetadata.allowMultiTouch || touches.length == 1)
@@ -329,6 +365,11 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     _setMouse: function(target) {
         target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
             event: cc.EventListener.MOUSE,
+            /**
+             *
+             * @param {cc.EventMouse} event
+             * @returns {boolean}
+             */
             onMouseDown: function (event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", event);
                 switch(event.getButton()) {
@@ -338,6 +379,11 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
                 }
                 return true;
             },
+            /**
+             *
+             * @param {cc.EventMouse} event
+             * @returns {boolean}
+             */
             onMouseMove: function (event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", event);
                 switch(event.getButton()) {
@@ -346,6 +392,11 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
                 }
                 return true;
             },
+            /**
+             *
+             * @param {cc.EventMouse} event
+             * @returns {boolean}
+             */
             onMouseScroll: function(event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", event);
                 if (cc.sys.os === cc.sys.OS_OSX) { // rolagem natural.
@@ -354,6 +405,11 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
                 pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_SCROLL, pd.inputManager._mouseMeta);
                 return true;
             },
+            /**
+             *
+             * @param {cc.EventMouse} event
+             * @returns {boolean}
+             */
             onMouseUp: function (event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", event);
                 switch(event.getButton()) {
@@ -398,6 +454,12 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
         target._inputMetadata[pd.InputManager.Sources.KEYBOARD] = cc.EventListener.create({
             event: cc.EventListener.KEYBOARD,
+            /**
+             *
+             * @param {number} keyCode
+             * @param {cc.EventKeyboard} event
+             * @returns {boolean}
+             */
             onKeyPressed:  function(keyCode, event) {
                 keyCode = pd.inputManager._parseKeyCode(event.getCurrentTarget(), keyCode);
                 pd.inputManager._setKeyPressed(keyCode);
@@ -405,6 +467,12 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
                 pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.KEY_DOWN, pd.inputManager._keyboardMeta);
                 return true;
             },
+            /**
+             *
+             * @param {number} keyCode
+             * @param {cc.EventKeyboard} event
+             * @returns {boolean}
+             */
             onKeyReleased: function(keyCode, event) {
                 keyCode = pd.inputManager._parseKeyCode(event.getCurrentTarget(), keyCode);
                 pd.inputManager._setKeyReleased(keyCode);
@@ -419,6 +487,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
 
     /**
      * Parseia um keyCode proveniente de um evento de teclado.
+     * @param target {Object}
      * @param keyCode {Number}
      * @private
      */
