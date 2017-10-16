@@ -181,7 +181,7 @@ pd.decorators.ObservableModel = {/** @lends pd.decorators.ObservableModel#*/
  * A idéia deste componente é parametrizar a forma como o processo de criação da View principal (MainLayer) da cena é feito, assim como a criação e injeção de seu controlador. Ao implementar este decorator, a cena age como um 'delegate' dentro da arquitetura.
  * @mixin
  */
-pd.decorators.MVCSceneCapabilities = {/** @lends jogo5av1geo1.MVCSceneCapabilities#**/
+pd.decorators.MVCSceneCapabilities = {/** @lends pd.decorators.MVCSceneCapabilities#**/
 
     /**
      * Seta a view principal da cena e seu respectivo controlador.
