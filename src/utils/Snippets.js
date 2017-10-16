@@ -504,7 +504,7 @@ pd.polygonInPolygonIntersection = function(polygon1, polygon2) {
     var n = 0;
     //polygon1 vai primeiro
     for (n = 0; n < polygon1.length; n++) {
-        if (jogo4av3mat1.pointInPolygonCollision(polygon1[n], polygon2)) {
+        if (pd.pointInPolygonIntersection(polygon1[n], polygon2)) {
             hasCollided = true;
             break;
         }
@@ -512,7 +512,7 @@ pd.polygonInPolygonIntersection = function(polygon1, polygon2) {
     //É a vez de polygon2, mas só se não houve colisão do lado de polygon1
     if (!hasCollided) {
         for (n = 0; n < polygon2.length; n++) {
-            if (jogo4av3mat1.pointInPolygonCollision(polygon2[n], polygon1)) {
+            if (pd.pointInPolygonIntersection(polygon2[n], polygon1)) {
                 hasCollided = true;
                 break;
             }
