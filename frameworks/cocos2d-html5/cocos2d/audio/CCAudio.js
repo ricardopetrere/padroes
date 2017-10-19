@@ -534,23 +534,24 @@ cc.Audio.WebAudio.prototype = {
          * //example
          * cc.audioEngine.playMusic(path, false);
          */
-        playMusic: function(url, loop, volume){
+        playMusic: function(url, loop, volume) {
+            if (volume == null)
+                volume = this._musicVolume;
             var bgMusic = this._currMusic;
             if (bgMusic && bgMusic.getPlaying()) {
                 bgMusic.stop();
             }
-            var musicVolume = volume || this._musicVolume;
             var audio = cc.loader.getRes(url);
             if (!audio) {
                 cc.loader.load(url, function () {
                     if (!audio.getPlaying() && !audio.interruptPlay) {
-                        audio.setVolume(musicVolume);
+                        audio.setVolume(volume);
                         audio.play(0, loop || false);
                     }
                 });
                 audio = cc.loader.getRes(url);
             }
-            audio.setVolume(musicVolume);
+            audio.setVolume(volume);
             audio.play(0, loop || false);
 
             this._currMusic = audio;
