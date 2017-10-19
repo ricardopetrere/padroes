@@ -880,11 +880,13 @@ pd.playSimpleEffect = function(url, loop, volume) {
 /**
  * Retorna uma ação que executa um som
  * @param {String} effect
+ * @param {boolean} [loop]
+ * @param {number} [volume]
  * @returns {cc.CallFunc}
  */
-pd.actionPlayEffect = function (effect) {
-    return new cc.CallFunc(function () {
-        pd.audioEngine.playEffect(effect);
+pd.actionPlayEffect = function (effect, loop, volume) {
+    return cc.callFunc(function () {
+        pd.audioEngine.playEffect(effect, loop, volume);
     });
 };
 //</editor-fold>

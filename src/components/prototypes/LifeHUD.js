@@ -201,8 +201,9 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
      * Recebe o valor atual de vidas e atualiza a HUD.
      * @param {Number} currentLives - Valor das vidas.
      * @param {Function} [callback] - Callback para ser executado após a atualização das vidas.
+     * @param {Object} [callbackHandler] - O objeto "dono" do callback. Caso for passado callback e não for passado handler, é o LifeHUD
      */
-    updateUI: function (currentLives, callback) {
+    updateUI: function (currentLives, callback, callbackHandler) {
         this._sequenceActions = [];
 
         currentLives = pd.clamp(currentLives, 0, this._totalLives);
@@ -220,8 +221,10 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
         }
 
         if(this._sequenceActions.length > 0) {
-            if(callback)
-                this._sequenceActions.push(cc.callFunc(callback, this));
+            if(callback) {
+                this._sequenceActions.push(cc.delayTime(0.5));
+                this._sequenceActions.push(cc.callFunc(callback, callbackHandler || this));
+            }
             this.runAction(cc.sequence(this._sequenceActions));
         }
 
@@ -333,16 +336,26 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
     runIdleAction: function () {
         switch (this._idleActionType) {
             case pd.LifeHUD.IdleActionsTypes.ROTATING:
-                for (var i  = 0; i < this._livesRemaining; i++) {
+                for (var i  = 0; i < this._totalLives; i++) {
                     var intensity = 3;
                     var time = 0.3;
                     if (i%2 === 0) {
+                        if (this._emptyLives)
+                            this._emptyLives[i].runAction(cc.repeatForever(cc.sequence(
+                                cc.rotateTo(time,   intensity,  intensity).easing(cc.easeSineInOut()),
+                                cc.rotateTo(time,  -intensity, -intensity).easing(cc.easeSineInOut())
+                            )));
                         this._lives[i].runAction(cc.repeatForever(cc.sequence(
                             cc.rotateTo(time,   intensity,  intensity).easing(cc.easeSineInOut()),
                             cc.rotateTo(time,  -intensity, -intensity).easing(cc.easeSineInOut())
                         )));
                     }
                     else {
+                        if (this._emptyLives)
+                            this._emptyLives[i].runAction(cc.repeatForever(cc.sequence(
+                                cc.rotateTo(time,  -intensity, -intensity).easing(cc.easeSineInOut()),
+                                cc.rotateTo(time,   intensity,  intensity).easing(cc.easeSineInOut())
+                            )));
                         this._lives[i].runAction(cc.repeatForever(cc.sequence(
                             cc.rotateTo(time,  -intensity, -intensity).easing(cc.easeSineInOut()),
                             cc.rotateTo(time,   intensity,  intensity).easing(cc.easeSineInOut())
@@ -353,11 +366,13 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
 
             case pd.LifeHUD.IdleActionsTypes.WAVE:
                 var sequence = [];
-                for (i  = 0; i < this._livesRemaining; i++) {
+                for (i  = 0; i < this._totalLives; i++) {
                     sequence.push(
                         cc.delayTime(0.05),
                         cc.callFunc(function (e, data) {
                             this._lives[data].runAction(cc.jumpBy(0.3, 0,0, 5, 1));
+                            if(this._emptyLives)
+                                this._emptyLives[data].runAction(cc.jumpBy(0.3, 0,0, 5, 1));
                         }, this, [i])
                     );
                 }
@@ -399,7 +414,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
 
     /**
      *Define o tipo de ação da introdução.
-     * @param {String} typeAction   - Tipo da ação da intro.
+     * @param {pd.LifeHUD.IntroActionsTypes} typeAction   - Tipo da ação da intro.
      * @param {String} (soundEffect = pd.res.fx_button)  - Nome do efeito sonoro.
      */
     setIntroAction: function (typeAction, soundEffect) {
@@ -411,7 +426,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
 
     /**
      *Define o tipo de ação da idle.
-     * @param {String} typeAction - Tido da ação de idle.
+     * @param {pd.LifeHUD.IdleActionsTypes} typeAction - Tido da ação de idle.
      */
     setIdleAction: function (typeAction) {
         this._idleActionType = typeAction;
@@ -419,7 +434,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
 
     /**
      *Define o tipo de ação ao ganhar vida.
-     * @param {String} typeAction   - Tipo da ação de ganhar vida.
+     * @param {pd.LifeHUD.GainLifeActionsTypes} typeAction   - Tipo da ação de ganhar vida.
      * @param {String} (soundEffect = pd.res.fx_button)  - Nome do efeito sonoro.
      */
     setGainLifeAction: function (typeAction, soundEffect) {
@@ -429,7 +444,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
 
     /**
      *Define o tipo de ação ao perder vida.
-     * @param {String} typeAction   - Tipo da ação de perder vida.
+     * @param {pd.LifeHUD.LoseLifeActionsTypes} typeAction   - Tipo da ação de perder vida.
      * @param {String} (soundEffect = pd.res.fx_button)  - Nome do efeito sonoro.
      */
     setLoseLifeAction: function (typeAction, soundEffect) {
