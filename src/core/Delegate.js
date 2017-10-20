@@ -400,5 +400,8 @@ pd.delegate = pd.generateSingleton(pd.Delegate);
 /**
  * Atalho para facilitar a chamada ao método de reter objetos.
  * @type {function}
+ * @param {cc.Node} obj
  */
-pd.retain = pd.delegate.retain;
+pd.retain = function(obj) {
+    pd.delegate.retain(obj);
+}

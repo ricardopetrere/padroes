@@ -302,7 +302,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
             cc.delayTime(0.25),
             cc.callFunc(this._onPageHidden, this, this._activeLayer)
         ));
-        pd.retain(this._activeLayer._slideTween);
+        pd.delegate.retain(this._activeLayer._slideTween);
 
         this._title.runAction(cc.jumpTo(0.3, this._title.x, this._title.y, 30, 1));
 
@@ -359,7 +359,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
             cc.spawn(cc.moveTo(0.25, shouldAnimate ? newLayer.x + this._slideDirection*pd.Tutorial.PAGE_SPACING : newLayer.x, newLayer._initialPosition.y), cc.fadeIn(0.2)).easing(cc.easeSineOut()),
             cc.callFunc(this._onPageShown, this))
         );
-        pd.retain(newLayer._slideTween);
+        pd.delegate.retain(newLayer._slideTween);
 
         for(var i in this._tweenableObjects) {
             var node = this._tweenableObjects[i];
@@ -507,7 +507,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this.headerText.runAction(cc.moveTo(0.1, this.headerText.displayState.x, this.headerText.y).easing(cc.easeSineOut()));
         this._activeLayer.slideBackToCenter();
 
-        pd.retain(this._activeLayer._slideTween);
+        pd.delegate.retain(this._activeLayer._slideTween);
     },
 
     /**
