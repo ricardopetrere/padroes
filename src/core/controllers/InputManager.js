@@ -613,7 +613,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     */
     _parseAcc: function(acc, listener) {
         if (cc.sys.os === cc.sys.OS_ANDROID) {
-            if (pd.natives.callNative("getRotation", null, pd.natives.JavaTypes.INT) >= 2) {
+            if (cc.ENGINE_VERSION.lastIndexOf("3.17") < 0 && //commit 09d73ae da cocos2d-x realizou essa correção
+                pd.natives.callNative("getRotation", null, pd.natives.JavaTypes.INT) >= 2) {
                 acc.x = -acc.x;
                 acc.y = -acc.y;
             }

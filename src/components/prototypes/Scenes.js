@@ -61,7 +61,7 @@ pd.ScenePrototype = cc.Scene.extend({/**@lends pd.ScenePrototype#*/
      * @param {Object} mainLayerOrMainLayerClass
      */
     initWithMainLayer: function(mainLayerOrMainLayerClass) {
-        if(!(mainLayerOrMainLayerClass instanceof cc.Scene))
+        if(!(mainLayerOrMainLayerClass instanceof cc.Layer))
             this.mainLayer = new mainLayerOrMainLayerClass();
         else
             this.mainLayer = mainLayerOrMainLayerClass;
