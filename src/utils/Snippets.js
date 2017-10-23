@@ -476,6 +476,41 @@ pd.lineInLineIntersection = function(l1, l2) {
 };
 
 /**
+ * Verifica se um ponto está dentro de uma faixa de tolerância de uma função
+ * @param {number} x
+ * @param {number} y
+ * @param {Function} func
+ * @param {Object} funcHandler
+ * @param {number | boolean} toleranceOrReturnPointDistance - Ao invés de retornar verdadeiro ou falso, retorna a distância
+ * @returns {boolean}
+ */
+pd.pointInFunction = function (x, y, func, funcHandler, toleranceOrReturnPointDistance) {
+    var retFunc = func.apply(funcHandler, x);
+    cc.log("[pd.pointInFunction] x informado: " + x + ", f(x) informado: " + y + ", f(x) obtido: " + retFunc);
+    if(toleranceOrReturnPointDistance === true)
+        return (Math.abs(retFunc - y));
+    else
+        return (Math.abs(retFunc - y) <= toleranceOrReturnPointDistance);
+};
+
+/**
+ * Movimenta um polígono nas quantidades X e Y informadas
+ * @param {cc.Point[]} polygon
+ * @param {number | cc.Point} xOrPoint
+ * @param {number} [y]
+ */
+pd.translatePolygon = function (polygon, xOrPoint, y) {
+    if(y === undefined) {
+        y = xOrPoint.y;
+        xOrPoint = xOrPoint.x;
+    }
+    for(var n = 0; n < polygon.length; n++) {
+        polygon[n].x += xOrPoint;
+        polygon[n].y += y;
+    }
+};
+
+/**
  * Verifica se um ponto está dentro de um polígono.
  * @param {cc.Point} p
  * @param {cc.Point[]} vertexes
