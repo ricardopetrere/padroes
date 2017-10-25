@@ -267,7 +267,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      * @param {Number | cc.WebAudio} effectId
      */
     stopEffect: function (effectId) {
-        if (effectId > 0 || effectId instanceof Object)
+        if (effectId >= 0 || effectId instanceof Object)
             cc.audioEngine.stopEffect(effectId);
     },
 

@@ -79,19 +79,19 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
      * Referência do arquivo de áudio que será usado para intro.
      * @type {String}
      */
-    _introSoundEffect: pd.res.fx_button,
+    _introSoundEffect: null,
 
     /**
      * Referência do arquivo de áudio que será usado ao perder vida.
      * @type {String}
      */
-    _loseLifeSoundEffect: pd.res.fx_button,
+    _loseLifeSoundEffect: null,
 
     /**
      * Referência do arquivo de áudio que será usado ao ganhar vida.
      * @type {String}
      */
-    _gainLifeSoundEffect: pd.res.fx_button,
+    _gainLifeSoundEffect: null,
 
     //</editor-fold>
 
