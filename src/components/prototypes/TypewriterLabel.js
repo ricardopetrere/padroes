@@ -41,8 +41,10 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
      */
     cleanText: function() {
         for(var i in this._labels) {
-            this._labels[i].setString("");
+            this.removeChild(this._labels[i]);
         }
+
+        this._labels = [];
     },
 
     /**
