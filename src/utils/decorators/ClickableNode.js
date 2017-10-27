@@ -70,6 +70,14 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
     },
 
     /**
+     * @param {Object} event
+     * @param {Number} [tolerance = 1]
+     */
+    isInsideMouseEvent: function(event, tolerance) {
+        return this.isInside(event.getLocationX(), event.getLocationY(), tolerance);
+    },
+
+    /**
      * Calcula a distância entre a sprite e um ponto, para o caso de colisões por distância.
      * @param {Number} _x
      * @param {Number} _y
