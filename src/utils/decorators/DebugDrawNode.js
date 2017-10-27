@@ -21,6 +21,11 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
     _debugDrawData: null,
 
     /**
+     * @type {Array}
+     */
+    _debugTextData: null,
+
+    /**
      * @type {Boolean}
      */
     _jsonDebugMode:true,
@@ -41,9 +46,11 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
             this.addChild(this._txtCoords, pd.ZOrders.EDITOR_SCREEN);
             this.setDebugDrawEnabled(true);
             this._drawNode = new cc.DrawNode();
+            this._debugTextData = [];
             this.addChild(this._drawNode,pd.ZOrders.PAUSE_LAYER);
             this._drawNode.update = function (dt) {
                 this.getParent()._updateDebugPolygons();
+                this.getParent()._updateDebugTexts();
             }
             this._drawNode.scheduleUpdate();
         }
@@ -122,6 +129,21 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
         }
     },
 
+    addDebugText: function (textOrFunction, thisArg, parent, zOrder, x, y, color) {
+        if(pd.debugMode) {
+            this._debugTextData = this._debugTextData || [];
+            color = this._parseColor(color);
+            var label = pd.createTextWithStandardFont(pd.Fonts.DIMBO, x, y, 48, color, "", null, parent, zOrder);
+            label.setVisible(this._showDebugObjects);
+            if (typeof textOrFunction == 'function') {
+                this._debugTextData.push({data: label, color: color, fnc: textOrFunction, thisArg: thisArg});
+            } else {
+                label.setString(textOrFunction);
+                this._debugTextData.push({data: label, color: color});
+            }
+        }
+    },
+
     /**
      * Limpa os polígonos de debug.
      */
@@ -142,8 +164,12 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
     setShowDebugObjects: function(showDebugObjects) {
         if(pd.debugMode) {
             this._showDebugObjects = showDebugObjects;
+            for(var i = 0; i < this._debugTextData.length; i++) {
+                this._debugTextData[i].data.visible = this._showDebugObjects;
+            }
             if (this._showDebugObjects) {
                 this._updateDebugPolygons();
+                this._updateDebugTexts();
                 this._txtCoords.visible = true;
             }
             else {
@@ -224,10 +250,24 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
             for (var i in this._debugDrawData) {
                 if (this._debugDrawData[i].data instanceof cc.Node) {
                     var rect = this._debugDrawData[i].fnc.apply(this._debugDrawData[i].data);
-                    this._drawNode.drawPoly(pd.rectToPolygon(rect), this._debugDrawData[i].color);
+                    this._drawNode.drawPoly(pd.rectToPolygon(rect), this._debugDrawData[i].color, 0, cc.color.BLACK);
+                } else
+                    this._drawNode.drawPoly(this._debugDrawData[i].data, this._debugDrawData[i].color, 0, cc.color.BLACK);
+            }
+        }
+    },
+
+    /**
+     * Atualiza os LabelTTF que necessitam de atualização constante
+     * @private
+     */
+    _updateDebugTexts: function () {
+        if(pd.debugMode) {
+            for(var i = 0; i < this._debugTextData.length; i++) {
+                if (this._debugTextData[i].data instanceof cc.LabelTTF) {
+                    if (typeof this._debugTextData[i].fnc == 'function')
+                        this._debugTextData[i].data.setString(this._debugTextData[i].fnc.call(this._debugTextData[i].thisArg));
                 }
-                else
-                    this._drawNode.drawPoly(this._debugDrawData[i].data, this._debugDrawData[i].color);
             }
         }
     }
