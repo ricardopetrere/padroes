@@ -128,7 +128,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     clean: function(target) {
         const metadata = target._inputMetadata;
         for(var i in metadata) {
-            if(metadata[i].hasOwnProperty("length") && metadata[i][0].hasOwnProperty("handler")) {
+            if(metadata[i].hasOwnProperty("length") && metadata[i][0] && metadata[i][0].hasOwnProperty("handler")) {
                 this.remove(i, target);
             }
         }
