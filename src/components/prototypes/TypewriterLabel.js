@@ -159,6 +159,20 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
     },
 
     /**
+     * Para de atualizar e mostra o texto instantaneamente.
+     */
+    displayTextInstant: function() {
+        for(var i = 0 ; i < this._labels.length ; i++) {
+            var label = this._labels[i];
+            label.displayTextInstant();
+        }
+
+        if(this._onComplete) {
+            this._onCompleteHandler[this._onComplete]();
+        }
+    },
+
+    /**
      * Manipula o término de uma animação de uma linha.
      * @private
      */
@@ -240,6 +254,16 @@ pd.TypewritterInternalLabelTTF = cc.LabelTTF.extend({/** @lends pd.decorators.Up
                 this._finish();
             }
         }
+    },
+
+    /**
+     * Mostra o texto instantaneamente.
+     */
+    displayTextInstant: function() {
+        this.unscheduleUpdate();
+        this.isDone = true;
+        this._currentText = this._completedText;
+        this.setString(this._currentText);
     },
 
     /**
