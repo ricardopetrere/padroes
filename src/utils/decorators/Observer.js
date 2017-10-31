@@ -1,6 +1,7 @@
 /**
  * Created by Ryan Balieiro on 15/09/17.
  * Implementa a capacidade a um objeto de 'observar' outro objeto que seja observável.
+ * Ao usar decorate, ele seta a propriedade _handlingMap para nulo, então tomar esse cuidado ao utilizar esse decorator
  * @mixin
  */
 pd.decorators.Observer = {/** @lends pd.decorators.Observer#*/
