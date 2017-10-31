@@ -7,6 +7,11 @@
  */
 pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     /**
+     * Ação de troca de frames do pd.Animation
+     * @type {cc.Animate}
+     */
+    animateAction: null,
+    /**
      * Indica se a animação atual está rodando.
      * @type {Boolean}
      */
@@ -188,6 +193,14 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     },
 
     /**
+     * Retorna o id (começando em 0) do quadro atual da animação vigente
+     * @returns {number}
+     */
+    getCurrentFrameIndex: function () {
+        return this.animateAction.getCurrentFrameIndex();
+    },
+
+    /**
      * Roda a animação atual.
      * @param {Boolean} isRepeatable
      * @param {Number} speed
@@ -303,6 +316,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
         } else {
             action = new cc.Animate(this.currentAnimation.animation);
         }
+        this.animateAction = action;
 
         if(isRepeatable == true) {
             this.animAction = repeatTimes ? new cc.Repeat(action, repeatTimes) : new cc.RepeatForever(action);

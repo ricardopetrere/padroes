@@ -107,7 +107,8 @@ pd.decorators.ViewController = {/** @lends pd.decorators.ViewController#*/
     setTargetView: function(view) {
         view.bind(this);
         this.view = view;
-        pd.decorate(this, pd.decorators.Observer);
+        if(!this._handlingMap)
+            pd.decorate(this, pd.decorators.Observer);
         this.setSoundObserver();
     },
 
