@@ -371,6 +371,14 @@ pd.parseAttr = function(attr) {
     if(attr.hasOwnProperty("flippedY")) {
         attr._flippedY = attr.flippedY;
     }
+    if(attr.hasOwnProperty("anchor")) {
+        attr.anchorX = attr.anchor;
+        attr.anchorY = attr.anchor;
+    }
+    //skewX
+    //skewY
+    //zIndex
+    //visible
 
     return attr;
 };
@@ -824,6 +832,42 @@ pd.distort = function (time, cycles, sx, sy) {
         );
     }
 
+    return cc.sequence(sequenceSteps);
+};
+
+/**
+ * Executa uma ação customizada, que não pré-existe na Cocos <p/>
+ * (ex: fade de áudio, como a função {@link pd.AudioEngine._fade}, que foi usada de base para essa função.
+ * Outra intenção dessa função é atender o que {@link cc.ActionTween} não for capaz
+ * @param {number} duration - Duração da ação em segundos
+ * @param {number} cycles - Número de vezes que a função deve ser executada
+ * @param {Function} func - Função que será executada (A função deve listar todos os parâmetros que irá necessitar)
+ * @param {Object} [funcHandler] - Proprietário da função. Quem será o 'this' na função
+ * @param {Array} [argArray] - Vetor contendo os argumentos usados pela função
+ * @param {Function} [cb] - Função a ser executada após a ação terminar
+ * @param {Object} [cbHandler] - Quem será o 'this' no callback
+ * @param {Array} [cbArgs] - Vetor contendo os argumentos usados pelo callback
+ * @param {Object} [easing] - cc.easeIn ou cc.easeOut. Interfere no intervalo entre cada execução da função
+ * @return {cc.Sequence}
+ */
+pd.customAction = function (duration, cycles, func, funcHandler, argArray, cb, cbHandler, cbArgs, easing) {
+    var step = duration / cycles;
+    // cc.log("step: " + step);
+    var sequenceSteps = [];
+    if(easing != null) {
+        cc.log("customAction tem easing");
+    }
+    for(var i = 0; i < cycles; i++) {
+        if (i > 0) {
+            sequenceSteps.push(cc.delayTime(easing != null ?
+                (easing.easing(i / cycles) - easing.easing((i - 1) / cycles)) * duration
+                : step));
+        }
+        sequenceSteps.push(pd.perfectCallFunc(func, funcHandler, argArray));
+    }
+    if (cb) {
+        sequenceSteps.push(cc.callFunc(cb, cbHandler || funcHandler));
+    }
     return cc.sequence(sequenceSteps);
 };
 
