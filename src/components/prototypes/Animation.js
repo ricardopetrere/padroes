@@ -136,6 +136,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
             numFrames: frames.length,
             speed: speed
         });
+        pd.delegate.retain(animation);
     },
 
     /**
