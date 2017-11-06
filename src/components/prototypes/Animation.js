@@ -258,10 +258,11 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * @param {Number} [speed]
      * @param {String|Function} [onComplete] - a função de callback.
      * @param {cc.Node} [onCompleteHandler] - o caller da função de callback.
+     * @param {Object} [easing] - Função de easing a ser aplicada na troca de frames
      * @param {boolean} [reversed=false]
      */
-    changeAndPlay: function(frame, repeatTimes, speed, onComplete, onCompleteHandler, reversed) {
-        this._displayAnimation(frame, repeatTimes ? true : false, speed, repeatTimes, reversed);
+    changeAndPlay: function(frame, repeatTimes, speed, onComplete, onCompleteHandler, reversed, easing) {
+        this._displayAnimation(frame, repeatTimes ? true : false, speed, repeatTimes, reversed, easing);
         this.onComplete = onComplete;
         this.onCompleteHandler = onCompleteHandler || this.getParent();
     },
@@ -271,9 +272,10 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * @param {Number|String} frame - o índice ou o nome da animação.
      * @param {Number} [speed=null]
      * @param {boolean} [reversed=false]
+     * @param {Object} [easing] - Função de easing a ser aplicada na troca de frames
      */
-    changeAndLoop: function(frame, speed, reversed) {
-        this._displayAnimation(frame, true, speed, 0, reversed);
+    changeAndLoop: function(frame, speed, reversed, easing) {
+        this._displayAnimation(frame, true, speed, 0, reversed, easing);
     },
 
     /**
@@ -307,15 +309,18 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * @param {Boolean} isRepeatable
      * @param {Boolean} repeatTimes
      * @param {boolean} [reversed=false]
+     * @param {Object} [easing] - Função de easing a ser aplicada na troca de frames
      * @private
      */
-    _run: function(isRepeatable, repeatTimes, reversed) {
+    _run: function(isRepeatable, repeatTimes, reversed, easing) {
         this._disposeAnimAction();
         this.currentAnimation.animation.setDelayPerUnit(1/this.currentAnimation.speed);
+        var action = new cc.Animate(this.currentAnimation.animation);
         if (reversed === true) {
-            var action = new cc.Animate(this.currentAnimation.animation).reverse();
-        } else {
-            action = new cc.Animate(this.currentAnimation.animation);
+            action = action.reverse();
+        }
+        if (easing != null) {
+            action = action.easing(easing);
         }
         this.animateAction = action;
 
@@ -374,16 +379,17 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
      * @param {Number} [speed=60]
      * @param {Number} [repeatTimes=0]
      * @param {boolean} [reversed=false]
+     * @param {Object} [easing] - Função de easing a ser aplicada na troca de frames
      * @private
      */
-    _displayAnimation: function(targetFrame, isRepeatable, speed, repeatTimes, reversed) {
+    _displayAnimation: function(targetFrame, isRepeatable, speed, repeatTimes, reversed, easing) {
         if (this._shouldResetAnimation || !this.isCurrentAnimationRunning || this.currentAnimation.animation !== this.getAnimation(targetFrame)) {
             this.stop();
             this.setAnimation(targetFrame);
             if (speed && speed !== this.currentAnimation.speed) {
                 this.currentAnimation.speed = speed;
             }
-            this._run(Boolean(isRepeatable), repeatTimes, reversed);
+            this._run(Boolean(isRepeatable), repeatTimes, reversed, easing);
         }
     },
 
