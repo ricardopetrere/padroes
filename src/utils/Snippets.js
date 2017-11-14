@@ -375,6 +375,9 @@ pd.parseAttr = function(attr) {
         attr.anchorX = attr.anchor;
         attr.anchorY = attr.anchor;
     }
+    /**
+     * @link {../../../_3_15/frameworks/cocos2d-html5/cocos2d/core/base-nodes/BaseNodesPropertyDefine.js}
+     */
     //skewX
     //skewY
     //zIndex
@@ -847,20 +850,39 @@ pd.distort = function (time, cycles, sx, sy) {
  * @param {Function} [cb] - Função a ser executada após a ação terminar
  * @param {Object} [cbHandler] - Quem será o 'this' no callback
  * @param {Array} [cbArgs] - Vetor contendo os argumentos usados pelo callback
- * @param {Object} [easing] - cc.easeIn ou cc.easeOut. Interfere no intervalo entre cada execução da função
+ // * @param {Object} [easing] - cc.easeIn ou cc.easeOut. Interfere no intervalo entre cada execução da função
+ * @param {number} [easeRate] - Interfere no intervalo entre cada execução da função
+ * @param {boolean} [easeOut] - Se é cc.easeIn ou cc.easeOut
  * @return {cc.Sequence}
  */
-pd.customAction = function (duration, cycles, func, funcHandler, argArray, cb, cbHandler, cbArgs, easing) {
+pd.customAction = function (duration, cycles, func, funcHandler, argArray, cb, cbHandler, cbArgs, easeRate, easeOut) {
     var step = duration / cycles;
     // cc.log("step: " + step);
     var sequenceSteps = [];
-    if(easing != null) {
-        cc.log("customAction tem easing");
+    if(easeRate != null) {
+        cc.log("customAction tem easeRate");
+        easeOut = easeOut || false;
+        var easing;
+        if(easeOut === true) {
+            // easing = new cc.EaseOut(easeRate);
+            easing = cc.easeOut(easeRate);
+            easeRate = 1 / easeRate;
+        } else {
+            // easing = new cc.EaseIn(easeRate);
+            easing = cc.easeIn(easeRate);
+        }
     }
     for(var i = 0; i < cycles; i++) {
         if (i > 0) {
-            sequenceSteps.push(cc.delayTime(easing != null ?
-                (easing.easing(i / cycles) - easing.easing((i - 1) / cycles)) * duration
+            // sequenceSteps.push(cc.delayTime(easing != null ?
+            //     (easing.easing(i / cycles) - easing.easing((i - 1) / cycles)) * duration
+
+            sequenceSteps.push(cc.delayTime(easeRate != null ?
+                (
+                    Math.pow(i / cycles, easeRate)
+                    - Math.pow((i - 1) / cycles, easeRate)
+                ) * duration
+
                 : step));
         }
         sequenceSteps.push(pd.perfectCallFunc(func, funcHandler, argArray));
