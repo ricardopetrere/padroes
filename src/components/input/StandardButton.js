@@ -161,10 +161,21 @@ pd.StandardButton = pd.Button.extend({/** @lends pd.StandardButton#**/
      * Faz um ajuste fino na posição da label do botão.
      * @param {Number} dx
      * @param {Number} dy
+     * @param {Number} [rotation=0]
      */
-    adjustLabel: function (dx, dy) {
+    adjustLabel: function (dx, dy, rotation) {
         this._label.x += dx;
         this._label.y += dy;
+        this._label.rotation = rotation || 0;
+    },
+
+    /**
+     * Muda o sprite frame da label.
+     * @param {pd.StandardButton.Icons} icon
+     */
+    setLabelSpriteFrame: function(icon) {
+        if(this._label instanceof cc.Sprite)
+            this._label.setSpriteFrame(pd.getSpriteFrame(icon));
     }
 });
 

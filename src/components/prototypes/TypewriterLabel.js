@@ -107,6 +107,16 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
     },
 
     /**
+     * Adiciona um callback a ser chamado durante a animação do texto.
+     * @param _handler {cc.Node}
+     * @param callback {String}
+     */
+    setOnUpdate: function(_handler, callback) {
+        this._onUpdateHandler = _handler;
+        this._onUpdate = callback;
+    },
+
+    /**
      * Adiciona um callback a ser chamado após a animação do texto terminar.
      * @param _handler {cc.Node}
      * @param callback {String}
@@ -142,6 +152,7 @@ pd.TypewriterLabel = cc.Node.extend({/** @lends pd.TypewriterLabel#**/
         timeSpanBetweenEachLetter = timeSpanBetweenEachLetter || 0.1;
         for(var i = 0; i < this._labels.length; i++) {
             this._labels[i].timeSpanBetweenEachLetter = timeSpanBetweenEachLetter;
+            this._labels[i]._handler = this;
         }
         this._labels[this._currentLine]._startUpdate(this);
     },
@@ -250,8 +261,13 @@ pd.TypewritterInternalLabelTTF = cc.LabelTTF.extend({/** @lends pd.decorators.Up
             this._currentText += this._targetText[0];
             this._targetText.splice(0, 1);
             this.setString(this._currentText);
+
             if(this._targetText.length <= 0){
                 this._finish();
+            }
+
+            if(this._handler._onUpdate) {
+                this._handler._onUpdateHandler[this._handler._onUpdate](this);
             }
         }
     },
@@ -264,6 +280,10 @@ pd.TypewritterInternalLabelTTF = cc.LabelTTF.extend({/** @lends pd.decorators.Up
         this.isDone = true;
         this._currentText = this._completedText;
         this.setString(this._currentText);
+
+        if(this._handler._onUpdate) {
+            this._handler._onUpdateHandler[this._handler._onUpdate](this);
+        }
     },
 
     /**
