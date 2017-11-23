@@ -96,7 +96,7 @@ pd.decorators.ObservableView.Events = {
  */
 pd.decorators.ViewController = {/** @lends pd.decorators.ViewController#*/
     /**
-     * @type {Object}
+     * @type {cc.Node}
      */
     view: null,
 
