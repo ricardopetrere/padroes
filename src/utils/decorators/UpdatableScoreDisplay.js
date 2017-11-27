@@ -36,7 +36,20 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
      * @returns {String}
      */
     _parseString: function(str) {
-        return str.toLocaleString().replace(".", "  ").replace(",", "  ");
+        str = str.toString();
+        if(str.length <= 3)
+            return str;
+
+        var formattedStr = "";
+        var count = 0;
+        for(var i = str.length - 1 ; i >= 0 ; i--) {
+            formattedStr = str.charAt(i) + formattedStr;
+            count++;
+            if(count % 3 == 0)
+                formattedStr = "  " + formattedStr;
+        }
+
+        return formattedStr;
     },
 
     /**
@@ -58,7 +71,7 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
             const factor = cc.sys.isMobile ? 1/30 : 1/60;
 
             if(!this._isUpdatingScore) {
-                pd.currentScene.mainLayer.runAction(this.updateAction = cc.repeatForever(cc.sequence(
+                pd.currentScene.getChildren()[0].runAction(this.updateAction = cc.repeatForever(cc.sequence(
                     cc.delayTime(factor),
                     pd.perfectCallFunc(this._updateScore, this, factor)
                 )));
