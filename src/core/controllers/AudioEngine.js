@@ -273,7 +273,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
 
     /**
      * Para a música de fundo.
-     * @param {Boolean} releaseData
+     * @param {Boolean} [releaseData]
      */
     stopMusic: function (releaseData) {
         cc.audioEngine.stopMusic(releaseData);
