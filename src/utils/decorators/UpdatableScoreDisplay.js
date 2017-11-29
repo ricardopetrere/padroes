@@ -88,6 +88,9 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
      * @param dt
      */
     _updateScore: function(dt) {
+        if(pd.currentScene.getChildren().length == 0)
+            return;
+
         this._currentDuration += dt;
         const percentage = pd.clamp(this._currentDuration/this._targetDuration, 0, 1);
 
