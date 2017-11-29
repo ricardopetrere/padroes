@@ -277,6 +277,9 @@ pd.createTextWithStandardFont = function(fontID, x, y, fontSize, color, text, al
 
 /**
  * Cria um clipping node.
+ * o primeiro rect identifica as dimensões do clipping node (podem ser vazios width e height)
+ * o segundo rect identifica as dimensões da área a ser exibida
+ * O anchorPoint no clippingNode é de cc.p(0.5, 0.5)
  * @param {cc.Node} parent
  * @param {Number | cc.Rect} xOrClippingNodeRect
  * @param {Number | cc.Rect} yOrMaskRect

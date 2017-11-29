@@ -59,7 +59,7 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
      */
     setScore: function(score, duration) {
         duration = duration || 0;
-        if(duration > 0) {
+        if(duration > 0 && pd.currentScene.getChildren().length > 0) {
             var current = parseInt(this.getString().replace("  ", ""));
             if (!current || isNaN(current))
                 current = 0;
@@ -95,7 +95,7 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
         if(percentage == 1) {
             this.setString(this._parseString(this._currentScore + this._dScore));
             if(this._isUpdatingScore)
-                pd.currentScene.mainLayer.stopAction(this.updateAction);
+                pd.currentScene.getChildren()[0].stopAction(this.updateAction);
             this._isUpdatingScore = false;
         }
     }
