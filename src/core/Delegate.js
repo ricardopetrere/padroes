@@ -196,14 +196,14 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
     bootUp: function() {
         if(pd.debugMode == true || (this.context == pd.Delegate.CONTEXT_PALCO && this.activeNamespace.srcPath.lastIndexOf("jogo") == -1)) {
             if (this.transitionTime > 0) {
-                var mainScene = FadeWhiteTransition(this.transitionTime, new this.activeNamespace.MainScene());
+                var mainScene = pd.FadeWhiteTransition(this.transitionTime, new this.activeNamespace.MainScene());
             } else {
                 mainScene = new this.activeNamespace.MainScene();
             }
         }
         else {
             this.transitionTime = 0.8;
-            mainScene = FadeWhiteTransition(this.transitionTime, new this.activeNamespace.MainScene());
+            mainScene = pd.FadeWhiteTransition(this.transitionTime, new this.activeNamespace.MainScene());
         }
         this.isTutorialSet = false;
         pd.delegate.activeNamespace.tutorialData = [];
@@ -311,12 +311,12 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
             pd.audioEngine.setMute(false);
             this._destroyGame();
 
-            var transition = FadeWhiteTransition(cc.sys.isMobile ? 0.3 : 0.4, new palco.MainScene());
+            var transition = pd.FadeWhiteTransition(cc.sys.isMobile ? 0.3 : 0.4, new palco.MainScene());
             cc.director.runScene(transition);
         }
         else {
             this.releaseAll();
-            transition = FadeWhiteTransition(0.6, new this.activeNamespace.MainScene());
+            transition = pd.FadeWhiteTransition(0.6, new this.activeNamespace.MainScene());
             pd.delegate.retain(transition);
             cc.director.runScene(transition);
         }

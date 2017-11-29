@@ -185,7 +185,7 @@ pd.PauseLayer = cc.Layer.extend({/**@lends pd.PauseLayer#*/
 
         if(pd.delegate.context != pd.Delegate.CONTEXT_PALCO) {
             var scene = new pd.delegate.activeNamespace.MainScene();
-            var transition = FadeWhiteTransition(1, scene);
+            var transition = pd.FadeWhiteTransition(1, scene);
             pd.switchScene(transition, this._handler, 0.2);
         }
         else {
@@ -239,7 +239,7 @@ pd.PauseLayer = cc.Layer.extend({/**@lends pd.PauseLayer#*/
         this._handler.cleanup();
 
         var scene = new pd.delegate.activeNamespace.MainScene();
-        var transition = FadeWhiteTransition(1, scene);
+        var transition = pd.FadeWhiteTransition(1, scene);
         pd.switchScene(transition, this._handler);
 
         cc.log("[pd.PauseLayer] Botão de reset pressionado.");
