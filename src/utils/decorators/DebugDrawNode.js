@@ -35,10 +35,7 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
      */
     _coordsLog:null,
 
-    /**
-     * Cria os elementos de debug.
-     */
-    initDebugDraw: function() {
+    __initDecorator__: function () {
         if(pd.debugMode) {
             this._txtCoords = pd.createTextWithStandardFont(pd.Fonts.CARTON_SIX, 0, 0, 32, cc.color(0, 0, 0));
             this._txtCoords.enableStroke(cc.color(255, 255, 255), 3);
@@ -54,6 +51,13 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
             }
             this._drawNode.scheduleUpdate();
         }
+    },
+    /**
+     * Cria os elementos de debug.
+     * @deprecated Implementar o decorator com {@link pd.decorate}, para que este utilize {@link pd.decorators.DebugDrawNode.__initDecorator__}
+     */
+    initDebugDraw: function() {
+        this.__initDecorator__();
     },
 
     /**

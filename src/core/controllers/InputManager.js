@@ -58,7 +58,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     },
 
     /**
-     * Seta um listener de evento para o álvo informado.
+     * Seta um listener de evento para o alvo informado.
      * @param {pd.InputManager.Events} eventType - tipo do evento.
      * @param {*} target - o objeto que dispara o evento.
      * @param {Function|String} [handlerFunc] - a função a ser invocada pelo objeto que escuta o evento.

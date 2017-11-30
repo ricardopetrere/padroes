@@ -1069,6 +1069,7 @@ pd.decorate = function(object, decorator) {
 
     object._mixes = object[i]._mixes || [];
     object._mixes.push(decorator);
+    decorator.__initDecorator__ && decorator.__initDecorator__.call(object);
 };
 //</editor-fold>
 //<editor-fold desc="#Others">
