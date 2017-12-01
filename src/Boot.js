@@ -46,6 +46,7 @@ pd.jsList = [
     "src/utils/decorators/EventDispatcher.js",
     "src/utils/decorators/MVC.js",
     "src/utils/decorators/Observer.js",
+    "src/utils/decorators/OptionsChooser.js",
     "src/utils/decorators/ParallaxObject.js",
     "src/utils/decorators/ResetableNode.js",
     "src/utils/decorators/UpdatableScoreDisplay.js",
