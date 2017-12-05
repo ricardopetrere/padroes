@@ -13,15 +13,19 @@ pd.decorators.OptionsChooser = {
     /**
      * @type {cc.Point}
      */
-    chooserDefaultPos: cc.p(-100, -100),
+    chooserDefaultPos: null,
     /**
-     * @type {{data: cc.Sprite | cc.Point[], attr: Object, type: pd.decorators.OptionsChooser.OptionTypes, func: Function, handler: Object, args: Object[]}[]}
+     * @type {pd.decorators.OptionsChooser.ChooserItem[]}
      */
     chooserOptions: null,
     /**
      * @type {cc.Point}
      */
     chooserPosMouse: null,
+    /**
+     * @type {boolean}
+     */
+    chooserEnabledListeners: false,
 
     /**
      * @function
@@ -29,10 +33,12 @@ pd.decorators.OptionsChooser = {
      * @private
      */
     __initDecorator__: function () {
+        this.chooserDefaultPos = cc.p(-100, -100);
         this.chooserOptions = [];
         this.chooserPosMouse = cc.p();
         if(this._inputMetadata == null)
             this._inputMetadata = {};
+        this.setChooserEnabledListeners(true);
         if(!this._alreadyHasListener("chooserMouseUp", pd.InputManager.Events.MOUSE_UP, this))
             pd.inputManager.add(pd.InputManager.Events.MOUSE_UP, this, "chooserMouseUp");
         if(!this._alreadyHasListener("chooserMouseMove", pd.InputManager.Events.MOUSE_MOVE, this))
@@ -76,8 +82,8 @@ pd.decorators.OptionsChooser = {
         var obj;
         var isSprite = option instanceof cc.Sprite;
         var isSpriteFrame = option instanceof cc.SpriteFrame || typeof option === 'string';
-        this.chooserOptions.push(obj = {
-            data: (
+        this.chooserOptions.push(obj = new pd.decorators.OptionsChooser.ChooserItem(
+            (
                 isSprite ?
                     option : (
                         isSpriteFrame ?
@@ -85,15 +91,15 @@ pd.decorators.OptionsChooser = {
                             option
                     )
             ),
-            attr: pd.parseAttr(chooserAttr),
-            type: (
+            pd.parseAttr(chooserAttr),
+            (
                 isSprite ||
                 isSpriteFrame
             ) ? pd.decorators.OptionsChooser.OptionTypes.SPRITE : pd.decorators.OptionsChooser.OptionTypes.POLYGON,
-            func: cb || function () { },
-            handler: cbHandler,
-            args: argsArray
-        });
+            cb || function () { },
+            cbHandler,
+            argsArray
+        ));
         return obj.data;
     },
     /**
@@ -107,10 +113,10 @@ pd.decorators.OptionsChooser = {
         for(var n = 0; n < this.chooserOptions.length; n++) {
             var option = this.chooserOptions[n];
             if(option.type === pd.decorators.OptionsChooser.OptionTypes.SPRITE) {
-                if(this.chooserPosMouse.x < option.data.x + (1 - option.data.anchorX) * option.data.width &&
-                    this.chooserPosMouse.x > option.data.x - option.data.anchorX * option.data.width &&
-                    this.chooserPosMouse.y < option.data.y + (1 - option.data.anchorY) * option.data.height &&
-                    this.chooserPosMouse.y > option.data.y - option.data.anchorY * option.data.height) {
+                if(this.chooserPosMouse.x < option.data.x + (1 - option.data.anchorX) * option.data.width * option.data.scaleX &&
+                    this.chooserPosMouse.x > option.data.x - option.data.anchorX * option.data.width * option.data.scaleX &&
+                    this.chooserPosMouse.y < option.data.y + (1 - option.data.anchorY) * option.data.height * option.data.scaleY &&
+                    this.chooserPosMouse.y > option.data.y - option.data.anchorY * option.data.height * option.data.scaleY) {
                     func.call(this, option);
                     return;
                 }
@@ -131,6 +137,7 @@ pd.decorators.OptionsChooser = {
     chooserFillPosMouse: function (e) {
         this.chooserPosMouse.x = e.getLocationX();
         this.chooserPosMouse.y = e.getLocationY();
+        this.chooserPosMouse = this.convertToNodeSpace(this.chooserPosMouse);
     },
     /**
      *
@@ -138,7 +145,14 @@ pd.decorators.OptionsChooser = {
      * @param {cc.EventMouse | cc.Touch} e
      */
     chooserMouseDown: function (e) {
-        this.chooserBasicLogic(e, function (option) {
+        if(!this.chooserEnabledListeners)
+            return;
+        this.chooserBasicLogic(e,
+            /**
+             *
+             * @param {pd.decorators.OptionsChooser.ChooserItem} option
+             */
+            function (option) {
             this.chooser.attr(option.attr);
         });
     },
@@ -148,7 +162,14 @@ pd.decorators.OptionsChooser = {
      * @param {cc.EventMouse | cc.Touch} e
      */
     chooserMouseMove: function (e) {
-        this.chooserBasicLogic(e, function (option) {
+        if(!this.chooserEnabledListeners)
+            return;
+        this.chooserBasicLogic(e,
+            /**
+             *
+             * @param {pd.decorators.OptionsChooser.ChooserItem} option
+             */
+            function (option) {
             this.chooser.attr(option.attr);
         });
     },
@@ -158,12 +179,26 @@ pd.decorators.OptionsChooser = {
      * @param {cc.EventMouse | cc.Touch} e
      */
     chooserMouseUp: function (e) {
-        if(this.chooser.x < 0)
+        if(!this.chooserEnabledListeners)
+            return;
+        if(cc.pointEqualToPoint(this.chooser, this.chooserDefaultPos))
             return;
 
-        this.chooserBasicLogic(e, function(option) {
+        this.chooserBasicLogic(e,
+            /**
+             *
+             * @param {pd.decorators.OptionsChooser.ChooserItem} option
+             */
+            function(option) {
             option.func.apply(option.handler, option.args);
         });
+    },
+    /**
+     *
+     * @returns {cc.Point}
+     */
+    getChooserDefaultPos: function () {
+        return this.chooserDefaultPos;
     },
     /**
      *
@@ -178,9 +213,49 @@ pd.decorators.OptionsChooser = {
         else
             this.chooser = spriteObj;
         return this.chooser;
+    },
+    /**
+     *
+     * @param {number | cc.Point} xOrPoint
+     * @param {number} y
+     */
+    setChooserDefaultPos: function (xOrPoint, y) {
+        if(xOrPoint.x !== undefined) {
+            this.chooserDefaultPos.x = xOrPoint.x;
+            this.chooserDefaultPos.y = xOrPoint.y;
+        } else {
+            this.chooserDefaultPos.x = xOrPoint;
+            this.chooserDefaultPos.y = y;
+        }
+    },
+    setChooserEnabledListeners: function (enabled) {
+        if(enabled === true) {
+            this.chooserEnabledListeners = enabled;
+        } else if (enabled === false) {
+            this.chooserEnabledListeners = enabled;
+        }
     }
 };
 
+/**
+ * @class
+ * @lends {pd.decorators.OptionsChooser.ChooserItem}
+ * @param {cc.Sprite | cc.Point[]} data - Sprite ou polígono do item
+ * @param {Object} attr - Dados de como deve se comportar o indicador de escolha ao se posicionar nesse item (posição, orientação, etc.)
+ * @param {pd.decorators.OptionsChooser.OptionTypes} type - Tipo de item (Sprite ou polígono)
+ * @param {Function} func - Função a ser executada quando o item for selecionado
+ * @param {Object} handler - Quem será o 'this' na função
+ * @param {Object[]} args - argumentos, em formato de vetor, a serem passados para a função
+ * @constructor
+ */
+pd.decorators.OptionsChooser.ChooserItem = function (data, attr, type, func, handler, args) {
+    this.data = data;
+    this.attr = attr;
+    this.type = type;
+    this.func = func;
+    this.handler = handler;
+    this.args = args;
+};
 /**
  *
  * @enum {string}

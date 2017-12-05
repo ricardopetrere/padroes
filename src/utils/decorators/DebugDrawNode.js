@@ -97,12 +97,37 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
     },
 
     /**
+     *
+     * @param type
+     * @param obj
+     * @param color
+     * @param getBoundingBoxFunction
+     * @private
+     */
+    _addDrawData: function (type, obj, color, getBoundingBoxFunction) {
+        if (pd.debugMode) {
+            color = this._parseColor(color);
+            if (obj.length > 0 && obj[0].length > 0) {
+                for (var i in obj) {
+                    this._addData(type, obj[i], color, getBoundingBoxFunction);
+                }
+            } else {
+                var data = {data: obj, color: color};
+                if (type == 1)//addDebugNodes
+                    data.fnc = fnc || obj.getBoundingBox;
+                this._debugDrawData.push(data);
+            }
+        }
+    },
+
+    /**
      * Adiciona nodos ao debug draw
      * @param {cc.Node | cc.Node[]} nodeOrNodes
      * @param {Function} [fnc=getBoundingBox]
      * @param {cc.Color} [color]
      */
     addDebugNodes: function (nodeOrNodes, fnc, color) {
+        // this._addDrawData(1, nodeOrNodes, color, fnc);
         if (pd.debugMode) {
             color = this._parseColor(color);
             if (nodeOrNodes.length > 0) {
@@ -121,6 +146,7 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
      * @param {cc.Color} [color]
      */
     addDebugPolygons: function(polygonOrPolygons, color) {
+        // this._addDrawData(2, polygonOrPolygons, color);
         if(pd.debugMode) {
             color = this._parseColor(color);
             if (polygonOrPolygons[0].length > 0) {
