@@ -469,6 +469,8 @@ pd.AnimationData = cc.Class.extend({
      * @returns {null|String}
      */
     getAnimationFrameName: function (frame) {
+        if (frame === 0)
+            return this.anim_name + ".png";
         if (frame < this.ini_frame || frame > this.last_frame)
             return null;
         return this.anim_name + pd.numberToString(frame) + ".png";
