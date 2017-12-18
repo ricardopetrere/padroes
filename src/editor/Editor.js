@@ -619,10 +619,10 @@ pd.Editor.sortEditorArrayByName = function(){
 pd.Editor.NodeList = [];
 
 
-pd.Editor.add = function(obj, type, name){
+pd.Editor.add = function(obj, name){
     if(!name)
         name = "objSemNome";
-    obj.debugName = obj.name || name;
+    obj.debugName = name || obj.name;
     pd.Editor.NodeList.push(obj);
 
     if(pd.debugMode)
