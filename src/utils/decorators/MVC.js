@@ -96,7 +96,7 @@ pd.decorators.ObservableView.Events = {
  */
 pd.decorators.ViewController = {/** @lends pd.decorators.ViewController#*/
     /**
-     * @type {Object}
+     * @type {cc.Node}
      */
     view: null,
 
@@ -161,7 +161,7 @@ pd.decorators.ObservableModel = {/** @lends pd.decorators.ObservableModel#*/
     /**
      * Notifica o controlador acerca de um evento, se houver um controlador.
      * @param {String} eventID
-     * @param {*} [eventData=null]
+     * @param {*} [eventData=null] Um objeto contendo dados a serem passados
      */
     notify: function(eventID, eventData) {
         if(this.controller)

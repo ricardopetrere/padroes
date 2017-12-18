@@ -58,11 +58,12 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     },
 
     /**
-     * Seta um listener de evento para o álvo informado.
+     * Seta um listener de evento para o alvo informado.
      * @param {pd.InputManager.Events} eventType - tipo do evento.
      * @param {*} target - o objeto que dispara o evento.
      * @param {Function|String} [handlerFunc] - a função a ser invocada pelo objeto que escuta o evento.
      * @param {*} [handler=null] - o objeto que escuta o evento. Caso seja null, o target será utilizado como handler.
+     * @returns {cc.EventListener} - O listener criado
      */
     add: function(eventType, target, handlerFunc, handler) {
         if(!target._inputMetadata)
@@ -72,7 +73,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
         if(!metadata[eventType])
             metadata[eventType] = [];
         metadata[eventType].push({handler: handler ? handler : target, handlerFunc:handlerFunc || function() {}});
-        this._checkInputSources(target, eventType, true);
+        return this._checkInputSources(target, eventType, true);
     },
 
     /**
@@ -174,11 +175,13 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * Adiciona um listener a um cc.Node.
      * @param {*} target
      * @param {cc.EventListener} listener
+     * @returns {cc.EventListener} - O listener criado
      */
     _addListener: function(target, listener) {
         cc.eventManager.addListener(listener, target);
         if(target._inputMetadata.priority)
             cc.eventManager.setPriority(listener, target._inputMetadata.priority);
+        return listener;
     },
 
     /**
@@ -207,22 +210,23 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {*} target
      * @param {pd.InputManager.Events} eventType
      * @param {Boolean} didAddCallback
+     * @returns {* | cc.EventListener} - O listener criado (apenas para criação)
      * @private
      */
     _checkInputSources: function(target, eventType, didAddCallback) {
         if(eventType.lastIndexOf("Mouse") != -1) {
             if(!target._inputMetadata[pd.InputManager.Sources.MOUSE]) {
-                this[didAddCallback ? "_activateMouse" : "_deactivateMouse"](target);
+                return this[didAddCallback ? "_activateMouse" : "_deactivateMouse"](target);
             }
         }
         else if(eventType.lastIndexOf("Key") != -1) {
             if(!target._inputMetadata[pd.InputManager.Sources.KEYBOARD]) {
-                this[didAddCallback ? "_activateKeyboard" : "_deactivateKeyboard"](target);
+                return this[didAddCallback ? "_activateKeyboard" : "_deactivateKeyboard"](target);
             }
         }
         else if(eventType.lastIndexOf("Accelerometer") != -1) {
             if(!target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER]) {
-                this[didAddCallback ? "_activateAccelerometer" : "_deactivateAccelerometer"](target);
+                return this[didAddCallback ? "_activateAccelerometer" : "_deactivateAccelerometer"](target);
             }
         }
     },
@@ -245,6 +249,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * Ativa o mouse.
      * @param {*} target
      * @private
+     * @returns {cc.EventListener} - O listener criado
      */
     _activateMouse: function(target) {
         if(target._inputMetadata[pd.InputManager.Sources.MOUSE])
@@ -260,7 +265,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             this._setMouse(target);
         }
 
-        this._addListener(target, target._inputMetadata[pd.InputManager.Sources.MOUSE]);
+        return this._addListener(target, target._inputMetadata[pd.InputManager.Sources.MOUSE]);
     },
 
     /**
@@ -447,6 +452,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * Ativa o teclado.
      * @param {*} target
      * @private
+     * @returns {cc.EventListener} - O listener criado
      */
     _activateKeyboard: function(target) {
         if(cc.sys.isMobile || target._inputMetadata[pd.InputManager.Sources.KEYBOARD])
@@ -482,7 +488,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             }
         });
 
-        this._addListener(target, target._inputMetadata[pd.InputManager.Sources.KEYBOARD]);
+        return this._addListener(target, target._inputMetadata[pd.InputManager.Sources.KEYBOARD]);
     },
 
     /**
@@ -560,6 +566,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * Ativa o acelerômetro.
      * @param {cc.Node} target
      * @private
+     * @returns {cc.EventListener} - O listener criado
      */
     _activateAccelerometer: function(target) {
         if(!cc.sys.isMobile || target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER])
@@ -592,7 +599,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
             }
         });
 
-        this._addListener(target, target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER]);
+        return this._addListener(target, target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER]);
     },
 
     /**

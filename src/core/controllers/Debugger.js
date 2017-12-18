@@ -117,7 +117,7 @@ pd.Debugger = cc.Class.extend({/**@lends pd.Debugger#*/
 
         if(shortcut.targetSceneName) {
             const targetScene = new pd.delegate.activeNamespace[shortcut.targetSceneName]();
-            var transition = FadeTransition(0.5, targetScene);
+            var transition = pd.FadeTransition(0.5, targetScene);
             pd.delegate.retain(transition);
             cc.director.runScene(transition);
             cc.log("[pd.Debugger] Carregando shortcut vinculado à tecla: ["+ (id) +"]. Redirecionando para a cena: " +

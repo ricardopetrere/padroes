@@ -162,6 +162,7 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
      * @private
      */
     _addBackground: function() {
+        //TODO: Trocar pra cc.LayerColor
         this._bg = new cc.Sprite(pd.res.s_fundoPreto);
         this._bg.setPosition(cc.winSize.width / 2, cc.winSize.height / 2);
         this.addChild(this._bg, 0);

@@ -36,7 +36,20 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
      * @returns {String}
      */
     _parseString: function(str) {
-        return str.toLocaleString().replace(".", "  ").replace(",", "  ");
+        str = str.toString();
+        if(str.length <= 3)
+            return str;
+
+        var formattedStr = "";
+        var count = 0;
+        for(var i = str.length - 1 ; i >= 0 ; i--) {
+            formattedStr = str.charAt(i) + formattedStr;
+            count++;
+            if(count % 3 == 0)
+                formattedStr = "  " + formattedStr;
+        }
+
+        return formattedStr;
     },
 
     /**
@@ -46,7 +59,7 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
      */
     setScore: function(score, duration) {
         duration = duration || 0;
-        if(duration > 0) {
+        if(duration > 0 && pd.currentScene.getChildren().length > 0) {
             var current = parseInt(this.getString().replace("  ", ""));
             if (!current || isNaN(current))
                 current = 0;
@@ -58,7 +71,7 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
             const factor = cc.sys.isMobile ? 1/30 : 1/60;
 
             if(!this._isUpdatingScore) {
-                pd.currentScene.mainLayer.runAction(this.updateAction = cc.repeatForever(cc.sequence(
+                pd.currentScene.getChildren()[0].runAction(this.updateAction = cc.repeatForever(cc.sequence(
                     cc.delayTime(factor),
                     pd.perfectCallFunc(this._updateScore, this, factor)
                 )));
@@ -75,6 +88,9 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
      * @param dt
      */
     _updateScore: function(dt) {
+        if(pd.currentScene.getChildren().length == 0)
+            return;
+
         this._currentDuration += dt;
         const percentage = pd.clamp(this._currentDuration/this._targetDuration, 0, 1);
 
@@ -82,7 +98,7 @@ pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDi
         if(percentage == 1) {
             this.setString(this._parseString(this._currentScore + this._dScore));
             if(this._isUpdatingScore)
-                pd.currentScene.mainLayer.stopAction(this.updateAction);
+                pd.currentScene.getChildren()[0].stopAction(this.updateAction);
             this._isUpdatingScore = false;
         }
     }

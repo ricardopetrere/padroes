@@ -650,3 +650,424 @@ pd.switchScene = function(transition, layer, delay) {
         layer.runAction(switchSequence);
     }
 };
+
+/**
+ * @param {Number} t
+ * @param {cc.Scene} s
+ * @param {cc.Layer} layer
+ * @param {Number} z
+ * @param {Number} x
+ * @param {Number} y
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var ZoomTo = function (t, s, layer, z, x, y) {
+    cc.warn("Transição [ZoomTo] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.ZoomTo(t, s, layer, z, x, y);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var JumpZoomTransition = function (t, s) {
+    cc.warn("Transição [JumpZoomTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.JumpZoomTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var FadeTransition = function (t, s) {
+    cc.warn("Transição [FadeTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.FadeTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var FadeWhiteTransition = function (t, s) {
+    cc.warn("Transição [FadeWhiteTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.FadeWhiteTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var FlipXLeftOver = function (t, s) {
+    cc.warn("Transição [FlipXLeftOver] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.FlipXLeftOver(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var FlipXRightOver = function (t, s) {
+    cc.warn("Transição [FlipXRightOver] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.FlipXRightOver(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var FlipYUpOver = function (t, s) {
+    cc.warn("Transição [FlipYUpOver] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.FlipYUpOver(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var FlipYDownOver = function (t, s) {
+    cc.warn("Transição [FlipYDownOver] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.FlipYDownOver(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var FlipAngularLeftOver = function (t, s) {
+    cc.warn("Transição [FlipAngularLeftOver] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.FlipAngularLeftOver(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var FlipAngularRightOver = function (t, s) {
+    cc.warn("Transição [FlipAngularRightOver] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.FlipAngularRightOver(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var ZoomFlipXLeftOver = function (t, s) {
+    cc.warn("Transição [ZoomFlipXLeftOver] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.ZoomFlipXLeftOver(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var ZoomFlipXRightOver = function (t, s) {
+    cc.warn("Transição [ZoomFlipXRightOver] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.ZoomFlipXRightOver(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var ZoomFlipYUpOver = function (t, s) {
+    cc.warn("Transição [ZoomFlipYUpOver] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.ZoomFlipYUpOver(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var ZoomFlipYDownOver = function (t, s) {
+    cc.warn("Transição [ZoomFlipYDownOver] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.ZoomFlipYDownOver(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var ZoomFlipAngularLeftOver = function (t, s) {
+    cc.warn("Transição [ZoomFlipAngularLeftOver] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.ZoomFlipAngularLeftOver(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var ZoomFlipAngularRightOver = function (t, s) {
+    cc.warn("Transição [ZoomFlipAngularRightOver] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.ZoomFlipAngularRightOver(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var ShrinkGrowTransition = function (t, s) {
+    cc.warn("Transição [ShrinkGrowTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.ShrinkGrowTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var RotoZoomTransition = function (t, s) {
+    cc.warn("Transição [RotoZoomTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.RotoZoomTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var MoveInLTransition = function (t, s) {
+    cc.warn("Transição [MoveInLTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.MoveInLTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var MoveInRTransition = function (t, s) {
+    cc.warn("Transição [MoveInRTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.MoveInRTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var MoveInTTransition = function (t, s) {
+    cc.warn("Transição [MoveInTTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.MoveInTTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var MoveInBTransition = function (t, s) {
+    cc.warn("Transição [MoveInBTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.MoveInBTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var SlideInLTransition = function (t, s) {
+    cc.warn("Transição [SlideInLTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.SlideInLTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var SlideInRTransition = function (t, s) {
+    cc.warn("Transição [SlideInRTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.SlideInRTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var SlideInTTransition = function (t, s) {
+    cc.warn("Transição [SlideInTTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.SlideInTTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var SlideInBTransition = function (t, s) {
+    cc.warn("Transição [SlideInBTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.SlideInBTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var CCTransitionCrossFade = function (t, s) {
+    cc.warn("Transição [CCTransitionCrossFade] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.CCTransitionCrossFade(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var CCTransitionRadialCCW = function (t, s) {
+    cc.warn("Transição [CCTransitionRadialCCW] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.CCTransitionRadialCCW(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var CCTransitionRadialCW = function (t, s) {
+    cc.warn("Transição [CCTransitionRadialCW] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.CCTransitionRadialCW(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var PageTransitionForward = function (t, s) {
+    cc.warn("Transição [PageTransitionForward] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.PageTransitionForward(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var PageTransitionBackward = function (t, s) {
+    cc.warn("Transição [PageTransitionBackward] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.PageTransitionBackward(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var FadeTRTransition = function (t, s) {
+    cc.warn("Transição [FadeTRTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.FadeTRTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var FadeBLTransition = function (t, s) {
+    cc.warn("Transição [FadeBLTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.FadeBLTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var FadeUpTransition = function (t, s) {
+    cc.warn("Transição [FadeUpTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.FadeUpTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var FadeDownTransition = function (t, s) {
+    cc.warn("Transição [FadeDownTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.FadeDownTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var TurnOffTilesTransition = function (t, s) {
+    cc.warn("Transição [TurnOffTilesTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.TurnOffTilesTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var SplitRowsTransition = function (t, s) {
+    cc.warn("Transição [SplitRowsTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.SplitRowsTransition(t, s);
+};
+
+/**
+ * @param {Number} t
+ * @param {Number} s
+ * @returns {cc.TransitionScene}
+ * @deprecated Transição foi movida para o namespace pd
+ */
+var SplitColsTransition = function (t, s) {
+    cc.warn("Transição [SplitColsTransition] foi movida para o namespace pd. Corrigir chamada da transição");
+    return pd.SplitColsTransition(t, s);
+};

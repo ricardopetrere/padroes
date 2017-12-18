@@ -277,6 +277,9 @@ pd.createTextWithStandardFont = function(fontID, x, y, fontSize, color, text, al
 
 /**
  * Cria um clipping node.
+ * o primeiro rect identifica as dimensões do clipping node (podem ser vazios width e height)
+ * o segundo rect identifica as dimensões da área a ser exibida
+ * O anchorPoint no clippingNode é de cc.p(0.5, 0.5)
  * @param {cc.Node} parent
  * @param {Number | cc.Rect} xOrClippingNodeRect
  * @param {Number | cc.Rect} yOrMaskRect
@@ -371,6 +374,17 @@ pd.parseAttr = function(attr) {
     if(attr.hasOwnProperty("flippedY")) {
         attr._flippedY = attr.flippedY;
     }
+    if(attr.hasOwnProperty("anchor")) {
+        attr.anchorX = attr.anchor;
+        attr.anchorY = attr.anchor;
+    }
+    /**
+     * @link {../../../_3_15/frameworks/cocos2d-html5/cocos2d/core/base-nodes/BaseNodesPropertyDefine.js}
+     */
+    //skewX
+    //skewY
+    //zIndex
+    //visible
 
     return attr;
 };
@@ -828,6 +842,61 @@ pd.distort = function (time, cycles, sx, sy) {
 };
 
 /**
+ * Executa uma ação customizada, que não pré-existe na Cocos <p/>
+ * (ex: fade de áudio, como a função {@link pd.AudioEngine._fade}, que foi usada de base para essa função.
+ * Outra intenção dessa função é atender o que {@link cc.ActionTween} não for capaz
+ * @param {number} duration - Duração da ação em segundos
+ * @param {number} cycles - Número de vezes que a função deve ser executada
+ * @param {Function} func - Função que será executada (A função deve listar todos os parâmetros que irá necessitar)
+ * @param {Object} [funcHandler] - Proprietário da função. Quem será o 'this' na função
+ * @param {Array} [argArray] - Vetor contendo os argumentos usados pela função
+ * @param {Function} [cb] - Função a ser executada após a ação terminar
+ * @param {Object} [cbHandler] - Quem será o 'this' no callback
+ * @param {Array} [cbArgs] - Vetor contendo os argumentos usados pelo callback
+ // * @param {Object} [easing] - cc.easeIn ou cc.easeOut. Interfere no intervalo entre cada execução da função
+ * @param {number} [easeRate] - Interfere no intervalo entre cada execução da função
+ * @param {boolean} [easeOut] - Se é cc.easeIn ou cc.easeOut
+ * @return {cc.Sequence}
+ */
+pd.customAction = function (duration, cycles, func, funcHandler, argArray, cb, cbHandler, cbArgs, easeRate, easeOut) {
+    var step = duration / cycles;
+    // cc.log("step: " + step);
+    var sequenceSteps = [];
+    if(easeRate != null) {
+        cc.log("customAction tem easeRate");
+        easeOut = easeOut || false;
+        var easing;
+        if(easeOut === true) {
+            // easing = new cc.EaseOut(easeRate);
+            easing = cc.easeOut(easeRate);
+            easeRate = 1 / easeRate;
+        } else {
+            // easing = new cc.EaseIn(easeRate);
+            easing = cc.easeIn(easeRate);
+        }
+    }
+    for(var i = 0; i < cycles; i++) {
+        if (i > 0) {
+            // sequenceSteps.push(cc.delayTime(easing != null ?
+            //     (easing.easing(i / cycles) - easing.easing((i - 1) / cycles)) * duration
+
+            sequenceSteps.push(cc.delayTime(easeRate != null ?
+                (
+                    Math.pow(i / cycles, easeRate)
+                    - Math.pow((i - 1) / cycles, easeRate)
+                ) * duration
+
+                : step));
+        }
+        sequenceSteps.push(pd.perfectCallFunc(func, funcHandler, argArray));
+    }
+    if (cb) {
+        sequenceSteps.push(cc.callFunc(cb, cbHandler || funcHandler));
+    }
+    return cc.sequence(sequenceSteps);
+};
+
+/**
  * Retorna uma ação de callFunc que chama a função com os parâmetros originais sem injetar o primeiro parâmetro como o "this".
  * @param {Function} func
  * @param {*} caller
@@ -1000,6 +1069,7 @@ pd.decorate = function(object, decorator) {
 
     object._mixes = object[i]._mixes || [];
     object._mixes.push(decorator);
+    decorator.__initDecorator__ && decorator.__initDecorator__.call(object);
 };
 //</editor-fold>
 //<editor-fold desc="#Others">
