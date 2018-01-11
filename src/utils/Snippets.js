@@ -322,9 +322,10 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
  */
 pd.createAnimation = function (attr, animacoes) {
     const animation = new pd.Animation();
-    if(attr)
+    if(attr) {
         animation.attr(pd.parseAttr(attr));
-    animation.setPosition(attr.x, attr.y);
+        animation.setPosition(attr.x, attr.y);
+    }
     var animationDataArray = [];
     if (animacoes instanceof Array) {
         animationDataArray = animacoes;
