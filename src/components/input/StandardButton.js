@@ -162,11 +162,14 @@ pd.StandardButton = pd.Button.extend({/** @lends pd.StandardButton#**/
      * @param {Number} dx
      * @param {Number} dy
      * @param {Number} [rotation=0]
+     * @param {Number} [dScale=0]
      */
-    adjustLabel: function (dx, dy, rotation) {
+    adjustLabel: function (dx, dy, rotation, dScale) {
         this._label.x += dx;
         this._label.y += dy;
         this._label.rotation = rotation || 0;
+        this._label.scaleX += dScale || 0;
+        this._label.scaleY += dScale || 0;
     },
 
     /**

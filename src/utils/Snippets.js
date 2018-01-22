@@ -898,6 +898,21 @@ pd.customAction = function (duration, cycles, func, funcHandler, argArray, cb, c
 };
 
 /**
+ * Cria uma função anônima que executa a ação indicada no node informado e retorna-a encapsulada em uma ação cc.CallFunc.
+ * Útil para deixar ações assíncronas dentro de uma sequência.
+ * @param {cc.Node} target
+ * @param {cc.Action} action
+ * @example
+ * var action = pd.asyncAction(myNode, cc.moveTo(0.3, 30, 0));
+ * @returns {cc.Action}
+ */
+pd.asyncAction = function(target, action) {
+    return cc.callFunc(function() {
+        this.runAction(action);
+    }, target);
+};
+
+/**
  * Retorna uma ação de callFunc que chama a função com os parâmetros originais sem injetar o primeiro parâmetro como o "this".
  * @param {Function} func
  * @param {*} caller
