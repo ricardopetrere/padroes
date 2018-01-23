@@ -137,6 +137,7 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
             } else {
                 this._debugDrawData.push({data: nodeOrNodes, fnc: fnc || nodeOrNodes.getBoundingBox, color: color});
             }
+            return nodeOrNodes;
         }
     },
 
@@ -156,9 +157,21 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
             } else {
                 this._debugDrawData.push({data: polygonOrPolygons, color: color});
             }
+            return polygonOrPolygons;
         }
     },
 
+    /**
+     *
+     * @param {Function | string} textOrFunction
+     * @param {Object} thisArg
+     * @param {cc.Node} parent
+     * @param {number} zOrder
+     * @param {number} x
+     * @param {number} y
+     * @param {cc.Color} [color]
+     * @returns {cc.LabelTTF}
+     */
     addDebugText: function (textOrFunction, thisArg, parent, zOrder, x, y, color) {
         if(pd.debugMode) {
             this._debugTextData = this._debugTextData || [];
@@ -171,6 +184,7 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
                 label.setString(textOrFunction);
                 this._debugTextData.push({data: label, color: color});
             }
+            return label;
         }
     },
 

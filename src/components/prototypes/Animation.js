@@ -305,16 +305,16 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     },
 
     /**
-     * Roda a animação.
-     * @param {Boolean} isRepeatable
-     * @param {Boolean} repeatTimes
-     * @param {boolean} [reversed=false]
-     * @param {Object} [easing] - Função de easing a ser aplicada na troca de frames
+     *
+     * @param {boolean} [isRepeatable]
+     * @param {number} [repeatTimes]
+     * @param {boolean} [reversed]
+     * @param {*} [easing]
+     * @returns {cc.Action}
      * @private
      */
-    _run: function(isRepeatable, repeatTimes, reversed, easing) {
+    _generateInnerAction: function (isRepeatable, repeatTimes, reversed, easing) {
         this._disposeAnimAction();
-        this.currentAnimation.animation.setDelayPerUnit(1/this.currentAnimation.speed);
         var action = new cc.Animate(this.currentAnimation.animation);
         if (reversed === true) {
             action = action.reverse();
@@ -323,16 +323,49 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
             action = action.easing(easing);
         }
         this.animateAction = action;
-
         if(isRepeatable == true) {
-            this.animAction = repeatTimes ? new cc.Repeat(action, repeatTimes) : new cc.RepeatForever(action);
-        }
-        else {
-            this.animAction = new cc.Sequence([action, new cc.CallFunc(this._onAnimCompleted, this)]);
+            if(repeatTimes)
+                this.animAction = new cc.Sequence(pd.perfectCallFunc(this._setRunning, this, true), new cc.Repeat(action, repeatTimes));
+            else {
+                this.animAction = new cc.RepeatForever(new cc.Sequence(pd.perfectCallFunc(this._setRunning, this, true), action));
+            }
+        } else {
+            this.animAction = new cc.Sequence([pd.perfectCallFunc(this._setRunning, this, true), action, new cc.CallFunc(this._onAnimCompleted, this)]);
         }
         pd.delegate.retain(this.animAction);
-        this.runAction(this.animAction);
-        this._setRunning(true);
+        return this.animAction;
+    },
+
+    /**
+     * Roda a animação.
+     * @param {Boolean} isRepeatable
+     * @param {Boolean} repeatTimes
+     * @param {boolean} [reversed=false]
+     * @param {Object} [easing] - Função de easing a ser aplicada na troca de frames
+     * @private
+     */
+    _run: function(isRepeatable, repeatTimes, reversed, easing) {
+        this.currentAnimation.animation.setDelayPerUnit(1/this.currentAnimation.speed);
+        this.runAction(this._generateInnerAction(isRepeatable, repeatTimes, reversed, easing));
+    },
+
+    /**
+     * Retorna a ação de animação do {@link pd.Animation}
+     * Usar quando quiser executar uma animação dentro de uma chamada de {@link cc.Node.runAction}
+     * @param {string|number} frame
+     * @param {number} [speed]
+     * @param {Function} [onComplete]
+     * @param {*} [onCompleteHandler]
+     * @param {boolean} [reversed]
+     * @param {*} [easing]
+     * @returns {cc.Action}
+     */
+    runAnimationAction: function (frame, isRepeatable, repeatTimes, speed, onComplete, onCompleteHandler, reversed, easing) {
+        this.setAnimation(frame);
+        this.currentAnimation.animation.setDelayPerUnit(1 / (speed || this.currentAnimation.speed));
+        this.onComplete = onComplete;
+        this.onCompleteHandler = onCompleteHandler || this.getParent();
+        return this._generateInnerAction(isRepeatable, repeatTimes, reversed, easing);
     },
 
     /**
