@@ -14,7 +14,7 @@ pd.decorators.Observer = {/** @lends pd.decorators.Observer#*/
     /**
      * Define o método a ser executado mediante o recebimento de uma notificação.
      * @param {String} eventID
-     * @param {Function} handlingFunc
+     * @param {pd.decorators.cbObserver} handlingFunc
      */
     observe: function(eventID, handlingFunc) {
         this._handlingMap = this._handlingMap || {};
@@ -33,3 +33,9 @@ pd.decorators.Observer = {/** @lends pd.decorators.Observer#*/
         this._handlingMap[eventID].apply(this, [eventID, eventData]);
     }
 };
+
+/**
+ @callback pd.decorators.cbObserver
+ @param {string} eventID - eventID
+ @param {*} eventData - eventData
+ */
