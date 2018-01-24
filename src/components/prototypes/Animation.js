@@ -85,10 +85,10 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     /**
      * Adiciona uma animação à lista.
      * @param {String|pd.AnimationData} nameOrAnimationData - um nome customizado para a animação, ou um objeto contendo todas as informações da animação.
-     * @param {Number} firstFrame - o frame inicial da animação.
-     * @param {Number} lastFrame - o último frame da animação.
-     * @param {String} spriteFrameNamePattern - o padrão de nome da animação no spriteFrameCache.
-     * @param {Number} speed - a velocidade da animação em frames/segundo.
+     * @param {Number} [firstFrame] - o frame inicial da animação.
+     * @param {Number} [lastFrame] - o último frame da animação.
+     * @param {String} [spriteFrameNamePattern] - o padrão de nome da animação no spriteFrameCache.
+     * @param {Number} [speed] - a velocidade da animação em frames/segundo.
      */
     addAnimation: function(nameOrAnimationData, firstFrame, lastFrame, spriteFrameNamePattern, speed) {
         if (nameOrAnimationData instanceof pd.AnimationData) {
