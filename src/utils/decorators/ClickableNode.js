@@ -42,6 +42,25 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
     },
 
     /**
+     * Seta um retângulo de colisão customizado.
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} width
+     * @param {Number} height
+     */
+    setCustomCollisionData: function(x, y, width, height) {
+        this._cachedBoundingBox = cc.rect(x,y,width,height);
+    },
+
+    /**
+     * Retorna a bounding box 'cacheada'.
+     * @returns {cc.Rect}
+     */
+    getCachedBoundingBox: function() {
+        return this._cachedBoundingBox;
+    },
+
+    /**
      * Atualiza o retângulo de colisão .
      * @param {Number} x
      * @param {Number} y

@@ -594,8 +594,8 @@ pd.polygonInRectCollision = function (array, rect) {
  * Calcula a distância entre dois pontos.
  * @param {Number|cc.Point} x1Orp1
  * @param {Number|cc.Point} y1Orp2
- * @param {Number} x2
- * @param {Number} y2
+ * @param {Number} [x2]
+ * @param {Number} [y2]
  * @returns {number}
  * @author Ricardo Petrére
  */
