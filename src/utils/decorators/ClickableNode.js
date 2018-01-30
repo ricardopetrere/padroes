@@ -42,6 +42,14 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
     },
 
     /**
+     * Limpa a caixa de colisão pré-cacheada.
+     * @private
+     */
+    cleanCachedCollisionData: function() {
+        this._cachedBoundingBox = null;
+    },
+
+    /**
      * Seta um retângulo de colisão customizado.
      * @param {Number} x
      * @param {Number} y
