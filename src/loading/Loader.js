@@ -346,7 +346,9 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
         for(var i in this._res) {
             this.addSpriteFrames(this._res[i], this._res[i] == pd.g_resources);
         }
-
+        const ns = pd.delegate.activeNamespace;
+        if(ns.postLoad)
+            ns.postLoad();
         pd.delegate.bootUp();
     },
 
