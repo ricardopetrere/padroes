@@ -769,7 +769,7 @@ pd.shake = function(time, cycles, initialRotation, strength) {
 };
 
 /**
- * Cria uma sequência para 'piscar' um objeto.
+ * Cria uma sequência para 'piscar' um objeto entre duas cores.
  * @param {Number} time - o tempo da animação.
  * @param {Number} flicks - o número de piscadas.
  * @param {cc.Color} initialColor - a cor inicial.
@@ -790,7 +790,7 @@ pd.flicker = function(time, flicks, initialColor, targetColor) {
 };
 
 /**
- * Cria uma sequência de fluttering.
+ * Cria uma sequência de fluttering (se movendo de um lado pro outro).
  * @param {Number} time
  * @param {Number} cycles
  * @param {Number} dx
@@ -798,7 +798,7 @@ pd.flicker = function(time, flicks, initialColor, targetColor) {
  */
 pd.flutter = function(time, cycles, dx, dy) {
     if(!time || !cycles)
-        throw new Error("[pd.shake] Um ou mais argumentos obrigatórios não foram fornecidos para a função!");
+        throw new Error("[pd.flutter] Um ou mais argumentos obrigatórios não foram fornecidos para a função!");
 
     dx = dx || 0;
     dy = dy || 0;
