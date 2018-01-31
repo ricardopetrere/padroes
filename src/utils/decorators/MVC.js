@@ -22,7 +22,7 @@ pd.decorators.ObservableView = {/** @lends pd.decorators.ObservableView#*/
 
     /**
      * Injeta um controlador na view, registrando-o como seu observador. <br />
-     * @param {pd.decorators.ViewController} controller
+     * @param {pd.decorators.ViewController|pd.decorators.Observer} controller
      */
     bind: function(controller) {
         if(!this.controller) {

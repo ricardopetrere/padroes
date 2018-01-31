@@ -446,6 +446,31 @@ pd.rectToPolygon = function(rect) {
 };
 
 /**
+ * Gera a bounding box de um polígono.
+ * @param {{cc.Point}[]} polygon
+ */
+pd.polygonToRect = function(polygon) {
+    var minX = null;
+    var maxX = null;
+    var minY = null;
+    var maxY = null;
+
+    for(var i in polygon) {
+        var vertex = polygon[i];
+        if(minX === null || vertex.x < minX)
+            minX = vertex.x;
+        if(maxX === null || vertex.x > maxX)
+            maxX = vertex.x;
+        if(minY === null || vertex.y < minY)
+            minY = vertex.y;
+        if(maxY === null || vertex.y > maxY)
+            maxY = vertex.y;
+    }
+
+    return cc.rect(minX, minY, maxX - minX, maxY - minY);
+};
+
+/**
  * Verifica se um ponto está em um segmento de reta.
  * @param {cc.Point} p
  * @param {{p1:cc.Point, p2:cc.Point}} l
