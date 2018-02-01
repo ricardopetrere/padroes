@@ -446,6 +446,31 @@ pd.rectToPolygon = function(rect) {
 };
 
 /**
+ * Gera a bounding box de um polígono.
+ * @param {{cc.Point}[]} polygon
+ */
+pd.polygonToRect = function(polygon) {
+    var minX = null;
+    var maxX = null;
+    var minY = null;
+    var maxY = null;
+
+    for(var i in polygon) {
+        var vertex = polygon[i];
+        if(minX === null || vertex.x < minX)
+            minX = vertex.x;
+        if(maxX === null || vertex.x > maxX)
+            maxX = vertex.x;
+        if(minY === null || vertex.y < minY)
+            minY = vertex.y;
+        if(maxY === null || vertex.y > maxY)
+            maxY = vertex.y;
+    }
+
+    return cc.rect(minX, minY, maxX - minX, maxY - minY);
+};
+
+/**
  * Verifica se um ponto está em um segmento de reta.
  * @param {cc.Point} p
  * @param {{p1:cc.Point, p2:cc.Point}} l
@@ -769,7 +794,7 @@ pd.shake = function(time, cycles, initialRotation, strength) {
 };
 
 /**
- * Cria uma sequência para 'piscar' um objeto.
+ * Cria uma sequência para 'piscar' um objeto entre duas cores.
  * @param {Number} time - o tempo da animação.
  * @param {Number} flicks - o número de piscadas.
  * @param {cc.Color} initialColor - a cor inicial.
@@ -790,7 +815,7 @@ pd.flicker = function(time, flicks, initialColor, targetColor) {
 };
 
 /**
- * Cria uma sequência de fluttering.
+ * Cria uma sequência de fluttering (se movendo de um lado pro outro).
  * @param {Number} time
  * @param {Number} cycles
  * @param {Number} dx
@@ -798,7 +823,7 @@ pd.flicker = function(time, flicks, initialColor, targetColor) {
  */
 pd.flutter = function(time, cycles, dx, dy) {
     if(!time || !cycles)
-        throw new Error("[pd.shake] Um ou mais argumentos obrigatórios não foram fornecidos para a função!");
+        throw new Error("[pd.flutter] Um ou mais argumentos obrigatórios não foram fornecidos para a função!");
 
     dx = dx || 0;
     dy = dy || 0;
