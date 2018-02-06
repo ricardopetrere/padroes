@@ -932,8 +932,10 @@ pd.customAction = function (duration, cycles, func, funcHandler, argArray, cb, c
  * @returns {cc.Action}
  */
 pd.asyncAction = function(target, action) {
+    pd.delegate.retain(action);
     return cc.callFunc(function() {
         this.runAction(action);
+        pd.delegate.release(action);
     }, target);
 };
 
