@@ -315,9 +315,13 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
             else {
                 this.setSpriteFrame(this._normalSpriteFrame);
                 this.setScale(this._normalScale);
-                this._shouldDispatchMouseUpCall = this._forceMouseUpCall;
-                if(!this._forceMouseUpCall)
+                if(!this._forceMouseUpCall) {
+                    this._shouldDispatchMouseUpCall = true;
                     this._onMouseUp(eventOrTouch);
+                }
+                else {
+                    this._shouldDispatchMouseUpCall = this._forceMouseUpCall;
+                }
             }
         }
     },

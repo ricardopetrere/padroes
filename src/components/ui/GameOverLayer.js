@@ -111,8 +111,22 @@ pd.GameOverLayer = cc.Layer.extend({/**@lends pd.GameOverLayer#*/
         if (!cc.sys.isNative) {
             this.getScheduler().unscheduleAll();
         }
+        else {
+            this._unscheduleAll(handler);
+        }
 
         this._buildUp();
+    },
+
+    /**
+     * Remove o update da cena recursivamente.
+     * @private
+     */
+    _unscheduleAll: function(handler) {
+        handler.unscheduleUpdate();
+        for(var i in handler.getChildren()) {
+            this._unscheduleAll(handler.getChildren()[i]);
+        }
     },
 
     /**
