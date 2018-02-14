@@ -598,6 +598,22 @@ pd.polygonInPolygonIntersection = function(polygon1, polygon2) {
 
 /**
  *
+ * @param {cc.Point[]} polygonOuter
+ * @param {cc.Point[]} polygonInner
+ * @returns {boolean}
+ */
+pd.polygonContainsPolygon = function (polygonOuter, polygonInner) {
+    var n, numberContainedPoints = 0;
+    for (n = 0; n < polygonInner.length; n++) {
+        if (pd.pointInPolygonIntersection(polygonInner[n], polygonOuter)) {
+            numberContainedPoints++;
+        }
+    }
+    return numberContainedPoints === polygonInner.length;
+};
+
+/**
+ *
  * @param {cc.Point[]} array
  * @param {cc.Rect} rect
  * @returns {boolean}
