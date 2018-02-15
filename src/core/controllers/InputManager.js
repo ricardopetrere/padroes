@@ -528,6 +528,18 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     },
 
     /**
+     * Força o estado de 'pressionado' da tecla para true ou false.
+     * @param {Number} keyCode - o key code da tecla.
+     * @param {Boolean} pressed
+     */
+    forceToggleKeyStatus: function(keyCode, pressed) {
+        if(pressed)
+            this._setKeyPressed(keyCode)
+        else
+            this._setKeyReleased(keyCode);
+    },
+
+    /**
      * Registra no vetor de teclas pressionadas o pressionar da tecla
      * @param {Number} keyCode
      * @private
