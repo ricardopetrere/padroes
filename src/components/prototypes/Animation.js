@@ -23,7 +23,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     defaultSpeed:24,
     /**
      * Vetor com os metadados dos 'estados' do componente animado.
-     * @type {{name:String, animation:cc.Animation, numFrames:Number, speed: Number}[]}
+     * @type {pd.AnimationMetadata[]}
      */
     animations:null,
     /**
@@ -33,7 +33,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     animAction:null,
     /**
      * Apontamento para os metadados da animação rodando.
-     * @type {{name:String, animation:cc.Animation, numFrames:Number, speed: Number}}
+     * @type {pd.AnimationMetadata}
      */
     currentAnimation:null,
     /**
@@ -104,12 +104,12 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
         var animation = new cc.Animation(frames, 1/this.defaultSpeed);
         pd.delegate.retain(animation);
 
-        this.animations.push({
-            name: nameOrAnimationData || this.animations.length + 1,
-            animation: animation, 
-            numFrames: lastFrame - firstFrame + 1, 
-            speed: speed || this.defaultSpeed
-        });
+        this.animations.push(new pd.AnimationMetadata(
+            nameOrAnimationData || this.animations.length + 1,
+            animation,
+            lastFrame - firstFrame + 1,
+            speed || this.defaultSpeed
+        ));
         
         if(this.animations.length == 1)
             this.changeAndStop(nameOrAnimationData);
@@ -130,12 +130,12 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
         }
 
         var animation = new cc.Animation(frames, 1/24);
-        this.animations.push({
-            name: name || this.animations.length + 1,
-            animation: animation,
-            numFrames: frames.length,
-            speed: speed
-        });
+        this.animations.push(new pd.AnimationMetadata(
+            name || this.animations.length + 1,
+            animation,
+            frames.length,
+            speed
+        ));
         pd.delegate.retain(animation);
     },
 
@@ -166,7 +166,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
     /**
      * Procura os metadados de uma animação, dado o seu nome ou seu id.
      * @param {String|Number} name
-     * @returns {{name:String, animation:cc.Animation, numFrames:Number}}
+     * @returns {cc.Animation}
      * @private
      */
     getAnimation: function(name) {
@@ -229,6 +229,24 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
         this._super();
         //cc.warn("[pd.Animation] A animação foi parada forçadamente devido a uma chamada à função stopAllActions");
         this._stopAnimation();
+    },
+
+    /**
+     *
+     * @param {string | number | pd.AnimationData} nameOrAnimationData - Nome da animação ou metadados desta
+     * @returns {pd.AnimationMetadata} - O metadado removido do objeto
+     */
+    removeAnimation: function (nameOrAnimationData) {
+        if(nameOrAnimationData.name != null)
+            this.removeAnimation(nameOrAnimationData.name);
+        for(var i = 0; i < this.animations.length; i++){
+            if(this.animations[i].name == nameOrAnimationData || i == parseInt(nameOrAnimationData) - 1) {
+                if(this.currentAnimation)
+                var ret = this.animations[i];
+                this.animations.splice(i, 1);
+                return ret;
+            }
+        }
     },
 
     /**
@@ -521,3 +539,19 @@ pd.AnimationData = cc.Class.extend({
         return this.anim_name + pd.numberToString(frame) + ".png";
     }
 });
+
+/**
+ * @class
+ * @param {String} name
+ * @param {cc.Animation} animation
+ * @param {Number} numFrames
+ * @param {Number} speed
+ * @classdesc Metadado do vetor animations do pd.Animation
+ * @constructor
+ */
+pd.AnimationMetadata = function (name, animation, numFrames, speed){
+    this.name = name;
+    this.animation = animation;
+    this.numFrames = numFrames;
+    this.speed = speed;
+}

@@ -350,7 +350,8 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
      * @private
      */
     _gameOver: function (type, circleSpriteFrame, messageSpriteFrame, tiltScreen) {
-        pd.currentScene.uiButton.cleanup();
+        if(pd.currentScene.uiButton)
+            pd.currentScene.uiButton.cleanup();
         const gameOverLayer = new pd.GameOverLayer();
         gameOverLayer.init(pd.currentScene, type, circleSpriteFrame, messageSpriteFrame, tiltScreen);
         pd.currentScene.addChild(gameOverLayer, pd.ZOrders.GAME_OVER_LAYER);
