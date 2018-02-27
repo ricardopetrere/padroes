@@ -80,7 +80,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     _followMode:false,
     /**
      * Variável interna para a lógia do 'modo follow'.
-     * @type {cc.Rect}
+     * @type {cc.Point[]}
      */
     _followModeTouchArea:null,
 
@@ -169,13 +169,13 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     /**
      * Seta o joystick para 'seguir' o toque do usuário, aparecendo na posição inicial do evento de toque toda a vez que o usuário tocar na área indicada.
      * @param {Boolean} followMode - true, para ativar. false, para desativar.
-     * @param {cc.Rect} [touchArea=null] - a área disponível em que o joystick pode aparecer. Caso seja null, a área disponível será a tela inteira.
+     * @param {cc.Rect | cc.Point[]} [touchArea=null] - a área disponível em que o joystick pode aparecer. Caso seja null, a área disponível será a tela inteira.
      */
     setFollowMode: function(followMode, touchArea) {
         this._followMode = followMode;
         if(followMode) {
             this.setVisible(false);
-            this._followModeTouchArea = touchArea;
+            this._followModeTouchArea = touchArea != null && touchArea.width != null ? pd.rectToPolygon(touchArea) : touchArea;
         }
     },
 
@@ -250,7 +250,10 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     _onMouseDown: function(eventOrTouch) {
         if(!this.isGrabbed) {
             if(this._followMode) {
-                if(!this._followModeTouchArea || pd.pointInPolygonIntersection(eventOrTouch.getLocation(), pd.rectToPolygon(this._followModeTouchArea))) {
+                if(
+                    (!this._followModeTouchArea || pd.pointInPolygonIntersection(eventOrTouch.getLocation(), this._followModeTouchArea))
+                    && !pd.isCollidingWithUIButton(eventOrTouch)
+                ) {
                     this.setPosition(eventOrTouch.getLocationX(), eventOrTouch.getLocationY());
                     this.setVisible(true);
                 }
