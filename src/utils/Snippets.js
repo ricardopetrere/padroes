@@ -1215,7 +1215,7 @@ pd.getNearestCollidingObject = function(locX, locY, objects) {
 
 /**
  * Verifica se as coordenadas do evento/ponto estão em colisão com a interface padrão.
- * @param {*} eventOrPoint
+ * @param {cc.EventMouse | cc.Touch | cc.Point} eventOrPoint
  */
 pd.isCollidingWithUIButton = function(eventOrPoint) {
     const button = pd.currentScene.uiButton;
