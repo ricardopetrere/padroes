@@ -277,7 +277,7 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
     /**
      * Retorna uma sequence com as actions da intro 
      * @param {Function} [easeFunction = cc.easeSinOut]  - Função de easing;
-     * @returns {cc.Action[]} - Sequencia de ações da intro.
+     * @returns {cc.TargetedAction} - Sequencia de ações da intro.
      */
     getIntro: function(easeFunction) {
         this._introSequence = [];
