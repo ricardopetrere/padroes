@@ -891,7 +891,7 @@ pd.distort = function (time, cycles, sx, sy) {
  * @param {number} cycles - Número de vezes que a função deve ser executada
  * @param {Function} func - Função que será executada (A função deve listar todos os parâmetros que irá necessitar)
  * @param {Object} [funcHandler] - Proprietário da função. Quem será o 'this' na função
- * @param {Array} [argArray] - Vetor contendo os argumentos usados pela função
+ * @param {Array} [argArray] - Vetor contendo os argumentos usados pela função. <br/>Dentro da função, os últimos argumentos serão sempre o intervalo de tempo, o ciclo atual e o tempo decorrido, tanto em tempo quanto em intervalo de 0 a 1
  * @param {Function} [cb] - Função a ser executada após a ação terminar
  * @param {Object} [cbHandler] - Quem será o 'this' no callback
  * @param {Array} [cbArgs] - Vetor contendo os argumentos usados pelo callback
@@ -930,10 +930,10 @@ pd.customAction = function (duration, cycles, func, funcHandler, argArray, cb, c
 
                 : step));
         }
-        sequenceSteps.push(pd.perfectCallFunc(func, funcHandler, argArray));
+        sequenceSteps.push(pd.perfectCallFunc(func, funcHandler, (argArray || []).concat([step, i + 1, (i + 1) * step, ((i + 1) * step) / duration])));
     }
     if (cb) {
-        sequenceSteps.push(cc.callFunc(cb, cbHandler || funcHandler));
+        sequenceSteps.push(pd.perfectCallFunc(cb, cbHandler || funcHandler, cbArgs));
     }
     return cc.sequence(sequenceSteps);
 };
@@ -962,7 +962,7 @@ pd.asyncAction = function(target, action) {
  * @param {...} args
  */
 pd.perfectCallFunc = function(func, caller, args) {
-    if(arguments.length > 3 || ((args != null && args != undefined) && Array.isArray(args[2]) == false)) {
+    if(arguments.length > 3 || ((args != null && args != undefined) && Array.isArray(args) == false)) {
         var _arguments = [];
         for(var i = 2 ; i < arguments.length ; i++)
             _arguments.push(arguments[i]);
