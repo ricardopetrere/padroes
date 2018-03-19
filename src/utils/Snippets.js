@@ -379,12 +379,14 @@ pd.parseAttr = function(attr) {
         attr.anchorX = attr.anchor;
         attr.anchorY = attr.anchor;
     }
+    if(attr.hasOwnProperty("zOrder")) {
+        attr.zIndex = attr.zOrder;
+    }
     /**
      * @link {../../../_3_15/frameworks/cocos2d-html5/cocos2d/core/base-nodes/BaseNodesPropertyDefine.js}
      */
     //skewX
     //skewY
-    //zIndex
     //visible
 
     return attr;

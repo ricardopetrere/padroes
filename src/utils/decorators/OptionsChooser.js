@@ -11,7 +11,7 @@ pd.decorators.OptionsChooser = {
      */
     chooser: null,
     /**
-     * @type {cc.Point}
+     * @type {cc.Point | {z: number}}
      */
     chooserDefaultPos: null,
     /**
@@ -36,18 +36,18 @@ pd.decorators.OptionsChooser = {
         this.chooserDefaultPos = cc.p(-100, -100);
         this.chooserOptions = [];
         this.chooserPosMouse = cc.p();
-        if(this._inputMetadata == null)
+        if (this._inputMetadata == null)
             this._inputMetadata = {};
         this.setChooserEnabledListeners(true);
-        if(!this._alreadyHasListener("chooserMouseUp", pd.InputManager.Events.MOUSE_UP, this))
+        if (!this._alreadyHasListener("chooserMouseUp", pd.InputManager.Events.MOUSE_UP, this))
             pd.inputManager.add(pd.InputManager.Events.MOUSE_UP, this, "chooserMouseUp");
-        if(!this._alreadyHasListener("chooserMouseMove", pd.InputManager.Events.MOUSE_MOVE, this))
+        if (!this._alreadyHasListener("chooserMouseMove", pd.InputManager.Events.MOUSE_MOVE, this))
             pd.inputManager.add(pd.InputManager.Events.MOUSE_MOVE, this, "chooserMouseMove");
-        if(cc.sys.isMobile) {
+        if (cc.sys.isMobile) {
             if (!this._alreadyHasListener("chooserMouseDown", pd.InputManager.Events.MOUSE_DOWN, this))
                 pd.inputManager.add(pd.InputManager.Events.MOUSE_DOWN, this, "chooserMouseDown");
         } else {
-            if(!this._alreadyHasListener("chooserMouseMove", pd.InputManager.Events.MOUSE_HOVER, this))
+            if (!this._alreadyHasListener("chooserMouseMove", pd.InputManager.Events.MOUSE_HOVER, this))
                 pd.inputManager.add(pd.InputManager.Events.MOUSE_HOVER, this, "chooserMouseMove");
         }
     },
@@ -66,7 +66,9 @@ pd.decorators.OptionsChooser = {
          * @type {Array}
          */
         var listeners = pd.inputManager.hasListener(eventType, target);
-        return !(listeners == null || !listeners.some(function (value, index, array) { return value.handlerFunc === fnc; }))
+        return !(listeners == null || !listeners.some(function (value, index, array) {
+            return value.handlerFunc === fnc;
+        }))
     },
     /**
      *
@@ -82,21 +84,20 @@ pd.decorators.OptionsChooser = {
         var obj;
         var isSprite = option instanceof cc.Sprite;
         var isSpriteFrame = option instanceof cc.SpriteFrame || typeof option === 'string';
+        var isPolygon = cc.isArray(option) && option[0].hasOwnProperty("x");
         this.chooserOptions.push(obj = new pd.decorators.OptionsChooser.ChooserItem(
             (
                 isSprite ?
                     option : (
-                        isSpriteFrame ?
-                            pd.createSprite(option) :
-                            option
-                    )
+                    isSpriteFrame ?
+                        pd.createSprite(option) :
+                        option
+                )
             ),
             pd.parseAttr(chooserAttr),
-            (
-                isSprite ||
-                isSpriteFrame
-            ) ? pd.decorators.OptionsChooser.OptionTypes.SPRITE : pd.decorators.OptionsChooser.OptionTypes.POLYGON,
-            cb || function () { },
+            isPolygon ? pd.decorators.OptionsChooser.OptionTypes.POLYGON : pd.decorators.OptionsChooser.OptionTypes.SPRITE,
+            cb || function () {
+            },
             cbHandler,
             argsArray
         ));
@@ -110,10 +111,10 @@ pd.decorators.OptionsChooser = {
      */
     chooserBasicLogic: function (e, func) {
         this.chooserFillPosMouse(e);
-        for(var n = 0; n < this.chooserOptions.length; n++) {
+        for (var n = 0; n < this.chooserOptions.length; n++) {
             var option = this.chooserOptions[n];
-            if(option.type === pd.decorators.OptionsChooser.OptionTypes.SPRITE) {
-                if(this.chooserPosMouse.x < option.data.x + (1 - option.data.anchorX) * option.data.width * option.data.scaleX &&
+            if (option.type === pd.decorators.OptionsChooser.OptionTypes.SPRITE) {
+                if (this.chooserPosMouse.x < option.data.x + (1 - option.data.anchorX) * option.data.width * option.data.scaleX &&
                     this.chooserPosMouse.x > option.data.x - option.data.anchorX * option.data.width * option.data.scaleX &&
                     this.chooserPosMouse.y < option.data.y + (1 - option.data.anchorY) * option.data.height * option.data.scaleY &&
                     this.chooserPosMouse.y > option.data.y - option.data.anchorY * option.data.height * option.data.scaleY) {
@@ -121,13 +122,13 @@ pd.decorators.OptionsChooser = {
                     return;
                 }
             } else {
-                if(pd.pointInPolygonIntersection(this.chooserPosMouse, option.data)) {
+                if (pd.pointInPolygonIntersection(this.chooserPosMouse, option.data)) {
                     func.call(this, option);
                     return;
                 }
             }
         }
-        this.chooser.setPosition(this.chooserDefaultPos);
+        this.resetChooserPosition();
     },
     /**
      *
@@ -145,7 +146,7 @@ pd.decorators.OptionsChooser = {
      * @param {cc.EventMouse | cc.Touch} e
      */
     chooserMouseDown: function (e) {
-        if(!this.chooserEnabledListeners)
+        if (!this.chooserEnabledListeners)
             return;
         this.chooserBasicLogic(e,
             /**
@@ -153,8 +154,8 @@ pd.decorators.OptionsChooser = {
              * @param {pd.decorators.OptionsChooser.ChooserItem} option
              */
             function (option) {
-            this.chooser.attr(option.attr);
-        });
+                this.chooser.attr(option.attr);
+            });
     },
     /**
      *
@@ -162,7 +163,7 @@ pd.decorators.OptionsChooser = {
      * @param {cc.EventMouse | cc.Touch} e
      */
     chooserMouseMove: function (e) {
-        if(!this.chooserEnabledListeners)
+        if (!this.chooserEnabledListeners)
             return;
         this.chooserBasicLogic(e,
             /**
@@ -170,8 +171,8 @@ pd.decorators.OptionsChooser = {
              * @param {pd.decorators.OptionsChooser.ChooserItem} option
              */
             function (option) {
-            this.chooser.attr(option.attr);
-        });
+                this.chooser.attr(option.attr);
+            });
     },
     /**
      *
@@ -179,9 +180,9 @@ pd.decorators.OptionsChooser = {
      * @param {cc.EventMouse | cc.Touch} e
      */
     chooserMouseUp: function (e) {
-        if(!this.chooserEnabledListeners)
+        if (!this.chooserEnabledListeners)
             return;
-        if(cc.pointEqualToPoint(this.chooser, this.chooserDefaultPos))
+        if (cc.pointEqualToPoint(this.chooser, this.chooserDefaultPos))
             return;
 
         this.chooserBasicLogic(e,
@@ -189,9 +190,9 @@ pd.decorators.OptionsChooser = {
              *
              * @param {pd.decorators.OptionsChooser.ChooserItem} option
              */
-            function(option) {
-            option.func.apply(option.handler, option.args);
-        });
+            function (option) {
+                option.func.apply(option.handler, option.args);
+            });
     },
     /**
      *
@@ -199,6 +200,10 @@ pd.decorators.OptionsChooser = {
      */
     getChooserDefaultPos: function () {
         return this.chooserDefaultPos;
+    },
+    resetChooserPosition: function () {
+        this.chooser.setPosition(this.chooserDefaultPos);
+        this.chooser.setLocalZOrder(this.chooserDefaultPos.z);
     },
     /**
      *
@@ -208,10 +213,14 @@ pd.decorators.OptionsChooser = {
      * @returns {cc.Sprite}
      */
     setChooser: function (spriteObj, zOrder) {
-        if(typeof spriteObj === 'string' || spriteObj instanceof cc.SpriteFrame)
+        if (typeof spriteObj === 'string' || spriteObj instanceof cc.SpriteFrame)
             this.chooser = pd.createSprite(spriteObj, null, this, zOrder || 0);
-        else
+        else {
             this.chooser = spriteObj;
+            if (this.chooser.getParent() == null)
+                this.addChild(this.chooser, zOrder != null ? zOrder : 1);
+        }
+        this.chooserDefaultPos.z = this.chooser.getLocalZOrder();
         return this.chooser;
     },
     /**
@@ -220,7 +229,7 @@ pd.decorators.OptionsChooser = {
      * @param {number} y
      */
     setChooserDefaultPos: function (xOrPoint, y) {
-        if(xOrPoint.x !== undefined) {
+        if (xOrPoint.x !== undefined) {
             this.chooserDefaultPos.x = xOrPoint.x;
             this.chooserDefaultPos.y = xOrPoint.y;
         } else {
@@ -229,7 +238,7 @@ pd.decorators.OptionsChooser = {
         }
     },
     setChooserEnabledListeners: function (enabled) {
-        if(enabled === true) {
+        if (enabled === true) {
             this.chooserEnabledListeners = enabled;
         } else if (enabled === false) {
             this.chooserEnabledListeners = enabled;
