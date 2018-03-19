@@ -133,6 +133,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
                 this.remove(i, target);
             }
         }
+
+        target._inputMetadata = null;
     },
 
     /**

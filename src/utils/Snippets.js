@@ -1011,15 +1011,25 @@ pd.addFocus = function(layer, time, opacity, nodes){
  * @param {Number} time {Number} - o tempo de transição de fadeOut da layer de foco.
  */
 pd.removeFocus = function(layer, time) {
-    if(layer._focusLayer && layer._focusLayer.nodes) {
-        layer._focusLayer.cleanup();
+    const setZOrders = function() {
         for (var i in layer._focusLayer.nodes) {
             layer._focusLayer.nodes[i].setLocalZOrder(layer._focusLayer.nodes[i]._oldZOrder);
         }
-        if(time > 0)
-            layer._focusLayer.runAction(cc.fadeTo(time, 0));
-        else
+    };
+
+    if(layer._focusLayer && layer._focusLayer.nodes) {
+        layer._focusLayer.cleanup();
+
+        if(time > 0) {
+            layer._focusLayer.runAction(cc.sequence(
+                cc.fadeTo(time, 0),
+                cc.callFunc(setZOrders, this)
+            ));
+        }
+        else {
+            setZOrders();
             layer._focusLayer.setOpacity(0);
+        }
     }
 };
 
