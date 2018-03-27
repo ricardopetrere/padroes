@@ -218,7 +218,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     },
 
     /**
-     * Atualiza as coordenadas do ponto-álvo.
+     * Atualiza as coordenadas do ponto-alvo.
      * @param {Number} x
      * @param {Number} y
      * @private

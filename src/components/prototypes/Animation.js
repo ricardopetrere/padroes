@@ -134,7 +134,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
             name || this.animations.length + 1,
             animation,
             frames.length,
-            speed
+            speed || this.defaultSpeed
         ));
         pd.delegate.retain(animation);
     },

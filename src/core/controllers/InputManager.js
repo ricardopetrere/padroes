@@ -133,6 +133,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
                 this.remove(i, target);
             }
         }
+
+        target._inputMetadata = null;
     },
 
     /**
@@ -253,7 +255,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      */
     _activateMouse: function(target) {
         if(target._inputMetadata[pd.InputManager.Sources.MOUSE])
-            return;
+            return target._inputMetadata[pd.InputManager.Sources.MOUSE];
 
         if(cc.sys.isMobile) {
             if(target._inputMetadata.touchEventTypeCode != cc.EventListener.TOUCH_ALL_AT_ONCE)
@@ -456,7 +458,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      */
     _activateKeyboard: function(target) {
         if(cc.sys.isMobile || target._inputMetadata[pd.InputManager.Sources.KEYBOARD])
-            return;
+            return target._inputMetadata[pd.InputManager.Sources.KEYBOARD];
 
         target._inputMetadata[pd.InputManager.Sources.KEYBOARD] = cc.EventListener.create({
             event: cc.EventListener.KEYBOARD,
@@ -582,7 +584,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      */
     _activateAccelerometer: function(target) {
         if(!cc.sys.isMobile || target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER])
-            return;
+            return target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER];
 
         cc.inputManager.setAccelerometerInterval(1/10);
         cc.inputManager.setAccelerometerEnabled(true);
