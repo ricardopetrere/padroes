@@ -168,6 +168,10 @@ pd.LifeHUD = cc.Sprite.extend({/** @lends pd.LifeHUD#**/
 
         if(totalLives)
             this.buildUp(totalLives, livesRemaining || 0);
+        //TODO Algo precisa ser feito para que, se já passar 'livesRemaining' inferior a 'totalLives', já rodar updateUI.
+        //Rodar a função udpateUI aqui, por enquanto, não funciona, porque a variável _livesRemaining já foi setada.
+        // if(livesRemaining && (livesRemaining < totalLives))
+        //     this.updateUI(livesRemaining, totalLives);
     },
 
     /**

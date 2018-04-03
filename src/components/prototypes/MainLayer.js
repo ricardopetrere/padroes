@@ -59,6 +59,18 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
     _transitionDuration:0,
 
     /**
+     * Função que pode ser configurada para ser executada logo antes de mudar para a cena de jogo
+     * @function
+     */
+    onBeforePlayGame: null,
+
+    /**
+     * Função que pode ser configurada para ser executada logo antes de abrir o tutorial
+     * @function
+     */
+    onBeforePlayTutorial: null,
+
+    /**
      * Seta os botões do menu.
      * @param {*} playBtn - Botão de jogar.
      * @param {*} tutorialBtn - Botão de instruções.
@@ -206,10 +218,11 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
         if(this._pressedButton == this._playBtn && this._gameScenePrototype) {
             if(!this._gameSceneTransitionFunction)
                 this._transitionDuration = 0;
-
+            this.onBeforePlayGame && this.onBeforePlayGame();
             pd.changeScene(new this._gameScenePrototype(), this._transitionDuration, this._gameSceneTransitionFunction);
         }
         else if(this._pressedButton == this._tutorialBtn) {
+            this.onBeforePlayTutorial && this.onBeforePlayTutorial();
             const tutorial = new pd.Tutorial(this.getParent());
         }
 
