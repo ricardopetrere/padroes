@@ -154,7 +154,7 @@ pd.decorators.OptionsChooser = {
              * @param {pd.decorators.OptionsChooser.ChooserItem} option
              */
             function (option) {
-                this.chooser.attr(option.attr);
+                this.chooser && this.chooser.attr(option.attr);
             });
     },
     /**
@@ -171,7 +171,7 @@ pd.decorators.OptionsChooser = {
              * @param {pd.decorators.OptionsChooser.ChooserItem} option
              */
             function (option) {
-                this.chooser.attr(option.attr);
+                this.chooser && this.chooser.attr(option.attr);
             });
     },
     /**
@@ -202,8 +202,10 @@ pd.decorators.OptionsChooser = {
         return this.chooserDefaultPos;
     },
     resetChooserPosition: function () {
-        this.chooser.setPosition(this.chooserDefaultPos);
-        this.chooser.setLocalZOrder(this.chooserDefaultPos.z);
+        if(this.chooser) {
+            this.chooser.setPosition(this.chooserDefaultPos);
+            this.chooser.setLocalZOrder(this.chooserDefaultPos.z);
+        }
     },
     /**
      *
