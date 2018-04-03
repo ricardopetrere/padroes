@@ -35,9 +35,11 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      * @param {Number} from - o fade inicial
      * @param {Number} to - o fade final
      * @param {Function} [cb] - A função para executar depois do fade
+     * @param {boolean} [returnAction] - Se é para retornar o objeto da ação, ao invés de executá-la diretamente.
+     * @returns {*|cc.Sequence} Ação de redução do som, caso seja pedido para retornar. Caso contrário, irá executar a ação e não retornar nada
      * @private
      */
-    _fade: function (getterFunction, setterFunction, target, duration, from, to, cb) {
+    _fade: function (getterFunction, setterFunction, target, duration, from, to, cb, returnAction) {
         if (from == null)
             from = getterFunction();
         duration = duration * 100;
@@ -56,9 +58,13 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
         if (cb) {
             sequenceSteps.push(new cc.CallFunc(cb, target));
         }
-        if (!(target instanceof cc.Node))
-            target = pd.currentScene;
-        target.runAction(new cc.Sequence(sequenceSteps));
+        if(returnAction === true) {
+            return cc.sequence(sequenceSteps)
+        } else {
+            if (!(target instanceof cc.Node))
+                target = pd.currentScene;
+            target.runAction(cc.sequence(sequenceSteps));
+        }
     },
 
     /**
@@ -68,9 +74,11 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      * @param {Number} from - o fade inicial
      * @param {Number} to - o fade final
      * @param {Function} [cb] - Uma função a ser executada após o fade
+     * @param {boolean} [returnAction] - Se é para retornar o objeto da ação, ao invés de executá-la diretamente.
+     * @returns {*|cc.Sequence} Ação de redução do som, caso seja pedido para retornar. Caso contrário, irá executar a ação e não retornar nada
      */
-    fadeEffect: function (target, duration, from, to, cb) {
-        this._fade(pd.audioEngine.getEffectsVolume, pd.audioEngine.setEffectsVolume, target, duration, from, to, cb);
+    fadeEffect: function (target, duration, from, to, cb, returnAction) {
+        return this._fade(pd.audioEngine.getEffectsVolume, pd.audioEngine.setEffectsVolume, target, duration, from, to, cb, returnAction);
     },
     
     /**
@@ -80,9 +88,11 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      * @param {Number} from - o fade inicial
      * @param {Number} to - o fade final
      * @param {Function} [cb] - Uma função a ser executada após o fade
+     * @param {boolean} [returnAction] - Se é para retornar o objeto da ação, ao invés de executá-la diretamente.
+     * @returns {*|cc.Sequence} Ação de redução do som, caso seja pedido para retornar. Caso contrário, irá executar a ação e não retornar nada
      */
-    fadeMusic: function(target, duration, from, to, cb) {
-        this._fade(pd.audioEngine.getMusicVolume, pd.audioEngine.setMusicVolume, target, duration, from, to, cb);
+    fadeMusic: function(target, duration, from, to, cb, returnAction) {
+        return this._fade(pd.audioEngine.getMusicVolume, pd.audioEngine.setMusicVolume, target, duration, from, to, cb, returnAction);
     },
 //</editor-fold>
 //<editor-fold desc="Volume & Mute">
