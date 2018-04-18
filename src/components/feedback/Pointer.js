@@ -56,7 +56,7 @@ pd.Pointer = pd.Animation.extend(pd.decorators.ResetableNode).extend({/**@lends 
      * @param {Number} [y=undefined] - a posição y para o qual a seta deve deslocar-se. se for undefined, não haverá deslocamento em Y.
      * @param {Boolean} [autoRun=false] - indica se a ação deve ser rodada no momento em que a função for invocada.
      * @param {Function} [easingFunc=null] - função de easing para a animação de escala.
-     * @returns {cc.TargetedAction}
+     * @returns {cc.Action}
      */
     animate: function(time, type, x, y, autoRun, easingFunc) {
         // Estado inicial: pressionado, se for animação de DRAG, solto para as demais animações.
@@ -181,7 +181,7 @@ pd.Pointer = pd.Animation.extend(pd.decorators.ResetableNode).extend({/**@lends 
      * Realiza uma animação de clique.
      * Função auxiliar alternativa ao animate apenas para simplicar a chamada.
      * @param {Boolean} [autoRun=false] - indica se a ação deve ser rodada no momento em que a função for invocada.
-     * @returns {cc.TargetedAction}
+     * @returns {cc.Action}
      */
     click: function(autoRun) {
         return this.animate(0, pd.Pointer.AnimationTypes.CLICK, undefined, undefined, autoRun, null);

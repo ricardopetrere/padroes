@@ -44,6 +44,11 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
      */
     _pressedScale:1,
     /**
+     * A duração de um feedback de clique.
+     * @type {Number}
+     */
+    _clickDuration:0.1,
+    /**
      * O fator de opacidade do botão no status 'idle'.
      * @type {Number}
      */
@@ -152,6 +157,22 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
     },
 
     /**
+     * Retorna a duração do feedback de clique.
+     * @returns {Number}
+     */
+    getClickDuration: function() {
+        return this._clickDuration;
+    },
+
+    /**
+     * Seta a duração do feedback de clique.
+     * @param {Number} clickDuration
+     */
+    setClickDuration: function(clickDuration) {
+        this._clickDuration = clickDuration;
+    },
+
+    /**
      * Determina se o evento de 'release' do botão deve ser disparado quando o usuário soltá-lo fora de sua região.
      * @param {Boolean} forceMouseUpCall
      */
@@ -175,6 +196,17 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
         this._disabledOpacity = disabledOpacity;
         if (!this._isEnabled)
             this.setOpacity(this._disabledOpacity);
+    },
+
+    /**
+     * Seta a escala para quando o botão for pressionado.<br/>
+     * Se estiver pressionado, a função já altera a escala do botão
+     * @param {number} pressedScale
+     */
+    setNormalScale: function (pressedScale) {
+        this._normalScale = pressedScale;
+        if (!this._isPressed)
+            this.setScale(this._normalScale);
     },
 
     /**
@@ -255,6 +287,22 @@ pd.Button = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorators
         if(autoRun === true)
             this.runAction(this._customTween);
 
+        return this._customTween;
+    },
+
+    /**
+     * Realiza uma animação de clique.
+     * Função auxiliar alternativa ao animate apenas para simplicar a chamada.
+     * @param {Boolean} [autoRun=false] - indica se a ação deve ser rodada no momento em que a função for invocada.
+     * @returns {cc.Action}
+     */
+    click: function(autoRun) {
+        var steps = [this.animate(0, true)];
+        steps.push(cc.delayTime(this._clickDuration));
+        steps.push(this.animate(0, false));
+        this._customTween = cc.sequence(steps);
+        if(autoRun === true)
+            this.runAction(this._customTween);
         return this._customTween;
     },
 

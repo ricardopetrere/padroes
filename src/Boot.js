@@ -66,6 +66,7 @@ pd.jsList = [
     "src/components/feedback/Pointer.js",
     "src/components/feedback/Tablet.js",
     "src/components/feedback/SimpleFeedback.js",
+    "src/components/feedback/SpaceBar.js",
     "src/interactions/Interaction.js",
     "src/interactions/DragAndDropInteraction.js",
     "src/loading/LoaderScene.js",

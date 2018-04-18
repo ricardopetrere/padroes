@@ -82,7 +82,7 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
                 this.joystick = new pd.Joystick(attr, false, false);
                 break;
             case pd.TutorialLayer.InputFeedbacks.SPACE_BAR:
-                this.spaceBar = new pd.Button(pd.SpriteFrames.KEY_SPACE, pd.SpriteFrames.KEY_SPACE_PRESSED, attr, 1, false);
+                this.spaceBar = new pd.SpaceBar(attr, false);
                 break;
         }
 
