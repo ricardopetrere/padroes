@@ -6,14 +6,30 @@
  * @mixin
  */
 pd.decorators.OptionsChooser = {
+    /*
+    TODO Criar a funcionalidade de permitir usar teclado para selecionar opções:
+    Sugestões:
+    - Em cada chooserItem, ter a função 'set<direcao>Item(obj)', para que se monte uma estrutura de "qual lado vai pra qual objeto?", onde
+        mantendo como null significa que não é para considerar keyUp.
+        E aí ter a função de mover automaticamente o chooser para a opção selecionada
+      */
     /**
      * @type {cc.Sprite}
      */
     chooser: null,
     /**
+     * Index da opção atualmente selecionada. -1 se não estiver selecionando nada
+     * @type {number}
+     */
+    chooserCurrentOption: -1,
+    /**
      * @type {cc.Point | {z: number}}
      */
     chooserDefaultPos: null,
+    /**
+     * @type {boolean}
+     */
+    chooserEnabledListeners: false,
     /**
      * @type {pd.decorators.OptionsChooser.ChooserItem[]}
      */
@@ -25,7 +41,7 @@ pd.decorators.OptionsChooser = {
     /**
      * @type {boolean}
      */
-    chooserEnabledListeners: false,
+    chooserUseKeyboard: false,
 
     /**
      * @function
@@ -118,16 +134,19 @@ pd.decorators.OptionsChooser = {
                     this.chooserPosMouse.x > option.data.x - option.data.anchorX * option.data.width * option.data.scaleX &&
                     this.chooserPosMouse.y < option.data.y + (1 - option.data.anchorY) * option.data.height * option.data.scaleY &&
                     this.chooserPosMouse.y > option.data.y - option.data.anchorY * option.data.height * option.data.scaleY) {
+                    this.chooserCurrentOption = n;
                     func.call(this, option);
                     return;
                 }
             } else {
                 if (pd.pointInPolygonIntersection(this.chooserPosMouse, option.data)) {
+                    this.chooserCurrentOption = n;
                     func.call(this, option);
                     return;
                 }
             }
         }
+        this.chooserCurrentOption = -1;
         this.resetChooserPosition();
     },
     /**
@@ -139,6 +158,22 @@ pd.decorators.OptionsChooser = {
         this.chooserPosMouse.x = e.getLocationX();
         this.chooserPosMouse.y = e.getLocationY();
         this.chooserPosMouse = this.convertToNodeSpace(this.chooserPosMouse);
+    },
+    /**
+     * @param {number | cc.Point[] | cc.Sprite} index
+     * @returns {pd.decorators.OptionsChooser.ChooserItem}
+     */
+    chooserGetItem: function (index) {
+        if (typeof index === 'number') {
+            return this.chooserOptions[index];
+        } else if (
+            (index instanceof cc.Sprite) ||
+            (index.length > 0 && index[0].x !== null)
+        ) {
+            return this.chooserOptions.filter(function (item, id, array) {
+                return item.data === index;
+            })[0];
+        }
     },
     /**
      *

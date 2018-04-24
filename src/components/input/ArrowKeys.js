@@ -45,24 +45,21 @@ pd.ArrowKeys = cc.Layer.extend({/** @lends pd.ArrowKeys#**/
         this._super();
 
         if(hasLeftButton)
-            this.leftButton = this._addButton(pd.SpriteFrames.KEY_LEFT, pd.SpriteFrames.KEY_LEFT_PRESSED, {x: -this.spacing, y: 0}, pd.Keys.LEFT);
+            this.leftButton = this._addButton(pd.SpriteFrames.KEY_LEFT, pd.SpriteFrames.KEY_LEFT_PRESSED, {x: 0, y: 0}, pd.Keys.LEFT);
         if(hasRightButton)
-            this.rightButton = this._addButton(pd.SpriteFrames.KEY_RIGHT, pd.SpriteFrames.KEY_RIGHT_PRESSED, {x: this.spacing, y: 0}, pd.Keys.RIGHT);
+            this.rightButton = this._addButton(pd.SpriteFrames.KEY_RIGHT, pd.SpriteFrames.KEY_RIGHT_PRESSED, {x: 0, y: 0}, pd.Keys.RIGHT);
         if(hasUpButton)
-            this.upButton = this._addButton(pd.SpriteFrames.KEY_UP, pd.SpriteFrames.KEY_UP_PRESSED, {x: 0, y: this.spacing }, pd.Keys.UP);
+            this.upButton = this._addButton(pd.SpriteFrames.KEY_UP, pd.SpriteFrames.KEY_UP_PRESSED, {x: 0, y: 0 }, pd.Keys.UP);
         if(hasDownButton)
             this.downButton = this._addButton(pd.SpriteFrames.KEY_DOWN, pd.SpriteFrames.KEY_DOWN_PRESSED, {x: 0, y: 0}, pd.Keys.DOWN);
-
-        if (!hasDownButton && !hasUpButton) {
-            this.leftButton.x += (this.spacing / 2);
-            this.rightButton.x -= (this.spacing / 2);
-        }
 
         if(autoEnable)
             this.enable();
 
         if(attr)
             this.attr(pd.parseAttr(attr));
+
+        this.updateKeyPositions();
     },
 
     /**
@@ -131,6 +128,25 @@ pd.ArrowKeys = cc.Layer.extend({/** @lends pd.ArrowKeys#**/
                 pd.inputManager.add(pd.InputManager.Events.BUTTON_PRESSED, btn, onKeyDown, handler || this);
             if(onKeyUp)
                 pd.inputManager.add(pd.InputManager.Events.BUTTON_RELEASED, btn, onKeyUp, handler || this);
+        }
+    },
+
+    getSpacing: function () {
+        return this.spacing;
+    },
+
+    setSpacing: function (spacing) {
+        this.spacing = spacing;
+        this.updateKeyPositions();
+    },
+
+    updateKeyPositions: function () {
+        this.leftButton && (this.leftButton.x = -this.spacing);
+        this.rightButton && (this.rightButton.x = this.spacing);
+        this.upButton && (this.upButton.y = this.spacing);
+        if (!this.downButton && !this.upButton && this.leftButton && this.rightButton) {
+            this.leftButton.x += (this.spacing / 2);
+            this.rightButton.x -= (this.spacing / 2);
         }
     }
 });

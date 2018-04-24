@@ -295,8 +295,8 @@ pd.Loader = cc.Class.extend({/** @lends pd.Loader#*/
     /**
      * Carrega um arquivo JSON
      * @param {string} jsonPath
-     * @param {Function} cbSuccess - Função deve conter parâmetro data
-     * @param {Function} [cbError] - Função receberá código de erro
+     * @param {function(data: Object)} cbSuccess - Função deve conter parâmetro data
+     * @param {function(err: number)} [cbError] - Função receberá código de erro
      * @param {Object} [thisArg] - o objeto a ser usado como 'this' nos callbacks
      */
     loadJSON: function (jsonPath, cbSuccess, cbError, thisArg) {

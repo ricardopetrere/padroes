@@ -25,6 +25,11 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      * @type {number}
      */
     musicVolume: 1,
+    /**
+     * A URL da música atual. Nulo se não esitver tocando
+     * @type {string}
+     */
+    _currentMusic: null,
 //<editor-fold desc="Fade">
     /**
      *
@@ -253,6 +258,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
         this._play(music, loop, this.musicVolume, "playMusic", function() {
             cc.log('fim da música');
         });
+        this._currentMusic = music;
         this.setMusicVolume(this.musicVolume);
     },
 
@@ -287,6 +293,7 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      */
     stopMusic: function (releaseData) {
         cc.audioEngine.stopMusic(releaseData);
+        this._currentMusic = null;
     }
 //</editor-fold>
 });
