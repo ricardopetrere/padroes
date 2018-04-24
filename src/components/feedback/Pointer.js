@@ -41,6 +41,14 @@ pd.Pointer = pd.Animation.extend(pd.decorators.ResetableNode).extend({/**@lends 
     },
 
     /**
+     * Retorna a duração do feedback de clique.
+     * @returns {Number}
+     */
+    getClickDuration: function() {
+        return this._clickDuration;
+    },
+
+    /**
      * Seta a duração do feedback de clique.
      * @param {Number} clickDuration
      */
