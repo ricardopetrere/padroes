@@ -54,6 +54,31 @@ pd.objectToArray = function(object) {
 };
 
 /**
+ * A partir de um enum informado, criar uma array dentro deste, onde cada posição eh uma das propriedades desse enum
+ * @param {T} obj - O objeto ou enumerador contendo as propriedades
+ * @returns {Array|T} - O mesmo objeto, mas com os índices de vetor preenchidos com suas próprias propriedades
+ * @template T O tipo em si do objeto
+ */
+pd.generateArrayInsideEnum = function (obj) {
+    if(cc.sys.isMobile) {//Mobile não tem a função cc.clone por algum motivo. Talvez seja até interessante usar esse método por padrão
+        var ret = [], i = 0;
+        for(var n in obj) {
+            ret[n] = obj[n];
+            ret[i] = obj[n];
+            i++;
+        }
+        return ret;
+    } else {
+        var c = cc.clone(obj);
+        obj = pd.objectToArray(obj);
+        for (var n in c) {
+            obj[n] = c[n];
+        }
+        return obj;
+    }
+};
+
+/**
  * Troca a posição de dois elementos de um array entre eles.
  * @type {Function}
  * @param {Array} array
@@ -536,23 +561,6 @@ pd.pointInFunction = function (x, y, func, funcHandler, toleranceOrReturnPointDi
 };
 
 /**
- * Movimenta um polígono nas quantidades X e Y informadas
- * @param {cc.Point[]} polygon
- * @param {number | cc.Point} xOrPoint
- * @param {number} [y]
- */
-pd.translatePolygon = function (polygon, xOrPoint, y) {
-    if(y === undefined) {
-        y = xOrPoint.y;
-        xOrPoint = xOrPoint.x;
-    }
-    for(var n = 0; n < polygon.length; n++) {
-        polygon[n].x += xOrPoint;
-        polygon[n].y += y;
-    }
-};
-
-/**
  * Verifica se um ponto está dentro de um polígono.
  * @param {cc.Point} p
  * @param {cc.Point[]} vertexes
@@ -734,7 +742,7 @@ pd.pointAdd = function (posOrRect, rectOrPosOrX, y, w, h, returnPoint) {
  * Calcula o ângulo entre dois pontos, podendo retornar o valor em graus ou radianos, e podendo inverter a ordem dos pontos no cálculo
  * @param {cc.Point} pA
  * @param {cc.Point} pB
- * @param {boolean} [showInRadians]
+ * @param {boolean} [showInRadians] Se deve retornar o valor em radianos. Por padrão, retornará em graus
  * @param {boolean} [reverse] Troca a ordem dos pontos, mudando a referência de pontos
  * @returns {number} - Ângulo no sentido anti-horário
  */
@@ -761,6 +769,238 @@ pd.normalizeAngle = function(angle) {
         angle = 360 + angle;
 
     return angle;
+};
+
+/**
+ * Clona um polígono no esquema "deepCopy", ao invés de linkar os objetos internos, o q aconteceria se usasse {@link pd.cloneArray}
+ * @param {cc.Point[]} polygon O polígono original
+ * @returns {cc.Point[]} Uma cópia do polígono informado
+ */
+pd.clonePolygon = function (polygon) {
+    var ret = [];
+    polygon.forEach(function (item, index, array) {
+        ret[index] = {};
+        ret[index].x = item.x;
+        ret[index].y = item.y;
+    });
+    return ret;
+};
+
+/**
+ * Retorna o menor valor de x, dentre todos os vértices, do polígono informado. Muito útil pra lidar com o polígono como se fosse {@link cc.Rect}
+ * @param {cc.Point[]} polygon
+ * @returns {Number}
+ */
+pd.polygonMinX = function (polygon) {
+    var ret = polygon[0];
+    for (var n = 0; n < polygon.length; n++) {
+        if (polygon[n].x < ret.x) {
+            ret = polygon[n];
+        }
+    }
+    return ret.x;
+};
+
+/**
+ * Retorna o maior valor de x, dentre todos os vértices, do polígono informado. Muito útil pra lidar com o polígono como se fosse {@link cc.Rect}
+ * @param {cc.Point[]} polygon
+ * @returns {Number}
+ */
+pd.polygonMaxX = function (polygon) {
+    var ret = polygon[0];
+    for (var n = 0; n < polygon.length; n++) {
+        if (polygon[n].x > ret.x) {
+            ret = polygon[n];
+        }
+    }
+    return ret.x;
+};
+
+/**
+ * Retorna o menor valor de y, dentre todos os vértices, do polígono informado. Muito útil pra lidar com o polígono como se fosse {@link cc.Rect}
+ * @param {cc.Point[]} polygon
+ * @returns {Number}
+ */
+pd.polygonMinY = function (polygon) {
+    var ret = polygon[0];
+    for (var n = 0; n < polygon.length; n++) {
+        if (polygon[n].y < ret.y) {
+            ret = polygon[n];
+        }
+    }
+    return ret.y;
+};
+
+/**
+ * Retorna o maior valor de y, dentre todos os vértices, do polígono informado. Muito útil pra lidar com o polígono como se fosse {@link cc.Rect}
+ * @param {cc.Point[]} polygon
+ * @returns {Number}
+ */
+pd.polygonMaxY = function (polygon) {
+    var ret = polygon[0];
+    for (var n = 0; n < polygon.length; n++) {
+        if (polygon[n].y > ret.y) {
+            ret = polygon[n];
+        }
+    }
+    return ret.y;
+};
+
+/**
+ * Calcula o "ponto-médio" do polígono, podendo informar um anchor point artificial do polígono
+ * @param {cc.Point[]} polygon
+ * @param {cc.Point} [anchorPoint] Informar esse parâmetro tratará esse local do polígono como midPoint
+ * @returns {cc.Point} O local do centro do polígono
+ */
+pd.calculatePolygonMidPoint = function (polygon, anchorPoint) {
+    if (anchorPoint == null) {
+        anchorPoint = cc.p(0.5, 0.5);
+    }
+    var midPoint = cc.p(
+        pd.polygonMinX(polygon) + (pd.polygonMaxX(polygon) - pd.polygonMinX(polygon)) * anchorPoint.x,
+        pd.polygonMinY(polygon) + (pd.polygonMaxY(polygon) - pd.polygonMinY(polygon)) * anchorPoint.y
+    );
+    return midPoint;
+};
+
+/**
+ * Rotaciona um polígono pela quantidade de graus informados, permitindo retornar em um novo objeto
+ * @param {cc.Point[]} polygon
+ * @param {number} degrees
+ * @param {cc.Point} [anchorPoint]
+ * @param {boolean} [clone]
+ * @returns {cc.Point[]}
+ */
+pd.rotatePolygon = function (polygon, degrees, anchorPoint, clone) {
+    var ret = polygon;
+    if (clone) {
+        ret = pd.clonePolygon(polygon);
+    }
+    var midPoint = pd.calculatePolygonMidPoint(polygon, anchorPoint);
+    var cos = Math.cos(cc.degreesToRadians(degrees)), sin = Math.sin(cc.degreesToRadians(degrees));
+    for (var n = 0; n < ret.length; n++) {
+        ret[n] = cc.p(
+            midPoint.x + ((ret[n].x - midPoint.x) * cos) - ((ret[n].y - midPoint.y) * sin),
+            midPoint.y + ((ret[n].x - midPoint.x) * sin) + ((ret[n].y - midPoint.y) * cos)
+        );
+    }
+    return ret;
+};
+
+/**
+ * Redimensiona um polígono para um novo fator (assumindo o original como sendo 1), permitindo retornar em um novo objeto
+ * @param {cc.Point[]} polygon
+ * @param {number | cc.Point} newScale
+ * @param {cc.Point} [anchorPoint]
+ * @param {boolean} [clone]
+ * @returns {cc.Point[]}
+ */
+pd.scalePolygon = function (polygon, newScale, anchorPoint, clone) {
+    var ret = polygon;
+    if (clone) {
+        ret = pd.clonePolygon(polygon);
+    }
+    var midPoint = pd.calculatePolygonMidPoint(polygon, anchorPoint);
+    for (var n = 0; n < ret.length; n++) {
+        ret[n] = cc.p(
+            midPoint.x + (ret[n].x - midPoint.x) * (newScale.x != null ? newScale.x : newScale),
+            midPoint.y + (ret[n].y - midPoint.y) * (newScale.x != null ? newScale.y : newScale)
+        );
+    }
+    return ret;
+};
+
+/**
+ * Movimenta um polígono nas quantidades X e Y informadas, permitindo retornar em um novo objeto
+ * @param {cc.Point[]} polygon
+ * @param {number | cc.Point} xOrPoint
+ * @param {number} [y]
+ * @param {boolean} [clone]
+ */
+pd.translatePolygon = function (polygon, xOrPoint, y, clone) {
+    var ret = polygon;
+    if(y === undefined) {
+        clone = y;
+        y = xOrPoint.y;
+        xOrPoint = xOrPoint.x;
+    }
+    if (clone) {
+        ret = pd.clonePolygon(polygon);
+    }
+    for(var n = 0; n < polygon.length; n++) {
+        polygon[n].x += xOrPoint;
+        polygon[n].y += y;
+    }
+    return ret;
+};
+
+/**
+ * Movimenta um {@link cc.Rect} nas quantidades X e Y informadas, permitindo retornar em um novo objeto
+ * @param {cc.Rect} rect
+ * @param {number} x
+ * @param {number} y
+ * @param {boolean} [clone]
+ * @returns {cc.Rect}
+ */
+pd.translateRect = function (rect, x, y, clone) {
+    var ret = rect;
+    if (clone) {
+        ret = cc.rect(rect);
+    }
+    ret.x += x;
+    ret.y += y;
+    return ret;
+};
+
+/**
+ * Realiza uma exibição serializada de um ponto
+ * @param {cc.Point} position
+ * @returns {string}
+ */
+pd.convertPointToJSON = function (position) {
+    return "{\"x\": " + position.x + ", \"y\": " + position.y + "}";
+};
+
+/**
+ * Realiza uma exibição serializada de um polígono
+ * @param {cc.Point[]} polygon
+ * @returns {string}
+ */
+pd.convertPolygonToJSON = function (polygon) {
+    var texto = "";
+    for (var n = 0; n < polygon.length; n++) {
+        if (n !== 0)
+            texto += ",\n";
+        texto += pd.convertPointToJSON(polygon[n]);
+    }
+    return texto;
+};
+
+/**
+ * Realiza uma exibição serializada de um {@link cc.Rect}
+ * @param {cc.Rect} rect
+ * @returns {string}
+ */
+pd.convertRectToJSON = function (rect) {
+    var texto = "";
+    return "{\"x\": " + rect.x + ", \"y\": " + rect.y + ", \"width\": " + rect.width + ", \"height\": " + rect.height + "}";
+};
+
+/**
+ * <p>
+ * Altera o conteúdo interno de um polígono, de modo que a referência externa se mantenha, o que não muda a associação para outros objetos
+ * Como um polígono é entendido como um objeto, ele é uma instância. Então essa função evita que uma referência fique "perdida" ao lidar
+ * com um mesmo polígono várias vezes
+ * </p>
+ * @param {cc.Point[]} polygonOld
+ * @param {cc.Point[]} polygonNew
+ */
+pd.replaceInnerPolygon = function (polygonOld, polygonNew) {
+    for (var n = 0; n < polygonOld.length; n++) {
+        polygonOld[n].x = polygonNew[n].x;
+        polygonOld[n].y = polygonNew[n].y;
+    }
+    polygonOld.splice(polygonNew.length);
 };
 //</editor-fold>
 //<editor-fold desc="#Actions and Feedback">
