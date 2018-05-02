@@ -148,8 +148,10 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
         this.activeNamespace = ns;
         activeGameSpace = ns; // legado - apenas para manter compatível!
 
-        ns.resPath = "res/";
-        ns.srcPath = "src/";
+        // ns.resPath = "res/";
+        // ns.srcPath = "src/";
+        ns.resPath = pd.Delegate.DefaultPaths.resPath;
+        ns.srcPath = pd.Delegate.DefaultPaths.srcPath;
 
         if(!ns.res && ns.Resources)
             ns.res = ns.Resources;
@@ -158,15 +160,18 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
             if(ns.JsonList) {
                 for(var i in ns.JsonList) {
                     if(ns.JsonList[i].lastIndexOf(customPath) == -1)
-                        ns.JsonList[i] = ns.JsonList[i].replace("res/", customPath + "/res/");
+                        // ns.JsonList[i] = ns.JsonList[i].replace("res/", customPath + "/res/");
+                        ns.JsonList[i] = customPath + "/" + ns.JsonList[i];
                 }
             }
 
             if (ns.resPath.lastIndexOf(customPath) == -1)
-                ns.resPath = ns.resPath.replace("res/", customPath + "/res/");
+                // ns.resPath = ns.resPath.replace("res/", customPath + "/res/");
+                ns.resPath = customPath + "/" + ns.resPath;
 
             if (ns.srcPath.lastIndexOf(customPath) == -1)
-                ns.srcPath = ns.srcPath.replace("src/", customPath + "/src/");
+                // ns.srcPath = ns.srcPath.replace("src/", customPath + "/src/");
+                ns.srcPath = customPath + "/" + ns.srcPath;
         }
 
         this._initGameResources(ns);
@@ -194,22 +199,23 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
      * Navega para a cena inicial do namespace carregado.
      */
     bootUp: function() {
+        var mainSceneClass = this.activeNamespace[pd.Delegate.DefaultPaths.mainScene];
         if(pd.debugMode == true || (this.context == pd.Delegate.CONTEXT_PALCO && this.activeNamespace.srcPath.lastIndexOf("jogo") == -1)) {
             if (this.transitionTime > 0) {
-                var mainScene = pd.FadeWhiteTransition(this.transitionTime, new this.activeNamespace.MainScene());
+                var mainScene = pd.FadeWhiteTransition(this.transitionTime, new mainSceneClass());
             } else {
-                mainScene = new this.activeNamespace.MainScene();
+                mainScene = new mainSceneClass();
             }
         }
         else {
             this.transitionTime = 0.8;
-            mainScene = pd.FadeWhiteTransition(this.transitionTime, new this.activeNamespace.MainScene());
+            mainScene = pd.FadeWhiteTransition(this.transitionTime, new mainSceneClass());
         }
         this.isTutorialSet = false;
         pd.delegate.activeNamespace.tutorialData = [];
         cc.director.runScene(mainScene);
         pd.debugger.init();
-        pd.debugger.addShortcut("MainScene");
+        pd.debugger.addShortcut(pd.Delegate.DefaultPaths.mainScene);
     },
 
     /**
@@ -311,12 +317,12 @@ pd.Delegate = cc.Class.extend({/**@lends pd.Delegate#*/
             pd.audioEngine.setMute(false);
             this._destroyGame();
 
-            var transition = pd.FadeWhiteTransition(cc.sys.isMobile ? 0.3 : 0.4, new palco.MainScene());
+            var transition = pd.FadeWhiteTransition(cc.sys.isMobile ? 0.3 : 0.4, new palco[pd.Delegate.DefaultPaths.mainScene]());
             cc.director.runScene(transition);
         }
         else {
             this.releaseAll();
-            transition = pd.FadeWhiteTransition(0.6, new this.activeNamespace.MainScene());
+            transition = pd.FadeWhiteTransition(0.6, new this.activeNamespace[pd.Delegate.DefaultPaths.mainScene]());
             pd.delegate.retain(transition);
             cc.director.runScene(transition);
         }
@@ -392,6 +398,32 @@ pd.Delegate.CONTEXT_PALCO = "contextPalco";
  * @type {string}
  */
 pd.Delegate.CONTEXT_PORTAL = "contextPortal";
+
+/**
+ * @enum {string}
+ */
+pd.Delegate.DefaultPaths = {
+    /**
+     * src/
+     */
+    srcPath: "src/",//initWithNamespace
+    /**
+     * res/
+     */
+    resPath: "res/",//initWithNamespace
+    /**
+     * metadata/
+     */
+    metadataFolder: "metadata/",
+    /**
+     * metadata/modules.json
+     */
+    modulesPath: "metadata/modules.json",
+    /**
+     * MainScene
+     */
+    mainScene: "MainScene"
+}
 
 /**
  * @type pd.Delegate

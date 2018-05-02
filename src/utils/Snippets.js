@@ -904,7 +904,7 @@ pd.scalePolygon = function (polygon, newScale, anchorPoint, clone) {
     for (var n = 0; n < ret.length; n++) {
         ret[n] = cc.p(
             midPoint.x + (ret[n].x - midPoint.x) * (newScale.x != null ? newScale.x : newScale),
-            midPoint.y + (ret[n].y - midPoint.y) * (newScale.x != null ? newScale.y : newScale)
+            midPoint.y + (ret[n].y - midPoint.y) * (newScale.y != null ? newScale.y : newScale)
         );
     }
     return ret;

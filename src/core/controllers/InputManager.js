@@ -4,14 +4,13 @@
  * @class
  * @extends {cc.Class}
  * @classdesc Objeto singleton responsável por gerenciar os listeners de inputs da aplicação. <br >
- *            Pendência: transformar os tipos de evento em um enumerador.
  */
 pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     /**
      * Apontamento singleton para a instância única do objeto.
      * @type {pd.InputManager}
      */
-    _singleton:null,
+    _singleton: null,
 
     /**
      * @type {Number[]}
@@ -21,7 +20,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     /**
      * @constructs
      */
-    ctor: function() {
+    ctor: function () {
         this.pressedKeys = [];
     },
 
@@ -34,8 +33,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {Number} [priority=0] - a prioridade que os listeners do node devem assumir.
      * @param {Boolean} [autoConvertWASDToArrowKeys=false] - indica se os eventos de teclado do objeto devem converter automaticamente as teclas WASD para Arrow Keys.
      */
-    config: function(target, allowMultiTouch, touchEventTypeCode, priority, autoConvertWASDToArrowKeys) {
-        if(!target._inputMetadata)
+    config: function (target, allowMultiTouch, touchEventTypeCode, priority, autoConvertWASDToArrowKeys) {
+        if (!target._inputMetadata)
             target._inputMetadata = {};
 
         const metadata = target._inputMetadata;
@@ -50,8 +49,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {*} target - o node a ser configurado.
      * @param {Boolean} autoConvertWASDToArrowKeys - indica se os eventos de teclado do objeto devem converter automaticamente as teclas WASD para Arrow Keys.
      */
-    setAutoConvertWASDToArrowKeys: function(target, autoConvertWASDToArrowKeys) {
-        if(!target._inputMetadata)
+    setAutoConvertWASDToArrowKeys: function (target, autoConvertWASDToArrowKeys) {
+        if (!target._inputMetadata)
             target._inputMetadata = {};
 
         target._inputMetadata.autoConvertWASDToArrowKeys = autoConvertWASDToArrowKeys;
@@ -65,12 +64,12 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {*} [handler=null] - o objeto que escuta o evento. Caso seja null, o target será utilizado como handler.
      * @returns {cc.EventListener} - O listener criado
      */
-    add: function(eventType, target, handlerFunc, handler) {
-        if(!target._inputMetadata)
+    add: function (eventType, target, handlerFunc, handler) {
+        if (!target._inputMetadata)
             target._inputMetadata = {};
 
         const metadata = target._inputMetadata;
-        if(!metadata[eventType])
+        if (!metadata[eventType])
             metadata[eventType] = [];
         metadata[eventType].push({handler: handler ? handler : target, handlerFunc:handlerFunc || function() {}});
         return this._checkInputSources(target, eventType, true);
@@ -92,7 +91,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {*} target - o objeto que dispara o evento.
      * @returns {Boolean}
      */
-    hasListener: function(eventType, target) {
+    hasListener: function (eventType, target) {
         const metadata = target._inputMetadata;
         return metadata[eventType];
     },
@@ -103,15 +102,15 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {*} target - o objeto que dispara o evento.
      * @param {Function|String} [handlerFunc] - a função sendo invocada pelo objeto que escuta o evento.
      */
-    remove: function(eventType, target, handlerFunc) {
-        if(!target._inputMetadata)
+    remove: function (eventType, target, handlerFunc) {
+        if (!target._inputMetadata)
             return;
 
         const metadata = target._inputMetadata;
-        if(metadata[eventType]) {
-            if(handlerFunc) {
-                for(var i in metadata[eventType]) {
-                    if(metadata[eventType][i].handlerFunc == handlerFunc)
+        if (metadata[eventType]) {
+            if (handlerFunc) {
+                for (var i in metadata[eventType]) {
+                    if (metadata[eventType][i].handlerFunc == handlerFunc)
                         delete metadata[eventType][i];
                 }
             }
@@ -126,10 +125,10 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * Remove todos os listeners do node informado.
      * @param {*} target
      */
-    clean: function(target) {
+    clean: function (target) {
         const metadata = target._inputMetadata;
-        for(var i in metadata) {
-            if(metadata[i].hasOwnProperty("length") && metadata[i][0] && metadata[i][0].hasOwnProperty("handler")) {
+        for (var i in metadata) {
+            if (metadata[i].hasOwnProperty("length") && metadata[i][0] && metadata[i][0].hasOwnProperty("handler")) {
                 this.remove(i, target);
             }
         }
@@ -140,7 +139,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     /**
      * Reseta variáveis do inputManager
      */
-    reset: function() {
+    reset: function () {
         this.clearPressedKeys();
     },
 
@@ -179,9 +178,9 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {cc.EventListener} listener
      * @returns {cc.EventListener} - O listener criado
      */
-    _addListener: function(target, listener) {
+    _addListener: function (target, listener) {
         cc.eventManager.addListener(listener, target);
-        if(target._inputMetadata.priority)
+        if (target._inputMetadata.priority)
             cc.eventManager.setPriority(listener, target._inputMetadata.priority);
         return listener;
     },
@@ -192,12 +191,12 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {pd.InputManager.Events} eventType
      * @param args
      */
-    call: function(target, eventType, args) {
-        if(!target._inputMetadata[eventType])
+    call: function (target, eventType, args) {
+        if (!target._inputMetadata[eventType])
             return;
 
         const metadata = target._inputMetadata[eventType];
-        for(var i in metadata) {
+        for (var i in metadata) {
             if (typeof metadata[i].handlerFunc == "string") {
                 metadata[i].handler[metadata[i].handlerFunc].apply(metadata[i].handler, args);
             }
@@ -215,19 +214,19 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @returns {* | cc.EventListener} - O listener criado (apenas para criação)
      * @private
      */
-    _checkInputSources: function(target, eventType, didAddCallback) {
-        if(eventType.lastIndexOf("Mouse") != -1) {
-            if(!target._inputMetadata[pd.InputManager.Sources.MOUSE]) {
+    _checkInputSources: function (target, eventType, didAddCallback) {
+        if (eventType.lastIndexOf("Mouse") != -1) {
+            if (!target._inputMetadata[pd.InputManager.Sources.MOUSE]) {
                 return this[didAddCallback ? "_activateMouse" : "_deactivateMouse"](target);
             }
         }
-        else if(eventType.lastIndexOf("Key") != -1) {
-            if(!target._inputMetadata[pd.InputManager.Sources.KEYBOARD]) {
+        else if (eventType.lastIndexOf("Key") != -1) {
+            if (!target._inputMetadata[pd.InputManager.Sources.KEYBOARD]) {
                 return this[didAddCallback ? "_activateKeyboard" : "_deactivateKeyboard"](target);
             }
         }
-        else if(eventType.lastIndexOf("Accelerometer") != -1) {
-            if(!target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER]) {
+        else if (eventType.lastIndexOf("Accelerometer") != -1) {
+            if (!target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER]) {
                 return this[didAddCallback ? "_activateAccelerometer" : "_deactivateAccelerometer"](target);
             }
         }
@@ -238,11 +237,11 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {String} arr
      * @param {...*} argv
      */
-    setEventMetadata: function(arr, argv) {
-        if(!this[arr])
+    setEventMetadata: function (arr, argv) {
+        if (!this[arr])
             this[arr] = [];
 
-        for(var i = 1 ; i < arguments.length ; i++) {
+        for (var i = 1; i < arguments.length; i++) {
             this[arr][i - 1] = arguments[i];
         }
     },
@@ -251,14 +250,14 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * Ativa o mouse.
      * @param {*} target
      * @private
-     * @returns {cc.EventListener} - O listener criado
+     * @returns {cc.EventListener | cc._EventListenerMouse | cc._EventListenerTouchOneByOne | cc._EventListenerTouchAllAtOnce} - O listener criado
      */
-    _activateMouse: function(target) {
-        if(target._inputMetadata[pd.InputManager.Sources.MOUSE])
+    _activateMouse: function (target) {
+        if (target._inputMetadata[pd.InputManager.Sources.MOUSE])
             return target._inputMetadata[pd.InputManager.Sources.MOUSE];
 
-        if(cc.sys.isMobile) {
-            if(target._inputMetadata.touchEventTypeCode != cc.EventListener.TOUCH_ALL_AT_ONCE)
+        if (cc.sys.isMobile) {
+            if (target._inputMetadata.touchEventTypeCode != cc.EventListener.TOUCH_ALL_AT_ONCE)
                 this._setMouseAsTouchOneByOne(target);
             else
                 this._setMouseAsTouchAllAtOnce(target)
@@ -275,7 +274,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {*} target
      * @private
      */
-    _setMouseAsTouchOneByOne: function(target) {
+    _setMouseAsTouchOneByOne: function (target) {
         target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
             event: target._inputMetadata.touchEventTypeCode ? target._inputMetadata.touchEventTypeCode : cc.EventListener.TOUCH_ONE_BY_ONE,
             /**
@@ -286,7 +285,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              */
             onTouchBegan: function (touch, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touch, event);
-                if(target._inputMetadata.allowMultiTouch || touch.getID() == 0)
+                if (target._inputMetadata.allowMultiTouch || touch.getID() == 0)
                     pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_DOWN, pd.inputManager._mouseMeta);
                 return true;
             },
@@ -298,7 +297,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              */
             onTouchMoved: function (touch, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touch, event);
-                if(target._inputMetadata.allowMultiTouch || touch.getID() == 0)
+                if (target._inputMetadata.allowMultiTouch || touch.getID() == 0)
                     pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MOVE, pd.inputManager._mouseMeta);
                 return true;
             },
@@ -310,7 +309,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              */
             onTouchEnded: function (touch, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touch, event);
-                if(target._inputMetadata.allowMultiTouch || touch.getID() == 0)
+                if (target._inputMetadata.allowMultiTouch || touch.getID() == 0)
                     pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_UP, pd.inputManager._mouseMeta);
                 return true;
             }
@@ -322,7 +321,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {*} target
      * @private
      */
-    _setMouseAsTouchAllAtOnce: function(target) {
+    _setMouseAsTouchAllAtOnce: function (target) {
         target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
             event: target._inputMetadata.touchEventTypeCode ? target._inputMetadata.touchEventTypeCode : cc.EventListener.TOUCH_ONE_BY_ONE,
             /**
@@ -333,7 +332,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              */
             onTouchesBegan: function (touches, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touches, event);
-                if(target._inputMetadata.allowMultiTouch || touches.length == 1)
+                if (target._inputMetadata.allowMultiTouch || touches.length == 1)
                     pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_DOWN, pd.inputManager._mouseMeta);
                 return true;
             },
@@ -345,7 +344,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              */
             onTouchesMoved: function (touches, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touches, event);
-                if(target._inputMetadata.allowMultiTouch || touches.length == 1)
+                if (target._inputMetadata.allowMultiTouch || touches.length == 1)
                     pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MOVE, pd.inputManager._mouseMeta);
                 return true;
             },
@@ -357,7 +356,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              */
             onTouchesEnded: function (touches, event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", touches, event);
-                if(target._inputMetadata.allowMultiTouch || touches.length == 1)
+                if (target._inputMetadata.allowMultiTouch || touches.length == 1)
                     pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_UP, pd.inputManager._mouseMeta);
                 return true;
             }
@@ -369,7 +368,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {*} target
      * @private
      */
-    _setMouse: function(target) {
+    _setMouse: function (target) {
         target._inputMetadata[pd.InputManager.Sources.MOUSE] = cc.EventListener.create({
             event: cc.EventListener.MOUSE,
             /**
@@ -379,10 +378,16 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              */
             onMouseDown: function (event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", event);
-                switch(event.getButton()) {
-                    case 0: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_DOWN, pd.inputManager._mouseMeta); break;
-                    case 1: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MIDDLE_DOWN, pd.inputManager._mouseMeta); break;
-                    case 2: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_RIGHT_DOWN, pd.inputManager._mouseMeta); break;
+                switch (event.getButton()) {
+                    case 0:
+                        pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_DOWN, pd.inputManager._mouseMeta);
+                        break;
+                    case 1:
+                        pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MIDDLE_DOWN, pd.inputManager._mouseMeta);
+                        break;
+                    case 2:
+                        pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_RIGHT_DOWN, pd.inputManager._mouseMeta);
+                        break;
                 }
                 return true;
             },
@@ -393,9 +398,13 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              */
             onMouseMove: function (event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", event);
-                switch(event.getButton()) {
-                    case null: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_HOVER, pd.inputManager._mouseMeta); break;
-                    case 0: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MOVE, pd.inputManager._mouseMeta); break;
+                switch (event.getButton()) {
+                    case null:
+                        pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_HOVER, pd.inputManager._mouseMeta);
+                        break;
+                    case 0:
+                        pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MOVE, pd.inputManager._mouseMeta);
+                        break;
                 }
                 return true;
             },
@@ -404,7 +413,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              * @param {cc.EventMouse} event
              * @returns {boolean}
              */
-            onMouseScroll: function(event) {
+            onMouseScroll: function (event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", event);
                 if (cc.sys.os === cc.sys.OS_OSX) { // rolagem natural.
                     event.setScrollData(event.getScrollX(), -event.getScrollY());
@@ -419,10 +428,16 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              */
             onMouseUp: function (event) {
                 pd.inputManager.setEventMetadata("_mouseMeta", event);
-                switch(event.getButton()) {
-                    case 0: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_UP, pd.inputManager._mouseMeta); break;
-                    case 1: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MIDDLE_UP, pd.inputManager._mouseMeta); break;
-                    case 2: pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_RIGHT_UP, pd.inputManager._mouseMeta); break;
+                switch (event.getButton()) {
+                    case 0:
+                        pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_UP, pd.inputManager._mouseMeta);
+                        break;
+                    case 1:
+                        pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_MIDDLE_UP, pd.inputManager._mouseMeta);
+                        break;
+                    case 2:
+                        pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.MOUSE_RIGHT_UP, pd.inputManager._mouseMeta);
+                        break;
                 }
                 return true;
             }
@@ -434,17 +449,17 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {*} target
      * @private
      */
-    _deactivateMouse: function(target) {
-        if(target._inputMetadata[pd.InputManager.Sources.MOUSE]
-        && !target._inputMetadata[pd.InputManager.Events.MOUSE_DOWN]
-        && !target._inputMetadata[pd.InputManager.Events.MOUSE_MIDDLE_DOWN]
-        && !target._inputMetadata[pd.InputManager.Events.MOUSE_RIGHT_DOWN]
-        && !target._inputMetadata[pd.InputManager.Events.MOUSE_HOVER]
-        && !target._inputMetadata[pd.InputManager.Events.MOUSE_MOVE]
-        && !target._inputMetadata[pd.InputManager.Events.MOUSE_SCROLL]
-        && !target._inputMetadata[pd.InputManager.Events.MOUSE_UP]
-        && !target._inputMetadata[pd.InputManager.Events.MOUSE_MIDDLE_UP]
-        && !target._inputMetadata[pd.InputManager.Events.MOUSE_RIGHT_UP]) {
+    _deactivateMouse: function (target) {
+        if (target._inputMetadata[pd.InputManager.Sources.MOUSE]
+            && !target._inputMetadata[pd.InputManager.Events.MOUSE_DOWN]
+            && !target._inputMetadata[pd.InputManager.Events.MOUSE_MIDDLE_DOWN]
+            && !target._inputMetadata[pd.InputManager.Events.MOUSE_RIGHT_DOWN]
+            && !target._inputMetadata[pd.InputManager.Events.MOUSE_HOVER]
+            && !target._inputMetadata[pd.InputManager.Events.MOUSE_MOVE]
+            && !target._inputMetadata[pd.InputManager.Events.MOUSE_SCROLL]
+            && !target._inputMetadata[pd.InputManager.Events.MOUSE_UP]
+            && !target._inputMetadata[pd.InputManager.Events.MOUSE_MIDDLE_UP]
+            && !target._inputMetadata[pd.InputManager.Events.MOUSE_RIGHT_UP]) {
             cc.eventManager.removeListener(target._inputMetadata[pd.InputManager.Sources.MOUSE]);
             delete target._inputMetadata[pd.InputManager.Sources.MOUSE];
         }
@@ -454,10 +469,10 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * Ativa o teclado.
      * @param {*} target
      * @private
-     * @returns {cc.EventListener} - O listener criado
+     * @returns {cc.EventListener | cc._EventListenerKeyboard} - O listener criado
      */
-    _activateKeyboard: function(target) {
-        if(cc.sys.isMobile || target._inputMetadata[pd.InputManager.Sources.KEYBOARD])
+    _activateKeyboard: function (target) {
+        if (cc.sys.isMobile || target._inputMetadata[pd.InputManager.Sources.KEYBOARD])
             return target._inputMetadata[pd.InputManager.Sources.KEYBOARD];
 
         target._inputMetadata[pd.InputManager.Sources.KEYBOARD] = cc.EventListener.create({
@@ -468,7 +483,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              * @param {cc.EventKeyboard} event
              * @returns {boolean}
              */
-            onKeyPressed:  function(keyCode, event) {
+            onKeyPressed: function (keyCode, event) {
                 keyCode = pd.inputManager._parseKeyCode(event.getCurrentTarget(), keyCode);
                 pd.inputManager._setKeyPressed(keyCode);
                 pd.inputManager.setEventMetadata("_keyboardMeta", keyCode, event);
@@ -481,7 +496,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              * @param {cc.EventKeyboard} event
              * @returns {boolean}
              */
-            onKeyReleased: function(keyCode, event) {
+            onKeyReleased: function (keyCode, event) {
                 keyCode = pd.inputManager._parseKeyCode(event.getCurrentTarget(), keyCode);
                 pd.inputManager._setKeyReleased(keyCode);
                 pd.inputManager.setEventMetadata("_keyboardMeta", keyCode, event);
@@ -499,11 +514,11 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param keyCode {Number}
      * @private
      */
-    _parseKeyCode: function(target, keyCode) {
-        if(!target._inputMetadata.autoConvertWASDToArrowKeys)
+    _parseKeyCode: function (target, keyCode) {
+        if (!target._inputMetadata.autoConvertWASDToArrowKeys)
             return keyCode;
 
-        switch(keyCode) {
+        switch (keyCode) {
             case cc.KEY.a: return pd.Keys.LEFT;
             case cc.KEY.s: return pd.Keys.DOWN;
             case cc.KEY.d: return pd.Keys.RIGHT;
@@ -516,7 +531,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     /**
      * Limpa o vetor de teclas pressionadas
      */
-    clearPressedKeys: function() {
+    clearPressedKeys: function () {
         this.pressedKeys = [];
     },
 
@@ -525,7 +540,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {Number} keyCode - O código da tecla
      * @returns {boolean}
      */
-    isKeyPressed: function(keyCode) {
+    isKeyPressed: function (keyCode) {
         return this.pressedKeys.lastIndexOf(keyCode) >= 0;
     },
 
@@ -534,8 +549,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {Number} keyCode - o key code da tecla.
      * @param {Boolean} pressed
      */
-    forceToggleKeyStatus: function(keyCode, pressed) {
-        if(pressed)
+    forceToggleKeyStatus: function (keyCode, pressed) {
+        if (pressed)
             this._setKeyPressed(keyCode)
         else
             this._setKeyReleased(keyCode);
@@ -546,7 +561,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {Number} keyCode
      * @private
      */
-    _setKeyPressed: function(keyCode) {
+    _setKeyPressed: function (keyCode) {
         if (this.pressedKeys.lastIndexOf(keyCode) < 0) {
             this.pressedKeys.push(keyCode);
         }
@@ -557,7 +572,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {Number} keyCode
      * @private
      */
-    _setKeyReleased: function(keyCode) {
+    _setKeyReleased: function (keyCode) {
         var indexTecla = this.pressedKeys.lastIndexOf(keyCode);
         if (indexTecla >= 0) {
             this.pressedKeys.splice(indexTecla, 1);
@@ -569,8 +584,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {*} target
      * @private
      */
-    _deactivateKeyboard: function(target) {
-        if(target._inputMetadata[pd.InputManager.Sources.KEYBOARD] && !target._inputMetadata[pd.InputManager.Events.KEY_DOWN] && !target._inputMetadata[pd.InputManager.Events.KEY_UP]) {
+    _deactivateKeyboard: function (target) {
+        if (target._inputMetadata[pd.InputManager.Sources.KEYBOARD] && !target._inputMetadata[pd.InputManager.Events.KEY_DOWN] && !target._inputMetadata[pd.InputManager.Events.KEY_UP]) {
             cc.eventManager.removeListener(target._inputMetadata[pd.InputManager.Sources.KEYBOARD]);
             delete target._inputMetadata[pd.InputManager.Sources.KEYBOARD];
         }
@@ -580,17 +595,17 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * Ativa o acelerômetro.
      * @param {cc.Node} target
      * @private
-     * @returns {cc.EventListener} - O listener criado
+     * @returns {cc.EventListener | cc._EventListenerAcceleration} - O listener criado
      */
-    _activateAccelerometer: function(target) {
-        if(!cc.sys.isMobile || target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER])
+    _activateAccelerometer: function (target) {
+        if (!cc.sys.isMobile || target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER])
             return target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER];
 
-        cc.inputManager.setAccelerometerInterval(1/10);
+        cc.inputManager.setAccelerometerInterval(1 / 10);
         cc.inputManager.setAccelerometerEnabled(true);
 
         target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER] = cc.EventListener.create({
-            event:cc.EventListener.ACCELERATION,
+            event: cc.EventListener.ACCELERATION,
             /**
              *
              * <p>
@@ -605,7 +620,7 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
              * @param event {cc.EventAcceleration}
              * @returns {boolean}
              */
-            callback: function(acc, event) {
+            callback: function (acc, event) {
                 pd.inputManager._parseAcc(acc, this);
                 pd.inputManager.setEventMetadata("_accelerometerMeta", acc, event);
                 pd.inputManager.call(event.getCurrentTarget(), pd.InputManager.Events.ACCELEROMETER, pd.inputManager._accelerometerMeta);
@@ -621,8 +636,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
      * @param {cc.Node} target
      * @private
      */
-    _deactivateAccelerometer: function(target) {
-        if(target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER] && !target._inputMetadata[pd.InputManager.Events.ACCELEROMETER]) {
+    _deactivateAccelerometer: function (target) {
+        if (target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER] && !target._inputMetadata[pd.InputManager.Events.ACCELEROMETER]) {
             cc.eventManager.removeListener(target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER]);
             delete target._inputMetadata[pd.InputManager.Sources.ACCELEROMETER];
         }
@@ -631,8 +646,8 @@ pd.InputManager = cc.Class.extend({/**@lends pd.InputManager#*/
     /**
      * Converte os valores de acc, para casos como os do Android, onde o acelerômetro é absoluto (não inverte ao inverter o aparelho)
      * @param acc {cc.Acceleration}
-    */
-    _parseAcc: function(acc, listener) {
+     */
+    _parseAcc: function (acc, listener) {
         if (cc.sys.os === cc.sys.OS_ANDROID) {
             if (cc.ENGINE_VERSION.lastIndexOf("3.17") < 0 && //commit 09d73ae da cocos2d-x realizou essa correção
                 pd.natives.callNative("getRotation", null, pd.natives.JavaTypes.INT) >= 2) {

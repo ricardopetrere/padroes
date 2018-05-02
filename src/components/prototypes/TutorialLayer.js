@@ -195,7 +195,13 @@ pd.TutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
         }
 
         if(this.joystick) {
+            this.joystick.cleanup();
             this.joystick.resetPad();
+        }
+
+        if(this.spaceBar) {
+            this.spaceBar.cleanup();
+            this.spaceBar.setPressed(false);
         }
     },
 
