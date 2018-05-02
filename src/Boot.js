@@ -20,7 +20,7 @@ if (cc.game.config[cc.game.CONFIG_KEY.renderMode] != 1) {
  * Versão atual dos padrões.
  * @type {string}
  */
-pd.version = "3.0beta";
+pd.version = "3.0.0";
 
 cc.log("[pd] Padrões Cocos Versão: " + pd.version);
 if(pd.debugMode)
@@ -110,7 +110,7 @@ pd.boot = function(paths, context) {
 
         //////////////////// MODO PALCO //////////////////////
         if(pd.delegate.context == pd.Delegate.CONTEXT_PALCO) {
-            pd.loader.loadJSON(pd.delegate.paths.volumePath + "/metadata/modules.json", function(metadata) {
+            pd.loader.loadJSON(pd.delegate.paths.volumePath + "/" + pd.Delegate.DefaultPaths.modulesPath, function(metadata) {
                 cc.loader.loadJs("src", ["Config.js"], function() {
                     palco.boot(metadata.targetBuild);
                 });
