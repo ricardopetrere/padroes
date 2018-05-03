@@ -10,12 +10,12 @@
  * @enum {string}
  */
 pd.resLoad = {
-    s_loader: padroesPath+"/res/img/loading/loader.png",
-    p_loader: padroesPath+"/res/img/loading/loader.plist",
-    fx_woosh: padroesPath+"/res/snd/loading/woosh.mp3",
-    fx_logo: padroesPath+"/res/snd/loading/logo.mp3",
-    fx_swish: padroesPath+"/res/snd/loading/swish.mp3",
-    lato: padroesPath+"/res/font/Lato.ttf"
+    s_loader: pd.padroesPath+"/res/img/loading/loader.png",
+    p_loader: pd.padroesPath+"/res/img/loading/loader.plist",
+    fx_woosh: pd.padroesPath+"/res/snd/loading/woosh.mp3",
+    fx_logo: pd.padroesPath+"/res/snd/loading/logo.mp3",
+    fx_swish: pd.padroesPath+"/res/snd/loading/swish.mp3",
+    lato: pd.padroesPath+"/res/font/Lato.ttf"
 };
 
 /**
@@ -26,36 +26,36 @@ pd.resLoad = {
 pd.res = {
 
     //Debugger:
-    editorSpriteSheet_s: padroesPath+"/res/img/editor/editorAssets.png",
-    editorSpriteSheet_p: padroesPath+"/res/img/editor/editorAssets.plist",
+    editorSpriteSheet_s: pd.padroesPath+"/res/img/editor/editorAssets.png",
+    editorSpriteSheet_p: pd.padroesPath+"/res/img/editor/editorAssets.plist",
 
     //UI:
-    s_input: padroesPath+"/res/img/blueUI/input.png",
-    p_input: padroesPath+"/res/img/blueUI/input.plist",
-    s_menus: padroesPath+"/res/img/blueUI/menus.png",
-    p_menus: padroesPath+"/res/img/blueUI/menus.plist",
-    s_Padroes: padroesPath+"/res/img/padroes.png",
-    p_Padroes: padroesPath+"/res/img/padroes.plist",
+    s_input: pd.padroesPath+"/res/img/blueUI/input.png",
+    p_input: pd.padroesPath+"/res/img/blueUI/input.plist",
+    s_menus: pd.padroesPath+"/res/img/blueUI/menus.png",
+    p_menus: pd.padroesPath+"/res/img/blueUI/menus.plist",
+    s_Padroes: pd.padroesPath+"/res/img/padroes.png",
+    p_Padroes: pd.padroesPath+"/res/img/padroes.plist",
 
     //Audios:
-    fx_Erro : padroesPath+"/res/snd/erro.mp3",
-    fx_Acerto : padroesPath+"/res/snd/acerto.mp3",
-    fx_BgmLose : padroesPath+"/res/snd/gameover.mp3",
-    fx_BgmWin : padroesPath+"/res/snd/happy.mp3",
-    fx_escrever : padroesPath+"/res/snd/escrever.mp3",
+    fx_Erro : pd.padroesPath+"/res/snd/erro.mp3",
+    fx_Acerto : pd.padroesPath+"/res/snd/acerto.mp3",
+    fx_BgmLose : pd.padroesPath+"/res/snd/gameover.mp3",
+    fx_BgmWin : pd.padroesPath+"/res/snd/happy.mp3",
+    fx_escrever : pd.padroesPath+"/res/snd/escrever.mp3",
 
     //Win/Lose:
-    s_fundoPreto : padroesPath+"/res/img/bg_final.png",
-    fx_flip : padroesPath+"/res/snd/desenrola.mp3",
-    fx_exp : padroesPath+"/res/snd/explosion.mp3",
-    fx_star : padroesPath+"/res/snd/estrelas.mp3",
-    fx_button: padroesPath+"/res/snd/button.mp3",
+    s_fundoPreto : pd.padroesPath+"/res/img/bg_final.png",
+    fx_flip : pd.padroesPath+"/res/snd/desenrola.mp3",
+    fx_exp : pd.padroesPath+"/res/snd/explosion.mp3",
+    fx_star : pd.padroesPath+"/res/snd/estrelas.mp3",
+    fx_button: pd.padroesPath+"/res/snd/button.mp3",
 
     //Fonts
-    carton_six: padroesPath+"/res/font/Carton Six.ttf",
-    dimbo: padroesPath+"/res/font/Dimbo.ttf",
-    calibri: padroesPath+"/res/font/Calibri.ttf",
-    gill_sans: padroesPath+"/res/font/Gill Sans MT Condensed.ttf"
+    carton_six: pd.padroesPath+"/res/font/Carton Six.ttf",
+    dimbo: pd.padroesPath+"/res/font/Dimbo.ttf",
+    calibri: pd.padroesPath+"/res/font/Calibri.ttf",
+    gill_sans: pd.padroesPath+"/res/font/Gill Sans MT Condensed.ttf"
 
 };
 

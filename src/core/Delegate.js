@@ -400,30 +400,45 @@ pd.Delegate.CONTEXT_PALCO = "contextPalco";
 pd.Delegate.CONTEXT_PORTAL = "contextPortal";
 
 /**
+ * Caminhos padrão dentro dos padrões
  * @enum {string}
  */
-pd.Delegate.DefaultPaths = {
-    /**
-     * src/
-     */
-    srcPath: "src/",//initWithNamespace
-    /**
-     * res/
-     */
-    resPath: "res/",//initWithNamespace
-    /**
-     * metadata/
-     */
-    metadataFolder: "metadata/",
-    /**
-     * metadata/modules.json
-     */
-    modulesPath: "metadata/modules.json",
-    /**
-     * MainScene
-     */
-    mainScene: "MainScene"
-}
+pd.Delegate.DefaultPaths = {};
+/**
+ * src/
+ * @type {string}
+ */
+pd.Delegate.DefaultPaths.srcPath = "src/",//initWithNamespace
+/**
+ * res/
+ * @type {string}
+ */
+pd.Delegate.DefaultPaths.resPath = "res/",//initWithNamespace
+/**
+ * metadata/
+ * @type {string}
+ */
+pd.Delegate.DefaultPaths.metadataFolder = "metadata/",
+/**
+ * metadata/modules.json
+ * @type {string}
+ */
+pd.Delegate.DefaultPaths.modulesPath = pd.Delegate.DefaultPaths.metadataFolder + "modules.json",
+/**
+ * MainScene
+ * @type {string}
+ */
+pd.Delegate.DefaultPaths.mainScene = "MainScene",
+/**
+ * Config.js
+ * @type {string}
+ */
+pd.Delegate.DefaultPaths.configFileName = "Config.js"
+/**
+ * src/Config.js
+ * @type {string}
+ */
+pd.Delegate.DefaultPaths.configFileLocation = pd.Delegate.DefaultPaths.srcPath + pd.Delegate.DefaultPaths.configFileName;
 
 /**
  * @type pd.Delegate

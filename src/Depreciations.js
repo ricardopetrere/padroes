@@ -1071,3 +1071,9 @@ var SplitColsTransition = function (t, s) {
     cc.warn("Transição [SplitColsTransition] foi movida para o namespace pd. Corrigir chamada da transição");
     return pd.SplitColsTransition(t, s);
 };
+
+/**
+ * @type {string}
+ * @deprecated Desde a versão 3.0.0, usar {@link pd.padroesPath}
+ */
+padroesPath = pd.padroesPath;
