@@ -5,7 +5,7 @@
  * Implementa a capacidade de um componente de disparar eventos via pd.InputManager.
  * @mixin
  */
-pd.decorators.EventDispatcher = { /** @lends pd.decorators.EventDispatcher#*/
+pd.decorators.EventDispatcher = /** @lends pd.decorators.EventDispatcher#*/{
     /**
      * O mecanismo de callback utilizado pelo botão.
      * @type {pd.decorators.EventDispatcher.CALLBACK_MODE_EXPLICIT|pd.decorators.EventDispatcher.CALLBACK_MODE_EVENT_BASED}

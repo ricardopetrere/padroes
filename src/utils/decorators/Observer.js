@@ -4,7 +4,7 @@
  * Ao usar decorate, ele seta a propriedade _handlingMap para nulo, então tomar esse cuidado ao utilizar esse decorator
  * @mixin
  */
-pd.decorators.Observer = {/** @lends pd.decorators.Observer#*/
+pd.decorators.Observer = /** @lends pd.decorators.Observer#*/{
 
     /**
      * @type {Object} - tabela hash que armazena os metadados da manipulação de notificações da interação sendo observada.

@@ -3,7 +3,7 @@
  * Implementa a capacidade de um node de desenhar elementos de 'debugging'.
  * @mixin
  */
-pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
+pd.decorators.DebugDrawNode = /** @lends pd.decorators.DebugDrawNode#*/{
 
     /**
      * @type {cc.LabelTTF}
@@ -163,7 +163,7 @@ pd.decorators.DebugDrawNode = {/** @lends pd.decorators.DebugDrawNode#*/
 
     /**
      *
-     * @param {Function | string} textOrFunction
+     * @param {function:string} | string} textOrFunction
      * @param {Object} thisArg
      * @param {cc.Node} parent
      * @param {number} zOrder

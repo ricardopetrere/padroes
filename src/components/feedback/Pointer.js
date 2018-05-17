@@ -21,8 +21,10 @@ pd.Pointer = pd.Animation.extend(pd.decorators.ResetableNode).extend({/**@lends 
         this._super();
 
         const frameName = "mouse" in cc.sys.capabilities ? "seta_" : "dedo_";
-        this.addAnimation('normal', 1, 1, frameName);
-        this.addAnimation('pressed', 2, 2, frameName);
+        // this.addAnimation('normal', 1, 1, frameName);
+        this.addAnimation(pd.Animations[frameName + 'normal']);
+        // this.addAnimation('pressed', 2, 2, frameName);
+        this.addAnimation(pd.Animations[frameName + 'pressed']);
         this.setAnchorPoint(0,1);
     },
 

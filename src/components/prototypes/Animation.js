@@ -554,4 +554,20 @@ pd.AnimationMetadata = function (name, animation, numFrames, speed){
     this.animation = animation;
     this.numFrames = numFrames;
     this.speed = speed;
-}
+};
+
+/**
+ * Enumerador de animações dos padrões. Teve que ficar aqui porque a classe {@link pd.AnimationData} só é gerada aqui.
+ * @enum {pd.AnimationData}
+ */
+pd.Animations = {
+    accel_normal:   new pd.AnimationData('normal',  1,  1, 24, 'accel_lateral'),
+    accel_left:     new pd.AnimationData('left',    1, 10, 24, 'accel_lateral'),
+    accel_right:    new pd.AnimationData('right',  11, 20, 24, 'accel_lateral'),
+    accel_up:       new pd.AnimationData('up',      1, 10, 24, 'accel_vertical'),
+    accel_down:     new pd.AnimationData('down',   11, 20, 24, 'accel_vertical'),
+    dedo_normal:    new pd.AnimationData('normal',  1,  1, 24, 'dedo_'),
+    seta_normal:    new pd.AnimationData('normal',  1,  1, 24, 'seta_'),
+    dedo_pressed:   new pd.AnimationData('pressed', 2,  2, 24, 'dedo_'),
+    seta_pressed:   new pd.AnimationData('pressed', 2,  2, 24, 'seta_'),
+};
