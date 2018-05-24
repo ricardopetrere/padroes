@@ -10,7 +10,7 @@
  * A implementação é baseada no paradigma do observador, onde a view atua como um objeto observável em uma relaçāo one-to-one com um controlador (observador).
  * @mixin
  */
-pd.decorators.ObservableView = {/** @lends pd.decorators.ObservableView#*/
+pd.decorators.ObservableView = /** @lends pd.decorators.ObservableView#*/{
     /**
      * @type {Object}
      */

@@ -6,7 +6,7 @@
  * * Ainda em desenvolvimento
  * @mixin
  */
-pd.decorators.BuildableNode = {/** @lends pd.decorators.BuildableNode#*/
+pd.decorators.BuildableNode = /** @lends pd.decorators.BuildableNode#*/{
 
     /**
      * @type {String}

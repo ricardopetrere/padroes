@@ -99,7 +99,7 @@ pd.generateSingleton = function (prototype) {
  * @param {String} context
  */
 pd.boot = function(paths, context) {
-    padroesPath = paths.padroesPath;
+    pd.padroesPath = paths.padroesPath;
     cc.loader.loadJs(paths.padroesPath, pd.jsList, function() {
         pd.delegate.setPaths(paths);
 
@@ -111,7 +111,7 @@ pd.boot = function(paths, context) {
         //////////////////// MODO PALCO //////////////////////
         if(pd.delegate.context == pd.Delegate.CONTEXT_PALCO) {
             pd.loader.loadJSON(pd.delegate.paths.volumePath + "/" + pd.Delegate.DefaultPaths.modulesPath, function(metadata) {
-                cc.loader.loadJs("src", ["Config.js"], function() {
+                cc.loader.loadJs(pd.Delegate.DefaultPaths.srcPath, [pd.Delegate.DefaultPaths.configFileName], function() {
                     palco.boot(metadata.targetBuild);
                 });
             });
@@ -119,7 +119,7 @@ pd.boot = function(paths, context) {
         /////////////////////////////////////////////////////
         //////////////// MODO STAND-ALONE ///////////////////
         else {
-            cc.loader.loadJs("src", ["Config.js"]);
+            cc.loader.loadJs(pd.Delegate.DefaultPaths.srcPath, [pd.Delegate.DefaultPaths.configFileName]);
         }
         /////////////////////////////////////////////////////
     });

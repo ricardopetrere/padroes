@@ -1131,7 +1131,7 @@ pd.distort = function (time, cycles, sx, sy) {
  * Outra intenção dessa função é atender o que {@link cc.ActionTween} não for capaz
  * @param {number} duration - Duração da ação em segundos
  * @param {number} cycles - Número de vezes que a função deve ser executada
- * @param {Function} func - Função que será executada (A função deve listar todos os parâmetros que irá necessitar)
+ * @param {{Function(..., step, index, elapsed, normalizedElapsed)}} func - Função que será executada (A função deve listar todos os parâmetros que irá necessitar)
  * @param {Object} [funcHandler] - Proprietário da função. Quem será o 'this' na função
  * @param {Array} [argArray] - Vetor contendo os argumentos usados pela função. <br/>Dentro da função, os últimos argumentos serão sempre o intervalo de tempo, o ciclo atual e o tempo decorrido, tanto em tempo quanto em intervalo de 0 a 1
  * @param {Function} [cb] - Função a ser executada após a ação terminar
@@ -1172,7 +1172,10 @@ pd.customAction = function (duration, cycles, func, funcHandler, argArray, cb, c
 
                 : step));
         }
-        sequenceSteps.push(pd.perfectCallFunc(func, funcHandler, (argArray || []).concat([step, i + 1, (i + 1) * step, ((i + 1) * step) / duration])));
+        //func(step, index>0, elapsed, elapsed / duration normalizada no intervalo de 0 a 1)
+        argArray = argArray || [];
+        // sequenceSteps.push(pd.perfectCallFunc(func, funcHandler, argArray.concat([step, i + 1, (i + 1) * step, ((i + 1) * step) / duration].slice(0, Math.max(func.length - argArray.length, 0)))));
+        sequenceSteps.push(pd.perfectCallFunc(func, funcHandler, argArray.concat([step, i + 1, (i + 1) * step, ((i + 1) * step) / duration])));
     }
     if (cb) {
         sequenceSteps.push(pd.perfectCallFunc(cb, cbHandler || funcHandler, cbArgs));
@@ -1369,8 +1372,9 @@ pd.UI_COLOR_ORANGE = 'orangeUI';
  * Injeta um decorator em um objeto dinamicamente (em runtime).
  * @param {*} object
  * @param {pd.decorators} decorator
+ * @param {Array} [args]
  */
-pd.decorate = function(object, decorator) {
+pd.decorate = function(object, decorator, args) {
     if(object._mixes && object._mixes.lastIndexOf(decorator) != -1)
         return;
 
@@ -1380,7 +1384,7 @@ pd.decorate = function(object, decorator) {
 
     object._mixes = object[i]._mixes || [];
     object._mixes.push(decorator);
-    decorator.__initDecorator__ && decorator.__initDecorator__.call(object);
+    decorator.__initDecorator__ && decorator.__initDecorator__.apply(object, args);
 };
 //</editor-fold>
 //<editor-fold desc="#Others">

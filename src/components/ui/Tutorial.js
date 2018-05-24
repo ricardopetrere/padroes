@@ -211,10 +211,11 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._indicators = [];
 
         for(var i = 0; i < numPages; i++) {
-            var indicator = pd.createSprite("stage_instrucoes", 512 + iniX + i * 30, 30 + pd.delegate.activeNamespace.tutorialData.txtOffSetY, this, 50);
-            indicator.setScale(0);
-            this._indicators.push(indicator);
-
+            if(numPages>1) {
+                var indicator = pd.createSprite("stage_instrucoes", 512 + iniX + i * 30, 30 + pd.delegate.activeNamespace.tutorialData.txtOffSetY, this, 50);
+                indicator.setScale(0);
+                this._indicators.push(indicator);
+            }
             var page = pd.delegate.activeNamespace.tutorialData[i];
             page.pageID = i;
             page.setCascadeOpacityEnabled(true);

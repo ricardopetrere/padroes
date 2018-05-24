@@ -207,12 +207,12 @@ pd.AudioEngine = cc.Class.extend({/** @lends pd.AudioEngine#*/
      */
     _play: function (res, loop, volume, funcPlay, cb) {
         var ret = -1;
-        if (res) {
+        if (/\.(mp3|wav|ogg|mp4|m4a)/.test(res)) {//Filtros pegos de CCAudio.js:330
             if(cc.sys.isMobile) {
                 if(funcPlay == "playEffect")
                     ret = cc.audioEngine.playEffect(res, loop || false, 1, 0, volume);
                 else
-                    ret = cc.audioEngine.playMusic(res, loop);
+                    ret = cc.audioEngine.playMusic(res, loop);/**O set de volume está sendo feito na {@link pd.AudioEngine.playMusic#}*/
             }
             else {
                 ret = cc.audioEngine[funcPlay](res, loop || false, volume);

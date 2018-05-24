@@ -7,7 +7,7 @@
  * O comportamento normal ao se usar esse decorator é de aplicá-lo a um objeto filho da layer principal, que esteja com uma ação {@link cc.Follow} rodando
  * @mixin
  */
-pd.decorators.ParallaxObject = {/** @lends pd.decorators.ParallaxObject#*/
+pd.decorators.ParallaxObject = /** @lends pd.decorators.ParallaxObject#*/{
     /**
      * A posição default do objeto, para quando o {@link parallaxParent} estiver em cc.p(0,0)
      * @type {cc.Point}

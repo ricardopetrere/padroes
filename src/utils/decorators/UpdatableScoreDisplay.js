@@ -5,7 +5,7 @@
  * Transforma uma cc.LabelTTF em um display de pontuação animado.
  * @mixin
  */
-pd.decorators.UpdatableScoreDisplay = {/** @lends pd.decorators.UpdatableScoreDisplay#*/
+pd.decorators.UpdatableScoreDisplay = /** @lends pd.decorators.UpdatableScoreDisplay#*/{
     /**
      * @type {Number}
      */

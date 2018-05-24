@@ -6,7 +6,7 @@
  * Este decorator é útil para objetos de interface que interagem de maneira explícita com inputs de mouse/touch.
  * @mixin
  */
-pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
+pd.decorators.ClickableNode = /** @lends pd.decorators.ClickableNode#*/{
     /**
      * Os dados de posição pré-cacheados do objeto.
      * @type {{local:cc.Point, global:cc.Point}}
@@ -72,16 +72,16 @@ pd.decorators.ClickableNode = {/** @lends pd.decorators.ClickableNode#*/
      * Atualiza o retângulo de colisão .
      * @param {Number} x
      * @param {Number} y
-     * @param {Number} size
+     * @param {Number} [size]
      * @private
      */
     _updateCollisionRect: function(x, y, size) {
         this._collisionRect = this._collisionRect || cc.rect(0, 0, 0, 0);
         var rect = this._collisionRect;
-        rect.x = x;
-        rect.y = y;
         rect.width = size || 1;
         rect.height = size || 1;
+        rect.x = x - rect.width / 2;
+        rect.y = y - rect.height / 2;
     },
 
     /**

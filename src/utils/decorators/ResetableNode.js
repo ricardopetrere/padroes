@@ -6,7 +6,7 @@
  * Este decorator é útil para objetos de interface e cenário que animam, e eventualmente, precisam resetar-se para seu estado inicial em algum ponto da aplicação.
  * @mixin
  */
-pd.decorators.ResetableNode = {/** @lends pd.decorators.ResetableNode#*/
+pd.decorators.ResetableNode = /** @lends pd.decorators.ResetableNode#*/{
     /**
      * O estado de exibição salvo.
      * @type {Object}

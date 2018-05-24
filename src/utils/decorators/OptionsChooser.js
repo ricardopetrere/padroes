@@ -5,7 +5,7 @@
  * No modo desktop, o posicionamento do indicador é automático ao passar o mouse por cima
  * @mixin
  */
-pd.decorators.OptionsChooser = {
+pd.decorators.OptionsChooser = /** @lends pd.decorators.OptionsChooser#*/{
     /*
     TODO Criar a funcionalidade de permitir usar teclado para selecionar opções:
     Sugestões:
