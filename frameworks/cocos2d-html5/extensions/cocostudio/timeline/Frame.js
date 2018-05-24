@@ -1019,7 +1019,7 @@ ccs.InnerActionFrame = ccs.Frame.extend({
                 innerStart = info.startIndex;
                 innerEnd = info.endIndex;
             } else {
-                cc.log("Animation %s not exists!", this._animationName);
+                cc.log("Animation %s doesn't exist!", this._animationName);
             }
         }
 

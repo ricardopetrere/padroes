@@ -327,7 +327,7 @@ cc.MotionStreak = cc.Node.extend(/** @lends cc.MotionStreak# */{
      * Set the position. <br />
      *
      * @param {cc.Point|Number} position
-     * @param {Number} [yValue=undefined] If not exists, the first parameter must be cc.Point.
+     * @param {Number} [yValue=undefined] If null, the first parameter must be cc.Point.
      */
     setPosition: function (position, yValue) {
         this.startingPositionInitialized = true;
