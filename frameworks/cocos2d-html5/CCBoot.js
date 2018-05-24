@@ -979,7 +979,7 @@ cc.loader = (function () {
                 loader = _register[type.toLowerCase()];
             }
             if (!loader) {
-                cc.error("loader for [" + type + "] not exists!");
+                cc.error("loader for [" + type + "] doesn't exist!");
                 return cb();
             }
             var realUrl = url;
@@ -2249,7 +2249,6 @@ cc.game = {/** @lends cc.game# */
      * @constant
      * @type {Object}
      *
-     * @prop {String} padroesPath       - Caminho do repositório dos Padrões
      * @prop {String} engineDir         - In debug mode, if you use the whole engine to develop your game, you should specify its relative path with "engineDir".
      * @prop {String} modules           - Defines which modules you will need in your game, it's useful only on web
      * @prop {String} debugMode         - Debug mode, see DEBUG_MODE_XXX constant definitions.
@@ -2263,7 +2262,6 @@ cc.game = {/** @lends cc.game# */
     CONFIG_KEY: {
         width: "width",
         height: "height",
-        padroesPath: "padroesPath",
         engineDir: "engineDir",
         modules: "modules",
         debugMode: "debugMode",
@@ -2466,7 +2464,6 @@ cc.game = {/** @lends cc.game# */
             this._runMainLoop();
 
             // Load game scripts
-            //cc.loader.loadJs(config[CONFIG_KEY.padroesPath], ["src/Boot.js"], function () {
             var jsList = cc.game.config.jsList;
             if (jsList) {
                 cc.loader.loadJsWithImg(jsList, function (err) {
@@ -2629,7 +2626,6 @@ cc.game = {/** @lends cc.game# */
 
         // Configs adjustment
         config[CONFIG_KEY.showFPS] = typeof config[CONFIG_KEY.showFPS] === 'undefined' ? true : config[CONFIG_KEY.showFPS];
-        //config[CONFIG_KEY.padroesPath] = config[CONFIG_KEY.padroesPath] || "Padroes";
         config[CONFIG_KEY.engineDir] = config[CONFIG_KEY.engineDir] || "frameworks/cocos2d-html5";
         if (config[CONFIG_KEY.debugMode] == null)
             config[CONFIG_KEY.debugMode] = 0;
