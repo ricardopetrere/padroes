@@ -75,7 +75,7 @@ pd.MainLayer = cc.Layer.extend({/**@lends pd.MainLayer#**/
      * @param {*} playBtn - Botão de jogar.
      * @param {*} tutorialBtn - Botão de instruções.
      * @param {Object} gameScenePrototype - Protótipo do objeto de cena a ser criado e navegado para ao pressionar o botão de jogar.
-     * @param {Function} [gameSceneTransitionFunction=FadeTransition] - A função de transição a ser executada para a navegação à Game Scene. Utilizar as funções pré-setadas do Transitions.js.
+     * @param {Function} [gameSceneTransitionFunction] - A função de transição a ser executada para a navegação à Game Scene. Utilizar as funções pré-setadas do Transitions.js.
      * @param {Number} [transitionDuration=0.5] - Indica o delay, em segundos, ao abrir a opção do botão após ele ser clicado.
      */
     config: function(playBtn, tutorialBtn, gameScenePrototype, gameSceneTransitionFunction, transitionDuration) {
