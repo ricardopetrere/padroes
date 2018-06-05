@@ -19,7 +19,7 @@ isPaused = pd.delegate.isPaused;
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.createSprite}.
  * A função ainda é a mesma, apenas foi dado um nome mais claro à ela.
  */
-pd.cObject = pd.legacyCreateSprite;
+pd.cObject = pd.createSprite;
 
 /**
  * Cria uma sprite.
@@ -30,41 +30,24 @@ pd.cObject = pd.legacyCreateSprite;
  * @param {Number} zOrder
  * @param {String} [name]
  * @param {boolean} [addToEditor]
+ * @deprecated - Ajustar código e usar {@link pd.createSprite}
  * @returns {cc.Sprite}
  */
-pd.legacyCreateSprite = function(spriteName, x, y, parentNode, zOrder, name, addToEditor){
-    var SF = pd.getSpriteFrame(spriteName);
-    if (!SF)
-        SF = spriteName;
-    const obj = new cc.Sprite(SF);
-    obj.setPosition(x, y);
-    obj.name = name;
-    zOrder = zOrder || 0;
-
-    if(parentNode != undefined && parentNode != null)
-        parentNode.addChild(obj, zOrder);
-
-    if(!cc.sys.isNative && pd.debugMode && addToEditor)
-        pd.Editor.add(obj);
-
-    return obj;
-};
+pd.legacyCreateSprite = pd.createSprite;
 
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.createText}.
  */
 pd.cText = function(x, y, txt, font, size){
-    var text = null;
-    if(typeof txt == "string"){
-        text = new cc.LabelTTF(txt, font, size);
-        text.setFontFillColor(new cc.Color(0, 0, 0));
+    if(typeof txt == "string") {
+        cc.warn("Ajustar código e usar pd.createText");
+        var obj = pd.createText(font, font, x, y, size, cc.color.BLACK, txt);
+        obj.setAnchorPoint(0.5, 1);
+        return obj;
+    } else {
+        cc.warn("Usar pd.createSprite ao invés dessa função.");
+        return pd.createSprite(txt, {x: x, y: y, anchorX: 0.5, anchorY: 1});
     }
-    else{
-        text = new cc.Sprite(txt);
-    }
-    text.setPosition(x, y);
-    text.setAnchorPoint(0.5, 1);
-    return text;
 };
 
 /**
@@ -667,7 +650,7 @@ var ZoomTo = function (t, s, layer, z, x, y) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -678,7 +661,7 @@ var JumpZoomTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -689,7 +672,7 @@ var FadeTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -700,7 +683,7 @@ var FadeWhiteTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -711,7 +694,7 @@ var FlipXLeftOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -722,7 +705,7 @@ var FlipXRightOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -733,7 +716,7 @@ var FlipYUpOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -744,7 +727,7 @@ var FlipYDownOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -755,7 +738,7 @@ var FlipAngularLeftOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -766,7 +749,7 @@ var FlipAngularRightOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -777,7 +760,7 @@ var ZoomFlipXLeftOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -788,7 +771,7 @@ var ZoomFlipXRightOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -799,7 +782,7 @@ var ZoomFlipYUpOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -810,7 +793,7 @@ var ZoomFlipYDownOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -821,7 +804,7 @@ var ZoomFlipAngularLeftOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -832,7 +815,7 @@ var ZoomFlipAngularRightOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -843,7 +826,7 @@ var ShrinkGrowTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -854,7 +837,7 @@ var RotoZoomTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -865,7 +848,7 @@ var MoveInLTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -876,7 +859,7 @@ var MoveInRTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -887,7 +870,7 @@ var MoveInTTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -898,7 +881,7 @@ var MoveInBTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -909,7 +892,7 @@ var SlideInLTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -920,7 +903,7 @@ var SlideInRTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -931,7 +914,7 @@ var SlideInTTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -942,7 +925,7 @@ var SlideInBTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -953,7 +936,7 @@ var CCTransitionCrossFade = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -964,7 +947,7 @@ var CCTransitionRadialCCW = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -975,7 +958,7 @@ var CCTransitionRadialCW = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -986,7 +969,7 @@ var PageTransitionForward = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -997,7 +980,7 @@ var PageTransitionBackward = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -1008,7 +991,7 @@ var FadeTRTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -1019,7 +1002,7 @@ var FadeBLTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -1030,7 +1013,7 @@ var FadeUpTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -1041,7 +1024,7 @@ var FadeDownTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -1052,7 +1035,7 @@ var TurnOffTilesTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -1063,7 +1046,7 @@ var SplitRowsTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */

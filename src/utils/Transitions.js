@@ -23,7 +23,7 @@ pd.ZoomTo = function (t, s, layer, z, x, y) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.JumpZoomTransition = function (t, s) {
@@ -32,7 +32,7 @@ pd.JumpZoomTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.FadeTransition = function (t, s) {
@@ -41,7 +41,7 @@ pd.FadeTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.FadeWhiteTransition = function (t, s) {
@@ -50,7 +50,7 @@ pd.FadeWhiteTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.FlipXLeftOver = function (t, s) {
@@ -59,7 +59,7 @@ pd.FlipXLeftOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.FlipXRightOver = function (t, s) {
@@ -68,7 +68,7 @@ pd.FlipXRightOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.FlipYUpOver = function (t, s) {
@@ -77,7 +77,7 @@ pd.FlipYUpOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.FlipYDownOver = function (t, s) {
@@ -86,7 +86,7 @@ pd.FlipYDownOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.FlipAngularLeftOver = function (t, s) {
@@ -95,7 +95,7 @@ pd.FlipAngularLeftOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.FlipAngularRightOver = function (t, s) {
@@ -104,7 +104,7 @@ pd.FlipAngularRightOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.ZoomFlipXLeftOver = function (t, s) {
@@ -113,7 +113,7 @@ pd.ZoomFlipXLeftOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.ZoomFlipXRightOver = function (t, s) {
@@ -122,7 +122,7 @@ pd.ZoomFlipXRightOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.ZoomFlipYUpOver = function (t, s) {
@@ -131,7 +131,7 @@ pd.ZoomFlipYUpOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.ZoomFlipYDownOver = function (t, s) {
@@ -140,7 +140,7 @@ pd.ZoomFlipYDownOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.ZoomFlipAngularLeftOver = function (t, s) {
@@ -149,7 +149,7 @@ pd.ZoomFlipAngularLeftOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.ZoomFlipAngularRightOver = function (t, s) {
@@ -158,7 +158,7 @@ pd.ZoomFlipAngularRightOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.ShrinkGrowTransition = function (t, s) {
@@ -167,7 +167,7 @@ pd.ShrinkGrowTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.RotoZoomTransition = function (t, s) {
@@ -176,7 +176,7 @@ pd.RotoZoomTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.MoveInLTransition = function (t, s) {
@@ -185,7 +185,7 @@ pd.MoveInLTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.MoveInRTransition = function (t, s) {
@@ -194,7 +194,7 @@ pd.MoveInRTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.MoveInTTransition = function (t, s) {
@@ -203,7 +203,7 @@ pd.MoveInTTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.MoveInBTransition = function (t, s) {
@@ -212,7 +212,7 @@ pd.MoveInBTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.SlideInLTransition = function (t, s) {
@@ -221,7 +221,7 @@ pd.SlideInLTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.SlideInRTransition = function (t, s) {
@@ -230,7 +230,7 @@ pd.SlideInRTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.SlideInTTransition = function (t, s) {
@@ -239,7 +239,7 @@ pd.SlideInTTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.SlideInBTransition = function (t, s) {
@@ -248,7 +248,7 @@ pd.SlideInBTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.CCTransitionCrossFade = function (t, s) {
@@ -257,7 +257,7 @@ pd.CCTransitionCrossFade = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.CCTransitionRadialCCW = function (t, s) {
@@ -266,7 +266,7 @@ pd.CCTransitionRadialCCW = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.CCTransitionRadialCW = function (t, s) {
@@ -275,7 +275,7 @@ pd.CCTransitionRadialCW = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.PageTransitionForward = function (t, s) {
@@ -285,7 +285,7 @@ pd.PageTransitionForward = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.PageTransitionBackward = function (t, s) {
@@ -295,7 +295,7 @@ pd.PageTransitionBackward = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.FadeTRTransition = function (t, s) {
@@ -304,7 +304,7 @@ pd.FadeTRTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.FadeBLTransition = function (t, s) {
@@ -313,7 +313,7 @@ pd.FadeBLTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.FadeUpTransition = function (t, s) {
@@ -322,7 +322,7 @@ pd.FadeUpTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.FadeDownTransition = function (t, s) {
@@ -331,7 +331,7 @@ pd.FadeDownTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.TurnOffTilesTransition = function (t, s) {
@@ -340,7 +340,7 @@ pd.TurnOffTilesTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.SplitRowsTransition = function (t, s) {
@@ -349,7 +349,7 @@ pd.SplitRowsTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  */
 pd.SplitColsTransition = function (t, s) {

@@ -220,7 +220,7 @@ pd.roundToExtreme = function (number, extreme) {
  * @returns {cc.SpriteFrame}
  */
 pd.getSpriteFrame = function(spriteFrameName) {
-    if(spriteFrameName.lastIndexOf(".png") == -1)
+    if(!/\.(png|jpeg|jpg)/.test(spriteFrameName))
         spriteFrameName += ".png";
 
     return cc.spriteFrameCache.getSpriteFrame(spriteFrameName);
@@ -236,8 +236,10 @@ pd.getSpriteFrame = function(spriteFrameName) {
  * @returns {cc.Sprite}
  */
 pd.createSprite = function(spriteOrSpriteFrameName, attr, parentNode, localZOrder, editorName) {
-    if(typeof arguments[1] == 'number')
-        return pd.legacyCreateSprite.apply(pd, arguments);
+    if(typeof arguments[1] == 'number') {
+        cc.warn("[pd.createSprite] Ajustar código e refazer chamada legado a esse método");
+        return pd.createSprite(spriteOrSpriteFrameName, {x: attr, y: parentNode}, localZOrder, editorName, arguments[6] === true ? arguments[5] : null)
+    }
 
     const target = pd.getSpriteFrame(spriteOrSpriteFrameName) || spriteOrSpriteFrameName;
     const obj = new cc.Sprite(target);
@@ -306,8 +308,8 @@ pd.createTextWithStandardFont = function(fontID, x, y, fontSize, color, text, al
  * o segundo rect identifica as dimensões da área a ser exibida
  * O anchorPoint no clippingNode é de cc.p(0.5, 0.5)
  * @param {cc.Node} parent
- * @param {Number | cc.Rect} xOrClippingNodeRect
- * @param {Number | cc.Rect} yOrMaskRect
+ * @param {Number} x
+ * @param {Number} y
  * @param {Number} width
  * @param {Number} height
  * @param {Number} maskX
@@ -316,20 +318,20 @@ pd.createTextWithStandardFont = function(fontID, x, y, fontSize, color, text, al
  * @param {Number} maskHeight
  * @returns {cc.ClippingNode}
  */
-pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width, height, maskX, maskY, maskWidth, maskHeight) {
-    if (xOrClippingNodeRect.x !== undefined) {
-        maskX = yOrMaskRect.x;
-        maskY = yOrMaskRect.y;
-        maskWidth = yOrMaskRect.width;
-        maskHeight = yOrMaskRect.height;
+pd.createClippingNode = function(parent, x, y, width, height, maskX, maskY, maskWidth, maskHeight) {
+    if (x.x !== undefined) {
+        maskX = y.x;
+        maskY = y.y;
+        maskWidth = y.width;
+        maskHeight = y.height;
 
-        height = xOrClippingNodeRect.height;
-        width = xOrClippingNodeRect.width;
-        yOrMaskRect = xOrClippingNodeRect.y;
-        xOrClippingNodeRect = xOrClippingNodeRect.x;
+        height = x.height;
+        width = x.width;
+        y = x.y;
+        x = x.x;
     }
     var clippingNode = new cc.ClippingNode();
-    clippingNode.attr({x:xOrClippingNodeRect, y:yOrMaskRect, width:width, height:height});
+    clippingNode.attr({x:x, y:y, width:width, height:height});
     parent.addChild(clippingNode, 50);
 
     const stencil = new cc.DrawNode();
@@ -338,6 +340,14 @@ pd.createClippingNode = function(parent, xOrClippingNodeRect, yOrMaskRect, width
     clippingNode.stencil = stencil;
     return clippingNode;
 };
+/**
+ * @override
+ * @function pd.createClippingNode
+ * @param {cc.Node} parent
+ * @param {cc.Rect} ClippingNodeRect
+ * @param {cc.Rect} MaskRect
+ * @returns {cc.ClippingNode}
+ */
 
 /**
  * Cria um {@link pd.Animation} passando uma lista de {@link pd.AnimationData} a serem adicionadas
