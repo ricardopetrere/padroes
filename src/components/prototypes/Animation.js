@@ -117,12 +117,16 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
 
     /**
      * Adiciona uma animação a partir de frames específicos.
-     * @param {String} name - um nome customizado para a animação.
+     * @param {String | pd.AnimationData} name - um nome customizado para a animação.
      * @param {Number[]} frameIDs - o vetor com o id dos frames desejados.
      * @param {String} spriteFrameNamePattern - o padrão de nome da animação no spriteFrameCache.
      * @param {Number} [speed=24] - a velocidade da animação.
      */
     addAnimationWithFrames: function(name, frameIDs, spriteFrameNamePattern, speed) {
+        if (name instanceof pd.AnimationData) {
+            this.addAnimationWithFrames(name.name, name.frames, name.anim_name, name.speed);
+            return;
+        }
         const frames = [];
 
         for(var i = 0 ; i < frameIDs.length ; i++) {
@@ -343,7 +347,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
         this.animateAction = action;
 
         if(isRepeatable == true) {
-            this.animAction = repeatTimes ? new cc.Repeat(action, repeatTimes) : new cc.RepeatForever(action);
+            this.animAction = repeatTimes ? cc.sequence(new cc.Repeat(action, repeatTimes), cc.callFunc(this._onAnimCompleted, this)) : new cc.RepeatForever(action);
         }
         else {
             this.animAction = new cc.Sequence([action, new cc.CallFunc(this._onAnimCompleted, this)]);
@@ -385,7 +389,7 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
 
         if(isRepeatable == true) {
             if(repeatTimes) {
-                this.animAction = new cc.Sequence(pd.perfectCallFunc(this._setRunning, this, true), new cc.Repeat(action, repeatTimes));
+                this.animAction = new cc.Sequence(pd.perfectCallFunc(this._setRunning, this, true), new cc.Repeat(action, repeatTimes), new cc.CallFunc(this._onAnimCompleted, this));
             } else {
                 this.animAction = new cc.RepeatForever(new cc.Sequence(pd.perfectCallFunc(this._setRunning, this, true), action));
             }
@@ -482,12 +486,23 @@ pd.Animation = cc.Sprite.extend({/** @lends pd.Animation#**/
  * @extends cc.Class
  * @classdesc Estrutura-esqueleto de uma animação a ser usada.
  */
-pd.AnimationData = cc.Class.extend({
+pd.AnimationData = cc.Class.extend(/** @lends pd.AnimationData# */{
+    /**
+     * Indica se a animação está informando frames em sequência, ou apenas frames específicos
+     * @type {boolean}
+     */
+    _continuousFrames: true,
     /**
      * Nome da animação a ser informada em {@link pd.Animation.change}
      * @type {String}
      */
     name: "",
+    /**
+     * Vetor contendo os IDs dos frames da animação
+     * Ex: [5, 10, 15] significa que a animação comporta apenas os frames 5, 10 e 15
+     * @type {Number[]}
+     */
+    frames: null,
     /**
      * Frame inicial da animação (index do primeiro arquivo de imagem da animação. <br/>
      * Ex: no arquivo 'imagem0005.png', o index é 5
@@ -514,15 +529,23 @@ pd.AnimationData = cc.Class.extend({
     /**
      * @constructs
      * @param {String} name
-     * @param {Number} ini_frame
+     * @param {Number | Number[]} ini_frameOrFrames
      * @param {Number} last_frame
      * @param {Number} [speed]
      * @param {String} [spriteFramePattern]
      */
-    ctor: function (name, ini_frame, last_frame, speed, spriteFramePattern) {
+    ctor: function (name, ini_frameOrFrames, last_frame, speed, spriteFramePattern) {
         this.name = name;
-        this.ini_frame = ini_frame;
-        this.last_frame = last_frame;
+        if(ini_frameOrFrames.length != null) {
+            cc.log("this._continuousFrames = false");
+            this._continuousFrames = false;
+            this.frames = ini_frameOrFrames;
+            // spriteFramePattern = speed;
+            // speed = last_frame;
+        } else {
+            this.ini_frame = ini_frameOrFrames;
+            this.last_frame = last_frame;
+        }
         this.speed = speed || 24;
         this.anim_name = spriteFramePattern || name;
     },
@@ -534,7 +557,9 @@ pd.AnimationData = cc.Class.extend({
     getAnimationFrameName: function (frame) {
         if (frame === 0)
             return this.anim_name + ".png";
-        if (frame < this.ini_frame || frame > this.last_frame)
+        if (!this._continuousFrames && this.frames.indexOf(frame) < 0)
+            return null;
+        if (this._continuousFrames && (frame < this.ini_frame || frame > this.last_frame))
             return null;
         return this.anim_name + pd.numberToString(frame) + ".png";
     }

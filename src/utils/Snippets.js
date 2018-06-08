@@ -370,7 +370,12 @@ pd.createAnimation = function (attr, animacoes) {
         }
     }
     for (var i = 0; i < animationDataArray.length; i++) {
-        animation.addAnimation(animationDataArray[i]);
+        if(animationDataArray[i].frames != null) {
+            cc.log("addAnimationWithFrames");
+            animation.addAnimationWithFrames(animationDataArray[i]);
+        } else {
+            animation.addAnimation(animationDataArray[i]);
+        }
     }
     return animation;
 };
@@ -886,13 +891,26 @@ pd.rotatePolygon = function (polygon, degrees, anchorPoint, clone) {
     if (clone) {
         ret = pd.clonePolygon(polygon);
     }
+    var isPoint = ret.length === 1;
+    if(isPoint) {
+        ret.splice(0, 0, cc.p());
+        anchorPoint = cc.p();
+    }
     var midPoint = pd.calculatePolygonMidPoint(polygon, anchorPoint);
     var cos = Math.cos(cc.degreesToRadians(degrees)), sin = Math.sin(cc.degreesToRadians(degrees));
     for (var n = 0; n < ret.length; n++) {
         ret[n] = cc.p(
-            midPoint.x + ((ret[n].x - midPoint.x) * cos) - ((ret[n].y - midPoint.y) * sin),
-            midPoint.y + ((ret[n].x - midPoint.x) * sin) + ((ret[n].y - midPoint.y) * cos)
+            Math.round(
+                (midPoint.x + ((ret[n].x - midPoint.x) * cos) - ((ret[n].y - midPoint.y) * sin))
+                * 1000) / 1000
+            ,
+            Math.round(
+                (midPoint.y + ((ret[n].x - midPoint.x) * sin) + ((ret[n].y - midPoint.y) * cos))
+                * 1000) / 1000
         );
+    }
+    if(isPoint) {
+        ret.splice(0,1);
     }
     return ret;
 };
