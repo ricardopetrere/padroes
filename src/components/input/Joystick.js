@@ -17,7 +17,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
      * Indica se o controle está sendo movido.
      * @type {Boolean}
      */
-    _isGrabbed: false,
+    isGrabbed: false,
     /**
      * O objeto responsável por gerenciar o joystick.
      * @type {cc.Node}
@@ -102,7 +102,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
         this._pad = pd.createSprite(pd.SpriteFrames.JOYSTICK_PAD, this._radius, this._radius, this);
         pd.decorate(this._pad, pd.decorators.ResetableNode);
         this._pad.saveDisplayState();
-        this._isGrabbed = false;
+        this.isGrabbed = false;
 
         if(attr)
             this.attr(pd.parseAttr(attr));
@@ -244,7 +244,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     },
 
     /**
-     * @param {Object} eventOrTouch
+     * @param {cc.EventMouse | cc.Touch} eventOrTouch
      * @private
      */
     _onMouseDown: function(eventOrTouch) {
@@ -275,7 +275,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     },
 
     /**
-     * @param {Object} eventOrTouch
+     * @param {cc.EventMouse | cc.Touch} eventOrTouch
      * @private
      */
     _onMouseDragged: function(eventOrTouch) {
@@ -286,7 +286,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
     },
 
     /**
-     * @param {Object} eventOrTouch
+     * @param {cc.EventMouse | cc.Touch} eventOrTouch
      * @private
      */
     _onMouseUp: function(eventOrTouch) {

@@ -1,25 +1,103 @@
 /**
  * Created by Ryan Balieiro on 23/05/17.
+ * Updated by Ricardo Petrére on 14/06/18. - Criados regions pra facilitar a navegação, e colocados warnings ao usar cada um.
  * @desc Listagem de propriedades depreciadas durante alterações dos padrões para manter a compatibilidade com versões antigas.
  */
+//region Globais
+/**
+ * @type {string}
+ * @deprecated Desde a versão 3.0.0, usar {@link pd.padroesPath}
+ */
+this.__defineGetter__("padroesPath", function() {
+    cc.warn("[padroesPath] Utilizar pd.padroesPath");
+    return pd.padroesPath;
+});
 
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.delegate.activeNamespace}.
  * @type {Object}
  */
-activeGameSpace = pd.delegate.activeNamespace;
+this.__defineGetter__("activeGameSpace", function() {
+    cc.warn("[activeGameSpace] Utilizar pd.delegate.activeNamespace")
+    return pd.delegate.activeNamespace;
+});
 
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.delegate.isPaused}.
  * @type {boolean}
  */
-isPaused = pd.delegate.isPaused;
+this.__defineGetter__("isPaused", function() {
+    cc.warn("[isPaused] Utilizar pd.delegate.isPaused")
+    return pd.delegate.isPaused;
+});
 
+/**
+ * @deprecated - desde a versao 2.3.
+ * @type {number}
+ */
+this.__defineGetter__("SingletonId_Animacoes", function () {
+    cc.warn("[SingletonId_Animacoes] Não utilizar mais objetos pd.Animado. Trocar para pd.Animation");
+    return 0;
+});
+
+/**
+ * @deprecated - desde a versão 2.2 - não utilizar mais este recurso! Utilizar {@link pd.debugMode}, e setar o modo debug via project.json.
+ * @type {undefined}
+ */
+this.__defineGetter__("DebugMode", function() {
+    cc.warn("[DebugMode] Não utilizar mais esse recurso! utilizar pd.debugMode e setar o modo debug via project.json");
+    return undefined;
+});
+
+/**
+ * @deprecated - desde a versão 2.2 - utilizar {@link pd.natives.openURL}.
+ */
+abreLink = function () {
+    cc.warn("[abreLink] utilizar pd.natives.openURL");
+    pd.natives.openURL.apply(pd.natives, arguments);
+}
+
+/**
+ * @deprecated - desde a versão 2.2 - utilizar {@link pd.natives.openURL}.
+ */
+abreLinkIOS = function () {
+    cc.warn("[abreLinkIOS] utilizar pd.natives.openURL");
+    pd.natives.openURL.apply(pd.natives, arguments);
+}
+
+/**
+ * @deprecated - desde a versão 2.2 - utilizar {@link pd.validate}.
+ */
+registrarValidacao = function () {
+    cc.warn("[registrarValidacao] utilizar pd.validate");
+    pd.validate();
+}
+
+/**
+ * @deprecated - desde a versão 2.2 - utilizar {@link pd.checkValidation}.
+ */
+checarValidacao = function () {
+    cc.warn("[checarValidacao] utilizar pd.checkValidation");
+    return pd.checkValidation();
+}
+
+/**
+ * @deprecated - desde a versão 2.2 - utilizar {@link pd.res}.
+ */
+pd.__defineGetter__("resPadrao", function() {
+    cc.warn("[pd.resPadrao] utilizar pd.res");
+    return pd.res;
+});
+//endregion
+//region Criação antiga de sprites
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.createSprite}.
  * A função ainda é a mesma, apenas foi dado um nome mais claro à ela.
  */
-pd.cObject = pd.legacyCreateSprite;
+pd.cObject = function () {
+    cc.warn("[pd.cObject] Utilizar pd.createSprite");
+    return pd.createSprite.apply(pd, arguments);
+}
 
 /**
  * Cria uma sprite.
@@ -30,119 +108,114 @@ pd.cObject = pd.legacyCreateSprite;
  * @param {Number} zOrder
  * @param {String} [name]
  * @param {boolean} [addToEditor]
+ * @deprecated - Ajustar código e usar {@link pd.createSprite}
  * @returns {cc.Sprite}
  */
-pd.legacyCreateSprite = function(spriteName, x, y, parentNode, zOrder, name, addToEditor){
-    var SF = pd.getSpriteFrame(spriteName);
-    if (!SF)
-        SF = spriteName;
-    const obj = new cc.Sprite(SF);
-    obj.setPosition(x, y);
-    obj.name = name;
-    zOrder = zOrder || 0;
-
-    if(parentNode != undefined && parentNode != null)
-        parentNode.addChild(obj, zOrder);
-
-    if(!cc.sys.isNative && pd.debugMode && addToEditor)
-        pd.Editor.add(obj);
-
-    return obj;
-};
+pd.legacyCreateSprite = function() {
+    cc.warn("[pd.legacyCreateSprite] Utilizar pd.createSprite");
+    return pd.createSprite.apply(pd, arguments);
+}
 
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.createText}.
  */
 pd.cText = function(x, y, txt, font, size){
-    var text = null;
-    if(typeof txt == "string"){
-        text = new cc.LabelTTF(txt, font, size);
-        text.setFontFillColor(new cc.Color(0, 0, 0));
+    if(typeof txt == "string") {
+        cc.warn("Ajustar código e usar pd.createText");
+        var obj = pd.createText(font, font, x, y, size, cc.color.BLACK, txt);
+        obj.setAnchorPoint(0.5, 1);
+        return obj;
+    } else {
+        cc.warn("Usar pd.createSprite ao invés dessa função.");
+        return pd.createSprite(txt, {x: x, y: y, anchorX: 0.5, anchorY: 1});
     }
-    else{
-        text = new cc.Sprite(txt);
-    }
-    text.setPosition(x, y);
-    text.setAnchorPoint(0.5, 1);
-    return text;
 };
-
+//endregion
+//region delegate
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.delegate.init}.
  */
-pd.initGlobals = pd.delegate.init;
-
-/**
- * @deprecated - desde a versão 2.2 - utilizar {@link pd.switchScene}.
- * A função ainda é a mesma, apenas foi refatorado o seu nome para enquadrar-se no padrão.
- */
-pd.trocaCena = pd.switchScene;
-
-/**
- * @deprecated - desde a versão 2.2 - utilizar {@link pd.natives.openURL}.
- */
-abreLink = pd.natives.openURL;
-
-/**
- * @deprecated - desde a versão 2.2 - utilizar {@link pd.natives.openURL}.
- */
-abreLinkIOS = pd.natives.openURL;
-
-/**
- * @deprecated - desde a versão 2.2 - utilizar {@link pd.validate}.
- */
-registrarValidacao = pd.validate;
-
-/**
- * @deprecated - desde a versão 2.2 - utilizar {@link pd.checkValidation}.
- */
-checarValidacao = pd.checkValidation;
+pd.initGlobals = function () {
+    cc.warn("[pd.initGlobals] utilizar pd.delegate.init");
+    pd.delegate.init();
+}
 
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.delegate.pause}.
  */
-pd.pausar = pd.delegate.pause;
+pd.pausar = function () {
+    cc.warn("[pd.pausar] utilizar pd.delegate.pause");
+    return pd.delegate.pause.apply(pd.delegate, arguments);
+}
 
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.delegate.resume}.
  */
-pd.resumar = pd.delegate.resume;
+pd.resumar = function () {
+    cc.warn("[pd.resumar] utilizar pd.delegate.resume");
+    pd.delegate.resume.apply(pd.delegate, arguments);
+}
 
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.delegate.retain} ou {@link pd.retain}.
  */
-pd.reter = pd.retain;
+pd.reter = function () {
+    cc.warn("[pd.reter] utilizar pd.delegate.retain ou pd.retain");
+    pd.delegate.retain.apply(pd, arguments);
+}
 
 /**
  * @deprecated - desde a versão 2.2 - não fazer chamadas a essa função - deixar apenas ela para ser manipulada pelo controlador interno.
  */
-pd.liberar = pd.delegate.releaseAll;
+pd.liberar = function () {
+    cc.warn("[pd.liberar] utilizar pd.delegate.releaseAll");
+    pd.delegate.releaseAll();
+}
 
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.delegate.finish}.
  */
-pd.finishGame = pd.delegate.finish;
+pd.finishGame = function () {
+    cc.warn("[pd.finishGame] utilizar pd.delegate.finish");
+    pd.delegate.finish();
+}
 
 /**
- * @deprecated - desde a versão 2.2 - utilizar {@link pd.res}.
+ * Executa a animação de vitória.
+ * @param {cc.SpriteFrame} circleSpriteFrame
+ * @param {cc.SpriteFrame} messageSpriteFrame
+ * @param {Boolean} [tiltScreen=true]
+ * @deprecated desde a versão 3.0 - Usar {@link pd.delegate.winGame}
  */
-pd.resPadrao = pd.res;
+pd.GameScene.prototype.winGame = function(circleSpriteFrame, messageSpriteFrame, tiltScreen) {
+    cc.warn("[pd.GameScene.winGame] utilizar pd.delegate.winGame");
+    pd.delegate.winGame(circleSpriteFrame, messageSpriteFrame, tiltScreen);
+};
 
 /**
- * @deprecated - desde a versão 2.2 - não utilizar mais este recurso! Utilizar {@link pd.debugMode}, e setar o modo debug via project.json.
- * @type {undefined}
+ * Executa a animação de derrota.
+ * @param {cc.SpriteFrame} circleSpriteFrame
+ * @param {Boolean} [tiltScreen=true]
+ * @deprecated desde a versão 3.0 - Usar {@link pd.delegate.loseGame}
  */
-DebugMode = undefined;
-
+pd.GameScene.prototype.loseGame = function(circleSpriteFrame, tiltScreen) {
+    cc.warn("[pd.GameScene.loseGame] utilizar pd.delegate.loseGame");
+    pd.delegate.loseGame(circleSpriteFrame, tiltScreen);
+};
+//endregion
+//region pd.Tutorial e pd.TutorialLayer
 /**
  * @deprecated - desde a versão 2.2 - utilizar {@link pd.Tutorial}.
  */
-pd.TutorialScene = pd.Tutorial;
+pd.__defineGetter__("TutorialScene", function(){
+    cc.warn("Utilizar pd.Tutorial");
+    return pd.Tutorial;
+});
 
 /**
  * @deprecated
  */
-pd.LegacyTutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
+pd.LegacyTutorialLayer = cc.Layer.extend({/**@lends pd.LegacyTutorialLayer#*/
     accelerometer:null,
     btnArrowUp: null,
     btnArrowDown: null,
@@ -156,6 +229,7 @@ pd.LegacyTutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
     pageID:-1,
 
     ctor: function(txt) {
+        cc.warn("[pd.LegacyTutorialLayer] Favor ajustar o código e, então, passar a utilizar a nova pd.TutorialLayer");
         this._super();
         this._createBottomText(txt);
     },
@@ -306,48 +380,76 @@ pd.LegacyTutorialLayer = cc.Layer.extend({/**@lends pd.TutorialLayer#*/
 /**
  * @deprecated - desde a versão 2.2.
  */
-pd.LegacyTutorialLayer.prototype.criarTextoInferior = pd.LegacyTutorialLayer.prototype.createBottomText;
+pd.LegacyTutorialLayer.prototype.criarTextoInferior = function (txt) {
+    cc.warn("[pd.LegacyTutorialLayer.prototype.criarTextoInferior] Utilizar pd.LegacyTutorialLayer.prototype._createBottomText");
+    pd.LegacyTutorialLayer.prototype._createBottomText(txt);
+}
 
 /**
  * @deprecated - desde a versão 2.2.
  */
-pd.LegacyTutorialLayer.prototype.createTeclas = pd.LegacyTutorialLayer.prototype.createArrowKeys;
+pd.LegacyTutorialLayer.prototype.createTeclas = function (offset) {
+    cc.warn("[pd.LegacyTutorialLayer.prototype.createTeclas] Utilizar pd.LegacyTutorialLayer.prototype.createArrowKeys");
+    return pd.LegacyTutorialLayer.prototype.createArrowKeys(offset);
+}
 
 /**
  * @deprecated - desde a versão 2.2.
  */
-pd.LegacyTutorialLayer.prototype.createPonteiro = pd.LegacyTutorialLayer.prototype.createPointer;
+pd.LegacyTutorialLayer.prototype.createPonteiro = function (initialPosition) {
+    cc.warn("[pd.LegacyTutorialLayer.prototype.createPonteiro] Utilizar pd.LegacyTutorialLayer.prototype.createPointer");
+    pd.LegacyTutorialLayer.prototype.createPointer(initialPosition);
+}
 
 /**
  * @deprecated - desde a versão 2.6.
  */
-pd.LegacyTutorialLayer.prototype.tecla_cima = pd.LegacyTutorialLayer.prototype.btnArrowUp;
+pd.LegacyTutorialLayer.prototype.__defineGetter__("tecla_cima", function () {
+    cc.warn("[pd.LegacyTutorialLayer.tecla_cima] Utilizar a propriedade btnArrowUp");
+    return pd.LegacyTutorialLayer.prototype.btnArrowUp;
+});
 
 /**
  * @deprecated - desde a versão 2.6.
  */
-pd.LegacyTutorialLayer.prototype.tecla_baixo = pd.LegacyTutorialLayer.prototype.btnArrowDown;
+pd.LegacyTutorialLayer.prototype.__defineGetter__("tecla_baixo", function () {
+    cc.warn("[pd.LegacyTutorialLayer.tecla_baixo] Utilizar a propriedade btnArrowDown");
+    return pd.LegacyTutorialLayer.prototype.btnArrowDown;
+});
 
 /**
  * @deprecated - desde a versão 2.6.
  */
-pd.LegacyTutorialLayer.prototype.tecla_esquerda = pd.LegacyTutorialLayer.prototype.btnArrowLeft;
+pd.LegacyTutorialLayer.prototype.__defineGetter__("tecla_esquerda", function () {
+    cc.warn("[pd.LegacyTutorialLayer.tecla_esquerda] Utilizar a propriedade btnArrowLeft");
+    return pd.LegacyTutorialLayer.prototype.btnArrowLeft;
+});
 
 /**
  * @deprecated - desde a versão 2.6.
  */
-pd.LegacyTutorialLayer.prototype.tecla_direita = pd.LegacyTutorialLayer.prototype.btnArrowRight;
+pd.LegacyTutorialLayer.prototype.__defineGetter__("tecla_direita", function () {
+    cc.warn("[pd.LegacyTutorialLayer.tecla_direita] Utilizar a propriedade btnArrowRight");
+    return pd.LegacyTutorialLayer.prototype.btnArrowRight;
+});
 
 /**
  * @deprecated - desde a versão 2.6.
  */
-pd.LegacyTutorialLayer.prototype.vTeclas = pd.LegacyTutorialLayer.prototype.arrowKeys;
+pd.LegacyTutorialLayer.prototype.__defineGetter__("vTeclas", function () {
+    cc.warn("[pd.LegacyTutorialLayer.vTeclas] Utilizar a propriedade arrowKeys");
+    return pd.LegacyTutorialLayer.prototype.arrowKeys;
+});
 
 /**
  * @deprecated - desde a versão 2.6.
  */
-pd.LegacyTutorialLayer.prototype.ponteiro = pd.LegacyTutorialLayer.prototype.pointer;
-
+pd.LegacyTutorialLayer.prototype.__defineGetter__("ponteiro", function () {
+    cc.warn("[pd.LegacyTutorialLayer.ponteiro] Utilizar a propriedade pointer");
+    return pd.LegacyTutorialLayer.prototype.pointer;
+});
+//endregion
+//region debugger
 /**
  * @deprecated - desde a versão 2.3 - utilizar a função {@link pd.debugger.addShortcut}.
  * @param {string} targetSceneName
@@ -356,15 +458,27 @@ pd.LegacyTutorialLayer.prototype.ponteiro = pd.LegacyTutorialLayer.prototype.poi
  * @param {*} callbackArguments
  */
 pd.Debugger.prototype.addScene = function(targetSceneName, callbackFunction, callbackCaller, callbackArguments) {
+    cc.warn("[pd.Debugger.prototype.addScene] Utilizar pd.debugger.addShortcut");
     pd.debugger.addShortcut(targetSceneName, callbackFunction, callbackCaller, callbackArguments);
 };
 
+/**
+ * @deprecated - desde a versão 2.5 - utilizar {@link pd.Editor.add}
+ */
+pd.AddToDebugger = function(obj, type, name) {
+    cc.warn("[pd.AddToDebugger] Utilizar pd.Editor.add");
+    // if (!cc.sys.isNative && pd.debugMode)
+    //     pd.Editor.add(obj, type, name);
+};
+//endregion
+//region inputManager
 /**
  * @deprecated - desde a versão 2.3 - utilizar {@link pd.inputManager.add}.
  * @example
  * pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, this.onMouseDown);
  */
 pd.setInput = function(layer, eventId, funcToCall, multiTouch) {
+    cc.warn("[pd.setInput] utilizar pd.inputManager.add");
     if(multiTouch)
         pd.inputManager.config(layer, true);
 
@@ -388,22 +502,34 @@ pd.setInput = function(layer, eventId, funcToCall, multiTouch) {
  * @deprecated
  * @type {number}
  */
-pd.setInput.MOUSE_DOWN = 0;
+pd.setInput.__defineGetter__("MOUSE_DOWN", function() {
+    cc.warn("[pd.setInput.MOUSE_DOWN] Ajustar código para utilizar pd.inputManager e então utilizar pd.InputManager.Events.MOUSE_DOWN");
+    return 0;
+});
 /**
  * @deprecated
  * @type {number}
  */
-pd.setInput.MOUSE_MOVE = 1;
+pd.setInput.__defineGetter__("MOUSE_MOVE", function() {
+    cc.warn("[pd.setInput.MOUSE_MOVE] Ajustar código para utilizar pd.inputManager e então utilizar pd.InputManager.Events.MOUSE_MOVE");
+    return 1;
+});
 /**
  * @deprecated
  * @type {number}
  */
-pd.setInput.MOUSE_UP = 2;
+pd.setInput.__defineGetter__("MOUSE_UP", function() {
+    cc.warn("[pd.setInput.MOUSE_UP] Ajustar código para utilizar pd.inputManager e então utilizar pd.InputManager.Events.MOUSE_UP");
+    return 2;
+});
 /**
  * @deprecated
  * @type {number}
  */
-pd.setInput.ACCELEROMETER = 3;
+pd.setInput.__defineGetter__("ACCELEROMETER", function() {
+    cc.warn("[pd.setInput.ACCELEROMETER] Ajustar código para utilizar pd.inputManager e então utilizar pd.InputManager.Events.ACCELEROMETER");
+    return 3;
+});
 
 /**
  * @deprecated - desde a versão 2.3 - utilizar {@link pd.inputManager.add}.
@@ -411,6 +537,7 @@ pd.setInput.ACCELEROMETER = 3;
  * pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, this, this.onMouseDown);
  */
 pd.setKeyboard = function(layer, funcKeyDown, funcKeyUp) {
+    cc.warn("[pd.setKeyboard] utilizar pd.inputManager.add");
     pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, layer, funcKeyDown);
     pd.inputManager.add(pd.InputManager.EVENT_KEY_UP, layer, funcKeyUp);
 };
@@ -419,6 +546,7 @@ pd.setKeyboard = function(layer, funcKeyDown, funcKeyUp) {
  * @deprecated - desde a versão 2.3 - utilizar {@link pd.inputManager.add}.
  */
 pd.setMouse = function(layer, funcMouseDown, funcMouseMove, funcMouseUp, multiTouch) {
+    cc.warn("[pd.setMouse] utilizar pd.inputManager.add");
     if(multiTouch)
         pd.inputManager.config(layer, true);
     pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, layer, funcMouseDown);
@@ -430,6 +558,7 @@ pd.setMouse = function(layer, funcMouseDown, funcMouseMove, funcMouseUp, multiTo
  * @deprecated - desde a versão 2.3 - utilizar {@link pd.inputManager.add}.
  */
 pd.setInputForButton = function(layer) {
+    cc.warn("[pd.setInputForButton] utilizar pd.inputManager.add");
     pd.inputManager.config(layer, false, cc.EventListener.TOUCH_ALL_AT_ONCE, 1);
     pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, layer, "onMouseDown");
     pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, layer, "onMouseDragged");
@@ -438,37 +567,6 @@ pd.setInputForButton = function(layer) {
     pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, layer, "keyDown");
     pd.inputManager.add(pd.InputManager.EVENT_KEY_UP, layer, "keyReleased");
 };
-
-/**
- * @deprecated - desde a versão 2.3 - utilizar {@link pd.Animation}.
- */
-pd.Animado = pd.Animation;
-
-/**
- * @deprecated - desde a versão 2.3 - utilizar {@link pd.Animation.changeAndPlay}, {@link pd.Animation.changeAndLoop} ou {@link pd.Animation.changeAndStop}.
- */
-pd.Animation.prototype.changeAnimation = function(newAnimation, repeatable, newSpeed, taxaRepeticao, callBack) {
-    if(repeatable == true || repeatable == null)
-        this.changeAndLoop(newAnimation, newSpeed);
-    else
-        this.changeAndPlay(newAnimation, taxaRepeticao, newSpeed, callBack, this.getParent());
-};
-
-/**
- * @deprecated - desde a versão 2.3 utilizar {@link pd.Button.prototype.setForceMouseUpCall}
- */
-pd.Button.prototype.setCallUpEvent = pd.Button.prototype.setForceMouseUpCall;
-
-/**
- * @deprecated - desde a versão 2.3 - utilizar {@link pd.Button.prototype.setKeyCode}
- */
-pd.Button.prototype.defineKey = pd.Button.prototype.setKeyCode;
-
-/**
- * @deprecated - desde a versao 2.3.
- * @type {number}
- */
-SingletonId_Animacoes = 0;
 
 /**
  * @deprecated - desde a versão 2.3 - utilizar {@link pd.Joystick.prototype.enable}
@@ -482,152 +580,226 @@ pd.setInputForJoystick = function() {
  * @constant
  * @type {string}
  */
-pd.InputManager.EVENT_MOUSE_DOWN = "eventTypeMouseDown";
+pd.InputManager.__defineGetter__("EVENT_MOUSE_DOWN", function () {
+    cc.warn("[pd.InputManager.EVENT_MOUSE_DOWN] Utilizar a referência enumerador pd.InputManager.Events");
+    return pd.InputManager.Events.MOUSE_DOWN;
+});
 
 /**
  * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
  * @constant
  * @type {string}
  */
-pd.InputManager.EVENT_MOUSE_HOVER = "eventMouseHover";
+pd.InputManager.__defineGetter__("EVENT_MOUSE_HOVER", function () {
+    cc.warn("[pd.InputManager.EVENT_MOUSE_HOVER] Utilizar a referência enumerador pd.InputManager.Events");
+    return pd.InputManager.Events.MOUSE_HOVER;
+});
 
 /**
  * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
  * @constant
  * @type {string}
  */
-pd.InputManager.EVENT_MOUSE_PAN = "eventMousePan";
+pd.InputManager.__defineGetter__("EVENT_MOUSE_PAN", function () {
+    cc.warn("[pd.InputManager.EVENT_MOUSE_PAN] Esse tipo de evento não existe");
+    return null;
+});
 
 /**
  * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
  * @constant
  * @type {string}
  */
-pd.InputManager.EVENT_MOUSE_MOVE = "eventTypeMouseMove";
+pd.InputManager.__defineGetter__("EVENT_MOUSE_MOVE", function () {
+    cc.warn("[pd.InputManager.EVENT_MOUSE_MOVE] Utilizar a referência enumerador pd.InputManager.Events");
+    return pd.InputManager.Events.MOUSE_MOVE;
+});
 
 /**
  * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
  * @constant
  * @type {string}
  */
-pd.InputManager.EVENT_MOUSE_SCROLL = "eventMouseScroll";
+pd.InputManager.__defineGetter__("EVENT_MOUSE_SCROLL", function () {
+    cc.warn("[pd.InputManager.EVENT_MOUSE_SCROLL] Utilizar a referência enumerador pd.InputManager.Events");
+    return pd.InputManager.Events.MOUSE_SCROLL;
+});
 
 /**
  * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
  * @constant
  * @type {string}
  */
-pd.InputManager.EVENT_MOUSE_UP = "eventTypeMouseUp";
+pd.InputManager.__defineGetter__("EVENT_MOUSE_UP", function () {
+    cc.warn("[pd.InputManager.EVENT_MOUSE_UP] Utilizar a referência enumerador pd.InputManager.Events");
+    return pd.InputManager.Events.MOUSE_UP;
+});
 
 /**
  * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
  * @constant
  * @type {string}
  */
-pd.InputManager.EVENT_KEY_DOWN = "eventTypeKeyDown";
+pd.InputManager.__defineGetter__("EVENT_KEY_DOWN", function () {
+    cc.warn("[pd.InputManager.EVENT_KEY_DOWN] Utilizar a referência enumerador pd.InputManager.Events");
+    return pd.InputManager.Events.KEY_DOWN;
+});
 
 /**
  * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
  * @constant
  * @type {string}
  */
-pd.InputManager.EVENT_KEY_UP = "eventTypeKeyUp";
+pd.InputManager.__defineGetter__("EVENT_KEY_UP", function () {
+    cc.warn("[pd.InputManager.EVENT_KEY_UP] Utilizar a referência enumerador pd.InputManager.Events");
+    return pd.InputManager.Events.KEY_UP;
+});
 
 /**
  * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
  * @constant
  * @type {string}
  */
-pd.InputManager.EVENT_ACCELEROMETER = "eventTypeAccelerometer";
+pd.InputManager.__defineGetter__("EVENT_ACCELEROMETER", function () {
+    cc.warn("[pd.InputManager.EVENT_ACCELEROMETER] Utilizar a referência enumerador pd.InputManager.Events");
+    return pd.InputManager.Events.ACCELEROMETER;
+});
 
 /**
  * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
  * @constant
  * @type {string}
  */
-pd.InputManager.EVENT_BUTTON_PRESSED = "eventButtonPress";
+pd.InputManager.__defineGetter__("EVENT_BUTTON_PRESSED", function () {
+    cc.warn("[pd.InputManager.EVENT_BUTTON_PRESSED] Utilizar a referência enumerador pd.InputManager.Events");
+    return pd.InputManager.Events.BUTTON_PRESSED;
+});
 
 /**
  * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
  * @constant
  * @type {string}
  */
-pd.InputManager.EVENT_BUTTON_RELEASED = "eventButtonReleased";
+pd.InputManager.__defineGetter__("EVENT_BUTTON_RELEASED", function () {
+    cc.warn("[pd.InputManager.EVENT_BUTTON_RELEASED] Utilizar a referência enumerador pd.InputManager.Events");
+    return pd.InputManager.Events.BUTTON_RELEASED;
+});
 
 /**
  * @deprecated - desde a versão 2.4 - utilizar a referência enumerador {@link pd.InputManager.Events}
  * @constant
  * @type {string}
  */
-pd.InputManager.EVENT_JOYSTICK_STATUS = "eventJoystickStatus";
+pd.InputManager.__defineGetter__("EVENT_JOYSTICK_STATUS", function () {
+    cc.warn("[pd.InputManager.EVENT_JOYSTICK_STATUS] Utilizar a referência enumerador pd.InputManager.Events");
+    return pd.InputManager.Events.JOYSTICK_STATUS;
+});
+//endregion
+//region pd.Animation
+/**
+ * @deprecated - desde a versão 2.3 - utilizar {@link pd.Animation}.
+ */
+pd.__defineGetter__("Animado", function(){
+    cc.warn("Utilizar pd.Animation");
+    return pd.Animation;
+});
 
 /**
- * @deprecated - desde a versão 2.5 - utilizar {@link pd.Editor.add}
+ * @deprecated - desde a versão 2.3 - utilizar {@link pd.Animation.changeAndPlay}, {@link pd.Animation.changeAndLoop} ou {@link pd.Animation.changeAndStop}.
  */
-pd.AddToDebugger = function(obj, type, name) {
-    // if (!cc.sys.isNative && pd.debugMode)
-    //     pd.Editor.add(obj, type, name);
+pd.Animation.prototype.changeAnimation = function(newAnimation, repeatable, newSpeed, taxaRepeticao, callBack) {
+    cc.warn("[pd.Animation.changeAnimation] utilizar pd.Animation.changeAndPlay, pd.Animation.changeAndLoop ou pd.Animation.changeAndStop");
+    if(repeatable == true || repeatable == null)
+        this.changeAndLoop(newAnimation, newSpeed);
+    else
+        this.changeAndPlay(newAnimation, taxaRepeticao, newSpeed, callBack, this.getParent());
 };
+//endregion
+//region pd.Button
+/**
+ * @deprecated - desde a versão 2.3 utilizar {@link pd.Button.prototype.setForceMouseUpCall}
+ */
+pd.Button.prototype.setCallUpEvent = function (forceMouseUpCall) {
+    cc.warn("[pd.Button.setCallUpEvent] utilizar pd.Button.setForceMouseUpCall");
+    pd.Button.prototype.setForceMouseUpCall(forceMouseUpCall);
+}
 
 /**
- * Executa a animação de vitória.
- * @param {cc.SpriteFrame} circleSpriteFrame
- * @param {cc.SpriteFrame} messageSpriteFrame
- * @param {Boolean} [tiltScreen=true]
- * @deprecated desde a versão 3.0 - Usar {@link pd.delegate.winGame}
+ * @deprecated - desde a versão 2.3 - utilizar {@link pd.Button.prototype.setKeyCode}
  */
-pd.GameScene.prototype.winGame = function(circleSpriteFrame, messageSpriteFrame, tiltScreen) {
-    pd.delegate.winGame(circleSpriteFrame, messageSpriteFrame, tiltScreen);
-};
-
-/**
- * Executa a animação de derrota.
- * @param {cc.SpriteFrame} circleSpriteFrame
- * @param {Boolean} [tiltScreen=true]
- * @deprecated desde a versão 3.0 - Usar {@link pd.delegate.loseGame}
- */
-pd.GameScene.prototype.loseGame = function(circleSpriteFrame, tiltScreen) {
-    pd.delegate.loseGame(circleSpriteFrame, tiltScreen);
-};
-
-/**
- * @deprecated - desde a versão 2.6 - utilizar {@link pd.TypewriterLabel}
- */
-pd.TextCreator = pd.TypewriterLabel;
-
-/**
- * @deprecated - desde a versão 2.6 - utilizar {@link pd.TypewriterLabel.prototype.setOnComplete}
- */
-pd.TypewriterLabel.prototype.addFinishCallback = pd.TypewriterLabel.prototype.setOnComplete;
-
-/**
- * @deprecated - desde a versão 2.6 - utilizar {@link pd.TypewriterLabel.prototype.setOnComplete}
- */
-pd.TypewriterLabel.prototype.addTextLine = pd.TypewriterLabel.prototype.addLine;
-
-/**
- * @deprecated - desde a versão 2.6 - utilizar {@link pd.TypewriterLabel.prototype.setOnComplete}
- */
-pd.TypewriterLabel.prototype.startUpdate = pd.TypewriterLabel.prototype.start;
-
-/**
- * @deprecated - desde a versão 2.6 utilizat {@link pd.TypewriterLabel.prototype.config}
- * @param target
- * @param displayingLinesAmount
- */
-pd.TextCreator.setFadeType = function(target, displayingLinesAmount){
-    target.config(displayingLinesAmount);
-};
+pd.Button.prototype.defineKey = function (keyCode) {
+    cc.warn("[pd.Button.defineKey] utilizar pd.Button.setKeyCode");
+    pd.Button.prototype.setKeyCode(keyCode);
+}
 
 /**
  * @deprecated - desde a versão 2.6 - utilizar {@link pd.Button.States.NORMAL}
  */
-pd.Button.States.SPRITEFRAME_NORMAL = "normal";
+pd.Button.States.__defineGetter__("SPRITEFRAME_NORMAL", function () {
+    cc.warn("[pd.Button.States.SPRITEFRAME_NORMAL] utilizar pd.Button.States.NORMAL");
+    return pd.Button.States.NORMAL;
+});
 
 /**
  * @deprecated - desde a versão 2.6 - utilizar {@link pd.Button.States.PRESSED}
  */
-pd.Button.States.SPRITEFRAME_PRESSED = "pressed";
+pd.Button.States.__defineGetter__("SPRITEFRAME_PRESSED", function () {
+    cc.warn("[pd.Button.States.SPRITEFRAME_PRESSED] utilizar pd.Button.States.PRESSED");
+    return pd.Button.States.PRESSED;
+});
+//endregion
+//region TypewriterLabel
+/**
+ * @deprecated - desde a versão 2.6 - utilizar {@link pd.TypewriterLabel}
+ */
+pd.__defineGetter__("TextCreator", function(){
+    cc.warn("Utilizar pd.TypewriterLabel");
+    return pd.TypewriterLabel;
+});
+
+/**
+ * @deprecated - desde a versão 2.6 - utilizar {@link pd.TypewriterLabel.prototype.setOnComplete}
+ */
+pd.TypewriterLabel.prototype.addFinishCallback = function() {
+    cc.warn("[pd.TypewriterLabel.addFinishCallback] utilizar pd.TypewriterLabel.setOnComplete");
+    pd.TypewriterLabel.prototype.setOnComplete.apply(pd.TypewriterLabel.prototype, arguments);
+};
+
+/**
+ * @deprecated - desde a versão 2.6 - utilizar {@link pd.TypewriterLabel.prototype.addLine}
+ */
+pd.TypewriterLabel.prototype.addTextLine = function() {
+    cc.warn("[pd.TypewriterLabel.addTextLine] utilizar pd.TypewriterLabel.addLine");
+    pd.TypewriterLabel.prototype.addLine.apply(pd.TypewriterLabel.prototype, arguments);
+};
+
+/**
+ * @deprecated - desde a versão 2.6 - utilizar {@link pd.TypewriterLabel.prototype.start}
+ */
+pd.TypewriterLabel.prototype.startUpdate = function() {
+    cc.warn("[pd.TypewriterLabel.startUpdate] utilizar pd.TypewriterLabel.start");
+    pd.TypewriterLabel.prototype.start.apply(pd.TypewriterLabel.prototype, arguments);
+};
+
+/**
+ * @deprecated - desde a versão 2.6 utilizar {@link pd.TypewriterLabel.prototype.config}
+ * @param {pd.TypewriterLabel} target
+ * @param {number} displayingLinesAmount
+ */
+pd.TextCreator.setFadeType = function(target, displayingLinesAmount){
+    cc.warn("[pd.TextCreator.setFadeType] utilizar pd.TypewriterLabel.config");
+    target.config(displayingLinesAmount);
+};
+//endregion
+//region Navegação de cenas
+/**
+ * @deprecated - desde a versão 2.2 - utilizar {@link pd.switchScene}.
+ * A função ainda é a mesma, apenas foi refatorado o seu nome para enquadrar-se no padrão.
+ */
+pd.trocaCena = function () {
+    cc.warn("[pd.trocaCena] utilizar pd.switchScene");
+    pd.switchScene.apply(pd, arguments);
+}
 
 /**
  * Troca a cena atual para a cena informada (antigo pd.trocaCena()).
@@ -638,6 +810,7 @@ pd.Button.States.SPRITEFRAME_PRESSED = "pressed";
  * @deprecated Usar {@link pd.changeScene}
  */
 pd.switchScene = function(transition, layer, delay) {
+    cc.warn("[pd.switchScene] Usar pd.changeScene");
     if(!layer._didGetDestroyed) {
         layer._didGetDestroyed = true;
         var delayTime = new cc.DelayTime(delay || 0.5);
@@ -650,7 +823,8 @@ pd.switchScene = function(transition, layer, delay) {
         layer.runAction(switchSequence);
     }
 };
-
+//endregion
+//region Transitions
 /**
  * @param {Number} t
  * @param {cc.Scene} s
@@ -658,6 +832,7 @@ pd.switchScene = function(transition, layer, delay) {
  * @param {Number} z
  * @param {Number} x
  * @param {Number} y
+ * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
 var ZoomTo = function (t, s, layer, z, x, y) {
@@ -667,7 +842,7 @@ var ZoomTo = function (t, s, layer, z, x, y) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -678,7 +853,7 @@ var JumpZoomTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -689,7 +864,7 @@ var FadeTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -700,7 +875,7 @@ var FadeWhiteTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -711,7 +886,7 @@ var FlipXLeftOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -722,7 +897,7 @@ var FlipXRightOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -733,7 +908,7 @@ var FlipYUpOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -744,7 +919,7 @@ var FlipYDownOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -755,7 +930,7 @@ var FlipAngularLeftOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -766,7 +941,7 @@ var FlipAngularRightOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -777,7 +952,7 @@ var ZoomFlipXLeftOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -788,7 +963,7 @@ var ZoomFlipXRightOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -799,7 +974,7 @@ var ZoomFlipYUpOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -810,7 +985,7 @@ var ZoomFlipYDownOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -821,7 +996,7 @@ var ZoomFlipAngularLeftOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -832,7 +1007,7 @@ var ZoomFlipAngularRightOver = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -843,7 +1018,7 @@ var ShrinkGrowTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -854,7 +1029,7 @@ var RotoZoomTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -865,7 +1040,7 @@ var MoveInLTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -876,7 +1051,7 @@ var MoveInRTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -887,7 +1062,7 @@ var MoveInTTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -898,7 +1073,7 @@ var MoveInBTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -909,7 +1084,7 @@ var SlideInLTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -920,7 +1095,7 @@ var SlideInRTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -931,7 +1106,7 @@ var SlideInTTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -942,7 +1117,7 @@ var SlideInBTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -953,7 +1128,7 @@ var CCTransitionCrossFade = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -964,7 +1139,7 @@ var CCTransitionRadialCCW = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -975,7 +1150,7 @@ var CCTransitionRadialCW = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -986,7 +1161,7 @@ var PageTransitionForward = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -997,7 +1172,7 @@ var PageTransitionBackward = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -1008,7 +1183,7 @@ var FadeTRTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -1019,7 +1194,7 @@ var FadeBLTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -1030,7 +1205,7 @@ var FadeUpTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -1041,7 +1216,7 @@ var FadeDownTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -1052,7 +1227,7 @@ var TurnOffTilesTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -1063,7 +1238,7 @@ var SplitRowsTransition = function (t, s) {
 
 /**
  * @param {Number} t
- * @param {Number} s
+ * @param {cc.Scene} s
  * @returns {cc.TransitionScene}
  * @deprecated Transição foi movida para o namespace pd
  */
@@ -1071,9 +1246,4 @@ var SplitColsTransition = function (t, s) {
     cc.warn("Transição [SplitColsTransition] foi movida para o namespace pd. Corrigir chamada da transição");
     return pd.SplitColsTransition(t, s);
 };
-
-/**
- * @type {string}
- * @deprecated Desde a versão 3.0.0, usar {@link pd.padroesPath}
- */
-padroesPath = pd.padroesPath;
+//endregion

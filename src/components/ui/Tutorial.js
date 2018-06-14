@@ -153,11 +153,11 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         this._tweenableObjects = [];
 
         this._bgLayers = [
-            pd.createSprite(pd.SpriteFrames.BG_TUTORIAL_01, 512, -500, this, 1),
-            pd.createSprite(pd.SpriteFrames.BG_TUTORIAL_02, 512, -500, this, 2),
-            pd.createSprite(pd.SpriteFrames.TUTORIAL_LAYER, 512, -500, this, 3)
+            pd.createSprite(pd.SpriteFrames.BG_TUTORIAL_01, {x: 512, y: -500}, this, 1),
+            pd.createSprite(pd.SpriteFrames.BG_TUTORIAL_02, {x: 512, y: -500}, this, 2),
+            pd.createSprite(pd.SpriteFrames.TUTORIAL_LAYER, {x: 512, y: -500}, this, 3)
         ];
-        this._extraBgLayer = pd.createSprite(pd.SpriteFrames.TUTORIAL_LAYER, 512, -500, this, 3);
+        this._extraBgLayer = pd.createSprite(pd.SpriteFrames.TUTORIAL_LAYER, {x: 512, y: -500}, this, 3);
         this._tweenableObjects.push(this._bgLayers[2]);
 
         if((pd.delegate.activeNamespace.tutoriais && pd.delegate.activeNamespace.tutorialData && pd.delegate.activeNamespace.tutoriais.length > pd.delegate.activeNamespace.tutorialData.length)) {
@@ -166,34 +166,38 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
             cc.warn("[pd] Aviso: utilizando recurso depreciado: activeNamespace.tutoriais. Utilizar a função pd.delegate.setTutorial() para inicializar o tutorial do jogo.")
         }
 
-        this._title = pd.createSprite(pd.SpriteFrames.TUTORIAL_TEXT, 512, 730, this, 99);
+        this._title = pd.createSprite(pd.SpriteFrames.TUTORIAL_TEXT, {x: 512, y: 730}, this, 99);
         this._title.setOpacity(0);
 
         this._btnExit = new pd.Button(pd.SpriteFrames.BTN_EXIT, pd.SpriteFrames.BTN_EXIT_PRESSED, {x:1090, y:740}, 1, true, false, this, "_onCloseButton");
         this.addChild(this._btnExit, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
 
-        this._btnRight = new pd.Button(pd.SpriteFrames.BTN_NEXT, pd.SpriteFrames.BTN_NEXT_PRESSED, {x:987, y:360}, 1, true, false, this, "_onNextPage");
-        this.addChild(this._btnRight, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
+        var fncBotoes = function (attr, thisArg, fnc, key, visible) {
+            var obj = new pd.Button(pd.SpriteFrames.BTN_NEXT, pd.SpriteFrames.BTN_NEXT_PRESSED, attr, 1, true, false, thisArg, fnc);
+            thisArg.addChild(obj, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
+            obj.setOpacity(0);
+            obj.setKeyCode(key);
+            obj.setVisible(visible);
+            return obj;
+        }
+        this._btnRight = fncBotoes({x: 987, y: 360}, this, "_onNextPage", pd.Keys.RIGHT, pd.delegate.activeNamespace.tutorialData.length > 1);
         this._btnRight.setFlippedX(true);
-        this._btnRight.setOpacity(0);
-        this._btnRight.setKeyCode(pd.Keys.RIGHT);
-        this._btnRight.setVisible(pd.delegate.activeNamespace.tutorialData.length > 1);
-
-        this._btnLeft = new pd.Button(pd.SpriteFrames.BTN_NEXT, pd.SpriteFrames.BTN_NEXT_PRESSED, {x:37, y:360}, 1, true, false, this, "_onPreviousPage");
-        this.addChild(this._btnLeft, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
-        this._btnLeft.setOpacity(0);
-        this._btnLeft.setKeyCode(pd.Keys.LEFT);
-        this._btnLeft.setVisible(false);
+        this._btnLeft = fncBotoes({x: 37, y: 360}, this, "_onPreviousPage", pd.Keys.LEFT, false);
 
         pd.delegate.activeNamespace.tutorialData.headerTextOffsetY = pd.delegate.activeNamespace.tutorialData.headerTextOffsetY || 0;
-        this.headerText = pd.cText(512, 660 + pd.delegate.activeNamespace.tutorialData.headerTextOffsetY, pd.delegate.activeNamespace.tutorialData.txt_objetivo, "Calibri", 25);
-        this.addChild(this.headerText, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
-        this.headerText.setOpacity(0);
+        var fncHeader = function (parent) {
+            if(typeof pd.delegate.activeNamespace.tutorialData.txt_objetivo === 'string')
+                var obj = pd.createText("Calibri", "Calibri", 512, 660 + pd.delegate.activeNamespace.tutorialData.headerTextOffsetY, 25, null, pd.delegate.activeNamespace.tutorialData.txt_objetivo);
+            else
+                obj = pd.createSprite(pd.delegate.activeNamespace.tutorialData.txt_objetivo, {x: 512, y: 660 + pd.delegate.activeNamespace.tutorialData.headerTextOffsetY});
+            obj.setAnchorPoint(0.5, 1);
+            parent.addChild(obj, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
+            obj.setOpacity(0);
+            return obj;
+        }
+        this.headerText = fncHeader(this);
         this.texto_objetivo = this.headerText; //legado!
-
-        this._extraHeaderText = pd.cText(512, 660 + pd.delegate.activeNamespace.tutorialData.headerTextOffsetY, pd.delegate.activeNamespace.tutorialData.txt_objetivo, "Calibri", 25);
-        this.addChild(this._extraHeaderText, pd.ZOrders.TUTORIAL_CONTROLLER_BUTTON);
-        this._extraHeaderText.setOpacity(0);
+        this._extraHeaderText = fncHeader(this);
 
         this._initPages();
         this._tweenableObjects.push(this.headerText);
@@ -212,7 +216,7 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
 
         for(var i = 0; i < numPages; i++) {
             if(numPages>1) {
-                var indicator = pd.createSprite("stage_instrucoes", 512 + iniX + i * 30, 30 + pd.delegate.activeNamespace.tutorialData.txtOffSetY, this, 50);
+                var indicator = pd.createSprite("stage_instrucoes", {x: 512 + iniX + i * 30, y: 30 + pd.delegate.activeNamespace.tutorialData.txtOffSetY}, this, 50);
                 indicator.setScale(0);
                 this._indicators.push(indicator);
             }
@@ -221,6 +225,8 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
             page.setCascadeOpacityEnabled(true);
             page.setOpacity(0);
             page.setVisible(false);
+            if(!page._initialPosition)
+                page._initialPosition = {x:page.x, y:page.y};
             this.addChild(page, pd.ZOrders.TUTORIAL_PAGE);
             this._pages.push(page);
         }
@@ -348,9 +354,6 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         const newLayer = this._activeLayer;
 
         newLayer.setVisible(true);
-        if(!newLayer._initialPosition)
-            newLayer._initialPosition = {x:this._activeLayer.x, y:this._activeLayer.y};
-
         newLayer.setStatus(false);
         newLayer.setPosition(newLayer._initialPosition.x, newLayer._initialPosition.y);
         newLayer.attr({opacity:shouldAnimate ? 255 : 0, x:shouldAnimate ? newLayer.x-this._slideDirection*pd.Tutorial.PAGE_SPACING : newLayer.x});
