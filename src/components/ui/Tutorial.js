@@ -225,6 +225,8 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
             page.setCascadeOpacityEnabled(true);
             page.setOpacity(0);
             page.setVisible(false);
+            if(!page._initialPosition)
+                page._initialPosition = {x:page.x, y:page.y};
             this.addChild(page, pd.ZOrders.TUTORIAL_PAGE);
             this._pages.push(page);
         }
@@ -352,9 +354,6 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
         const newLayer = this._activeLayer;
 
         newLayer.setVisible(true);
-        if(!newLayer._initialPosition)
-            newLayer._initialPosition = {x:this._activeLayer.x, y:this._activeLayer.y};
-
         newLayer.setStatus(false);
         newLayer.setPosition(newLayer._initialPosition.x, newLayer._initialPosition.y);
         newLayer.attr({opacity:shouldAnimate ? 255 : 0, x:shouldAnimate ? newLayer.x-this._slideDirection*pd.Tutorial.PAGE_SPACING : newLayer.x});

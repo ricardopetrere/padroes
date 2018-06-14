@@ -537,11 +537,8 @@ pd.AnimationData = cc.Class.extend(/** @lends pd.AnimationData# */{
     ctor: function (name, ini_frameOrFrames, last_frame, speed, spriteFramePattern) {
         this.name = name;
         if(ini_frameOrFrames.length != null) {
-            cc.log("this._continuousFrames = false");
             this._continuousFrames = false;
             this.frames = ini_frameOrFrames;
-            // spriteFramePattern = speed;
-            // speed = last_frame;
         } else {
             this.ini_frame = ini_frameOrFrames;
             this.last_frame = last_frame;

@@ -371,7 +371,6 @@ pd.createAnimation = function (attr, animacoes) {
     }
     for (var i = 0; i < animationDataArray.length; i++) {
         if(animationDataArray[i].frames != null) {
-            cc.log("addAnimationWithFrames");
             animation.addAnimationWithFrames(animationDataArray[i]);
         } else {
             animation.addAnimation(animationDataArray[i]);
