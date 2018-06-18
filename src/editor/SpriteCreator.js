@@ -24,9 +24,9 @@ pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
 
         pd.Editor.activeSpriteCreator = this;
         this.isDragging = false;
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, "onMouseDown", this);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, this, "onMouseUp", this);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, this, "onMouseMove", this);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_DOWN, this, "onMouseDown", this);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_UP, this, "onMouseUp", this);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_MOVE, this, "onMouseMove", this);
 
 
         this.selectedInfos = [];
@@ -208,7 +208,7 @@ pd.Editor.SpriteCreator = cc.Scale9Sprite.extend({
             }
             cc.log(spriteName)
             var spriteFrame = cc.spriteFrameCache.getSpriteFrame(spriteName);
-            if((spriteFrame == null || spriteFrame == undefined) || spriteName.indexOf(activeGameSpace.resPath) != -1){
+            if((spriteFrame == null || spriteFrame == undefined) || spriteName.indexOf(pd.delegate.activeNamespace.resPath) != -1){
                 cc.log('sprite frame invalida.');
                 return;
             }

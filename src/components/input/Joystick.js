@@ -99,7 +99,7 @@ pd.Joystick = cc.Sprite.extend(pd.decorators.EventDispatcher).extend(pd.decorato
 
         this._super(pd.getSpriteFrame(pd.SpriteFrames.JOYSTICK_BACKGROUND));
         this._radius = this.getBoundingBox().width/2;
-        this._pad = pd.createSprite(pd.SpriteFrames.JOYSTICK_PAD, this._radius, this._radius, this);
+        this._pad = pd.createSprite(pd.SpriteFrames.JOYSTICK_PAD, {x: this._radius, y: this._radius}, this);
         pd.decorate(this._pad, pd.decorators.ResetableNode);
         this._pad.saveDisplayState();
         this.isGrabbed = false;

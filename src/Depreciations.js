@@ -254,6 +254,7 @@ pd.LegacyTutorialLayer = cc.Layer.extend({/**@lends pd.LegacyTutorialLayer#*/
         this.arrowKeys = [this.btnArrowLeft, this.btnArrowUp, this.btnArrowRight, this.btnArrowDown];
 
         ////////// LEGADO: ///////////////
+        //TODO Remover isso aqui, verificar antes se não vai quebrar com os jogos antigos
         this.tecla_cima = this.btnArrowUp;
         this.tecla_esquerda = this.btnArrowLeft;
         this.tecla_baixo = this.btnArrowDown;
@@ -318,9 +319,8 @@ pd.LegacyTutorialLayer = cc.Layer.extend({/**@lends pd.LegacyTutorialLayer#*/
         if(!pd.delegate.activeNamespace.tutorialData.txtOffSetY)
             pd.delegate.activeNamespace.tutorialData.txtOffSetY = 0;
 
-        const label = pd.cText(0, 0, txt, "Calibri", 25);
-        label.setPosition(512, 140 + pd.delegate.activeNamespace.tutorialData.txtOffSetY);
-        this.addChild(label, pd.ZOrders.TUTORIAL_PAGE_BOTTOM_TEXT);
+        const label = pd.createText("Calibri", "Calibri", 512, 140 + pd.delegate.activeNamespace.tutorialData.txtOffSetY,
+            25, null, txt, null, this, pd.ZOrders.TUTORIAL_PAGE_BOTTOM_TEXT);
     },
 
     stop: function() {
@@ -475,7 +475,7 @@ pd.AddToDebugger = function(obj, type, name) {
 /**
  * @deprecated - desde a versão 2.3 - utilizar {@link pd.inputManager.add}.
  * @example
- * pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, this.onMouseDown);
+ * pd.inputManager.add(pd.InputManager.Events.MOUSE_DOWN, this, this.onMouseDown);
  */
 pd.setInput = function(layer, eventId, funcToCall, multiTouch) {
     cc.warn("[pd.setInput] utilizar pd.inputManager.add");
@@ -484,17 +484,17 @@ pd.setInput = function(layer, eventId, funcToCall, multiTouch) {
 
     switch(eventId) {
         case 0:
-            pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, layer, funcToCall);
-            return layer._inputMetadata[pd.InputManager.EVENT_MOUSE_DOWN];
+            pd.inputManager.add(pd.InputManager.Events.MOUSE_DOWN, layer, funcToCall);
+            return layer._inputMetadata[pd.InputManager.Events.MOUSE_DOWN];
         case 1:
-            pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, layer, funcToCall);
-            return layer._inputMetadata[pd.InputManager.EVENT_MOUSE_MOVE];
+            pd.inputManager.add(pd.InputManager.Events.MOUSE_MOVE, layer, funcToCall);
+            return layer._inputMetadata[pd.InputManager.Events.MOUSE_MOVE];
         case 2:
-            pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, layer, funcToCall);
-            return layer._inputMetadata[pd.InputManager.EVENT_MOUSE_UP];
+            pd.inputManager.add(pd.InputManager.Events.MOUSE_UP, layer, funcToCall);
+            return layer._inputMetadata[pd.InputManager.Events.MOUSE_UP];
         case 3:
-            pd.inputManager.add(pd.InputManager.EVENT_ACCELEROMETER, layer, funcToCall);
-            return layer._inputMetadata[pd.InputManager.EVENT_ACCELEROMETER];
+            pd.inputManager.add(pd.InputManager.Events.ACCELEROMETER, layer, funcToCall);
+            return layer._inputMetadata[pd.InputManager.Events.ACCELEROMETER];
     }
 };
 
@@ -534,12 +534,12 @@ pd.setInput.__defineGetter__("ACCELEROMETER", function() {
 /**
  * @deprecated - desde a versão 2.3 - utilizar {@link pd.inputManager.add}.
  * @example
- * pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, this, this.onMouseDown);
+ * pd.inputManager.add(pd.InputManager.Events.KEY_DOWN, this, this.onMouseDown);
  */
 pd.setKeyboard = function(layer, funcKeyDown, funcKeyUp) {
     cc.warn("[pd.setKeyboard] utilizar pd.inputManager.add");
-    pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, layer, funcKeyDown);
-    pd.inputManager.add(pd.InputManager.EVENT_KEY_UP, layer, funcKeyUp);
+    pd.inputManager.add(pd.InputManager.Events.KEY_DOWN, layer, funcKeyDown);
+    pd.inputManager.add(pd.InputManager.Events.KEY_UP, layer, funcKeyUp);
 };
 
 /**
@@ -549,9 +549,9 @@ pd.setMouse = function(layer, funcMouseDown, funcMouseMove, funcMouseUp, multiTo
     cc.warn("[pd.setMouse] utilizar pd.inputManager.add");
     if(multiTouch)
         pd.inputManager.config(layer, true);
-    pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, layer, funcMouseDown);
-    pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, layer, funcMouseMove);
-    pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, layer, funcMouseUp);
+    pd.inputManager.add(pd.InputManager.Events.MOUSE_DOWN, layer, funcMouseDown);
+    pd.inputManager.add(pd.InputManager.Events.MOUSE_MOVE, layer, funcMouseMove);
+    pd.inputManager.add(pd.InputManager.Events.MOUSE_UP, layer, funcMouseUp);
 };
 
 /**
@@ -560,12 +560,12 @@ pd.setMouse = function(layer, funcMouseDown, funcMouseMove, funcMouseUp, multiTo
 pd.setInputForButton = function(layer) {
     cc.warn("[pd.setInputForButton] utilizar pd.inputManager.add");
     pd.inputManager.config(layer, false, cc.EventListener.TOUCH_ALL_AT_ONCE, 1);
-    pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, layer, "onMouseDown");
-    pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, layer, "onMouseDragged");
-    pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, layer, "onMouseUp");
+    pd.inputManager.add(pd.InputManager.Events.MOUSE_DOWN, layer, "onMouseDown");
+    pd.inputManager.add(pd.InputManager.Events.MOUSE_MOVE, layer, "onMouseDragged");
+    pd.inputManager.add(pd.InputManager.Events.MOUSE_UP, layer, "onMouseUp");
 
-    pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, layer, "keyDown");
-    pd.inputManager.add(pd.InputManager.EVENT_KEY_UP, layer, "keyReleased");
+    pd.inputManager.add(pd.InputManager.Events.KEY_DOWN, layer, "keyDown");
+    pd.inputManager.add(pd.InputManager.Events.KEY_UP, layer, "keyReleased");
 };
 
 /**
@@ -758,6 +758,18 @@ pd.__defineGetter__("TextCreator", function(){
 });
 
 /**
+ * @deprecated - desde a versão 2.6 utilizar {@link pd.TypewriterLabel.prototype.config}
+ * Essa listagem irá acionar o __defineGetter__ acima, o que exibirá o warning.
+ * Portanto, ignorar esse específico warning se só ocorrer uma vez, na inicialização
+ * @param {pd.TypewriterLabel} target
+ * @param {number} displayingLinesAmount
+ */
+pd.TextCreator.setFadeType = function(target, displayingLinesAmount){
+    cc.warn("[pd.TextCreator.setFadeType] utilizar pd.TypewriterLabel.config");
+    target.config(displayingLinesAmount);
+};
+
+/**
  * @deprecated - desde a versão 2.6 - utilizar {@link pd.TypewriterLabel.prototype.setOnComplete}
  */
 pd.TypewriterLabel.prototype.addFinishCallback = function() {
@@ -779,16 +791,6 @@ pd.TypewriterLabel.prototype.addTextLine = function() {
 pd.TypewriterLabel.prototype.startUpdate = function() {
     cc.warn("[pd.TypewriterLabel.startUpdate] utilizar pd.TypewriterLabel.start");
     pd.TypewriterLabel.prototype.start.apply(pd.TypewriterLabel.prototype, arguments);
-};
-
-/**
- * @deprecated - desde a versão 2.6 utilizar {@link pd.TypewriterLabel.prototype.config}
- * @param {pd.TypewriterLabel} target
- * @param {number} displayingLinesAmount
- */
-pd.TextCreator.setFadeType = function(target, displayingLinesAmount){
-    cc.warn("[pd.TextCreator.setFadeType] utilizar pd.TypewriterLabel.config");
-    target.config(displayingLinesAmount);
 };
 //endregion
 //region Navegação de cenas

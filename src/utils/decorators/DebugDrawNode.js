@@ -16,12 +16,12 @@ pd.decorators.DebugDrawNode = /** @lends pd.decorators.DebugDrawNode#*/{
     _showDebugObjects:false,
 
     /**
-     * @type {Array}
+     * @type {{data: cc.Node | cc.Point[], [fnc]: Function, color: cc.Color}[]}
      */
     _debugDrawData: null,
 
     /**
-     * @type {Array}
+     * @type {{data: cc.LabelTTF, color: cc.Color, [fnc]: string | Function, [thisArg]: Object}[]}
      */
     _debugTextData: null,
 
