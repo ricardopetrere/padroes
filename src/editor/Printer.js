@@ -23,9 +23,9 @@ pd.Editor.Printer = cc.Scale9Sprite.extend({
 
         pd.Editor.activePrinter = this;
         this.isDragging = false;
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, "onMouseDown", this);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, this, "onMouseUp", this);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, this, "onMouseMove", this);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_DOWN, this, "onMouseDown", this);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_UP, this, "onMouseUp", this);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_MOVE, this, "onMouseMove", this);
 
         //this = pd.Editor.createView("Printer", cc.p(512, 384), cc.size(260, 290));
         //this.addChild(this, 50);

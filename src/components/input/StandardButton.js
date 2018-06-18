@@ -111,11 +111,11 @@ pd.StandardButton = pd.Button.extend({/** @lends pd.StandardButton#**/
 
         const boundingBox = this.getBoundingBox();
         if(shape == pd.StandardButton.Shapes.ROUNDED) {
-            this._background = pd.createSprite(pd.SpriteFrames.ROUND_BUTTON_BODY, boundingBox.width/2 + 3, boundingBox.height/2, this, -1);
+            this._background = pd.createSprite(pd.SpriteFrames.ROUND_BUTTON_BODY, {x: boundingBox.width/2 + 3, y: boundingBox.height/2}, this, -1);
             this._label.setPosition(this._label.x + 6.5, this._label.y - 4);
         }
         else if(shape == pd.StandardButton.Shapes.SQUARED) {
-            this._background = pd.createSprite(pd.SpriteFrames.SQUARE_BUTTON_BODY, boundingBox.width/2 + 3, boundingBox.height/2, this, -1);
+            this._background = pd.createSprite(pd.SpriteFrames.SQUARE_BUTTON_BODY, {x: boundingBox.width/2 + 3, y: boundingBox.height/2}, this, -1);
         }
     },
 

@@ -20,7 +20,7 @@ pd.Editor = cc.LayerColor.extend({
         pd.Editor.activePrinter = null;
 
         //adiciona o listener de mouse para verificar colisão com os botoes de seleção de editor.
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, "onMouseDown", this);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_DOWN, this, "onMouseDown", this);
 
         //inicializa os botões do editor.
         this.btn_editor = new cc.Sprite(cc.spriteFrameCache.getSpriteFrame(pd.SpriteFrames.EDITOR_BTN));
@@ -180,10 +180,10 @@ pd.Editor.GeneralEditor = cc.Scale9Sprite.extend({
             }
         });
         cc.eventManager.addListener(listener, this);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, this, "_onMouseUp", this);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, this, "_onMouseMove", this);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_UP, this, "_onMouseUp", this);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_MOVE, this, "_onMouseMove", this);
 
-        pd.inputManager.add(pd.InputManager.EVENT_KEY_DOWN, this, "onKeyDown", this);
+        pd.inputManager.add(pd.InputManager.Events.KEY_DOWN, this, "onKeyDown", this);
 
 
         //Cria a interface principal do Editor

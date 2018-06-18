@@ -95,7 +95,7 @@ pd.PauseLayer = cc.Layer.extend({/**@lends pd.PauseLayer#*/
      * @private
      */
     _buildUI: function() {
-        this._sidebar = pd.createSprite("pd_pause_interface", -this.offset, cc.winSize.height/2, this, 1);
+        this._sidebar = pd.createSprite("pd_pause_interface", {x: -this.offset, y: cc.winSize.height/2}, this, 1);
 
         this._btnMenu = new pd.Button(pd.SpriteFrames.BTN_MENU, pd.SpriteFrames.BTN_MENU_PRESSED, {x:this.offset, y:480}, 1, true, false, this, this._onButtonClick);
         this._sidebar.addChild(this._btnMenu, pd.ZOrders.PAUSE_LAYER_UI_ELEMENTS);
@@ -184,9 +184,8 @@ pd.PauseLayer = cc.Layer.extend({/**@lends pd.PauseLayer#*/
         pd.audioEngine.playEffect(pd.res.fx_button);
 
         if(pd.delegate.context != pd.Delegate.CONTEXT_PALCO) {
-            var scene = new pd.delegate.activeNamespace.MainScene();
-            var transition = pd.FadeWhiteTransition(1, scene);
-            pd.switchScene(transition, this._handler, 0.2);
+            var scene = new pd.delegate.activeNamespace[pd.Delegate.DefaultPaths.mainScene]();
+            pd.changeScene(scene, 1, pd.FadeWhiteTransition);
         }
         else {
             pd.delegate.finish();
@@ -238,9 +237,8 @@ pd.PauseLayer = cc.Layer.extend({/**@lends pd.PauseLayer#*/
         pd.audioEngine.playEffect(pd.res.fx_button);
         this._handler.cleanup();
 
-        var scene = new pd.delegate.activeNamespace.MainScene();
-        var transition = pd.FadeWhiteTransition(1, scene);
-        pd.switchScene(transition, this._handler);
+        var scene = new pd.delegate.activeNamespace[pd.Delegate.DefaultPaths.mainScene]();
+        pd.changeScene(scene, 1, FadeWhiteTransition);
 
         cc.log("[pd.PauseLayer] Botão de reset pressionado.");
     },

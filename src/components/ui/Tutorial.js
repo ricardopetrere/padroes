@@ -140,9 +140,9 @@ pd.Tutorial = cc.LayerColor.extend({/**@lends pd.Tutorial#*/
             throw new Error("[pd.Tutorial] Não é possível instanciar dois tutoriais ao mesmo tempo!");
         pd.Tutorial.hasInstance = true;
 
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_DOWN, this, this._onSwipeBegin);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_MOVE, this, this._onSwipeMove);
-        pd.inputManager.add(pd.InputManager.EVENT_MOUSE_UP, this, this._onSwipeFinish);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_DOWN, this, this._onSwipeBegin);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_MOVE, this, this._onSwipeMove);
+        pd.inputManager.add(pd.InputManager.Events.MOUSE_UP, this, this._onSwipeFinish);
     },
 
     /**
